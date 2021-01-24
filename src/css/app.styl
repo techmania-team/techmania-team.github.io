@@ -1,0 +1,97 @@
+// app global css in Stylus form
+$techColor = #a5d6a7
+$techgreyColor = #1e1e1e
+
+body
+  background #121212
+
+.text-tech
+  color $techColor
+.text-techgrey
+  color $techgreyColor
+.bg-tech
+  background $techColor
+.border-tech
+  border-color $techColor
+.bg-techgrey
+  background $techgreyColor
+
+.container
+  width 100%;
+  padding-right 0.75rem
+  padding-left 0.75rem
+  margin-right auto
+  margin-left auto
+
+@media (min-width: 576px)
+  .container
+    max-width: 540px
+
+@media (max-width: 767px)
+  .nav-desktop
+    display none
+
+@media (min-width: 768px)
+  .container
+    max-width: 720px
+  .nav-mobile
+    display none !important
+
+@media (min-width: 992px)
+  .container
+    max-width: 960px
+
+@media (min-width: 1200px)
+  .container
+    max-width: 1140px
+
+@media (min-width: 1400px)
+  .container
+    max-width: 1320px
+
+#header-video > .q-parallax__content
+  background rgba(0,0,0,0.7)
+  img
+    max-width 897px
+
+#how-to-play
+  .q-tab-panel
+    h4
+      margin 26 0
+    .row
+      min-height 200px
+      img
+        height 100px
+        max-width 370px
+
+#keyboard-scheme
+  max-width 681px
+
+.note:not([src*="basic.png"])
+  max-width 370px
+
+@media (max-width: 1023px)
+  #how-to-play .description
+    text-align center
+
+@media (min-width: 1024px)
+  #how-to-play .description
+    text-align left
+
+.q-markdown 
+  a
+    color $techColor
+  h1
+    font-size 1.8rem
+    color $techColor
+
+.q-img__content > div
+  background rgba(0,0,0,0.8)
+
+.card-pattern 
+  .description
+    white-space pre-wrap
+  .btn-dl
+    top 0
+    right 12px
+    transform translateY(-50%)
