@@ -3,7 +3,7 @@ on:
   push:
     branches: [ master ]
 jobs:
-  PWA:
+  SPA:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -14,7 +14,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_BRANCH: master
           BRANCH: gh-pages
-          FOLDER: dist/pwa
+          FOLDER: dist/spa
           BUILD_SCRIPT: npm install && npm run build
           CLEAN: true
           BACK_URL: ${{ secrets.BACK_URL }}
