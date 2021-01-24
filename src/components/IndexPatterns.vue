@@ -2,7 +2,7 @@
   .container
     .row
       .col-12.q-mx-auto
-        h4 Latest Patterns
+        h4.text-center Latest Patterns
         q-separator
         .row
           .col-12.col-sm-6.col-lg-3.q-pa-md.q-my-lg(v-for="(pattern, index) in patterns" :key="pattern.id")
