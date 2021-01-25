@@ -1,6 +1,6 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`https://img.youtube.com/vi/${GetIDFromYouTubeLink(pattern.link)}/0.jpg`")
+    q-img(:src="`https://img.youtube.com/vi/${pattern.previews[0].link}/0.jpg`")
       .absolute-bottom.text-h6 {{ pattern.name }}
     q-card-section
       q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" @click="openLink(pattern.link)")
