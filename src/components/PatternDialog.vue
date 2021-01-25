@@ -36,8 +36,8 @@
                   .col-1
                   q-input.col-5(v-model.number="difficulty.level" type="number" placeholder="Level" :rules="[val => !!val || 'Field is required']")
                   .col-1
-                    q-btn(flat round icon="clear" v-if="index !== model.difficulties.length-1" @click="removeDifficulty(index)")
-                    q-btn(flat round icon="add" v-if="index === model.difficulties.length-1" @click="addDifficulty")
+                    q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
+                    q-btn(flat round icon="add" v-else @click="addDifficulty")
             p.mb-none Description
               q-input.q-mb-md(v-model="model.description" type="textarea" autogrow)
           q-card-section(v-if="model.id")
