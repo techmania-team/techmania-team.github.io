@@ -21,7 +21,8 @@ module.exports = function (/* ctx */) {
     boot: [
       'i18n',
       'axios',
-      'mixin'
+      'mixin',
+      'analytics'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
