@@ -16,15 +16,16 @@
             q-btn(round v-if="isLogin" to="/mypage")
               q-avatar
                 img(:src="user.avatar_url")
-            q-btn-dropdown.nav-mobile(auto-close stretch flat v-model="dropdown" label="Menu")
+            q-btn.nav-mobile(:label="isLogin ? '' : 'Menu'" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
         q-separator.nav-mobile(v-show="dropdown")
-        q-slide-transition
-          q-list.nav-mobile(clickable v-show="dropdown")
-            q-item.text-grey7(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
+      q-slide-transition
+        .container.nav-mobile(v-show="dropdown")
+          q-list
+            q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
               q-item-section {{ nav.label }}
-            q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self')" active-class="text-white")
+            q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self'); dropdown = !dropdown" active-class="text-white")
               q-item-section Login
-            q-item.text-grey7(clickable v-if="isLogin" to="/mypage" active-class="text-white")
+            q-item.text-grey7(clickable @click="dropdown = !dropdown" v-if="isLogin" to="/mypage" active-class="text-white")
               q-item-section My Page
             q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
               q-item-section Logout
