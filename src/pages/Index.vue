@@ -5,7 +5,7 @@
         video(:src="'./assets/header.webm'" autoplay loop muted)
       template(v-slot:content="scope")
         img.full-width(:src="'./assets/Logo.png'")
-        q-btn.q-my-md(color="secondary" size="lg" @click="openUrl('https://github.com/macmillan333/techmania/releases/latest')")
+        q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
           q-icon(left name="download" )
           div Download
         div.text-center
