@@ -18,7 +18,7 @@
           ul
             li(v-for="(preview, index) in pattern.previews" :key="'P'+index")
               | {{ preview.name }}
-              q-btn(flat round icon="fab fa-youtube" color="tech" @click="openLink(preview.link)")
+              q-btn(flat round icon="fab fa-youtube" color="tech" @click="openLink('https://www.youtube.com/watch?v=' + preview.link)")
         q-expansion-item(label="Description")
           q-item.description
             | {{ pattern.description }}
