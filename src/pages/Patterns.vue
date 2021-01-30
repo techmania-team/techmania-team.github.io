@@ -55,7 +55,7 @@ export default {
     },
     async fetchPatterns () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=indexpatterns')
+        const result = await this.$axios.get(process.env.BACK_URL + '?action=patterns')
         if (result.data.success) {
           this.patterns = result.data.results
         } else {
