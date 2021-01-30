@@ -13,7 +13,7 @@
 import PatternCard from './PatternCard'
 
 export default {
-  name: 'IndexVideos',
+  name: 'IndexPatterns',
   components: {
     PatternCard
   },
