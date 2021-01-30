@@ -29,9 +29,11 @@
                   q-btn.q-mr-xs(flat round icon="fab fa-github" color="tech" @click="openLink(release.html_url)")
                   q-btn.q-mr-xs(flat round icon="download" color="tech" @click="openLink(release.assets[0].browser_download_url)")
                   img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total'")
-              div
-                q-separator
-                q-markdown.q-pa-md(:src="release.body")
+              q-separator
+              q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? 'Hide Detail' : 'Show Detail'" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
+              q-slide-transition
+                div(v-if="release.expand")
+                  q-markdown.q-pa-md(:src="release.body")
 </template>
 
 <script>
@@ -46,7 +48,10 @@ export default {
   mounted () {
     this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
       .then(result => {
-        this.releases = result.data
+        this.releases = result.data.map(data => {
+          data.expand = false
+          return data
+        })
       })
       .catch(() => {
         this.error = true
