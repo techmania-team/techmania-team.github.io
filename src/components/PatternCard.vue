@@ -13,7 +13,7 @@
           q-item-section Keysounded: {{ pattern.keysounded === 0 ? 'No' : 'Yes' }}
         q-expansion-item(label="Difficulties")
           ul
-            li(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index") {{ difficulty.name }}: {{ difficulty.level }}
+            li(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index") {{ difficulty.control }} - {{ difficulty.name }}: {{ difficulty.level }}
         q-expansion-item(label="Previews")
           ul
             li(v-for="(preview, index) in pattern.previews" :key="'P'+index")

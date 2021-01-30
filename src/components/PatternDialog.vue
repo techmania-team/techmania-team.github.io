@@ -32,9 +32,11 @@
             p.q-mb-none Difficulties
               .q-mb-md
                 .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                  q-input.col-5(v-model="difficulty.name" placeholder="Name" :rules="[val => !!val || 'Field is required']")
+                  q-select.col-3(v-model="difficulty.control" :options="controlTypes" placeholder="Control" :rules="[val => !!val || 'Field is required']")
                   .col-1
-                  q-input.col-5(v-model.number="difficulty.level" type="number" placeholder="Level" :rules="[val => !!val || 'Field is required']")
+                  q-input.col-3(v-model="difficulty.name" placeholder="Name" :rules="[val => !!val || 'Field is required']")
+                  .col-1
+                  q-input.col-3(v-model.number="difficulty.level" type="number" placeholder="Level" :rules="[val => !!val || 'Field is required']")
                   .col-1
                     q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
                     q-btn(flat round icon="add" v-else @click="addDifficulty")
@@ -67,11 +69,12 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0 }],
+        difficulties: [{ name: '', level: 0, control: 'Touch' }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
       },
+      controlTypes: ['Touch', 'Keys', 'KM'],
       isedit: false,
       confirm: false
     }
@@ -98,7 +101,7 @@ export default {
           name: '',
           composer: '',
           keysounded: false,
-          difficulties: [{ name: '', level: 0 }],
+          difficulties: [{ name: '', level: 0, control: 'Touch' }],
           link: '',
           previews: [{ link: '', name: '' }],
           description: ''
@@ -141,7 +144,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0 }],
+            difficulties: [{ name: '', level: 0, control: 'Touch' }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
@@ -176,7 +179,7 @@ export default {
       this.model.previews.splice(index, 1)
     },
     addDifficulty () {
-      this.model.difficulties.push({ name: '', level: 0 })
+      this.model.difficulties.push({ name: '', level: 0, control: 'Touch' })
     },
     removeDifficulty (index) {
       this.model.difficulties.splice(index, 1)
@@ -186,7 +189,7 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0 }],
+        difficulties: [{ name: '', level: 0, control: 'Touch' }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
@@ -211,7 +214,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0 }],
+            difficulties: [{ name: '', level: 0, control: 'Touch' }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
