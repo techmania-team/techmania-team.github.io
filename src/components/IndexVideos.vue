@@ -14,13 +14,28 @@ export default {
   name: 'IndexVideos',
   data () {
     return {
-      videos: [
-        'https://www.youtube.com/embed/qQAmkMlBvtg',
-        'https://www.youtube.com/embed/HJm2royZpR0',
-        'https://www.youtube.com/embed/bJwrmy8UmGM',
-        'https://www.youtube.com/embed/tdDm6Mrir7I'
-      ]
+      videos: []
     }
+  },
+  methods: {
+    async fetchVideos () {
+      try {
+        const result = await this.$axios.get(process.env.BACK_URL + '?action=indexvideos')
+        if (result.data.success) {
+          this.videos = ['qQAmkMlBvtg', ...result.data.results].map(video => {
+            console.log(video)
+            return 'https://www.youtube.com/embed/' + video
+          })
+        } else {
+          throw new Error('Error')
+        }
+      } catch (_) {
+        this.error = true
+      }
+    }
+  },
+  mounted () {
+    this.fetchVideos()
   }
 }
 </script>
