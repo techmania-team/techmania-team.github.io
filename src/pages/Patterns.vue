@@ -12,6 +12,7 @@
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
           .col-12.col-sm-6.col-lg-3.q-pa-md.q-my-lg(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
+          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-lg(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
             PatternCard(:pattern="pattern" :mine="false")
 </template>
 
