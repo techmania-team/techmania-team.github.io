@@ -7,7 +7,7 @@
             h4.text-center Patterns
             q-separator.q-my-md
             br
-            q-input(rounded outlined v-model="search" placeholder="Search" @keydown.enter="applySearch")
+            q-input(rounded outlined v-model="search.text" placeholder="Search song or composer" @keydown.enter="applySearch")
               template(v-slot:after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
