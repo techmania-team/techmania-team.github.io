@@ -9,7 +9,7 @@
           .col-6.text-right
             h4
               q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
-          q-separator
+        q-separator
         .row.q-my-md
           .col-6
             .text-h6.q-mt-md.q-mb-lg Pattern Data
