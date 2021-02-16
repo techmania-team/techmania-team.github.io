@@ -30,7 +30,7 @@
             q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
               q-item-section Logout
     q-page-container
-      router-view
+      router-view(:key="$route.fullPath")
     q-footer.bg-techgrey.text-white.relative-position(bordered)
       .container
         q-toolbar

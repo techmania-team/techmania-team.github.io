@@ -27,6 +27,32 @@ export default async ({ Vue }) => {
         const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
         const match = url.match(regExp)
         return (match && match[7].length === 11) ? match[7] : false
+      },
+      getLevelColor (level) {
+        const cls = []
+        if (level <= 5) {
+          cls.push({ 'text-yellow-8': true })
+        } else if (level <= 10) {
+          cls.push({ 'text-blue': true })
+        } else {
+          cls.push({ 'text-red-6': true })
+        }
+        return cls
+      },
+      getControlIcon (control, level) {
+        let icon = ''
+        switch (control) {
+          case 'Touch':
+            icon = 'touch_app'
+            break
+          case 'Keys':
+            icon = 'keyboard'
+            break
+          case 'KM':
+            icon = level <= 5 ? 'img:./assets/icons/KM_NM.svg' : level <= 10 ? 'img:./assets/icons/KM_HD.svg' : 'img:./assets/icons/KM_MX.svg'
+            break
+        }
+        return icon
       }
     },
     computed: {

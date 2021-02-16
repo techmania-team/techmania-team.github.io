@@ -11,7 +11,7 @@
             q-tabs(v-model="tab" class="text-tech" align="center")
               q-tab(name="touch" icon="touch_app" label="Touch")
               q-tab(name="keyboard" icon="keyboard" label="Keyboard")
-              q-tab(name="km" icon="img:./assets/icons/KM.png" label="KM")
+              q-tab(name="km" icon="svguse:./assets/icons/KM.svg#tech" label="KM")
             q-separator
             q-tab-panels(v-model="tab" animated)
               q-tab-panel#how-to-touch(name="touch")

@@ -20,8 +20,8 @@
                     q-btn(flat  size="10px" label="Yes" :text-color="search.keysounded === 1 ? 'white' : 'grey'" @click="search.keysounded = 1")
                     q-btn(flat  size="10px" label="No" :text-color="search.keysounded === 0 ? 'white' : 'grey'" @click="search.keysounded = 0")
             q-separator.q-my-md
-        .row.justify-around
-          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-lg(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
+        .row.q-my-md
+          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
             PatternCard(:pattern="pattern" :mine="false")
 </template>
 

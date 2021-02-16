@@ -12,9 +12,9 @@
           | Latest Version: {{ tag }}
           br
           | Released at {{ published }}
-    section.q-mx-auto.padding
+    section.q-mx-auto.padding.q-my-md
       Patterns#index-videos
-    section.q-mx-auto.padding
+    section.q-mx-auto.padding.q-my-md
       Videos#index-videos
 </template>
 

@@ -7,6 +7,7 @@ const routes = [
       { path: 'howtoplay', component: () => import('pages/HowToPlay.vue'), meta: { title: 'TECHMANIA | How To Play', login: false } },
       { path: 'changelog', component: () => import('pages/Changelog.vue'), meta: { title: 'TECHMANIA | Changelog', login: false } },
       { path: 'patterns', component: () => import('pages/Patterns.vue'), meta: { title: 'TECHMANIA | Patterns', login: false } },
+      { path: 'patterns/:id', component: () => import('pages/Pattern.vue'), meta: { title: 'TECHMANIA', login: false } },
       { path: 'mypage', component: () => import('pages/MyPage.vue'), meta: { title: 'TECHMANIA | My Page', login: true } }
     ]
   },
