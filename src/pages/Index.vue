@@ -4,14 +4,16 @@
       template(v-slot:media)
         video(:src="'./assets/header.webm'" autoplay loop muted)
       template(v-slot:content="scope")
-        img.full-width(:src="'./assets/Logo.png'")
-        q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
-          q-icon(left name="download" )
-          div Download
-        div.text-center
-          | Latest Version: {{ tag }}
-          br
-          | Released at {{ published }}
+        .absolute.column.items-center
+          img#logo(:src="'./assets/Logo.png'")
+          .text-h3
+            q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
+              q-icon(left name="download" )
+              div Download
+          .text-center
+            | Latest Version: {{ tag }}
+            br
+            | Released at {{ published }}
     section.q-mx-auto.padding.q-my-md
       Patterns#index-videos
     section.q-mx-auto.padding.q-my-md
