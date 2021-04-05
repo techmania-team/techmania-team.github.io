@@ -26,8 +26,7 @@
                 h4.q.q-timeline__title
                   | {{ release.name.length === 0 ? release.tag_name : release.name }}
                   | &nbsp;
-                  q-btn.q-mr-xs(flat round icon="fab fa-github" color="tech" @click="openLink(release.html_url)")
-                  q-btn.q-mr-xs(flat round icon="download" color="tech" @click="openLink(release.assets[0].browser_download_url)")
+                  q-btn.q-mr-xs(flat round icon="download" color="tech" @click="openLink(release.html_url)")
                   img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total'")
               q-separator
               q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? 'Hide Detail' : 'Show Detail'" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
