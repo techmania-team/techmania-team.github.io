@@ -9,6 +9,7 @@
                 img(:src="'./assets/notes/basic.png'")
               | &nbsp;TECHMANIA
           q-tabs
+            q-tab.nav-desktop(@click="openLink('https://github.com/techmania-team/techmania/wiki', '_blank')" label="Manual")
             q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="nav.label")
             q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" label="Login")
             q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" label="My Page")
@@ -21,6 +22,8 @@
       q-slide-transition
         .container.nav-mobile(v-show="dropdown")
           q-list
+            q-item.text-grey7(clickable v-if="!isLogin" @click="openLink('https://github.com/techmania-team/techmania/wiki', '_blank'); dropdown = !dropdown" active-class="text-white")
+              q-item-section Manual
             q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
               q-item-section {{ nav.label }}
             q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self'); dropdown = !dropdown" active-class="text-white")
