@@ -52,10 +52,6 @@ export default {
       dropdown: false,
       navs: [
         {
-          link: '/howtoplay',
-          label: 'How To Play'
-        },
-        {
           link: '/changelog',
           label: 'Changelog'
         },
