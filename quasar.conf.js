@@ -50,7 +50,8 @@ module.exports = function (/* ctx */) {
       env: {
         BACK_URL: process.env.BACK_URL,
         DISCORD_CLIENT: process.env.DISCORD_CLIENT,
-        DISCORD_SECRET: process.env.DISCORD_SECRET
+        DISCORD_SECRET: process.env.DISCORD_SECRET,
+        HOST_URL: process.env.HOST_URL
       },
       // transpile: false,
 
