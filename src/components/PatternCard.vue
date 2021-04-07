@@ -1,6 +1,6 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`https://i.ytimg.com/vi_webp/${pattern.previews[0].link}/maxresdefault.webp`" @click="$router.push('/patterns/'+pattern.id)" @error="imgerror" :ratio="16/9")
+    q-img(:src="`https://i.ytimg.com/vi_webp/${pattern.previews[0].link}/hqdefault.webp`" @click="$router.push('/patterns/'+pattern.id)" @error="imgerror" :ratio="16/9")
       .absolute-bottom
         .text-h6 {{ pattern.name }}
         .text-subtitle2  {{ pattern.composer }}

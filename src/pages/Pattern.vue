@@ -1,6 +1,6 @@
 <template lang="pug">
   q-page#pattern
-    section.bg(:style="{backgroundImage}")
+    section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
     section.q-mx-auto.padding
       .container
         .row
@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     backgroundImage () {
-      return this.pattern.previews.length > 0 ? `url(https://i.ytimg.com/vi_webp/${this.pattern.previews[0].link}/maxresdefault.webp)` : ''
+      return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].link}/hqdefault.jpg` : ''
     }
   },
   methods: {
