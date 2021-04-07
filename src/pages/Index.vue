@@ -26,6 +26,61 @@ import Patterns from '../components/IndexPatterns.vue'
 
 export default {
   name: 'PageIndex',
+  meta () {
+    return {
+      title: 'TECHMANIA',
+      meta: {
+        title: {
+          name: 'title',
+          content: 'TECHMANIA'
+        },
+        description: {
+          name: 'description',
+          content: 'Official TECHMANIA Website'
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website'
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: 'TECHMANIA'
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: 'Official TECHMANIA Website'
+        },
+        ogImage: {
+          name: 'og:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: 'TECHMANIA'
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: 'Official TECHMANIA Website'
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        }
+      }
+    }
+  },
   components: {
     Videos,
     Patterns
