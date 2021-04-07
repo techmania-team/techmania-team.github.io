@@ -22,7 +22,7 @@ module.exports = function (/* ctx */) {
       'i18n',
       'axios',
       'mixin',
-      'analytics'
+      { path: 'analytics', server: false }
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -117,7 +117,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'SessionStorage'],
+      plugins: ['Notify', 'SessionStorage', 'Meta'],
       cssAddon: true
     },
 
