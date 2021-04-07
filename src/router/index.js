@@ -35,7 +35,9 @@ export default function ({ store }) {
   })
 
   Router.afterEach((to, from) => {
-    document.title = to.meta.title
+    if (process.env.CLIENT) {
+      document.title = to.meta.title
+    }
   })
 
   return Router
