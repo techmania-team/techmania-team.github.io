@@ -38,6 +38,61 @@
 <script>
 export default {
   name: 'PageChangelog',
+  meta () {
+    return {
+      title: 'Changelog | TECHMANIA',
+      meta: {
+        title: {
+          name: 'title',
+          content: 'Changelog | TECHMANIA'
+        },
+        description: {
+          name: 'description',
+          content: 'Changelog of TECHMANIA.'
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website'
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: 'Changelog | TECHMANIA'
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: 'Changelog of TECHMANIA.'
+        },
+        ogImage: {
+          name: 'og:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: 'Changelog | TECHMANIA'
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: 'Changelog of TECHMANIA.'
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        }
+      }
+    }
+  },
   data () {
     return {
       releases: [],
