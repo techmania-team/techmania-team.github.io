@@ -38,6 +38,61 @@
 <script>
 export default {
   name: 'PagePatterns',
+  meta () {
+    return {
+      title: `${this.pattern.name} | TECHMANIA`,
+      meta: {
+        title: {
+          name: 'title',
+          content: `${this.pattern.name} | TECHMANIA`
+        },
+        description: {
+          name: 'description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website'
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: `${this.pattern.name} | TECHMANIA`
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+        },
+        ogImage: {
+          name: 'og:image',
+          content: this.backgroundImage
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: `${this.pattern.name} | TECHMANIA`
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: this.backgroundImage
+        }
+      }
+    }
+  },
   data () {
     return {
       pattern: {
