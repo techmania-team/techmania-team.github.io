@@ -24,6 +24,61 @@ import PatternCard from '../components/PatternCard'
 
 export default {
   name: 'PageMyPage',
+  meta () {
+    return {
+      title: 'My Page | TECHMANIA',
+      meta: {
+        title: {
+          name: 'title',
+          content: 'My Page | TECHMANIA'
+        },
+        description: {
+          name: 'description',
+          content: 'Your profile'
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website'
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: 'My Page | TECHMANIA'
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: 'Your profile'
+        },
+        ogImage: {
+          name: 'og:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: 'My Page | TECHMANIA'
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: 'Your profile'
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        }
+      }
+    }
+  },
   components: {
     PatternDialog,
     PatternCard
