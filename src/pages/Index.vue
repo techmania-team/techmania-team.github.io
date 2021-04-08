@@ -44,7 +44,7 @@ export default {
         },
         ogUrl: {
           name: 'og:url',
-          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
         },
         ogTitle: {
           name: 'og:title',
@@ -64,7 +64,7 @@ export default {
         },
         twUrl: {
           name: 'twitter:url',
-          content: new URL(process.env.HOST_URL + this.$route.fullPath)
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
         },
         twTitle: {
           name: 'twitter:title',
