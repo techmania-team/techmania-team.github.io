@@ -9,6 +9,7 @@
     "lint": "eslint --ext .js,.vue ./",
     "dev": "quasar dev -m ssr",
     "build": "quasar build -m ssr",
+    "heroku-postbuild": "yarn && yarn build",
     "icons": "icongenie g -i ./public/assets/notes/basic.png"
   },
   "dependencies": {
