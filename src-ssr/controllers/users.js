@@ -86,5 +86,21 @@ module.exports = {
       console.log(error)
       res.status(500).send({ success: true, message: 'Server Error' })
     }
+  },
+  async logout (req, res) {
+    try {
+      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
+      const fd = new FormData()
+      fd.append('token', req.user.accessInfo[infoidx].discord)
+      fd.append('client_id', process.env.DISCORD_CLIENT.replace(/abc/g, ''))
+      fd.append('client_secret', process.env.DISCORD_SECRET)
+      await axios.post('https://discord.com/api/oauth2/token/revoke', fd, {
+        headers: fd.getHeaders()
+      })
+
+      req.user.accessInfo.splice(infoidx, 1)
+    } catch (_) {
+    }
+    res.status(200).send({ success: true, message: '' })
   }
 }
