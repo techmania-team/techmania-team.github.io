@@ -57,5 +57,34 @@ module.exports = {
     } else {
       res.status(400).send({ success: false, message: 'Bad Request' })
     }
+  },
+  async extend (req, res) {
+    try {
+      // refresh discord token
+      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
+      const fd = new FormData()
+      fd.append('grant_type', 'refresh_token')
+      fd.append('client_id', process.env.DISCORD_CLIENT.replace(/abc/g, ''))
+      fd.append('client_secret', process.env.DISCORD_SECRET)
+      fd.append('refresh_token', req.user.accessInfo[infoidx].discordRefresh)
+      fd.append('redirect_uri', new URL('/api/users/login', process.env.HOST_URL).toString())
+      fd.append('scope', 'identify guilds')
+      const response = await axios.post('https://discord.com/api/oauth2/token', fd, {
+        headers: fd.getHeaders()
+      })
+      const accessToken = response.data.access_token
+      const refreshToken = response.data.refresh_token
+
+      const token = jwt.sign({ _id: req.user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '5 days' })
+      req.user.accessInfo[infoidx].discord = accessToken
+      req.user.accessInfo[infoidx].discordRefresh = refreshToken
+      req.user.accessInfo[infoidx].jwt = token
+      await req.user.save()
+
+      res.status(200).send({ success: true, message: '', jwt: token, token: accessToken })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({ success: true, message: 'Server Error' })
+    }
   }
 }
