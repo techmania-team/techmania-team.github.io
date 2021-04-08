@@ -22,7 +22,8 @@ module.exports = function (/* ctx */) {
       'i18n',
       'axios',
       'mixin',
-      { path: 'analytics', server: false }
+      { path: 'analytics', server: false },
+      { path: 'persist', server: false }
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -48,10 +49,14 @@ module.exports = function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       env: {
-        BACK_URL: process.env.BACK_URL,
+        // I don't know why the fuck dotenv always parse wrong value, this trick should fix it
         DISCORD_CLIENT: process.env.DISCORD_CLIENT,
         DISCORD_SECRET: process.env.DISCORD_SECRET,
-        HOST_URL: process.env.HOST_URL
+        DISCORD_WEBHOOK: process.env.DISCORD_WEBHOOK,
+        DISCORD_GUILD: process.env.DISCORD_GUILD,
+        HOST_URL: process.env.HOST_URL,
+        DB_URL: process.env.DB_URL,
+        JWT_SECRET: process.env.JWT_SECRET
       },
       // transpile: false,
 
@@ -118,7 +123,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'SessionStorage', 'Meta'],
+      plugins: ['Notify', 'LocalStorage', 'Meta'],
       cssAddon: true
     },
 
