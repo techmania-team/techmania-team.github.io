@@ -63,9 +63,13 @@ export default {
     }
   },
   methods: {
-    logout () {
+    async logout () {
+      try {
+        await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
+          headers: { Authorization: `Bearer ${this.user.jwt}` }
+        })
+      } catch (_) {}
       this.$store.commit('user/logout')
-      this.openLink(process.env.BACK_URL + '?action=logout', '_self')
     }
   }
 }
