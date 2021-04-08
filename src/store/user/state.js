@@ -3,6 +3,7 @@ export default function () {
     token: '',
     id: '',
     username: '',
-    avatar: ''
+    avatar: '',
+    jwt: ''
   }
 }

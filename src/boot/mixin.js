@@ -9,7 +9,7 @@ export default async ({ Vue }) => {
     data () {
       return {
         discordURL: {
-          login: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT}&redirect_uri=${encodeURIComponent(process.env.BACK_URL)}&response_type=code&scope=identify%20guilds`,
+          login: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(process.env.HOST_URL + '/api/users/login')}&response_type=code&scope=identify%20guilds`,
           token: 'https://discord.com/api/oauth2/token',
           identity: 'https://discord.com/api/users/@me',
           guilds: 'https://discord.com/api/users/@me/guilds'
