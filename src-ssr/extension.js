@@ -13,10 +13,14 @@
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
+const routerUsers = require('./routes/users.js')
+
 module.exports.extendApp = function ({ app, ssr }) {
   mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 
   app.set('trust proxy', 1)
 
   app.use(bodyParser.json())
+
+  app.use('/api/users', routerUsers)
 }
