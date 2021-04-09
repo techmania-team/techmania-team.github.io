@@ -33,8 +33,9 @@ const previewSchema = new mongoose.Schema({
 
 const schema = new mongoose.Schema({
   submitter: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'users'
   },
   name: {
     type: String,

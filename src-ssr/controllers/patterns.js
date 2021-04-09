@@ -15,7 +15,7 @@ module.exports = {
         return
       } else {
         const result = await patterns.create({
-          submitter: req.user.discord,
+          submitter: req.user._id,
           name: req.body.name,
           composer: req.body.composer,
           keysounded: req.body.keysounded === 1,
