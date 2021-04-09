@@ -44,54 +44,69 @@ export default {
       meta: {
         title: {
           name: 'title',
-          content: `${this.pattern.name} | TECHMANIA`
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
         },
         description: {
           name: 'description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
         },
         ogType: {
           name: 'og:type',
-          content: 'website'
+          content: 'website',
+          'data-dynamic': true
         },
         ogUrl: {
           name: 'og:url',
-          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
         },
         ogTitle: {
           name: 'og:title',
-          content: `${this.pattern.name} | TECHMANIA`
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
         },
         ogDescription: {
           name: 'og:description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
         },
         ogImage: {
           name: 'og:image',
-          content: this.backgroundImage
+          content: this.backgroundImage,
+          'data-dynamic': true
         },
         twCard: {
           name: 'twitter:card',
-          content: 'summary_large_image'
+          content: 'summary_large_image',
+          'data-dynamic': true
         },
         twUrl: {
           name: 'twitter:url',
-          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
         },
         twTitle: {
           name: 'twitter:title',
-          content: `${this.pattern.name} | TECHMANIA`
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
         },
         twDescription: {
           name: 'twitter:description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
         },
         twImage: {
           name: 'twitter:image',
-          content: this.backgroundImage
+          content: this.backgroundImage,
+          'data-dynamic': true
         }
       }
     }
+  },
+  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    return store.dispatch('temp/fetchPattern', currentRoute.params.id)
   },
   data () {
     return {
@@ -129,7 +144,9 @@ export default {
     }
   },
   mounted () {
-    this.fetchPattern()
+    this.pattern = this.$store.getters['temp/getPattern']
+    document.title = `${this.pattern.name} | TECHMANIA`
+    this.$store.commit('temp/cleanPattern')
   }
 }
 </script>
