@@ -32,7 +32,7 @@
         .row.justify-center
           .col-12.text-h6.text-center Previews
           .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.link")
+            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
 
 <script>
@@ -96,7 +96,7 @@ export default {
   data () {
     return {
       pattern: {
-        id: 0,
+        _id: '',
         name: '',
         composer: '',
         keysounded: '',
@@ -104,31 +104,27 @@ export default {
         link: '',
         previews: [],
         description: '',
-        user: ''
+        submitter: { name: '', _id: '' }
       }
     }
   },
   computed: {
     backgroundImage () {
-      return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].link}/hqdefault.jpg` : ''
+      return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].ytid}/hqdefault.jpg` : ''
     }
   },
   methods: {
     async fetchPattern () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=pattern&id=' + this.$route.params.id)
+        const result = await this.$axios.get(new URL(`/api/patterns/${this.$route.params.id}`, process.env.HOST_URL))
         if (result.data.success) {
-          if (result.data.results.length > 0) {
-            this.pattern = result.data.results[0]
-            document.title = 'TECHMANIA | ' + this.pattern.name
-          } else {
-            this.$router.push('/404')
-          }
+          this.pattern = result.data.result
+          document.title = `${this.pattern.name} | TECHMANIA`
         } else {
           throw new Error('Error')
         }
       } catch (_) {
-        this.error = true
+        this.$router.push('/404')
       }
     }
   },
