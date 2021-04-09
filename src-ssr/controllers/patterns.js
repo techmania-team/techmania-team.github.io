@@ -18,7 +18,7 @@ module.exports = {
           submitter: req.user._id,
           name: req.body.name,
           composer: req.body.composer,
-          keysounded: req.body.keysounded === 1,
+          keysounded: req.body.keysounded,
           difficulties: req.body.difficulties,
           link: req.body.link,
           previews: req.body.previews,
@@ -44,7 +44,7 @@ module.exports = {
             color: '15158332',
             fields: [
               { name: 'Composer', value: req.body.composer, inline: true },
-              { name: 'Keysounded', value: req.body.keysounded === 1 ? 'Yes' : 'No', inline: true },
+              { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
               { name: 'Previews', value: strPreveiw, inline: false },
               { name: 'Difficulties', value: strDifficulty, inline: false },
               { name: 'Download', value: req.body.link, inline: false },
