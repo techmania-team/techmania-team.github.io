@@ -22,7 +22,7 @@ export default {
         )
         this.$store.commit('user/login', { ...result.data })
       } catch (error) {
-        console.log(error)
+        this.$store.commit('user/logout')
       }
     }
   },
