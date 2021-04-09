@@ -12,7 +12,7 @@ const difficultySchema = new mongoose.Schema({
   // 0 = Touch
   // 1 = Keyboard
   // 2 = KM
-  countrol: {
+  control: {
     type: Number,
     required: true,
     min: 0,
