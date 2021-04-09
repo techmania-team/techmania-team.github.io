@@ -5,7 +5,7 @@
         h4.text-center Latest Patterns
         q-separator
         .row
-          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
+          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern._id")
             PatternCard(:pattern="pattern" :mine="false")
 </template>
 
@@ -25,9 +25,9 @@ export default {
   methods: {
     async fetchPatterns () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=indexpatterns')
+        const result = await this.$axios.get(new URL('/api/patterns?start=0&limit=8', process.env.HOST_URL))
         if (result.data.success) {
-          this.patterns = result.data.results
+          this.patterns = result.data.result
         } else {
           throw new Error('Error')
         }
