@@ -68,6 +68,10 @@ const schema = new mongoose.Schema({
   submitDate: {
     type: Date,
     default: Date.now
+  },
+  updateDate: {
+    type: Date,
+    default: Date.now
   }
 })
 

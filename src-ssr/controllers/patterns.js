@@ -126,7 +126,8 @@ module.exports = {
           difficulties: req.body.difficulties,
           link: req.body.link,
           previews: req.body.previews,
-          description: req.body.description
+          description: req.body.description,
+          updateDate: Date.now()
         })
         res.status(200).send({ success: true, message: '' })
       }
