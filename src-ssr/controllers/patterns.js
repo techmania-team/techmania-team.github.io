@@ -66,5 +66,17 @@ module.exports = {
     } catch (error) {
       res.status(500).send({ success: false, message: 'Server Error' })
     }
+  },
+  async searchID (req, res) {
+    try {
+      const result = await patterns.findById(req.params.id).populate('submitter', 'name').lean()
+      if (result === null) {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(200).send({ success: true, message: '', result })
+      }
+    } catch (error) {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
   }
 }
