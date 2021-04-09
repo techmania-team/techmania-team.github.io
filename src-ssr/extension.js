@@ -32,9 +32,8 @@ module.exports.extendApp = function ({ app, ssr }) {
   app.get('/patterns/:id', (req, res, next) => {
     console.log(req.headers['user-agent'])
     const agent = req.headers['user-agent']
-    if ((agent.match(/facebook/gi) || agent.match(/twitter/gi)) && req.originalUrl.includes('/patterns/')) {
+    if ((agent.match(/facebook/gi) || agent.match(/twitter/gi) || agent.match(/discord/gi)) && req.originalUrl.includes('/patterns/')) {
       const data = req.originalUrl.split('/')
-      console.log(data)
       res.redirect(new URL('/api/meta/pattern/' + data[2], process.env.HOST_URL))
     } else {
       next()
