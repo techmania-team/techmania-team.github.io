@@ -76,13 +76,11 @@ app.get(ssr.resolveUrl('*'), (req, res) => {
       if (err.url) {
         if (err.code) res.redirect(err.code, err.url)
         else res.redirect(err.url)
-      }
-      else if (err.code === 404) {
+      } else if (err.code === 404) {
         // Should reach here only if no "catch-all" route
         // is defined in /src/routes
         res.status(404).send('404 | Page Not Found')
-      }
-      else {
+      } else {
         // Render Error Page or
         // create a route (/src/routes) for an error page and redirect to it
         res.status(500).send('500 | Internal Server Error')
@@ -92,8 +90,12 @@ app.get(ssr.resolveUrl('*'), (req, res) => {
           console.error(err.stack)
         }
       }
-    }
-    else {
+    } else {
+      const agent = req.headers['user-agent']
+      if ((agent.match(/facebook/gi) || agent.match(/twitter/gi)) && req.originalUrl.includes('/patterns/')) {
+        const data = req.originalUrl.split('/')
+        res.redirect(new URL('/api/pattern/' + data[1], process.env.HOST_URL))
+      }
       res.send(html)
     }
   })
