@@ -1,4 +1,5 @@
 const axios = require('axios')
+const mongoose = require('mongoose')
 const patterns = require('../models/patterns.js')
 
 module.exports = {
@@ -61,9 +62,14 @@ module.exports = {
   },
   async search (req, res) {
     try {
-      const result = await patterns.find().populate('submitter', 'name').lean()
+      const query = {}
+      if (req.query.submitter) {
+        query.submitter = mongoose.Types.ObjectId(req.query.submitter)
+      }
+      const result = await patterns.find(query).populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
+      console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
     }
   },

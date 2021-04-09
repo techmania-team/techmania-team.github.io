@@ -103,9 +103,9 @@ export default {
   methods: {
     async fetchMyPattern () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=mypatterns', { withCredentials: true })
+        const result = await this.$axios.get(new URL(`/api/patterns?submitter=${this.user.id}`, process.env.HOST_URL))
         if (result.data.success) {
-          this.patterns = result.data.results
+          this.patterns = result.data.result
         } else {
           throw new Error('Error')
         }
