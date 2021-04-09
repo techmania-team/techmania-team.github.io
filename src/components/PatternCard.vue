@@ -10,7 +10,12 @@
       .row.no-wrap.items-center
       q-list
         q-item(v-if="!mine")
-          q-item-section Submitted by {{ pattern.submitter.name }}
+          q-item-section
+            | Pattern by {{ pattern.submitter.name }}
+            br
+            | Submitted {{ formattedTime }}
+            br
+            | Upadated {{ formattedUpdateTime }}
         q-item
           q-item-section(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
             div
@@ -42,6 +47,14 @@ export default {
   methods: {
     imgerror () {
       console.log('a')
+    }
+  },
+  computed: {
+    formattedTime () {
+      return new Date(this.pattern.submitDate).toLocaleString('en-US')
+    },
+    formattedUpdateTime () {
+      return new Date(this.pattern.updateDate).toLocaleString('en-US')
     }
   }
 }
