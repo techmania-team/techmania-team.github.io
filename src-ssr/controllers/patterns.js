@@ -38,7 +38,7 @@ module.exports = {
           avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
           content: `New pattern submitted by <@${req.user.discord}>`,
           embeds: [{
-            url: new URL(`/pattern/${result._id}`, process.env.HOST_URL).toString(),
+            url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
             image: { url: `http://i3.ytimg.com/vi/${req.body.previews[0].ytid}/hqdefault.jpg` },
             title: req.body.name,
             color: '15158332',
