@@ -99,6 +99,7 @@ module.exports = {
       })
 
       req.user.accessInfo.splice(infoidx, 1)
+      req.user.save()
     } catch (_) {
     }
     res.status(200).send({ success: true, message: '' })
