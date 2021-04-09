@@ -91,11 +91,6 @@ app.get(ssr.resolveUrl('*'), (req, res) => {
         }
       }
     } else {
-      const agent = req.headers['user-agent']
-      if ((agent.match(/facebook/gi) || agent.match(/twitter/gi)) && req.originalUrl.includes('/patterns/')) {
-        const data = req.originalUrl.split('/')
-        res.redirect(new URL('/api/pattern/' + data[1], process.env.HOST_URL))
-      }
       res.send(html)
     }
   })
