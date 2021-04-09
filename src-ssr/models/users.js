@@ -13,7 +13,7 @@ const AccessInfoSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-})
+}, { versionKey: false })
 
 const schema = new mongoose.Schema({
   discord: {
@@ -28,6 +28,6 @@ const schema = new mongoose.Schema({
   accessInfo: {
     type: [AccessInfoSchema]
   }
-})
+}, { versionKey: false })
 
 module.exports = mongoose.model('users', schema)

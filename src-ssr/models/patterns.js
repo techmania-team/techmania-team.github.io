@@ -18,7 +18,7 @@ const difficultySchema = new mongoose.Schema({
     min: 0,
     max: 2
   }
-})
+}, { versionKey: false })
 
 const previewSchema = new mongoose.Schema({
   name: {
@@ -29,7 +29,7 @@ const previewSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-})
+}, { versionKey: false })
 
 const schema = new mongoose.Schema({
   submitter: {
@@ -73,6 +73,6 @@ const schema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-})
+}, { versionKey: false })
 
 module.exports = mongoose.model('patterns', schema)
