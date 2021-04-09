@@ -20,8 +20,8 @@
               div
                 q-icon(name="upload")
                 | &nbsp;Submitted by {{ pattern.user }}
-              div(:class="[{'text-red': pattern.keysounded === '0', 'text-positive': pattern.keysounded === '1'}]")
-                q-icon(:name="pattern.keysounded === '0' ? 'close' : 'check'")
+              div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
+                q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;Keysounded
               div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index" :class="getLevelColor(difficulty.level)")
                 q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelColor(difficulty.level)")
