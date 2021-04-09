@@ -1,6 +1,6 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`https://i.ytimg.com/vi_webp/${pattern.previews[0].link}/hqdefault.webp`" @click="$router.push('/patterns/'+pattern.id)" @error="imgerror" :ratio="16/9")
+    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" @error="imgerror" :ratio="16/9")
       .absolute-bottom
         .text-h6 {{ pattern.name }}
         .text-subtitle2  {{ pattern.composer }}
@@ -10,11 +10,11 @@
       .row.no-wrap.items-center
       q-list
         q-item(v-if="!mine")
-          q-item-section Submitted by {{ pattern.user }}
+          q-item-section Submitted by {{ pattern.submitter.name }}
         q-item
-          q-item-section(:class="[{'text-red': pattern.keysounded === '0', 'text-positive': pattern.keysounded === '1'}]")
+          q-item-section(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
             div
-              q-icon(:name="pattern.keysounded === '0' ? 'close' : 'check'")
+              q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
               | &nbsp;Keysounded
         q-item
           q-item-section
@@ -27,7 +27,7 @@
                 :class="getLevelColor(difficulty.level)"
               )
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
-                  | {{ difficulty.control }} - {{ difficulty.name }}
+                  | {{ controls[difficulty.control] }} - {{ difficulty.name }}
                   br
                   span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
 </template>

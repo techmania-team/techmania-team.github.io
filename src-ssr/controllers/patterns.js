@@ -58,5 +58,13 @@ module.exports = {
       console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
     }
+  },
+  async search (req, res) {
+    try {
+      const result = await patterns.find().populate('submitter', 'name').lean()
+      res.status(200).send({ success: true, message: '', result })
+    } catch (error) {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
   }
 }

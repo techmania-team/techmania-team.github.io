@@ -13,7 +13,8 @@ export default async ({ Vue }) => {
           token: 'https://discord.com/api/oauth2/token',
           identity: 'https://discord.com/api/users/@me',
           guilds: 'https://discord.com/api/users/@me/guilds'
-        }
+        },
+        controls: ['Touch', 'Keys', 'KM']
       }
     },
     methods: {
@@ -39,13 +40,13 @@ export default async ({ Vue }) => {
       getControlIcon (control, level) {
         let icon = ''
         switch (control) {
-          case 'Touch':
+          case 0:
             icon = 'touch_app'
             break
-          case 'Keys':
+          case 1:
             icon = 'keyboard'
             break
-          case 'KM':
+          case 2:
             icon = level <= 5 ? 'img:./assets/icons/KM_NM.svg' : level <= 10 ? 'img:./assets/icons/KM_HD.svg' : 'img:./assets/icons/KM_MX.svg'
             break
         }
