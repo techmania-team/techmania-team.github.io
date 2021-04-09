@@ -32,7 +32,7 @@
             p.q-mb-none Difficulties
               .q-mb-md
                 .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                  q-select.col-3(v-model="difficulty.control" :options="controlTypes" placeholder="Control" :rules="[val => !!val || 'Field is required']")
+                  q-select.col-3(v-model="difficulty.control" :options="controlTypes" placeholder="Control" emit-value map-options)
                   .col-1
                   q-input.col-3(v-model="difficulty.name" placeholder="Name" :rules="[val => !!val || 'Field is required']")
                   .col-1
@@ -69,12 +69,16 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 'Touch' }],
+        difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
       },
-      controlTypes: ['Touch', 'Keys', 'KM'],
+      controlTypes: [
+        { label: 'Touch', value: 0 },
+        { label: 'Keys', value: 1 },
+        { label: 'KM', value: 2 }
+      ],
       isedit: false,
       confirm: false
     }
@@ -101,7 +105,7 @@ export default {
           name: '',
           composer: '',
           keysounded: false,
-          difficulties: [{ name: '', level: 0, control: 'Touch' }],
+          difficulties: [{ name: '', level: 0, control: 0 }],
           link: '',
           previews: [{ link: '', name: '' }],
           description: ''
@@ -128,10 +132,12 @@ export default {
       try {
         const post = JSON.parse(JSON.stringify(this.model))
         post.previews.map(preview => {
-          preview.link = this.GetIDFromYouTubeLink(preview.link)
+          preview.ytid = this.GetIDFromYouTubeLink(preview.link)
           return preview
         })
-        const result = await this.$axios.post(process.env.BACK_URL + '?action=submit', post, { withCredentials: true })
+        const result = await this.$axios.post(new URL('/api/patterns', process.env.HOST_URL), post, {
+          headers: { Authorization: `Bearer ${this.user.jwt}` }
+        })
         if (result.data.success) {
           this.$q.notify({
             icon: 'check',
@@ -144,27 +150,25 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 'Touch' }],
+            difficulties: [{ name: '', level: 0, control: 0 }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
           }
           this.$emit('refreshPattern')
           this.openModal = false
-        } else {
-          let message = ''
-          if (result.data.message === 'Not in guild') {
-            message = 'You must join our discord to submit new pattern.'
-          }
-          if (result.data.message === 'Unauthorized') {
-            message = 'Unauthorized.'
-          }
-          throw new Error(message)
         }
       } catch (error) {
+        let message = ''
+        if (error.response.data.message === 'Not in guild') {
+          message = 'You must join our discord to submit new pattern.'
+        }
+        if (error.response.data.message === 'Unauthorized') {
+          message = 'Unauthorized.'
+        }
         this.$q.notify({
           icon: 'warning',
-          message: error.message,
+          message,
           color: 'negative',
           position: 'top',
           timeout: 2000
@@ -179,7 +183,7 @@ export default {
       this.model.previews.splice(index, 1)
     },
     addDifficulty () {
-      this.model.difficulties.push({ name: '', level: 0, control: 'Touch' })
+      this.model.difficulties.push({ name: '', level: 0, control: 0 })
     },
     removeDifficulty (index) {
       this.model.difficulties.splice(index, 1)
@@ -189,7 +193,7 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 'Touch' }],
+        difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
@@ -214,7 +218,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 'Touch' }],
+            difficulties: [{ name: '', level: 0, control: 0 }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
