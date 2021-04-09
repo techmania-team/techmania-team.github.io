@@ -9,10 +9,14 @@
       q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$emit('edit')")
       .row.no-wrap.items-center
       q-list
-        q-item(v-if="!mine")
-          q-item-section
+        q-item
+          q-item-section(v-if="!mine")
             | Pattern by {{ pattern.submitter.name }}
             br
+            | Submitted {{ formattedTime }}
+            br
+            | Upadated {{ formattedUpdateTime }}
+          q-item-section(v-else)
             | Submitted {{ formattedTime }}
             br
             | Upadated {{ formattedUpdateTime }}
