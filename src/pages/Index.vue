@@ -15,7 +15,7 @@
             br
             | Released at {{ published }}
     section.q-mx-auto.padding.q-my-md
-      Patterns#index-videos
+      Patterns#index-patterns
     section.q-mx-auto.padding.q-my-md
       Videos#index-videos
 </template>
