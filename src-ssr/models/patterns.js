@@ -6,7 +6,7 @@ const difficultySchema = new mongoose.Schema({
     required: true
   },
   level: {
-    type: String,
+    type: Number,
     required: true
   },
   // 0 = Touch
