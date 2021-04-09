@@ -10,16 +10,17 @@
       .row.no-wrap.items-center
       q-list
         q-item
-          q-item-section(v-if="!mine")
-            | Pattern by {{ pattern.submitter.name }}
-            br
-            | Submitted {{ formattedTime }}
-            br
-            | Upadated {{ formattedUpdateTime }}
-          q-item-section(v-else)
-            | Submitted {{ formattedTime }}
-            br
-            | Upadated {{ formattedUpdateTime }}
+          q-item-section
+            p
+              span(v-if="!mine") Pattern by {{ pattern.submitter.name }}
+              br(v-if="!mine")
+              span Submitted {{ formattedTime.relative }}
+                q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
+                  | {{ formattedTime.text }}
+              br
+              span Upadated {{ formattedUpdateTime.relative }}
+                q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
+                  | {{ formattedUpdateTime.text }}
         q-item
           q-item-section(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
             div
@@ -55,10 +56,16 @@ export default {
   },
   computed: {
     formattedTime () {
-      return new Date(this.pattern.submitDate).toLocaleString('en-US')
+      return {
+        relative: this.$date(this.pattern.submitDate).fromNow(),
+        text: new Date(this.pattern.submitDate).toLocaleString('en-US')
+      }
     },
     formattedUpdateTime () {
-      return new Date(this.pattern.updateDate).toLocaleString('en-US')
+      return {
+        relative: this.$date(this.pattern.updateDate).fromNow(),
+        text: new Date(this.pattern.updateDate).toLocaleString('en-US')
+      }
     }
   }
 }
