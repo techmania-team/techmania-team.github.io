@@ -145,5 +145,17 @@ module.exports = {
       console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
     }
+  },
+  async indexvideo (req, res) {
+    try {
+      const result = await patterns.aggregate([
+        { $unwind: '$previews' },
+        { $project: { 'previews.ytid': 1 } },
+        { $sample: { size: 7 } }
+      ])
+      res.status(200).send({ success: true, message: '', result })
+    } catch (error) {
+
+    }
   }
 }
