@@ -84,7 +84,7 @@ module.exports = {
       res.status(200).send({ success: true, message: '', jwt: token, token: accessToken })
     } catch (error) {
       console.log(error)
-      res.status(500).send({ success: true, message: 'Server Error' })
+      res.status(500).send({ success: false, message: 'Server Error' })
     }
   },
   async logout (req, res) {
