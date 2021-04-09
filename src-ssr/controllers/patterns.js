@@ -104,5 +104,35 @@ module.exports = {
       console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
     }
+  },
+  async update (req, res) {
+    try {
+      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
+      // check in discord guild or not
+      const response = await axios.get('https://discord.com/api/users/@me/guilds', {
+        headers: { Authorization: `Bearer ${req.user.accessInfo[infoidx].discord}` }
+      })
+      const inGuild = response.data.find(guild => guild.id.toString() === process.env.DISCORD_GUILD.toString())
+      if (!inGuild) {
+        res.status(403).send({ success: false, message: 'Not in guild' })
+        return
+      } else {
+        await patterns.findOneAndUpdate({
+          _id: mongoose.Types.ObjectId(req.params.id),
+          submitter: req.user._id,
+          name: req.body.name,
+          composer: req.body.composer,
+          keysounded: req.body.keysounded,
+          difficulties: req.body.difficulties,
+          link: req.body.link,
+          previews: req.body.previews,
+          description: req.body.description
+        })
+        res.status(200).send({ success: true, message: '' })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
   }
 }
