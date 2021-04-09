@@ -81,7 +81,7 @@ module.exports = {
       req.user.accessInfo[infoidx].jwt = token
       await req.user.save()
 
-      res.status(200).send({ success: true, message: '', jwt: token, token: accessToken })
+      res.status(200).send({ success: true, message: '', jwt: token, token: accessToken, id: req.user._id })
     } catch (error) {
       console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
