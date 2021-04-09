@@ -9,14 +9,12 @@ export default async ({ Vue }) => {
     data () {
       return {
         discordURL: {
-          login: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT}&redirect_uri=${encodeURIComponent(process.env.BACK_URL)}&response_type=code&scope=identify%20guilds`,
+          login: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`,
           token: 'https://discord.com/api/oauth2/token',
           identity: 'https://discord.com/api/users/@me',
           guilds: 'https://discord.com/api/users/@me/guilds'
         },
-        env: {
-          BACK_URL: process.env.BACK_URL
-        }
+        controls: ['Touch', 'Keys', 'KM']
       }
     },
     methods: {
@@ -42,13 +40,13 @@ export default async ({ Vue }) => {
       getControlIcon (control, level) {
         let icon = ''
         switch (control) {
-          case 'Touch':
+          case 0:
             icon = 'touch_app'
             break
-          case 'Keys':
+          case 1:
             icon = 'keyboard'
             break
-          case 'KM':
+          case 2:
             icon = level <= 5 ? 'img:./assets/icons/KM_NM.svg' : level <= 10 ? 'img:./assets/icons/KM_HD.svg' : 'img:./assets/icons/KM_MX.svg'
             break
         }

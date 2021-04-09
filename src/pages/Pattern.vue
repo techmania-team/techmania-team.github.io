@@ -1,6 +1,6 @@
 <template lang="pug">
   q-page#pattern
-    section.bg(:style="{backgroundImage}")
+    section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
     section.q-mx-auto.padding
       .container
         .row
@@ -20,8 +20,8 @@
               div
                 q-icon(name="upload")
                 | &nbsp;Submitted by {{ pattern.user }}
-              div(:class="[{'text-red': pattern.keysounded === '0', 'text-positive': pattern.keysounded === '1'}]")
-                q-icon(:name="pattern.keysounded === '0' ? 'close' : 'check'")
+              div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
+                q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;Keysounded
               div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index" :class="getLevelColor(difficulty.level)")
                 q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelColor(difficulty.level)")
@@ -32,16 +32,86 @@
         .row.justify-center
           .col-12.text-h6.text-center Previews
           .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.link")
+            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
 
 <script>
 export default {
   name: 'PagePatterns',
+  meta () {
+    return {
+      title: `${this.pattern.name} | TECHMANIA`,
+      meta: {
+        title: {
+          name: 'title',
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
+        },
+        description: {
+          name: 'description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website',
+          'data-dynamic': true
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
+        },
+        ogImage: {
+          name: 'og:image',
+          content: this.backgroundImage,
+          'data-dynamic': true
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image',
+          'data-dynamic': true
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: `${this.pattern.name} | TECHMANIA`,
+          'data-dynamic': true
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          'data-dynamic': true
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: this.backgroundImage,
+          'data-dynamic': true
+        }
+      }
+    }
+  },
+  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    return store.dispatch('temp/fetchPattern', currentRoute.params.id)
+  },
   data () {
     return {
       pattern: {
-        id: 0,
+        _id: '',
         name: '',
         composer: '',
         keysounded: '',
@@ -49,36 +119,34 @@ export default {
         link: '',
         previews: [],
         description: '',
-        user: ''
+        submitter: { name: '', _id: '' }
       }
     }
   },
   computed: {
     backgroundImage () {
-      return this.pattern.previews.length > 0 ? `url(https://i.ytimg.com/vi_webp/${this.pattern.previews[0].link}/maxresdefault.webp)` : ''
+      return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].ytid}/hqdefault.jpg` : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     }
   },
   methods: {
     async fetchPattern () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=pattern&id=' + this.$route.params.id)
+        const result = await this.$axios.get(new URL(`/api/patterns/${this.$route.params.id}`, process.env.HOST_URL))
         if (result.data.success) {
-          if (result.data.results.length > 0) {
-            this.pattern = result.data.results[0]
-            document.title = 'TECHMANIA | ' + this.pattern.name
-          } else {
-            this.$router.push('/404')
-          }
+          this.pattern = result.data.result
+          document.title = `${this.pattern.name} | TECHMANIA`
         } else {
           throw new Error('Error')
         }
       } catch (_) {
-        this.error = true
+        this.$router.push('/404')
       }
     }
   },
   mounted () {
-    this.fetchPattern()
+    this.pattern = this.$store.getters['temp/getPattern']
+    document.title = `${this.pattern.name} | TECHMANIA`
+    this.$store.commit('temp/cleanPattern')
   }
 }
 </script>

@@ -30,6 +30,61 @@ import PatternCard from '../components/PatternCard'
 
 export default {
   name: 'PagePatterns',
+  meta () {
+    return {
+      title: 'Patterns | TECHMANIA',
+      meta: {
+        title: {
+          name: 'title',
+          content: 'Patterns | TECHMANIA'
+        },
+        description: {
+          name: 'description',
+          content: 'Patterns for TECHMANIA.'
+        },
+        ogType: {
+          name: 'og:type',
+          content: 'website'
+        },
+        ogUrl: {
+          name: 'og:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
+        },
+        ogTitle: {
+          name: 'og:title',
+          content: 'Patterns | TECHMANIA'
+        },
+        ogDescription: {
+          name: 'og:description',
+          content: 'Patterns for TECHMANIA.'
+        },
+        ogImage: {
+          name: 'og:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: 'Patterns | TECHMANIA'
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: 'Patterns for TECHMANIA.'
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+        }
+      }
+    }
+  },
   components: {
     PatternCard
   },
@@ -48,9 +103,8 @@ export default {
   computed: {
     filteredPatterns () {
       return this.patterns.filter(pattern => {
-        const ks = parseInt(pattern.keysounded)
         const match = pattern.composer.toUpperCase().includes(this.filter.toUpperCase()) || pattern.name.toUpperCase().includes(this.filter.toUpperCase())
-        return this.search.keysounded === -1 ? match : match && ks === this.search.keysounded
+        return this.search.keysounded === -1 ? match : this.search.keysounded === 1 ? match && pattern.keysounded : match && !pattern.keysounded
       })
     }
   },
@@ -70,9 +124,9 @@ export default {
     },
     async fetchPatterns () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=patterns')
+        const result = await this.$axios.get(new URL('/api/patterns', process.env.HOST_URL))
         if (result.data.success) {
-          this.patterns = result.data.results
+          this.patterns = result.data.result
         } else {
           throw new Error('Error')
         }

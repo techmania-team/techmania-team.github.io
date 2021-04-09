@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
-
-import { SessionStorage } from 'quasar'
-import createPersistedState from 'vuex-persistedstate'
+import temp from './temp'
 
 Vue.use(Vuex)
 
@@ -16,23 +14,12 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
+export default function ({ ssrContext }) {
   const Store = new Vuex.Store({
     modules: {
-      user
+      user,
+      temp
     },
-    plugins: [
-      createPersistedState({
-        paths: [
-          'user'
-        ],
-        storage: {
-          getItem: key => SessionStorage.getItem(key),
-          setItem: (key, value) => SessionStorage.set(key, value),
-          removeItem: key => SessionStorage.remove(key)
-        }
-      })
-    ],
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: process.env.DEBUGGING

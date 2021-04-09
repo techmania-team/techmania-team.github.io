@@ -32,7 +32,7 @@
             p.q-mb-none Difficulties
               .q-mb-md
                 .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                  q-select.col-3(v-model="difficulty.control" :options="controlTypes" placeholder="Control" :rules="[val => !!val || 'Field is required']")
+                  q-select.col-3(v-model="difficulty.control" :options="controlTypes" placeholder="Control" emit-value map-options)
                   .col-1
                   q-input.col-3(v-model="difficulty.name" placeholder="Name" :rules="[val => !!val || 'Field is required']")
                   .col-1
@@ -42,7 +42,7 @@
                     q-btn(flat round icon="add" v-else @click="addDifficulty")
             p.mb-none Description
               q-input.q-mb-md(v-model="model.description" type="textarea" autogrow)
-          q-card-section(v-if="model.id")
+          q-card-section(v-if="model._id")
             p.text-red DANGER ZONE
             q-btn(color="red" @click="deleteConfirm") DELETE THIS PATTERN
           q-card-actions(align="right")
@@ -65,16 +65,20 @@ export default {
       submitting: false,
       deleting: false,
       model: {
-        id: '',
+        _id: '',
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 'Touch' }],
+        difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
       },
-      controlTypes: ['Touch', 'Keys', 'KM'],
+      controlTypes: [
+        { label: 'Touch', value: 0 },
+        { label: 'Keys', value: 1 },
+        { label: 'KM', value: 2 }
+      ],
       isedit: false,
       confirm: false
     }
@@ -97,20 +101,19 @@ export default {
     patterndata () {
       if (Object.keys(this.patterndata).length === 0) {
         this.model = {
-          id: '',
+          _id: '',
           name: '',
           composer: '',
           keysounded: false,
-          difficulties: [{ name: '', level: 0, control: 'Touch' }],
+          difficulties: [{ name: '', level: 0, control: 0 }],
           link: '',
           previews: [{ link: '', name: '' }],
           description: ''
         }
       } else {
         const patterndata = JSON.parse(JSON.stringify(this.patterndata))
-        patterndata.keysounded = patterndata.keysounded === '1'
         patterndata.previews.map(preview => {
-          preview.link = 'https://www.youtube.com/watch?v=' + preview.link
+          preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
           return preview
         })
         this.model = patterndata
@@ -128,10 +131,19 @@ export default {
       try {
         const post = JSON.parse(JSON.stringify(this.model))
         post.previews.map(preview => {
-          preview.link = this.GetIDFromYouTubeLink(preview.link)
+          preview.ytid = this.GetIDFromYouTubeLink(preview.link)
           return preview
         })
-        const result = await this.$axios.post(process.env.BACK_URL + '?action=submit', post, { withCredentials: true })
+        let result
+        if (this.model._id) {
+          result = await this.$axios.patch(new URL(`/api/patterns/${this.model._id}`, process.env.HOST_URL), post, {
+            headers: { Authorization: `Bearer ${this.user.jwt}` }
+          })
+        } else {
+          result = await this.$axios.post(new URL('/api/patterns', process.env.HOST_URL), post, {
+            headers: { Authorization: `Bearer ${this.user.jwt}` }
+          })
+        }
         if (result.data.success) {
           this.$q.notify({
             icon: 'check',
@@ -144,7 +156,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 'Touch' }],
+            difficulties: [{ name: '', level: 0, control: 0 }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
@@ -152,19 +164,19 @@ export default {
           this.$emit('refreshPattern')
           this.openModal = false
         } else {
-          let message = ''
-          if (result.data.message === 'Not in guild') {
-            message = 'You must join our discord to submit new pattern.'
-          }
-          if (result.data.message === 'Unauthorized') {
-            message = 'Unauthorized.'
-          }
-          throw new Error(message)
+          throw new Error('Server Error')
         }
       } catch (error) {
+        let message = ''
+        if (error.response.data.message === 'Not in guild') {
+          message = 'You must join our discord to submit new pattern.'
+        }
+        if (error.response.data.message === 'Unauthorized') {
+          message = 'Unauthorized.'
+        }
         this.$q.notify({
           icon: 'warning',
-          message: error.message,
+          message,
           color: 'negative',
           position: 'top',
           timeout: 2000
@@ -179,7 +191,7 @@ export default {
       this.model.previews.splice(index, 1)
     },
     addDifficulty () {
-      this.model.difficulties.push({ name: '', level: 0, control: 'Touch' })
+      this.model.difficulties.push({ name: '', level: 0, control: 0 })
     },
     removeDifficulty (index) {
       this.model.difficulties.splice(index, 1)
@@ -189,7 +201,7 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 'Touch' }],
+        difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: ''
@@ -201,7 +213,9 @@ export default {
     async deletePattern () {
       this.deleting = true
       try {
-        const result = await this.$axios.post(process.env.BACK_URL + '?action=delete', { id: this.model.id }, { withCredentials: true })
+        const result = await this.$axios.delete(new URL(`/api/patterns/${this.model._id}`, process.env.HOST_URL), {
+          headers: { Authorization: `Bearer ${this.user.jwt}` }
+        })
         if (result.data.success) {
           this.$q.notify({
             icon: 'check',
@@ -214,7 +228,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 'Touch' }],
+            difficulties: [{ name: '', level: 0, control: 0 }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: ''
@@ -223,19 +237,19 @@ export default {
           this.confirm = false
           this.openModal = false
         } else {
-          let message = ''
-          if (result.data.message === 'Not in guild') {
-            message = 'You must join our discord to submit new pattern.'
-          }
-          if (result.data.message === 'Unauthorized') {
-            message = 'Unauthorized.'
-          }
-          throw new Error(message)
+          throw new Error('Server Error')
         }
       } catch (error) {
+        let message = 'Server Error'
+        if (error.response.data.message === 'Not in guild') {
+          message = 'You must join our discord to submit new pattern.'
+        }
+        if (error.response.data.message === 'Unauthorized') {
+          message = 'Unauthorized.'
+        }
         this.$q.notify({
           icon: 'warning',
-          message: error.message,
+          message,
           color: 'negative',
           position: 'top',
           timeout: 2000

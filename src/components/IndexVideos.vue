@@ -20,9 +20,13 @@ export default {
   methods: {
     async fetchVideos () {
       try {
-        const result = await this.$axios.get(process.env.BACK_URL + '?action=indexvideos')
+        const result = await this.$axios.get(new URL('/api/patterns/indexvideo', process.env.HOST_URL))
         if (result.data.success) {
-          this.videos = ['qQAmkMlBvtg', ...result.data.results].map(video => {
+          this.videos = ['qQAmkMlBvtg']
+          for (const data of result.data.result) {
+            this.videos.push(data.previews.ytid)
+          }
+          this.videos = this.videos.map(video => {
             return 'https://www.youtube.com/embed/' + video
           })
         } else {
