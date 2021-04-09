@@ -47,7 +47,7 @@ module.exports = {
           discordRefresh: refreshToken
         })
         await user.save()
-        res.redirect(new URL(`?token=${accessToken}&jwt=${token}`, process.env.HOST_URL).toString())
+        res.redirect(new URL(`?token=${accessToken}&jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
       } catch (error) {
         if (error.response) {
           console.log(error.response.data)

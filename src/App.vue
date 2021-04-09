@@ -35,6 +35,7 @@ export default {
         this.getUserData(response.data.token)
         this.$store.commit('user/addjwt', response.data.jwt)
         this.$store.commit('user/addtoken', response.data.token)
+        this.$store.commit('user/addid', response.data.id)
       } catch (error) {
         this.$store.commit('user/logout')
       }
@@ -42,6 +43,7 @@ export default {
       this.getUserData(this.query.token)
       this.$store.commit('user/addjwt', this.query.jwt)
       this.$store.commit('user/addtoken', this.query.token)
+      this.$store.commit('user/addid', this.query.id)
       this.$router.replace({ query: {} })
     }
   }
