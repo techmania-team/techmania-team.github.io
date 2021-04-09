@@ -63,10 +63,20 @@ module.exports = {
   async search (req, res) {
     try {
       const query = {}
+      let skip = 0
+      let limit = 0
       if (req.query.submitter) {
         query.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
-      const result = await patterns.find(query).populate('submitter', 'name').lean()
+      if (req.query.start) {
+        skip = parseInt(req.query.start)
+        skip = isNaN(skip) ? 0 : skip
+      }
+      if (req.query.limit) {
+        limit = parseInt(req.query.limit)
+        limit = isNaN(limit) ? 0 : limit
+      }
+      const result = await patterns.find(query, {}, { skip, limit }).sort('-submitDate').populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       console.log(error)
