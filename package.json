@@ -10,7 +10,8 @@
     "dev": "quasar dev -m ssr",
     "build": "quasar build -m ssr",
     "heroku-postbuild": "yarn && yarn build",
-    "icons": "icongenie g -i ./public/assets/notes/basic.png"
+    "icons": "icongenie g -i ./public/assets/notes/basic.png",
+    "start": "cd dist/ssr && yarn start"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
