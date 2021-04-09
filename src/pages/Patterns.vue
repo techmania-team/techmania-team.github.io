@@ -103,9 +103,8 @@ export default {
   computed: {
     filteredPatterns () {
       return this.patterns.filter(pattern => {
-        const ks = parseInt(pattern.keysounded)
         const match = pattern.composer.toUpperCase().includes(this.filter.toUpperCase()) || pattern.name.toUpperCase().includes(this.filter.toUpperCase())
-        return this.search.keysounded === -1 ? match : match && ks === this.search.keysounded
+        return this.search.keysounded === -1 ? match : this.search.keysounded === 1 ? match && pattern.keysounded : match && !pattern.keysounded
       })
     }
   },
