@@ -12,7 +12,7 @@
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
           .col-12.col-sm-6.col-lg-3.q-pa-md.q-my-lg(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
-            PatternCard(:pattern="pattern" :mine="true" @edit="editPattern(pattern.id)")
+            PatternCard(:pattern="pattern" :mine="true" @edit="editPattern(pattern._id)")
     PatternDialog(:open="isModalOpen" :patterndata="editingPattern" @model="val => isModalOpen = val" @refreshPattern="fetchMyPattern")
     q-page-sticky(position="bottom-right" :offset="[36, 36]")
       q-btn(fab icon="add" color="tech" text-color="black" @click="newPattern")
@@ -114,7 +114,7 @@ export default {
       }
     },
     editPattern (id) {
-      this.editingPattern = this.patterns.find(pattern => pattern.id === id)
+      this.editingPattern = this.patterns.find(pattern => pattern._id === id)
       this.isModalOpen = true
     },
     newPattern () {
