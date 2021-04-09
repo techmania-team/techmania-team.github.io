@@ -13,9 +13,6 @@ export default async ({ Vue }) => {
           token: 'https://discord.com/api/oauth2/token',
           identity: 'https://discord.com/api/users/@me',
           guilds: 'https://discord.com/api/users/@me/guilds'
-        },
-        env: {
-          BACK_URL: process.env.BACK_URL
         }
       }
     },
