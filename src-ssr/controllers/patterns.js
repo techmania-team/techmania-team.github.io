@@ -127,8 +127,7 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       } else {
-        await patterns.findOneAndUpdate({
-          _id: mongoose.Types.ObjectId(req.params.id),
+        await patterns.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
           submitter: req.user._id,
           name: req.body.name,
           composer: req.body.composer,
