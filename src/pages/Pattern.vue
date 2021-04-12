@@ -19,7 +19,7 @@
                 | &nbsp;Composed by {{ pattern.composer }}
               div
                 q-icon(name="upload")
-                | &nbsp;Submitted by {{ pattern.user }}
+                | &nbsp;Submitted by {{ pattern.submitter.name }}
               div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
                 q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;Keysounded
