@@ -167,11 +167,10 @@ export default {
           throw new Error('Server Error')
         }
       } catch (error) {
-        let message = ''
+        let message = 'Server Error'
         if (error.response.data.message === 'Not in guild') {
           message = 'You must join our discord to submit new pattern.'
-        }
-        if (error.response.data.message === 'Unauthorized') {
+        } else if (error.response.data.message === 'Unauthorized') {
           message = 'Unauthorized.'
         }
         this.$q.notify({
@@ -243,8 +242,7 @@ export default {
         let message = 'Server Error'
         if (error.response.data.message === 'Not in guild') {
           message = 'You must join our discord to submit new pattern.'
-        }
-        if (error.response.data.message === 'Unauthorized') {
+        } else if (error.response.data.message === 'Unauthorized') {
           message = 'Unauthorized.'
         }
         this.$q.notify({
