@@ -11,7 +11,7 @@
               template(v-slot:after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
-          .col-12.col-sm-6.col-lg-3.q-pa-md.q-my-lg(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
+          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
             PatternCard(:pattern="pattern" :mine="true" @edit="editPattern(pattern._id)")
     PatternDialog(:open="isModalOpen" :patterndata="editingPattern" @model="val => isModalOpen = val" @refreshPattern="fetchMyPattern")
     q-page-sticky(position="bottom-right" :offset="[36, 36]")
