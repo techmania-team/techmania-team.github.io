@@ -31,7 +31,7 @@
             p {{ pattern.description }}
         .row.justify-center
           .col-12.text-h6.text-center {{ $t('pattern.previews') }}
-          .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
+          .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
             q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
 
