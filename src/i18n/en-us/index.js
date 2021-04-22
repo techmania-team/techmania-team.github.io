@@ -31,10 +31,15 @@ export default {
     keysounded: 'Keysounded',
     author: 'Pattern by',
     submitted: 'Submitted',
+    submittedBy: 'Submitted by',
     updated: 'Updated',
     keys: 'Keys',
     touch: 'Touch',
-    km: 'KM'
+    km: 'KM',
+    composer: 'Composed By',
+    patternData: 'Pattern Data',
+    description: 'Pattern Description',
+    previews: 'Previews'
   },
   submitForm: {
     composer: 'Composer',

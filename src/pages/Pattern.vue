@@ -12,25 +12,25 @@
         q-separator
         .row.q-my-md
           .col-6
-            .text-h6.q-mt-md.q-mb-lg Pattern Data
+            .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
             .q-gutter-sm
               div
                 q-icon(name="person")
-                | &nbsp;Composed by {{ pattern.composer }}
+                | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
               div
                 q-icon(name="upload")
-                | &nbsp;Submitted by {{ pattern.submitter.name }}
+                | &nbsp;{{ $t('pattern.submittedBy') }} {{ pattern.submitter.name }}
               div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
                 q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
-                | &nbsp;Keysounded
+                | &nbsp;{{ $t('pattern.keysounded') }}
               div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index" :class="getLevelColor(difficulty.level)")
                 q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelColor(difficulty.level)")
                 | &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
           .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
-            .text-h6.q-mt-md.q-mb-lg Description
+            .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
             p {{ pattern.description }}
         .row.justify-center
-          .col-12.text-h6.text-center Previews
+          .col-12.text-h6.text-center {{ $t('pattern.previews') }}
           .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
             q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
