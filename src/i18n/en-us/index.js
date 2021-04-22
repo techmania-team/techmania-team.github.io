@@ -13,5 +13,10 @@ export default {
     release: 'Released at ',
     videos: 'Videos',
     patterns: 'Latest Patterns'
+  },
+  changelog: {
+    downloads: 'Downloads',
+    showDetail: 'Show Detail',
+    hideDetail: 'Hide Detail'
   }
 }
