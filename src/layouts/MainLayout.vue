@@ -18,7 +18,7 @@
               q-btn(round v-if="isLogin" to="/mypage")
                 q-avatar
                   img(:src="user.avatar_url")
-              q-btn.nav-mobile(:label="isLogin ? '' : 'Menu'" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
+              q-btn.nav-mobile(:label="isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
           q-separator.nav-mobile(v-show="dropdown")
         q-slide-transition
           .container.nav-mobile(v-show="dropdown")
