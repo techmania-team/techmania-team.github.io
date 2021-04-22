@@ -4,10 +4,10 @@
       .container
         .row
           .col-12.q-mx-auto
-            h4.text-center My Patterns
+            h4.text-center {{ $t('nav.myPatterns') }}
             q-separator.q-my-md
             br
-            q-input(rounded outlined v-model="search" placeholder="Search" @keydown.enter="applySearch")
+            q-input(rounded outlined v-model="search" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
               template(v-slot:after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row

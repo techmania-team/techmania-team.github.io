@@ -6,7 +6,8 @@ export default {
     login: 'Login',
     myPage: 'My Page',
     logout: 'Logout',
-    menu: 'Menu'
+    menu: 'Menu',
+    myPatterns: 'My Patterns'
   },
   index: {
     download: 'Download',
