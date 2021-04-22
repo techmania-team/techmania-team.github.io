@@ -2,7 +2,7 @@
   .container
     .row
       .col-12.q-mx-auto
-        h4.text-center Latest Patterns
+        h4.text-center {{ $t('index.patterns') }}
         q-separator
         .row
           .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern._id")

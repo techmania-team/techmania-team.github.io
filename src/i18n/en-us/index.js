@@ -6,5 +6,12 @@ export default {
     login: 'Login',
     mypage: 'My Page',
     logout: 'Logout'
+  },
+  index: {
+    download: 'Download',
+    version: 'Latest Version: ',
+    release: 'Released at ',
+    videos: 'Videos',
+    patterns: 'Latest Patterns'
   }
 }

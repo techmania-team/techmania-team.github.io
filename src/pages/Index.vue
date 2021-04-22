@@ -9,11 +9,11 @@
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
               q-icon(left name="download" )
-              div Download
+              div {{ $t('index.download') }}
           .text-center
-            | Latest Version: {{ tag }}
+            | {{ $t('index.version') }}: {{ tag }}
             br
-            | Released at {{ published }}
+            | {{ $t('index.release') }} {{ published }}
     section.q-mx-auto.padding.q-my-md
       Patterns#index-patterns
     section.q-mx-auto.padding.q-my-md
