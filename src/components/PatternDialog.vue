@@ -36,7 +36,7 @@
                   .col-1
                   q-input.col-3(v-model="difficulty.name" placeholder="Name" :rules="[val => !!val || 'Field is required']")
                   .col-1
-                  q-input.col-3(v-model.number="difficulty.level" type="number" placeholder="Level" :rules="[val => !!val || 'Field is required']")
+                  q-input.col-3(v-model.number="difficulty.level" type="number" placeholder="Level" :rules="[val => !!val && val > 0|| 'Field is required']")
                   .col-1
                     q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
                     q-btn(flat round icon="add" v-else @click="addDifficulty")
