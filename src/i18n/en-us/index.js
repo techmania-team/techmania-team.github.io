@@ -19,5 +19,11 @@ export default {
     downloads: 'Downloads',
     showDetail: 'Show Detail',
     hideDetail: 'Hide Detail'
+  },
+  patterns: {
+    all: 'All',
+    yes: 'Yes',
+    no: 'No',
+    search: 'Search'
   }
 }

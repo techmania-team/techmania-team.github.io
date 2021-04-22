@@ -4,21 +4,21 @@
       .container
         .row
           .col-12.q-mx-auto
-            h4.text-center Patterns
+            h4.text-center {{ $t('nav.patterns') }}
             q-separator.q-my-md
             br
-            q-input(rounded outlined v-model="search.text" placeholder="Search song or composer" @keydown.enter="applySearch")
+            q-input(rounded outlined v-model="search.text" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
               template(v-slot:after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
             br
             q-list.search
               q-item.q-py-none
-                q-item-section Keysounded
+                q-item-section {{ $t('pattern.keysounded') }}
                 q-item-section
                   div
-                    q-btn(flat  size="10px" label="All" :text-color="search.keysounded === -1 ? 'white' : 'grey'" @click="search.keysounded = -1")
-                    q-btn(flat  size="10px" label="Yes" :text-color="search.keysounded === 1 ? 'white' : 'grey'" @click="search.keysounded = 1")
-                    q-btn(flat  size="10px" label="No" :text-color="search.keysounded === 0 ? 'white' : 'grey'" @click="search.keysounded = 0")
+                    q-btn(flat size="10px" :label="$t('patterns.all')" :text-color="search.keysounded === -1 ? 'white' : 'grey'" @click="search.keysounded = -1")
+                    q-btn(flat size="10px" :label="$t('patterns.yes')" :text-color="search.keysounded === 1 ? 'white' : 'grey'" @click="search.keysounded = 1")
+                    q-btn(flat size="10px" :label="$t('patterns.no')" :text-color="search.keysounded === 0 ? 'white' : 'grey'" @click="search.keysounded = 0")
             q-separator.q-my-md
         .row.q-my-md
           .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
