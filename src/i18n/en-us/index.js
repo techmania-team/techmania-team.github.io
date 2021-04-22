@@ -25,5 +25,14 @@ export default {
     yes: 'Yes',
     no: 'No',
     search: 'Search'
+  },
+  pattern: {
+    keysounded: 'Keysounded',
+    author: 'Pattern by',
+    submitted: 'Submitted',
+    updated: 'Updated',
+    keys: 'Keys',
+    touch: 'Touch',
+    km: 'KM'
   }
 }
