@@ -10,11 +10,11 @@
                   img(:src="'./assets/notes/basic.png'")
                 | &nbsp;TECHMANIA
             q-tabs
-              q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" label="Manual")
-              q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="nav.label")
-              q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" label="Login")
-              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" label="My Page")
-              q-tab.nav-desktop(v-if="isLogin" @click="logout()" label="Logout")
+              q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
+              q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
+              q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
+              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.mypage')")
+              q-tab.nav-desktop(v-if="isLogin" @click="logout()" :label="$t('nav.logout')")
               q-btn(round v-if="isLogin" to="/mypage")
                 q-avatar
                   img(:src="user.avatar_url")
@@ -24,15 +24,15 @@
           .container.nav-mobile(v-show="dropdown")
             q-list
               q-item.text-grey7(clickable v-if="!isLogin" @click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank'); dropdown = !dropdown" active-class="text-white")
-                q-item-section Manual
+                q-item-section {{ $t('nav.manual') }}
               q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
-                q-item-section {{ nav.label }}
+                q-item-section {{ $t(nav.label) }}
               q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self'); dropdown = !dropdown" active-class="text-white")
-                q-item-section Login
+                q-item-section {{ $t('nav.login') }}
               q-item.text-grey7(clickable @click="dropdown = !dropdown" v-if="isLogin" to="/mypage" active-class="text-white")
-                q-item-section My Page
+                q-item-section {{ $t('nav.mypage') }}
               q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
-                q-item-section Logout
+                q-item-section {{ $t('nav.logout') }}
       q-page-container
         router-view(:key="$route.fullPath")
       q-footer.bg-techgrey.text-white.relative-position(bordered)
@@ -54,11 +54,11 @@ export default {
       navs: [
         {
           link: '/changelog',
-          label: 'Changelog'
+          label: 'nav.changelog'
         },
         {
           link: '/patterns',
-          label: 'Patterns'
+          label: 'nav.patterns'
         }
       ]
     }

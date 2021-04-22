@@ -1,7 +1,10 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
-  failed: 'Action failed',
-  success: 'Action was successful'
+  nav: {
+    manual: 'Manual',
+    changelog: 'Changelog',
+    patterns: 'Patterns',
+    login: 'Login',
+    mypage: 'My Page',
+    logout: 'Logout'
+  }
 }
