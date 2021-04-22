@@ -14,7 +14,7 @@ export default async ({ Vue }) => {
           identity: 'https://discord.com/api/users/@me',
           guilds: 'https://discord.com/api/users/@me/guilds'
         },
-        controls: ['Touch', 'Keys', 'KM']
+        controls: ['touch', 'keys', 'km']
       }
     },
     methods: {
