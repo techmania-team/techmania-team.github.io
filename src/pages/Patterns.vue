@@ -109,19 +109,6 @@ export default {
     }
   },
   methods: {
-    openDialog () {
-      if (this.isLogin) {
-        this.submitModel = true
-      } else {
-        this.$q.notify({
-          icon: 'warning',
-          message: 'You must login to submit a new pattern.',
-          color: 'negative',
-          position: 'top',
-          timeout: 2000
-        })
-      }
-    },
     async fetchPatterns () {
       try {
         const result = await this.$axios.get(new URL('/api/patterns', process.env.HOST_URL))
