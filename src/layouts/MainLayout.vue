@@ -13,7 +13,7 @@
               q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
               q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
               q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
-              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.mypage')")
+              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.myPage')")
               q-tab.nav-desktop(v-if="isLogin" @click="logout()" :label="$t('nav.logout')")
               q-btn(round v-if="isLogin" to="/mypage")
                 q-avatar
@@ -30,7 +30,7 @@
               q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self'); dropdown = !dropdown" active-class="text-white")
                 q-item-section {{ $t('nav.login') }}
               q-item.text-grey7(clickable @click="dropdown = !dropdown" v-if="isLogin" to="/mypage" active-class="text-white")
-                q-item-section {{ $t('nav.mypage') }}
+                q-item-section {{ $t('nav.myPage') }}
               q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
                 q-item-section {{ $t('nav.logout') }}
       q-page-container

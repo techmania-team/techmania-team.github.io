@@ -4,7 +4,7 @@ export default {
     changelog: 'Changelog',
     patterns: 'Patterns',
     login: 'Login',
-    mypage: 'My Page',
+    myPage: 'My Page',
     logout: 'Logout',
     menu: 'Menu'
   },
