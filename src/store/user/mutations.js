@@ -24,3 +24,7 @@ export function logout (state) {
   state.jwt = ''
   state.discord = ''
 }
+
+export function setLocale (state, data) {
+  state.locale = data
+}

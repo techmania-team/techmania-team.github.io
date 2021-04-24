@@ -3,7 +3,7 @@
     .container
       .row
         .col-12.q-mx-auto
-          h4.text-center Changelog
+          h4.text-center {{ $t('nav.changelog') }}
           q-separator.q-my-md
           div(v-if="releases.length === 0 && !error")
             q-item(v-for="i in 3" :key="i")
@@ -27,9 +27,9 @@
                   | {{ release.name.length === 0 ? release.tag_name : release.name }}
                   | &nbsp;
                   q-btn.q-mr-xs(flat round icon="download" color="tech" @click="openLink(release.html_url)")
-                  img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total'")
+                  img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total?label=' + $t('changelog.downloads')")
               q-separator
-              q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? 'Hide Detail' : 'Show Detail'" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
+              q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? $t('changelog.hideDetail') : $t('changelog.showDetail')" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
               q-slide-transition
                 div(v-if="release.expand")
                   q-markdown.q-pa-md(:src="release.body")

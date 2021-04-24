@@ -12,20 +12,20 @@
         q-item
           q-item-section
             p
-              span(v-if="!mine") Pattern by {{ pattern.submitter.name }}
+              span(v-if="!mine") {{ $t('pattern.author') }} {{ pattern.submitter.name }}
               br(v-if="!mine")
-              span Submitted {{ formattedTime.relative }}
+              span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
                   | {{ formattedTime.text }}
               br
-              span Upadated {{ formattedUpdateTime.relative }}
+              span {{ $t('pattern.updated') }} {{ formattedUpdateTime.relative }}
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
                   | {{ formattedUpdateTime.text }}
         q-item
           q-item-section(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
             div
               q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
-              | &nbsp;Keysounded
+              | &nbsp;{{ $t('pattern.keysounded') }}
         q-item
           q-item-section
             div.q-gutter-sm
@@ -37,7 +37,7 @@
                 :class="getLevelColor(difficulty.level)"
               )
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
-                  | {{ controls[difficulty.control] }} - {{ difficulty.name }}
+                  | {{ $t('pattern.'+controls[difficulty.control]) }} - {{ difficulty.name }}
                   br
                   span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
 </template>
@@ -57,14 +57,14 @@ export default {
   computed: {
     formattedTime () {
       return {
-        relative: this.$date(this.pattern.submitDate).fromNow(),
-        text: new Date(this.pattern.submitDate).toLocaleString('en-US')
+        relative: this.$date(this.pattern.submitDate).locale(this.$q.lang.getLocale()).fromNow(),
+        text: new Date(this.pattern.submitDate).toLocaleString(this.$q.lang.getLocale())
       }
     },
     formattedUpdateTime () {
       return {
-        relative: this.$date(this.pattern.updateDate).fromNow(),
-        text: new Date(this.pattern.updateDate).toLocaleString('en-US')
+        relative: this.$date(this.pattern.updateDate).locale(this.$q.lang.getLocale()).fromNow(),
+        text: new Date(this.pattern.updateDate).toLocaleString(this.$q.lang.getLocale())
       }
     }
   }

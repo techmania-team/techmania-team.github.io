@@ -2,7 +2,7 @@
   .container
     .row
       .col-12.q-mx-auto
-        h4.text-center Videos
+        h4.text-center {{ $t('index.videos') }}
         q-separator
         .row
           .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in videos" :key="idx")

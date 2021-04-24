@@ -10,29 +10,39 @@
                   img(:src="'./assets/notes/basic.png'")
                 | &nbsp;TECHMANIA
             q-tabs
-              q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" label="Manual")
-              q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="nav.label")
-              q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" label="Login")
-              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" label="My Page")
-              q-tab.nav-desktop(v-if="isLogin" @click="logout()" label="Logout")
+              q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
+              q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
+              q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
+              q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.myPage')")
+              q-tab.nav-desktop(v-if="isLogin" @click="logout()" :label="$t('nav.logout')")
+              q-btn-dropdown.nav-desktop(stretch flat :label="user.locale")
+                q-list
+                  q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                    q-item-section
+                      q-item-label {{ locale.toUpperCase() }}
               q-btn(round v-if="isLogin" to="/mypage")
                 q-avatar
                   img(:src="user.avatar_url")
-              q-btn.nav-mobile(:label="isLogin ? '' : 'Menu'" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
+              q-btn.nav-mobile(:label="isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
           q-separator.nav-mobile(v-show="dropdown")
         q-slide-transition
           .container.nav-mobile(v-show="dropdown")
             q-list
               q-item.text-grey7(clickable v-if="!isLogin" @click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank'); dropdown = !dropdown" active-class="text-white")
-                q-item-section Manual
+                q-item-section {{ $t('nav.manual') }}
               q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
-                q-item-section {{ nav.label }}
+                q-item-section {{ $t(nav.label) }}
               q-item.text-grey7(clickable v-if="!isLogin" @click="openLink(discordURL.login, '_self'); dropdown = !dropdown" active-class="text-white")
-                q-item-section Login
+                q-item-section {{ $t('nav.login') }}
               q-item.text-grey7(clickable @click="dropdown = !dropdown" v-if="isLogin" to="/mypage" active-class="text-white")
-                q-item-section My Page
+                q-item-section {{ $t('nav.myPage') }}
               q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
-                q-item-section Logout
+                q-item-section {{ $t('nav.logout') }}
+              q-btn-dropdown.full-width(align="between" stretch flat :label="user.locale")
+                q-list
+                  q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                    q-item-section
+                      q-item-label {{ locale.toUpperCase() }}
       q-page-container
         router-view(:key="$route.fullPath")
       q-footer.bg-techgrey.text-white.relative-position(bordered)
@@ -54,12 +64,16 @@ export default {
       navs: [
         {
           link: '/changelog',
-          label: 'Changelog'
+          label: 'nav.changelog'
         },
         {
           link: '/patterns',
-          label: 'Patterns'
+          label: 'nav.patterns'
         }
+      ],
+      localeOptions: [
+        'en-us',
+        'zh-tw'
       ]
     }
   },
@@ -72,6 +86,10 @@ export default {
       } catch (_) {}
       this.$store.commit('user/logout')
       if (this.$route.meta.login) this.$router.push('/')
+    },
+    updateLocale (value) {
+      this.$i18n.locale = value
+      this.$store.commit('user/setLocale', value)
     }
   }
 }

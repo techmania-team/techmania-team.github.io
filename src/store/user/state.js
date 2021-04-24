@@ -1,3 +1,5 @@
+import Quasar from 'quasar'
+
 export default function () {
   return {
     token: '',
@@ -5,6 +7,7 @@ export default function () {
     discord: '',
     username: '',
     avatar: '',
-    jwt: ''
+    jwt: '',
+    locale: Quasar.lang.getLocale()
   }
 }
