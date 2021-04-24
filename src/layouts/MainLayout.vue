@@ -15,6 +15,11 @@
               q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
               q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.myPage')")
               q-tab.nav-desktop(v-if="isLogin" @click="logout()" :label="$t('nav.logout')")
+              q-btn-dropdown.nav-desktop(stretch flat :label="user.locale")
+                q-list
+                  q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                    q-item-section
+                      q-item-label {{ locale.toUpperCase() }}
               q-btn(round v-if="isLogin" to="/mypage")
                 q-avatar
                   img(:src="user.avatar_url")
@@ -33,6 +38,11 @@
                 q-item-section {{ $t('nav.myPage') }}
               q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
                 q-item-section {{ $t('nav.logout') }}
+              q-btn-dropdown.full-width(align="between" stretch flat :label="user.locale")
+                q-list
+                  q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                    q-item-section
+                      q-item-label {{ locale.toUpperCase() }}
       q-page-container
         router-view(:key="$route.fullPath")
       q-footer.bg-techgrey.text-white.relative-position(bordered)
@@ -60,6 +70,10 @@ export default {
           link: '/patterns',
           label: 'nav.patterns'
         }
+      ],
+      localeOptions: [
+        'en-us',
+        'zh-tw'
       ]
     }
   },
@@ -72,6 +86,10 @@ export default {
       } catch (_) {}
       this.$store.commit('user/logout')
       if (this.$route.meta.login) this.$router.push('/')
+    },
+    updateLocale (value) {
+      this.$i18n.locale = value
+      this.$store.commit('user/setLocale', value)
     }
   }
 }
