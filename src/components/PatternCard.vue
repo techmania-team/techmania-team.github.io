@@ -57,14 +57,14 @@ export default {
   computed: {
     formattedTime () {
       return {
-        relative: this.$date(this.pattern.submitDate).locale(this.$q.lang.getLocale()).fromNow(),
-        text: new Date(this.pattern.submitDate).toLocaleString(this.$q.lang.getLocale())
+        relative: this.$date(this.pattern.submitDate).locale(this.user.locale).fromNow(),
+        text: new Date(this.pattern.submitDate).toLocaleString(this.user.locale)
       }
     },
     formattedUpdateTime () {
       return {
-        relative: this.$date(this.pattern.updateDate).locale(this.$q.lang.getLocale()).fromNow(),
-        text: new Date(this.pattern.updateDate).toLocaleString(this.$q.lang.getLocale())
+        relative: this.$date(this.pattern.updateDate).locale(this.user.locale).fromNow(),
+        text: new Date(this.pattern.updateDate).toLocaleString(this.user.locale)
       }
     }
   }
