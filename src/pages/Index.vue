@@ -88,7 +88,12 @@ export default {
   data () {
     return {
       tag: '',
-      published: ''
+      publishDate: ''
+    }
+  },
+  computed: {
+    published () {
+      return this.publishDate.length > 0 ? new Date(this.publishDate).toLocaleString(this.user.locale) : 'Unknown'
     }
   },
   methods: {
@@ -96,10 +101,9 @@ export default {
       try {
         const result = await this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
         this.tag = result.data[0].tag_name
-        this.published = new Date(result.data[0].published_at).toLocaleString()
+        this.publishDate = result.data[0].published_at
       } catch (_) {
         this.tag = 'Unknown'
-        this.published = 'Unknown'
       }
     }
   },

@@ -20,7 +20,7 @@
             q-timeline-entry(
               v-for="release in releases"
               :key="release.node_id"
-              :subtitle="new Date(release.published_at).toLocaleString()"
+              :subtitle="new Date(release.published_at).toLocaleString(user.locale)"
             )
               template(v-slot:title)
                 h4.q.q-timeline__title
