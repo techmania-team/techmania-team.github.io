@@ -7,3 +7,9 @@ export default {
   'zh-tw': zhTW,
   'zh-cn': zhCN
 }
+
+export const localeOptions = [
+  'en-us',
+  'zh-tw',
+  'zh-cn'
+]

@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { localeOptions } from '../i18n'
+
 export default {
   name: 'MainLayout',
   data () {
@@ -71,11 +73,7 @@ export default {
           label: 'nav.patterns'
         }
       ],
-      localeOptions: [
-        'en-us',
-        'zh-tw',
-        'zh-cn'
-      ]
+      localeOptions
     }
   },
   methods: {
