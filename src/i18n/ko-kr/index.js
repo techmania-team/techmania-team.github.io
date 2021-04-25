@@ -11,7 +11,7 @@ export default {
   },
   index: {
     download: '다운로드',
-    version: '최신 버전: ',
+    version: '최신 버전',
     release: '출시일: ',
     videos: '비디오',
     patterns: '최신 패턴'
