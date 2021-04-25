@@ -73,7 +73,8 @@ export default {
       ],
       localeOptions: [
         'en-us',
-        'zh-tw'
+        'zh-tw',
+        'zh-cn'
       ]
     }
   },
