@@ -31,7 +31,7 @@ export default {
     keysounded: 'ノート音',
     author: '製作者: ',
     submitted: '投稿日: ',
-    submittedBy: '投稿者:',
+    submittedBy: '投稿者: ',
     updated: '更新: ',
     keys: 'キーボード',
     touch: 'タッチ',
