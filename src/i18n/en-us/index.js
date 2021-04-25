@@ -11,7 +11,7 @@ export default {
   },
   index: {
     download: 'Download',
-    version: 'Latest Version: ',
+    version: 'Latest Version',
     release: 'Released at ',
     videos: 'Videos',
     patterns: 'Latest Patterns'
