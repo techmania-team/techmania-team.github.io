@@ -11,7 +11,7 @@ export default {
   },
   index: {
     download: 'ダウンロード',
-    version: '最新バージョン：',
+    version: '最新バージョン',
     release: 'リリーズ日：',
     videos: 'ビデオ',
     patterns: '最新パターン'
