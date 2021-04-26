@@ -28,7 +28,7 @@
                 | &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
           .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
             .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
-            p {{ pattern.description }}
+            p(v-html="pattern.description")
         .row.justify-center
           .col-12.text-h6.text-center {{ $t('pattern.previews') }}
           .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
