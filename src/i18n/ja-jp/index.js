@@ -12,7 +12,7 @@ export default {
   index: {
     download: 'ダウンロード',
     version: '最新バージョン',
-    release: 'リリーズ日：',
+    release: 'リリーズ日: ',
     videos: 'ビデオ',
     patterns: '最新パターン'
   },
@@ -29,14 +29,14 @@ export default {
   },
   pattern: {
     keysounded: 'ノート音',
-    author: '製作者：',
-    submitted: '投稿日：',
-    submittedBy: '投稿者：',
-    updated: '更新：',
+    author: '製作者: ',
+    submitted: '投稿日: ',
+    submittedBy: '投稿者: ',
+    updated: '更新: ',
     keys: 'キーボード',
     touch: 'タッチ',
     km: 'キーボード・マウス',
-    composer: '作曲家：',
+    composer: '作曲家: ',
     patternData: 'パターンデータ',
     description: 'パターン詳細',
     previews: 'プレビュー'
