@@ -9,6 +9,7 @@
           .col-6.text-right
             h4
               q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
+              q-btn.q-mr-xs(flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
         q-separator
         .row.q-my-md
           .col-6
