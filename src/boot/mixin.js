@@ -60,6 +60,13 @@ export default async ({ Vue }) => {
       isLogin () {
         return this.user.id.length !== 0
       }
+    },
+    beforeEnter: (to, from, next) => {
+      if (to.meta.login && this.store.getters['user/getUserData'].id.length === 0) {
+        next('/')
+      } else {
+        next()
+      }
     }
   })
 }
