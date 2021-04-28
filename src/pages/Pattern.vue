@@ -8,8 +8,8 @@
             h4 {{ pattern.name }}
           .col-6.text-right
             h4
-              q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
               q-btn.q-mr-xs(flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
+              q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
         q-separator
         .row.q-my-md
           .col-6
@@ -144,10 +144,14 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
     this.pattern = this.$store.getters['temp/getPattern']
-    document.title = `${this.pattern.name} | TECHMANIA`
-    this.$store.commit('temp/cleanPattern')
+    if (this.pattern._id.length === 0) {
+      this.$router.push('/404')
+    } else {
+      document.title = `${this.pattern.name} | TECHMANIA`
+      this.$store.commit('temp/cleanPattern')
+    }
   }
 }
 </script>
