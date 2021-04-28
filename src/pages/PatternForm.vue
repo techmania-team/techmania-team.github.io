@@ -147,7 +147,6 @@ export default {
       confirm: false,
       editor: {
         toolbar: [
-          ['left', 'center', 'right', 'justify'],
           ['bold', 'italic', 'strike', 'underline', 'subscript', 'superscript'],
           ['hr', 'link'],
           ['undo', 'redo'],
