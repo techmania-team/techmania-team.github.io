@@ -12,7 +12,7 @@
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
           .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
-            PatternCard(:pattern="pattern" :mine="true" @edit="editPattern(pattern._id)")
+            PatternCard(:pattern="pattern" :mine="true")
     q-page-sticky(position="bottom-right" :offset="[36, 36]")
       q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/patterns/new')")
 </template>
@@ -107,9 +107,6 @@ export default {
       } catch (_) {
         this.error = true
       }
-    },
-    editPattern (id) {
-      this.$router.push('/patterns/edit/' + id)
     },
     applySearch () {
       this.filter = this.search
