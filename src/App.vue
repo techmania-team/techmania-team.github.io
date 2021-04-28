@@ -26,7 +26,7 @@ export default {
       }
     }
   },
-  async mounted () {
+  async created () {
     if (this.user.jwt.length > 0) {
       try {
         const response = await this.$axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
