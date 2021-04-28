@@ -49,7 +49,7 @@ module.exports = {
               { name: 'Previews', value: strPreveiw, inline: false },
               { name: 'Difficulties', value: strDifficulty, inline: false },
               { name: 'Download', value: req.body.link, inline: false },
-              { name: 'Description', value: req.body.description, inline: false }
+              { name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false }
             ]
           }]
         })
