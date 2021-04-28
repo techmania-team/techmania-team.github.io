@@ -44,7 +44,7 @@
                     q-item-section
                       q-item-label {{ locale.toUpperCase() }}
       q-page-container
-        router-view(:key="$route.fullPath")
+        router-view.q-mb-xl(:key="$route.fullPath")
       q-footer.bg-techgrey.text-white.relative-position(bordered)
         .container
           q-toolbar
