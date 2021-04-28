@@ -307,16 +307,9 @@ export default {
     }
   },
   created () {
-    this.pattern = this.$store.getters['temp/getPattern']
-    if (this.pattern._id.length === 0) {
-      this.$router.push('/404')
-    } else {
-      document.title = `${this.pattern.name} | TECHMANIA`
-      this.$store.commit('temp/cleanPattern')
-    }
-
     const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
-    if (this.pattern._id.length === 0 || this.pattern.submitter._id !== this.user.id) {
+    console.log(patterndata)
+    if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
       this.$router.push('/404')
     } else {
       patterndata.previews.map(preview => {
