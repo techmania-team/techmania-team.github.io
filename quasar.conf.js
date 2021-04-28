@@ -48,7 +48,7 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       env: {
         // I don't know why the fuck dotenv always parse wrong value, this trick should fix it
         DISCORD_CLIENT: process.env.DISCORD_CLIENT,
