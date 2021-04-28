@@ -18,6 +18,6 @@ module.exports = async (req, res, next) => {
       throw new Error()
     }
   } catch (error) {
-    res.status(401).send({ success: false, message: '未登入' })
+    res.status(401).send({ success: false, message: 'Unauthorized' })
   }
 }
