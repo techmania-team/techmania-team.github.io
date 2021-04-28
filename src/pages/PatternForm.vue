@@ -5,7 +5,7 @@
         .row
           .col-12.q-mx-auto
             q-form(@submit.prevent="submitForm")
-              h4.text-center {{ model._id && model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
+              h4.text-center {{ model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
               q-separator.q-my-md
               br
               q-banner.text-white.bg-red(inline-actions)
