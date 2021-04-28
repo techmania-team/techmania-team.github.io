@@ -17,7 +17,8 @@ const routes = [
   // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('pages/Error404.vue'),
+    meta: { title: '404 | TECHMANIA', login: false }
   }
 ]
 
