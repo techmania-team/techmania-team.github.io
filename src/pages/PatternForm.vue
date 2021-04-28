@@ -22,28 +22,26 @@
               p.q-mb-none {{ $t('submitForm.dlLink') }}
               q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
               q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
-              p.q-mb-none {{ $t('submitForm.preview') }}
-                .q-mb-md
-                  .row.items-start(v-for="(preview, index) in model.previews" :key="'A'+index")
-                    q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                    .col-1
-                    q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
-                    .col-1.text-center
-                      q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
-                      q-btn(flat round icon="add" v-else @click="addPreview")
-              p.q-mb-none {{ $t('submitForm.difficulties') }}
-                .q-mb-md
-                  .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                    q-select.col-3(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
-                    .col-1
-                    q-input.col-3(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                    .col-1
-                    q-input.col-3(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
-                    .col-1
-                      q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
-                      q-btn(flat round icon="add" v-else @click="addDifficulty")
-              p.q-mb-none {{ $t('submitForm.description') }}
-                q-editor.q-mb-md(v-model="model.description" :toolbar="editor.toolbar")
+              p.q-mb-md {{ $t('submitForm.preview') }}
+                .row.items-start(v-for="(preview, index) in model.previews" :key="'A'+index")
+                  q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+                  .col-1
+                  q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
+                  .col-1.text-center
+                    q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
+                    q-btn(flat round icon="add" v-else @click="addPreview")
+              p.q-mb-md {{ $t('submitForm.difficulties') }}
+              .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
+                q-select.col-3(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
+                .col-1
+                q-input.col-3(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+                .col-1
+                q-input.col-3(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
+                .col-1
+                  q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
+                  q-btn(flat round icon="add" v-else @click="addDifficulty")
+              p.q-mb-md {{ $t('submitForm.description') }}
+              q-editor(v-model="model.description" :toolbar="editor.toolbar")
               div(v-if="model._id.length > 0")
                 hr.q-my-xl
                 p.text-red {{ $t('submitForm.dangerZone') }}
