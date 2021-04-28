@@ -42,11 +42,13 @@
                     .col-1
                       q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
                       q-btn(flat round icon="add" v-else @click="addDifficulty")
-              p.mb-none {{ $t('submitForm.description') }}
+              p.q-mb-none {{ $t('submitForm.description') }}
                 q-editor.q-mb-md(v-model="model.description" :toolbar="editor.toolbar")
-              p.text-red {{ $t('submitForm.dangerZone') }}
-              q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
-              br
+              div(v-if="model._id.length > 0")
+                hr.q-my-xl
+                p.text-red {{ $t('submitForm.dangerZone') }}
+                q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
+              hr.q-my-xl
               p.text-center
                 q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
       q-dialog(v-model="confirm")
