@@ -129,21 +129,6 @@ export default {
       return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].ytid}/hqdefault.jpg` : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     }
   },
-  methods: {
-    async fetchPattern () {
-      try {
-        const result = await this.$axios.get(new URL(`/api/patterns/${this.$route.params.id}`, process.env.HOST_URL))
-        if (result.data.success) {
-          this.pattern = result.data.result
-          document.title = `${this.pattern.name} | TECHMANIA`
-        } else {
-          throw new Error('Error')
-        }
-      } catch (_) {
-        this.$router.push('/404')
-      }
-    }
-  },
   created () {
     this.pattern = this.$store.getters['temp/getPattern']
     if (this.pattern._id.length === 0) {
