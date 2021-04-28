@@ -8,7 +8,7 @@
             h4 {{ pattern.name }}
           .col-6.text-right
             h4
-              q-btn.q-mr-xs(flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
+              q-btn.q-mr-xs(v-if="pattern.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
               q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
         q-separator
         .row.q-my-md
