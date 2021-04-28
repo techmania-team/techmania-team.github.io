@@ -157,11 +157,12 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    return store.dispatch('temp/fetchPattern', currentRoute.params.id)
+    if (currentRoute.params.id) return store.dispatch('temp/fetchPattern', currentRoute.params.id)
+    else return 0
   },
   computed: {
     title () {
-      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern') + '| TECHMANIA'
+      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern') + ' | TECHMANIA'
     },
     controlTypes () {
       return [
@@ -307,17 +308,18 @@ export default {
     }
   },
   created () {
-    const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
-    console.log(patterndata)
-    if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
-      this.$router.push('/404')
-    } else {
-      patterndata.previews.map(preview => {
-        preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
-        return preview
-      })
-      this.model = patterndata
-      this.$store.commit('temp/cleanPattern')
+    if (this.$route.params.id) {
+      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
+      if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
+        this.$router.push('/404')
+      } else {
+        patterndata.previews.map(preview => {
+          preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
+          return preview
+        })
+        this.model = patterndata
+        this.$store.commit('temp/cleanPattern')
+      }
     }
   }
 }
