@@ -306,14 +306,26 @@ export default {
       this.deleting = false
     }
   },
-  mounted () {
+  created () {
+    this.pattern = this.$store.getters['temp/getPattern']
+    if (this.pattern._id.length === 0) {
+      this.$router.push('/404')
+    } else {
+      document.title = `${this.pattern.name} | TECHMANIA`
+      this.$store.commit('temp/cleanPattern')
+    }
+
     const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
-    patterndata.previews.map(preview => {
-      preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
-      return preview
-    })
-    this.model = patterndata
-    this.$store.commit('temp/cleanPattern')
+    if (this.pattern._id.length === 0 || this.pattern.submitter._id !== this.user.id) {
+      this.$router.push('/404')
+    } else {
+      patterndata.previews.map(preview => {
+        preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
+        return preview
+      })
+      this.model = patterndata
+      this.$store.commit('temp/cleanPattern')
+    }
   }
 }
 </script>
