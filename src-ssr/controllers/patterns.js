@@ -56,8 +56,13 @@ module.exports = {
         res.status(200).send({ success: true, message: '' })
       }
     } catch (error) {
-      console.log(error)
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   },
   async search (req, res) {
@@ -79,8 +84,11 @@ module.exports = {
       const result = await patterns.find(query, {}, { skip, limit }).sort('-submitDate').populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
-      console.log(error)
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   },
   async searchID (req, res) {
@@ -92,7 +100,11 @@ module.exports = {
         res.status(200).send({ success: true, message: '', result })
       }
     } catch (error) {
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   },
   async del (req, res) {
@@ -111,8 +123,11 @@ module.exports = {
         res.status(200).send({ success: true, message: '' })
       }
     } catch (error) {
-      console.log(error)
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   },
   async update (req, res) {
@@ -141,8 +156,13 @@ module.exports = {
         res.status(200).send({ success: true, message: '' })
       }
     } catch (error) {
-      console.log(error)
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'ValidationError') {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   },
   async indexvideo (req, res) {
@@ -154,7 +174,11 @@ module.exports = {
       ])
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
-
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   }
 }
