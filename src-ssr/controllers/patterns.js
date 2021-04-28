@@ -53,7 +53,7 @@ module.exports = {
             ]
           }]
         })
-        res.status(200).send({ success: true, message: '' })
+        res.status(200).send({ success: true, message: '', id: result._id })
       }
     } catch (error) {
       if (error.name === 'ValidationError') {

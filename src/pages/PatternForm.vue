@@ -204,19 +204,14 @@ export default {
             position: 'top',
             timeout: 2000
           })
-          this.model = {
-            name: '',
-            composer: '',
-            keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 0 }],
-            link: '',
-            previews: [{ link: '', name: '' }],
-            description: ''
-          }
         } else {
           throw new Error('Server Error')
         }
-        this.$router.push('/mypage')
+        if (this.model._id.length > 0) {
+          this.$router.push('/patterns/' + this.model._id)
+        } else {
+          this.$router.push('/patterns/' + result.data.id)
+        }
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
         if (error.response.data.message === 'Not in guild') {
