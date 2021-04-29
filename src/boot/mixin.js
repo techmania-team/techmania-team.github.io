@@ -51,6 +51,60 @@ export default async ({ Vue }) => {
             break
         }
         return icon
+      },
+      async getUserData (token) {
+        try {
+          const result = await this.$axios.get(this.discordURL.identity,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          )
+          this.$store.commit('user/login', { ...result.data })
+        } catch (error) {
+          this.$store.commit('user/logout')
+        }
+      },
+      async extendToken () {
+        if (this.user.jwt.length > 0) {
+          console.log('extendToken')
+          try {
+            const response = await this.$axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
+              headers: { Authorization: `Bearer ${this.user.jwt}` }
+            })
+            this.getUserData(response.data.token)
+            this.$store.commit('user/addjwt', response.data.jwt)
+            this.$store.commit('user/addtoken', response.data.token)
+            this.$store.commit('user/addid', response.data.id)
+          } catch (error) {
+            this.$store.commit('user/logout')
+          }
+        }
+      },
+      async login () {
+        if (this.$route.query.jwt && this.$route.query.token) {
+          this.$store.commit('user/addjwt', this.$route.query.jwt)
+          this.$store.commit('user/addtoken', this.$route.query.token)
+          this.$store.commit('user/addid', this.$route.query.id)
+          this.$router.replace({ query: {} })
+        }
+        if (this.user.jwt.length > 0) {
+          this.getUserData(this.user.token)
+        }
+      },
+      async logout () {
+        try {
+          await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
+            headers: { Authorization: `Bearer ${this.user.jwt}` }
+          })
+        } catch (_) {}
+        this.$store.commit('user/logout')
+        if (this.$route.meta.login) this.$router.push('/')
+      },
+      updateLocale (value) {
+        this.$i18n.locale = value
+        this.$store.commit('user/setLocale', value)
       }
     },
     computed: {
