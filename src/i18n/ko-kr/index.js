@@ -68,6 +68,9 @@ export default {
     title: '새로운 패턴을 투고하기',
     ytLink: 'YouTube 링크',
     required: '필수',
-    invalidLink: '유효한 URL을 입력해 주세요.'
+    invalidLink: '유효한 URL을 입력해 주세요.',
+    submitted: '투고에 성공했습니다.',
+    updated: '업데이트에 성공했습니다.',
+    deleted: '삭제되었습니다.'
   }
 }

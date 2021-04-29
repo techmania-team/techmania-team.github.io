@@ -68,6 +68,9 @@ export default {
     title: 'Submit New Pattern',
     ytLink: 'YouTube Link',
     required: 'Field is required',
-    invalidLink: 'Please enter a valid URL.'
+    invalidLink: 'Please enter a valid URL.',
+    submitted: 'Submitted successfully.',
+    updated: 'Updated successfully.',
+    deleted: 'Deleted successfully.'
   }
 }

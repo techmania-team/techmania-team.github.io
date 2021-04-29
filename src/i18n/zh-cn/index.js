@@ -68,6 +68,9 @@ export default {
     title: '上传新谱面',
     ytLink: 'YouTube 链接',
     required: '必填项',
-    invalidLink: '请输入有效的网址'
+    invalidLink: '请输入有效的网址',
+    submitted: '上传成功',
+    deleted: '删除成功',
+    updated: '编辑成功'
   }
 }

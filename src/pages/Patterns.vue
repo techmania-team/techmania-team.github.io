@@ -21,7 +21,7 @@
                     q-btn(flat size="10px" :label="$t('patterns.no')" :text-color="search.keysounded === 0 ? 'white' : 'grey'" @click="search.keysounded = 0")
             q-separator.q-my-md
         .row.q-my-md
-          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
+          .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
             PatternCard(:pattern="pattern" :mine="false")
 </template>
 

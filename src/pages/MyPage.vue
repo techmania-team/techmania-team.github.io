@@ -12,14 +12,12 @@
                 q-btn(icon="search" round desnse flat @click="applySearch")
         .row
           .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in filteredPatterns" :key="pattern.id")
-            PatternCard(:pattern="pattern" :mine="true" @edit="editPattern(pattern._id)")
-    PatternDialog(:open="isModalOpen" :patterndata="editingPattern" @model="val => isModalOpen = val" @refreshPattern="fetchMyPattern")
+            PatternCard(:pattern="pattern" :mine="true")
     q-page-sticky(position="bottom-right" :offset="[36, 36]")
-      q-btn(fab icon="add" color="tech" text-color="black" @click="newPattern")
+      q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/patterns/new')")
 </template>
 
 <script>
-import PatternDialog from '../components/PatternDialog'
 import PatternCard from '../components/PatternCard'
 
 export default {
@@ -80,17 +78,14 @@ export default {
     }
   },
   components: {
-    PatternDialog,
     PatternCard
   },
   data () {
     return {
-      isModalOpen: false,
       patterns: [],
       search: '',
       filter: '',
-      error: false,
-      editingPattern: {}
+      error: false
     }
   },
   computed: {
@@ -112,14 +107,6 @@ export default {
       } catch (_) {
         this.error = true
       }
-    },
-    editPattern (id) {
-      this.editingPattern = this.patterns.find(pattern => pattern._id === id)
-      this.isModalOpen = true
-    },
-    newPattern () {
-      this.editingPattern = {}
-      this.isModalOpen = true
     },
     applySearch () {
       this.filter = this.search

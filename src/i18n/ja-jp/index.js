@@ -68,6 +68,9 @@ export default {
     title: '新しいパターンを投稿',
     ytLink: 'YouTubeリンク',
     required: '必須',
-    invalidLink: '有効なURLを入力してください。'
+    invalidLink: '有効なURLを入力してください。',
+    submitted: '投稿に成功しました。',
+    updated: '更新に成功しました。',
+    deleted: '削除しました。'
   }
 }

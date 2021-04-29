@@ -8,6 +8,7 @@
             h4 {{ pattern.name }}
           .col-6.text-right
             h4
+              q-btn.q-mr-xs(v-if="pattern.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
               q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
         q-separator
         .row.q-my-md
@@ -28,7 +29,7 @@
                 | &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
           .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
             .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
-            p {{ pattern.description }}
+            p(v-html="pattern.description")
         .row.justify-center
           .col-12.text-h6.text-center {{ $t('pattern.previews') }}
           .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
@@ -128,25 +129,14 @@ export default {
       return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].ytid}/hqdefault.jpg` : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     }
   },
-  methods: {
-    async fetchPattern () {
-      try {
-        const result = await this.$axios.get(new URL(`/api/patterns/${this.$route.params.id}`, process.env.HOST_URL))
-        if (result.data.success) {
-          this.pattern = result.data.result
-          document.title = `${this.pattern.name} | TECHMANIA`
-        } else {
-          throw new Error('Error')
-        }
-      } catch (_) {
-        this.$router.push('/404')
-      }
-    }
-  },
-  mounted () {
+  created () {
     this.pattern = this.$store.getters['temp/getPattern']
-    document.title = `${this.pattern.name} | TECHMANIA`
-    this.$store.commit('temp/cleanPattern')
+    if (this.pattern._id.length === 0) {
+      this.$router.push('/404')
+    } else {
+      document.title = `${this.pattern.name} | TECHMANIA`
+      this.$store.commit('temp/cleanPattern')
+    }
   }
 }
 </script>

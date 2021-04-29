@@ -44,7 +44,7 @@
                     q-item-section
                       q-item-label {{ locale.toUpperCase() }}
       q-page-container
-        router-view(:key="$route.fullPath")
+        router-view.q-mb-xl(:key="$route.fullPath")
       q-footer.bg-techgrey.text-white.relative-position(bordered)
         .container
           q-toolbar
@@ -74,21 +74,6 @@ export default {
         }
       ],
       localeOptions
-    }
-  },
-  methods: {
-    async logout () {
-      try {
-        await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
-          headers: { Authorization: `Bearer ${this.user.jwt}` }
-        })
-      } catch (_) {}
-      this.$store.commit('user/logout')
-      if (this.$route.meta.login) this.$router.push('/')
-    },
-    updateLocale (value) {
-      this.$i18n.locale = value
-      this.$store.commit('user/setLocale', value)
     }
   }
 }

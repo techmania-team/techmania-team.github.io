@@ -26,14 +26,6 @@ export default function ({ store }) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Router.beforeEach((to, from, next) => {
-    if (to.meta.login && store.getters['user/getUserData'].id.length === 0) {
-      next('/')
-    } else {
-      next()
-    }
-  })
-
   Router.afterEach((to, from) => {
     if (process.env.CLIENT) {
       document.title = to.meta.title
