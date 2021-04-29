@@ -68,7 +68,6 @@ export default async ({ Vue }) => {
       },
       async extendToken () {
         if (this.user.jwt.length > 0) {
-          console.log('extendToken')
           try {
             const response = await this.$axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
               headers: { Authorization: `Bearer ${this.user.jwt}` }
@@ -90,6 +89,11 @@ export default async ({ Vue }) => {
           this.$router.replace({ query: {} })
         }
         if (this.user.jwt.length > 0) {
+          // 5 days = 432000000 ms
+          if (Date.now() - this.user.jwtReceived > 432000000) {
+            await this.extendToken()
+            return
+          }
           this.getUserData(this.user.token)
         }
       },

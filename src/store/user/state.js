@@ -8,6 +8,7 @@ export default function () {
     username: '',
     avatar: '',
     jwt: '',
+    jwtReceived: 0,
     locale: Quasar.lang.getLocale()
   }
 }

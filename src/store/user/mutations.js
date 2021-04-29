@@ -6,6 +6,7 @@ export function login (state, data) {
 
 export function addjwt (state, data) {
   state.jwt = data
+  state.jwtReceived = Date.now()
 }
 
 export function addtoken (state, data) {
@@ -23,6 +24,7 @@ export function logout (state) {
   state.avatar = ''
   state.jwt = ''
   state.discord = ''
+  state.jwtReceived = 0
 }
 
 export function setLocale (state, data) {
