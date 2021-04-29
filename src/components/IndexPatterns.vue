@@ -5,7 +5,7 @@
         h4.text-center {{ $t('index.patterns') }}
         q-separator
         .row
-          .col-12.col-sm-6.col-md-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern._id")
+          .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern._id")
             PatternCard(:pattern="pattern" :mine="false")
 </template>
 
