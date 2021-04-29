@@ -197,20 +197,27 @@ export default {
           })
         }
         if (result.data.success) {
-          this.$q.notify({
-            icon: 'check',
-            message: 'Submitted.',
-            color: 'positive',
-            position: 'top',
-            timeout: 2000
-          })
+          if (this.model._id.length > 0) {
+            this.$q.notify({
+              icon: 'check',
+              message: this.$t('submitForm.updated'),
+              color: 'positive',
+              position: 'top',
+              timeout: 2000
+            })
+            this.$router.push('/patterns/' + this.model._id)
+          } else {
+            this.$q.notify({
+              icon: 'check',
+              message: this.$t('submitForm.submitted'),
+              color: 'positive',
+              position: 'top',
+              timeout: 2000
+            })
+            this.$router.push('/patterns/' + result.data.id)
+          }
         } else {
           throw new Error('Server Error')
-        }
-        if (this.model._id.length > 0) {
-          this.$router.push('/patterns/' + this.model._id)
-        } else {
-          this.$router.push('/patterns/' + result.data.id)
         }
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
@@ -264,7 +271,7 @@ export default {
         if (result.data.success) {
           this.$q.notify({
             icon: 'check',
-            message: 'Deleted.',
+            message: this.$t('submitForm.deleted'),
             color: 'positive',
             position: 'top',
             timeout: 2000

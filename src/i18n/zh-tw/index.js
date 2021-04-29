@@ -68,6 +68,9 @@ export default {
     title: '送出新譜面',
     ytLink: 'YouTube 連結',
     required: '必填欄位',
-    invalidLink: '請輸入有效的網址'
+    invalidLink: '請輸入有效的網址',
+    submitted: '送出成功',
+    deleted: '刪除成功',
+    updated: '編輯成功'
   }
 }
