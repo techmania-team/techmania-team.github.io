@@ -81,6 +81,33 @@ module.exports = {
         limit = parseInt(req.query.limit)
         limit = isNaN(limit) ? 0 : limit
       }
+      if (req.query.keysounded === 'yes') {
+        query.keysounded = true
+      } else if (req.query.keysounded === 'no') {
+        query.keysounded = false
+      }
+      if (req.query.control) {
+        const control = parseInt(req.query.control)
+        if (!isNaN(control) && control <= 2 && control >= 0) {
+          query['difficulties.control'] = control
+        }
+      }
+      if (req.query.keywords) {
+        if (!query.$or) query.$or = []
+        const keywords = req.query.keywords.match(/[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g)
+        const names = []
+        const composers = []
+        const descriptions = []
+        for (const i in keywords) {
+          const re = new RegExp(keywords[i].replace(/"|'/g), 'i')
+          names.push(re)
+          composers.push(re)
+          descriptions.push(re)
+        }
+        query.$or.push({ name: { $in: names } })
+        query.$or.push({ composer: { $in: composers } })
+        query.$or.push({ description: { $in: descriptions } })
+      }
       const result = await patterns.find(query, {}, { skip, limit }).sort('-submitDate').populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
