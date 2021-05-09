@@ -1,6 +1,6 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" @error="imgerror" :ratio="16/9")
+    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" :ratio="16/9")
       .absolute-bottom
         .text-h6 {{ pattern.name }}
         .text-subtitle2  {{ pattern.composer }}
@@ -48,11 +48,6 @@ export default {
   props: {
     pattern: Object,
     mine: Boolean
-  },
-  methods: {
-    imgerror () {
-      console.log('a')
-    }
   },
   computed: {
     formattedTime () {
