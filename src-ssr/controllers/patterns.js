@@ -73,6 +73,7 @@ module.exports = {
       const query = {}
       let skip = 0
       let limit = 0
+      const sort = {}
       if (req.query.submitter) {
         query.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
@@ -117,7 +118,22 @@ module.exports = {
         query.$or.push({ composer: { $in: composers } })
         query.$or.push({ description: { $in: descriptions } })
       }
-      const result = await patterns.find(query, {}, { skip, limit }).sort('-submitDate').populate('submitter', 'name').lean()
+      if (req.query.sortBy) {
+        const querySort = parseInt(req.query.sort)
+        if (isNaN(querySort) || (querySort !== 1 && querySort !== -1)) {
+          res.status(400).send({ success: false, message: 'Invalid Sort' })
+          return
+        }
+        const sortBy = req.query.sortBy
+        if (sortBy !== 'submitDate' && sortBy !== 'updateDate' && sortBy !== 'name') {
+          res.status(400).send({ success: false, message: 'Invalid SortBy' })
+          return
+        }
+        sort[sortBy] = querySort
+      } else {
+        sort.submitDate = -1
+      }
+      const result = await patterns.find(query, {}, { skip, limit }).sort(sort).populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       if (error.name === 'CastError') {
