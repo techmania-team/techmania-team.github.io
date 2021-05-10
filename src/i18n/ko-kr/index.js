@@ -32,7 +32,7 @@ export default {
     author: '제작자: ',
     submitted: '투고일: ',
     submittedBy: '투고자: ',
-    updated: '업데이트: ',
+    updated: '갱신일: ',
     keys: '키보드',
     touch: '터치',
     km: '키보드/마우스',
