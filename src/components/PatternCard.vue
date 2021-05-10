@@ -12,7 +12,7 @@
         q-item
           q-item-section
             p
-              span(v-if="!mine") {{ $t('pattern.author') }} {{ pattern.submitter.name }}
+              span(v-if="!mine") {{ $t('pattern.submittedBy') }} {{ pattern.submitter.name }}
               br(v-if="!mine")
               span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
