@@ -34,24 +34,27 @@ module.exports = {
         for (const difficulty of req.body.difficulties) {
           strDifficulty += `${controls[difficulty.control]} - ${difficulty.name}: lv.${difficulty.level}\n`
         }
+        const embeds = [{
+          url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
+          image: { url: `http://i3.ytimg.com/vi/${req.body.previews[0].ytid}/hqdefault.jpg` },
+          title: req.body.name,
+          color: '15158332',
+          fields: [
+            { name: 'Composer', value: req.body.composer, inline: true },
+            { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
+            { name: 'Previews', value: strPreveiw, inline: false },
+            { name: 'Difficulties', value: strDifficulty, inline: false },
+            { name: 'Download', value: req.body.link, inline: false }
+          ]
+        }]
+        if (req.body.description) {
+          embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
+        }
         await axios.post(process.env.DISCORD_WEBHOOK, {
           username: 'TECHMANIA',
           avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
           content: `New pattern submitted by <@${req.user.discord}>`,
-          embeds: [{
-            url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
-            image: { url: `http://i3.ytimg.com/vi/${req.body.previews[0].ytid}/hqdefault.jpg` },
-            title: req.body.name,
-            color: '15158332',
-            fields: [
-              { name: 'Composer', value: req.body.composer, inline: true },
-              { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
-              { name: 'Previews', value: strPreveiw, inline: false },
-              { name: 'Difficulties', value: strDifficulty, inline: false },
-              { name: 'Download', value: req.body.link, inline: false },
-              { name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false }
-            ]
-          }]
+          embeds
         })
         res.status(200).send({ success: true, message: '', id: result._id })
       }
