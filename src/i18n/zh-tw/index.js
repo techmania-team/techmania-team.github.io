@@ -30,8 +30,8 @@ export default {
   pattern: {
     keysounded: '按鍵音',
     author: '譜面作者: ',
-    submitted: '提交於: ',
-    submittedBy: '提交者: ',
+    submitted: '上傳於: ',
+    submittedBy: '上傳者: ',
     updated: '最後更新於: ',
     keys: '鍵盤',
     touch: '觸控',
