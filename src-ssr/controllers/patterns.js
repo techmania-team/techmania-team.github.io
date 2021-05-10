@@ -79,7 +79,10 @@ module.exports = {
       }
       if (req.query.limit) {
         limit = parseInt(req.query.limit)
-        limit = isNaN(limit) ? 0 : limit
+        if (limit >= 50 || isNaN(limit)) {
+          res.status(400).send({ success: false, message: 'Invalid limit' })
+          return
+        }
       }
       if (req.query.keysounded === 'yes') {
         query.keysounded = true
@@ -90,6 +93,9 @@ module.exports = {
         const control = parseInt(req.query.control)
         if (!isNaN(control) && control <= 2 && control >= 0) {
           query['difficulties.control'] = control
+        } else {
+          res.status(400).send({ success: false, message: 'Invalid control' })
+          return
         }
       }
       if (req.query.keywords) {
