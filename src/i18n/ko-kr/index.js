@@ -25,7 +25,11 @@ export default {
     all: '전체',
     yes: '있음',
     no: '없음',
-    search: '검색'
+    search: '검색',
+    sort: '분류',
+    sortSubmit: '투고일',
+    sortUpdate: '갱신일',
+    sortName: '곡명'
   },
   pattern: {
     keysounded: '키사운드',

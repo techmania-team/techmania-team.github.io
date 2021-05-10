@@ -25,7 +25,11 @@ export default {
     all: 'すべて',
     yes: 'あり',
     no: 'なし',
-    search: '検索'
+    search: '検索',
+    sort: 'ソート',
+    sortSubmit: '投稿日',
+    sortUpdate: '更新日',
+    sortName: '曲名'
   },
   pattern: {
     keysounded: 'ノート音',

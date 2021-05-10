@@ -25,7 +25,11 @@ export default {
     all: '不限',
     yes: '有',
     no: '無',
-    search: '搜尋'
+    search: '搜尋',
+    sort: '排序',
+    sortSubmit: '上傳時間',
+    sortUpdate: '最後更新時間',
+    sortName: '曲名'
   },
   pattern: {
     keysounded: '按鍵音',

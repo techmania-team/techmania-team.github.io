@@ -25,7 +25,11 @@ export default {
     all: '不限',
     yes: '有',
     no: '无',
-    search: '搜索'
+    search: '搜索',
+    sort: '排序',
+    sortSubmit: '上传时间',
+    sortUpdate: '最后更新时间',
+    sortName: '曲名'
   },
   pattern: {
     keysounded: '按键音',
