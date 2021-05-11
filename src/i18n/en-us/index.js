@@ -25,7 +25,11 @@ export default {
     all: 'All',
     yes: 'Yes',
     no: 'No',
-    search: 'Search'
+    search: 'Search',
+    sort: 'Sort',
+    sortSubmit: 'Submit Date',
+    sortUpdate: 'Update Date',
+    sortName: 'Name'
   },
   pattern: {
     keysounded: 'Keysounded',

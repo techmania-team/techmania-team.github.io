@@ -1,6 +1,6 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" @error="imgerror" :ratio="16/9")
+    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" :ratio="16/9")
       .absolute-bottom
         .text-h6 {{ pattern.name }}
         .text-subtitle2  {{ pattern.composer }}
@@ -12,7 +12,7 @@
         q-item
           q-item-section
             p
-              span(v-if="!mine") {{ $t('pattern.author') }} {{ pattern.submitter.name }}
+              span(v-if="!mine") {{ $t('pattern.submittedBy') }} {{ pattern.submitter.name }}
               br(v-if="!mine")
               span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
@@ -48,11 +48,6 @@ export default {
   props: {
     pattern: Object,
     mine: Boolean
-  },
-  methods: {
-    imgerror () {
-      console.log('a')
-    }
   },
   computed: {
     formattedTime () {

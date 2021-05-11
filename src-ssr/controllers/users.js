@@ -49,9 +49,6 @@ module.exports = {
         await user.save()
         res.redirect(new URL(`?token=${accessToken}&jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data)
-        } else console.log(error)
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     } else {
@@ -83,7 +80,6 @@ module.exports = {
 
       res.status(200).send({ success: true, message: '', jwt: token, token: accessToken, id: req.user._id })
     } catch (error) {
-      console.log(error)
       res.status(500).send({ success: false, message: 'Server Error' })
     }
   },

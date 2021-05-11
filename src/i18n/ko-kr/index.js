@@ -25,14 +25,18 @@ export default {
     all: '전체',
     yes: '있음',
     no: '없음',
-    search: '검색'
+    search: '검색',
+    sort: '분류',
+    sortSubmit: '투고일',
+    sortUpdate: '갱신일',
+    sortName: '곡명'
   },
   pattern: {
     keysounded: '키사운드',
     author: '제작자: ',
     submitted: '투고일: ',
     submittedBy: '투고자: ',
-    updated: '업데이트: ',
+    updated: '갱신일: ',
     keys: '키보드',
     touch: '터치',
     km: '키보드/마우스',
