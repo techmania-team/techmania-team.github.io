@@ -47,6 +47,7 @@
                 p.text-red {{ $t('submitForm.dangerZone') }}
                 q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
               hr.q-my-xl
+              p.text-center(v-html="$t('submitForm.agreetos', {tosURL})")
               p.text-center
                 q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
       q-dialog(v-model="confirm")
@@ -153,7 +154,8 @@ export default {
           ['unordered', 'ordered'],
           ['viewsource']
         ]
-      }
+      },
+      tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {

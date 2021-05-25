@@ -75,6 +75,7 @@ export default {
     invalidLink: '有効なURLを入力してください。',
     submitted: '投稿に成功しました。',
     updated: '更新に成功しました。',
-    deleted: '削除しました。'
+    deleted: '削除しました。',
+    agreetos: 'パターンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。'
   }
 }

@@ -75,6 +75,7 @@ export default {
     invalidLink: '請輸入有效的網址',
     submitted: '送出成功',
     deleted: '刪除成功',
-    updated: '編輯成功'
+    updated: '編輯成功',
+    agreetos: '送出譜面代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>'
   }
 }

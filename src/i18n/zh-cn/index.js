@@ -75,6 +75,7 @@ export default {
     invalidLink: '请输入有效的网址',
     submitted: '上传成功',
     deleted: '删除成功',
-    updated: '编辑成功'
+    updated: '编辑成功',
+    agreetos: '送出谱面代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>'
   }
 }

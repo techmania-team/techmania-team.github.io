@@ -75,6 +75,7 @@ export default {
     invalidLink: '유효한 URL을 입력해 주세요.',
     submitted: '투고에 성공했습니다.',
     updated: '업데이트에 성공했습니다.',
-    deleted: '삭제되었습니다.'
+    deleted: '삭제되었습니다.',
+    agreetos: '패턴을 투고할 시 <a href="{tosURL}" target="_blank">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.'
   }
 }
