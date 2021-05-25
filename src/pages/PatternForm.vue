@@ -8,7 +8,7 @@
               h4.text-center {{ model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
               q-separator.q-my-md
               br
-              q-banner.text-white.bg-red(inline-actions)
+              q-banner.text-white.bg-red(rounded inline-actions)
                 | {{ $t('submitForm.rulesTitle') }}
                 ul
                   li {{ $t('submitForm.rules1') }}
