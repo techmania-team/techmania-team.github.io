@@ -47,8 +47,10 @@
                 p.text-red {{ $t('submitForm.dangerZone') }}
                 q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
               hr.q-my-xl
-              p.text-center(v-html="$t('submitForm.agreetos', {tosURL})")
               p.text-center
+                q-checkbox(v-model="model.agree")
+                  span(v-html="$t('submitForm.agreetos', {tosURL})")
+                br
                 q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
       q-dialog(v-model="confirm")
         q-card
@@ -142,7 +144,8 @@ export default {
         difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
-        description: ''
+        description: '',
+        agree: false
       },
       isedit: false,
       confirm: false,
@@ -181,6 +184,16 @@ export default {
       return (match && match[7].length === 11)
     },
     async submitForm () {
+      if (!this.model.agree) {
+        this.$q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: this.$t('submitForm.agreetos2'),
+          position: 'top'
+        })
+        return
+      }
       this.submitting = true
       try {
         const post = JSON.parse(JSON.stringify(this.model))
@@ -265,7 +278,8 @@ export default {
         difficulties: [{ name: '', level: 0, control: 0 }],
         link: '',
         previews: [{ link: '', name: '' }],
-        description: ''
+        description: '',
+        agree: false
       }
     },
     deleteConfirm () {
@@ -292,7 +306,8 @@ export default {
             difficulties: [{ name: '', level: 0, control: 0 }],
             link: '',
             previews: [{ link: '', name: '' }],
-            description: ''
+            description: '',
+            agree: false
           }
           this.confirm = false
         } else {
@@ -335,7 +350,7 @@ export default {
           preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
           return preview
         })
-        this.model = patterndata
+        this.model = { ...patterndata, agree: false }
         this.$store.commit('temp/cleanPattern')
       }
     }

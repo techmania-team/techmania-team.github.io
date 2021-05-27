@@ -76,6 +76,7 @@ export default {
     submitted: 'Submitted successfully.',
     updated: 'Updated successfully.',
     deleted: 'Deleted successfully.',
-    agreetos: 'Submitting the patterns signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.'
+    agreetos: 'Submitting the patterns signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
+    agreetos2: 'You need to accept the terms first.'
   }
 }

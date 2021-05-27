@@ -76,6 +76,7 @@ export default {
     submitted: '投稿に成功しました。',
     updated: '更新に成功しました。',
     deleted: '削除しました。',
-    agreetos: 'パターンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。'
+    agreetos: 'パターンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。',
+    agreetos2: 'まず規約に同意する必要があります。'
   }
 }

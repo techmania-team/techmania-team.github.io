@@ -76,6 +76,7 @@ export default {
     submitted: '上传成功',
     deleted: '删除成功',
     updated: '编辑成功',
-    agreetos: '送出谱面代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>'
+    agreetos: '送出谱面代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>',
+    agreetos2: '您必须同意使用条款'
   }
 }
