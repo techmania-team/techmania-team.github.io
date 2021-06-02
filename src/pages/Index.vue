@@ -2,7 +2,7 @@
   q-page#index
     q-parallax#header-video
       template(v-slot:media)
-        video(:src="'./assets/header.webm'" autoplay loop muted)
+        video(:src="'./assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
       template(v-slot:content="scope")
         .absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
