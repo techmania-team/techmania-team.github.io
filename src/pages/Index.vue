@@ -6,14 +6,28 @@
       template(v-slot:content="scope")
         .absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
-          .text-h3
-            q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
-              q-icon(left name="download" )
-              div {{ $t('index.download') }}
-          p
-            | {{ $t('index.version') }}: {{ tag }}
-            br
-            | {{ $t('index.release') }} {{ published }}
+          div(v-if="platform === 'windows'")
+            .text-h3
+              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
+                q-icon(left name="fab fa-windows" )
+                div {{ $t('index.download') }}
+            p
+              | {{ $t('index.version') }}: {{ tag }}
+              br
+              | {{ $t('index.release') }} {{ published }}
+              br
+              a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+          div(v-else-if="platform === 'android'")
+            .text-h3
+              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://drive.google.com/file/d/18S81J4U3DN5BNEHQe4b5vxKH6YoCmYe2/view')")
+                q-icon(left name="android" )
+                div {{ $t('index.download') }}
+            p
+              | {{ $t('index.version') }}: {{ tagAndroid }}
+              br
+              | {{ $t('index.release') }} {{ publishAndroid }}
+              br
+              a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
     section.q-mx-auto.padding.q-my-md
       Patterns#index-patterns
     section.q-mx-auto.padding.q-my-md
@@ -88,7 +102,10 @@ export default {
   data () {
     return {
       tag: '',
-      publishDate: ''
+      tagAndroid: '0.6b',
+      publishDate: '',
+      publishAndroid: '',
+      platform: 'windows'
     }
   },
   computed: {
@@ -109,6 +126,8 @@ export default {
   },
   mounted () {
     this.getLatestTag()
+    this.publishAndroid = new Date('2021/05/12 15:41:00').toLocaleString(this.user.locale)
+    if (this.$q.platform.is.android) this.platform = 'android'
   }
 }
 </script>

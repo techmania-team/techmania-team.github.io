@@ -14,7 +14,8 @@ export default {
     version: 'Latest Version',
     release: 'Released at ',
     videos: 'Videos',
-    patterns: 'Latest Patterns'
+    patterns: 'Latest Patterns',
+    platform: '{platform} users'
   },
   changelog: {
     downloads: 'Downloads',

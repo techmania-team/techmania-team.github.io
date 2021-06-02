@@ -14,7 +14,8 @@ export default {
     version: '最新版本',
     release: '發布於',
     videos: '遊戲影片',
-    patterns: '最新譜面'
+    patterns: '最新譜面',
+    platform: '{platform} 使用者'
   },
   changelog: {
     downloads: '下載數',

@@ -14,7 +14,8 @@ export default {
     version: '最新バージョン',
     release: 'リリーズ日: ',
     videos: 'ビデオ',
-    patterns: '最新パターン'
+    patterns: '最新パターン',
+    platform: '{platform}ユーザー'
   },
   changelog: {
     downloads: 'ダウンロード',

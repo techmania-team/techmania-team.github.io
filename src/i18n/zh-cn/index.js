@@ -14,7 +14,8 @@ export default {
     version: '最新版本',
     release: '发布于',
     videos: '视频',
-    patterns: '最新谱面'
+    patterns: '最新谱面',
+    platform: '{platform} 用户'
   },
   changelog: {
     downloads: '下载次数',
