@@ -4,13 +4,13 @@
       template(v-slot:media)
         video(:src="'./assets/header.webm'" autoplay loop muted)
       template(v-slot:content="scope")
-        .absolute.column.items-center
+        .absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
               q-icon(left name="download" )
               div {{ $t('index.download') }}
-          .text-center
+          p
             | {{ $t('index.version') }}: {{ tag }}
             br
             | {{ $t('index.release') }} {{ published }}
