@@ -8,7 +8,7 @@
           img#logo(:src="'./assets/Logo.png'")
           div(v-if="platform === 'windows'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://github.com/macmillan333/techmania/releases/latest')")
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/macmillan333/techmania/releases/latest')
                 q-icon(left name="fab fa-windows" )
                 div {{ $t('index.download') }}
             p
@@ -19,7 +19,7 @@
               a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://drive.google.com/file/d/11jgs4E46cm6swlt6CN4j7kkwjljSiDdj/view')")
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/11jgs4E46cm6swlt6CN4j7kkwjljSiDdj/view')
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p
