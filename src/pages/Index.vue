@@ -19,7 +19,7 @@
               a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://drive.google.com/file/d/18S81J4U3DN5BNEHQe4b5vxKH6YoCmYe2/view')")
+              q-btn.q-my-md(color="secondary" size="lg" @click="openLink('https://drive.google.com/file/d/11jgs4E46cm6swlt6CN4j7kkwjljSiDdj/view')")
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p
@@ -102,7 +102,7 @@ export default {
   data () {
     return {
       tag: '',
-      tagAndroid: '0.6b',
+      tagAndroid: '0.7',
       publishDate: '',
       publishAndroid: '',
       platform: 'windows'
@@ -126,7 +126,7 @@ export default {
   },
   mounted () {
     this.getLatestTag()
-    this.publishAndroid = new Date('2021/05/12 15:41:00').toLocaleString(this.user.locale)
+    this.publishAndroid = new Date('2021/06/14 14:33:00 GMT+0800').toLocaleString(this.user.locale)
     if (this.$q.platform.is.android) this.platform = 'android'
   }
 }
