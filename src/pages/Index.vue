@@ -19,6 +19,8 @@
               a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
               | &emsp;
               a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
+              | &emsp;
+              a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
               q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/11jgs4E46cm6swlt6CN4j7kkwjljSiDdj/view' target='_blank')
@@ -32,10 +34,12 @@
               a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
               | &emsp;
               a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
+              | &emsp;
+              a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'ios'")
             .text-h3
               q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases' target='_blank')
-                q-icon(left name="fab fa-apple" )
+                q-icon(left name="img:./assets/icons/ios.svg" )
                 div {{ $t('index.download') }}
             p
               | {{ $t('index.version') }}: {{ tag.ios }}
@@ -45,6 +49,23 @@
               a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
               | &emsp;
               a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+              | &emsp;
+              a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
+          div(v-else-if="platform === 'mac'")
+            .text-h3
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/fhalfkg/techmania/releases/latest' target='_blank')
+                q-icon(left name="fab fa-apple" )
+                div {{ $t('index.download') }}
+            p
+              | {{ $t('index.version') }}: {{ tag.mac }}
+              br
+              | {{ $t('index.release') }} {{ published.mac }}
+              br
+              a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
+              | &emsp;
+              a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+              | &emsp;
+              a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
     section.q-mx-auto.padding.q-my-md
       Patterns#index-patterns
     section.q-mx-auto.padding.q-my-md
@@ -119,31 +140,49 @@ export default {
   data () {
     return {
       tag: {
-        win: '',
+        win: '0.7',
         ios: '0.7',
-        android: '0.7'
+        android: '0.7',
+        mac: '0.7'
       },
-      publishDate: '',
+      publishDate: {
+        win: '',
+        ios: '',
+        android: '',
+        mac: ''
+      },
       platform: 'windows'
     }
   },
   computed: {
     published () {
       return {
-        win: this.publishDate.length > 0 ? new Date(this.publishDate).toLocaleString(this.user.locale) : 'Unknown',
+        win: this.publishDate.win.length > 0 ? new Date(this.publishDate.win).toLocaleString(this.user.locale) : 'Unknown',
         android: new Date('2021/06/14 14:33:00 GMT+0800').toLocaleString(this.user.locale),
-        ios: new Date('2021/06/20 21:45:00 GMT+0800').toLocaleString(this.user.locale)
+        ios: this.publishDate.ios.length > 0 ? new Date(this.publishDate.ios).toLocaleString(this.user.locale) : 'Unknown',
+        mac: this.publishDate.mac.length > 0 ? new Date(this.publishDate.mac).toLocaleString(this.user.locale) : 'Unknown'
       }
     }
   },
   methods: {
     async getLatestTag () {
       try {
-        const result = await this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
-        this.tag.win = result.data[0].tag_name
-        this.publishDate = result.data[0].published_at
+        let win = this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
+        let ios = this.$axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
+        let mac = this.$axios.get('https://api.github.com/repos/fhalfkg/techmania/releases')
+        win = await win
+        ios = await ios
+        mac = await mac
+        this.tag.win = win.data[0].tag_name
+        this.tag.ios = ios.data[0].tag_name
+        this.tag.mac = mac.data[0].tag_name
+        this.publishDate.win = win.data[0].published_at
+        this.publishDate.ios = ios.data[0].published_at
+        this.publishDate.mac = mac.data[0].published_at
       } catch (_) {
-        this.tag = 'Unknown'
+        this.tag.win = 'Unknown'
+        this.tag.ios = 'Unknown'
+        this.tag.mac = 'Unknown'
       }
     }
   },
@@ -151,6 +190,7 @@ export default {
     this.getLatestTag()
     if (this.$q.platform.is.android) this.platform = 'android'
     else if (this.$q.platform.is.ios) this.platform = 'ios'
+    else if (this.$q.platform.is.mac) this.platform = 'mac'
   }
 }
 </script>
