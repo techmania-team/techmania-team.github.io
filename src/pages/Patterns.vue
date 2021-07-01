@@ -60,23 +60,23 @@ export default {
           content: 'Patterns for TECHMANIA.'
         },
         ogType: {
-          property: 'og:type',
+          name: 'og:type',
           content: 'website'
         },
         ogUrl: {
-          property: 'og:url',
+          name: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
         },
         ogTitle: {
-          property: 'og:title',
+          name: 'og:title',
           content: 'Patterns | TECHMANIA'
         },
         ogDescription: {
-          property: 'og:description',
+          name: 'og:description',
           content: 'Patterns for TECHMANIA.'
         },
         ogImage: {
-          property: 'og:image',
+          name: 'og:image',
           content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
         },
         twCard: {

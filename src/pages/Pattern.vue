@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'PagePattern',
+  name: 'PagePatterns',
   meta () {
     return {
       title: `${this.pattern.name} | TECHMANIA`,
@@ -54,27 +54,27 @@ export default {
           'data-dynamic': true
         },
         ogType: {
-          property: 'og:type',
+          name: 'og:type',
           content: 'website',
           'data-dynamic': true
         },
         ogUrl: {
-          property: 'og:url',
+          name: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
           'data-dynamic': true
         },
         ogTitle: {
-          property: 'og:title',
+          name: 'og:title',
           content: `${this.pattern.name} | TECHMANIA`,
           'data-dynamic': true
         },
         ogDescription: {
-          property: 'og:description',
+          name: 'og:description',
           content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
           'data-dynamic': true
         },
         ogImage: {
-          property: 'og:image',
+          name: 'og:image',
           content: this.backgroundImage,
           'data-dynamic': true
         },
@@ -107,7 +107,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
+    return store.dispatch('temp/fetchPattern', currentRoute.params.id)
   },
   data () {
     return {
@@ -130,13 +130,12 @@ export default {
     }
   },
   created () {
-    this.pattern = this.$store.getters['tempPattern/getPattern']
+    this.pattern = this.$store.getters['temp/getPattern']
     if (this.pattern._id.length === 0) {
       this.$router.push('/404')
     } else {
-      if (process.env.CLIENT) {
-        document.title = `${this.pattern.name} | TECHMANIA`
-      }
+      document.title = `${this.pattern.name} | TECHMANIA`
+      this.$store.commit('temp/cleanPattern')
     }
   }
 }

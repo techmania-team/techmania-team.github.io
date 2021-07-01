@@ -76,32 +76,32 @@ export default {
         },
         description: {
           name: 'description',
-          content: this.description,
+          content: 'Edit Pattern',
           'data-dynamic': true
         },
         ogType: {
-          property: 'og:type',
+          name: 'og:type',
           content: 'website',
           'data-dynamic': true
         },
         ogUrl: {
-          property: 'og:url',
+          name: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
           'data-dynamic': true
         },
         ogTitle: {
-          property: 'og:title',
+          name: 'og:title',
           content: this.title,
           'data-dynamic': true
         },
         ogDescription: {
-          property: 'og:description',
-          content: this.description,
+          name: 'og:description',
+          content: 'Edit Pattern',
           'data-dynamic': true
         },
         ogImage: {
-          property: 'og:image',
-          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+          name: 'og:image',
+          content: this.backgroundImage,
           'data-dynamic': true
         },
         twCard: {
@@ -121,12 +121,12 @@ export default {
         },
         twDescription: {
           name: 'twitter:description',
-          content: this.description,
+          content: 'Edit Pattern',
           'data-dynamic': true
         },
         twImage: {
           name: 'twitter:image',
-          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+          content: this.backgroundImage,
           'data-dynamic': true
         }
       }
@@ -162,15 +162,12 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    if (currentRoute.params.id) return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
+    if (currentRoute.params.id) return store.dispatch('temp/fetchPattern', currentRoute.params.id)
     else return 0
   },
   computed: {
     title () {
       return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern') + ' | TECHMANIA'
-    },
-    description () {
-      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
     },
     controlTypes () {
       return [
@@ -345,7 +342,7 @@ export default {
   },
   created () {
     if (this.$route.params.id) {
-      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['tempPattern/getPattern']))
+      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
       if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
         this.$router.push('/404')
       } else {
@@ -354,6 +351,7 @@ export default {
           return preview
         })
         this.model = { ...patterndata, agree: false }
+        this.$store.commit('temp/cleanPattern')
       }
     }
   }
