@@ -76,32 +76,32 @@ export default {
         },
         description: {
           name: 'description',
-          content: 'Edit Pattern',
+          content: this.description,
           'data-dynamic': true
         },
         ogType: {
-          name: 'og:type',
+          property: 'og:type',
           content: 'website',
           'data-dynamic': true
         },
         ogUrl: {
-          name: 'og:url',
+          property: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
           'data-dynamic': true
         },
         ogTitle: {
-          name: 'og:title',
+          property: 'og:title',
           content: this.title,
           'data-dynamic': true
         },
         ogDescription: {
-          name: 'og:description',
-          content: 'Edit Pattern',
+          property: 'og:description',
+          content: this.description,
           'data-dynamic': true
         },
         ogImage: {
-          name: 'og:image',
-          content: this.backgroundImage,
+          property: 'og:image',
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
           'data-dynamic': true
         },
         twCard: {
@@ -121,12 +121,12 @@ export default {
         },
         twDescription: {
           name: 'twitter:description',
-          content: 'Edit Pattern',
+          content: this.description,
           'data-dynamic': true
         },
         twImage: {
           name: 'twitter:image',
-          content: this.backgroundImage,
+          content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
           'data-dynamic': true
         }
       }
@@ -168,6 +168,9 @@ export default {
   computed: {
     title () {
       return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern') + ' | TECHMANIA'
+    },
+    description () {
+      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
     },
     controlTypes () {
       return [

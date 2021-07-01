@@ -54,27 +54,27 @@ export default {
           'data-dynamic': true
         },
         ogType: {
-          name: 'og:type',
+          property: 'og:type',
           content: 'website',
           'data-dynamic': true
         },
         ogUrl: {
-          name: 'og:url',
+          property: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
           'data-dynamic': true
         },
         ogTitle: {
-          name: 'og:title',
+          property: 'og:title',
           content: `${this.pattern.name} | TECHMANIA`,
           'data-dynamic': true
         },
         ogDescription: {
-          name: 'og:description',
+          property: 'og:description',
           content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
           'data-dynamic': true
         },
         ogImage: {
-          name: 'og:image',
+          property: 'og:image',
           content: this.backgroundImage,
           'data-dynamic': true
         },

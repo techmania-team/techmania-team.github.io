@@ -22,23 +22,23 @@ export default {
           content: 'Oops. Nothing here...'
         },
         ogType: {
-          name: 'og:type',
+          property: 'og:type',
           content: 'website'
         },
         ogUrl: {
-          name: 'og:url',
+          property: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
         },
         ogTitle: {
-          name: 'og:title',
+          property: 'og:title',
           content: '404 | TECHMANIA'
         },
         ogDescription: {
-          name: 'og:description',
+          property: 'og:description',
           content: 'Oops. Nothing here...'
         },
         ogImage: {
-          name: 'og:image',
+          property: 'og:image',
           content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
         },
         twCard: {
