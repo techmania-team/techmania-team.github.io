@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
-import temp from './temp'
+import tempPattern from './temp-pattern'
 
 Vue.use(Vuex)
 
@@ -18,7 +18,7 @@ export default function ({ ssrContext }) {
   const Store = new Vuex.Store({
     modules: {
       user,
-      temp
+      tempPattern
     },
     // enable strict mode (adds overhead!)
     // for dev mode only

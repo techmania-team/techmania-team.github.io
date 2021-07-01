@@ -162,7 +162,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    if (currentRoute.params.id) return store.dispatch('temp/fetchPattern', currentRoute.params.id)
+    if (currentRoute.params.id) return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
     else return 0
   },
   computed: {
@@ -342,7 +342,7 @@ export default {
   },
   created () {
     if (this.$route.params.id) {
-      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['temp/getPattern']))
+      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['tempPattern/getPattern']))
       if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
         this.$router.push('/404')
       } else {

@@ -107,7 +107,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    return store.dispatch('temp/fetchPattern', currentRoute.params.id)
+    return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
   },
   data () {
     return {
@@ -130,11 +130,13 @@ export default {
     }
   },
   created () {
-    this.pattern = this.$store.getters['temp/getPattern']
+    this.pattern = this.$store.getters['tempPattern/getPattern']
     if (this.pattern._id.length === 0) {
       this.$router.push('/404')
     } else {
-      document.title = `${this.pattern.name} | TECHMANIA`
+      if (process.env.CLIENT) {
+        document.title = `${this.pattern.name} | TECHMANIA`
+      }
       this.$store.commit('temp/cleanPattern')
     }
   }
