@@ -137,7 +137,6 @@ export default {
       if (process.env.CLIENT) {
         document.title = `${this.pattern.name} | TECHMANIA`
       }
-      this.$store.commit('temp/cleanPattern')
     }
   }
 }

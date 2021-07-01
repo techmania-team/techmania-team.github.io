@@ -351,7 +351,6 @@ export default {
           return preview
         })
         this.model = { ...patterndata, agree: false }
-        this.$store.commit('temp/cleanPattern')
       }
     }
   }
