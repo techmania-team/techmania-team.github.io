@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: 'PagePatterns',
+  name: 'PagePattern',
   meta () {
     return {
       title: `${this.pattern.name} | TECHMANIA`,
