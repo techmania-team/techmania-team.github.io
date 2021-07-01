@@ -35,12 +35,14 @@ module.exports = {
           user = await users.create({
             discord: response.data.id,
             name: response.data.username,
+            avatar: response.data.avatar,
             accessInfo: []
           })
         }
 
         const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '5 days' })
         user.name = response.data.username
+        user.avatar = response.data.avatar
         user.accessInfo.push({
           jwt: token,
           discord: accessToken,
