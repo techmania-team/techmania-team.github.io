@@ -67,17 +67,33 @@
               | &emsp;
               a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
     section.q-mx-auto.padding.q-my-md
-      Patterns#index-patterns
+      .container
+        .row
+          .col-12.q-mx-auto
+            h4.text-center {{ $t('index.patterns') }}
+            q-separator
+            .row
+              .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern._id")
+                PatternCard(:pattern="pattern" :mine="false")
     section.q-mx-auto.padding.q-my-md
-      Videos#index-videos
+      .container
+        .row
+          .col-12.q-mx-auto
+            h4.text-center {{ $t('index.videos') }}
+            q-separator
+            .row
+              .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in videos" :key="idx")
+                q-video(:ratio="16/9" :src="video")
 </template>
 
 <script>
-import Videos from '../components/IndexVideos.vue'
-import Patterns from '../components/IndexPatterns.vue'
+import PatternCard from '../components/PatternCard.vue'
 
 export default {
   name: 'PageIndex',
+  components: {
+    PatternCard
+  },
   meta () {
     return {
       title: 'TECHMANIA',
@@ -91,23 +107,23 @@ export default {
           content: 'Official TECHMANIA Website'
         },
         ogType: {
-          name: 'og:type',
+          property: 'og:type',
           content: 'website'
         },
         ogUrl: {
-          name: 'og:url',
+          property: 'og:url',
           content: new URL(this.$route.fullPath, process.env.HOST_URL).toString()
         },
         ogTitle: {
-          name: 'og:title',
+          property: 'og:title',
           content: 'TECHMANIA'
         },
         ogDescription: {
-          name: 'og:description',
+          property: 'og:description',
           content: 'Official TECHMANIA Website'
         },
         ogImage: {
-          name: 'og:image',
+          property: 'og:image',
           content: 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
         },
         twCard: {
@@ -133,61 +149,37 @@ export default {
       }
     }
   },
-  components: {
-    Videos,
-    Patterns
-  },
   data () {
     return {
-      tag: {
-        win: '0.7',
-        ios: '0.7',
-        android: '0.7',
-        mac: '0.7'
-      },
-      publishDate: {
-        win: '',
-        ios: '',
-        android: '',
-        mac: ''
-      },
       platform: 'windows'
     }
   },
+  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    return store.dispatch('tempIndex/fetchData', currentRoute.params.id)
+  },
   computed: {
+    tag () {
+      return this.$store.getters['tempIndex/getTag']
+    },
+    patterns () {
+      return this.$store.getters['tempIndex/getPatterns']
+    },
+    videos () {
+      return this.$store.getters['tempIndex/getVideos']
+    },
+    publishDate () {
+      return this.$store.getters['tempIndex/getPublishDate']
+    },
     published () {
       return {
         win: this.publishDate.win.length > 0 ? new Date(this.publishDate.win).toLocaleString(this.user.locale) : 'Unknown',
-        android: new Date('2021/06/14 14:33:00 GMT+0800').toLocaleString(this.user.locale),
+        android: new Date(this.publishDate.android).toLocaleString(this.user.locale),
         ios: this.publishDate.ios.length > 0 ? new Date(this.publishDate.ios).toLocaleString(this.user.locale) : 'Unknown',
         mac: this.publishDate.mac.length > 0 ? new Date(this.publishDate.mac).toLocaleString(this.user.locale) : 'Unknown'
       }
     }
   },
-  methods: {
-    async getLatestTag () {
-      try {
-        let win = this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
-        let ios = this.$axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
-        let mac = this.$axios.get('https://api.github.com/repos/fhalfkg/techmania/releases')
-        win = await win
-        ios = await ios
-        mac = await mac
-        this.tag.win = win.data[0].tag_name
-        this.tag.ios = ios.data[0].tag_name
-        this.tag.mac = mac.data[0].tag_name
-        this.publishDate.win = win.data[0].published_at
-        this.publishDate.ios = ios.data[0].published_at
-        this.publishDate.mac = mac.data[0].published_at
-      } catch (_) {
-        this.tag.win = 'Unknown'
-        this.tag.ios = 'Unknown'
-        this.tag.mac = 'Unknown'
-      }
-    }
-  },
   mounted () {
-    this.getLatestTag()
     if (this.$q.platform.is.android) this.platform = 'android'
     else if (this.$q.platform.is.ios) this.platform = 'ios'
     else if (this.$q.platform.is.mac) this.platform = 'mac'

@@ -1,5 +1,5 @@
-export function cleanPattern (state, data) {
-  state.pattern = {
+export default function () {
+  return {
     _id: '',
     name: '',
     composer: '',
@@ -10,8 +10,4 @@ export function cleanPattern (state, data) {
     description: '',
     submitter: { name: '', _id: '' }
   }
-}
-
-export function setPattern (state, data) {
-  state.pattern = data
 }

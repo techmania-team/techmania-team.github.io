@@ -9,6 +9,7 @@ export default ({ app, store }) => {
   app.i18n = new VueI18n({
     locale: store.getters['user/getUserData'].locale,
     fallbackLocale: 'en-us',
-    messages
+    messages,
+    silentFallbackWarn: true
   })
 }
