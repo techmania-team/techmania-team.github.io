@@ -52,14 +52,14 @@ export default {
   computed: {
     formattedTime () {
       return {
-        relative: process.env.CLIENT ? this.$date(this.pattern.submitDate).locale(this.user.locale2).fromNow() : '',
-        text: process.env.CLIENT ? new Date(this.pattern.submitDate).toLocaleString(this.user.locale) : ''
+        relative: this.$date(this.pattern.submitDate).locale(this.user.locale2).fromNow(),
+        text: new Date(this.pattern.submitDate).toLocaleString(this.user.locale)
       }
     },
     formattedUpdateTime () {
       return {
-        relative: process.env.CLIENT ? this.$date(this.pattern.updateDate).locale(this.user.locale2).fromNow() : '',
-        text: process.env.CLIENT ? new Date(this.pattern.updateDate).toLocaleString(this.user.locale) : ''
+        relative: this.$date(this.pattern.updateDate).locale(this.user.locale2).fromNow(),
+        text: new Date(this.pattern.updateDate).toLocaleString(this.user.locale)
       }
     }
   }

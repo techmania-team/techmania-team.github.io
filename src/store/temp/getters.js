@@ -1,3 +1,3 @@
 export function getPattern (state) {
-  return state
+  return state.pattern
 }
