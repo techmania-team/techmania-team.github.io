@@ -14,7 +14,7 @@
             q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
             q-route-tab.nav-desktop(v-if="isLogin" to="/mypage" :label="$t('nav.myPage')")
             q-tab.nav-desktop(v-if="isLogin" @click="logout()" :label="$t('nav.logout')")
-            q-btn-dropdown.nav-desktop(stretch flat :label="user.locale")
+            q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
               q-list
                 q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
                   q-item-section
@@ -37,7 +37,7 @@
               q-item-section {{ $t('nav.myPage') }}
             q-item.text-grey7(clickable v-if="isLogin" @click="logout()" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
-            q-btn-dropdown.full-width(align="between" stretch flat :label="user.locale")
+            q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
               q-list
                 q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
                   q-item-section

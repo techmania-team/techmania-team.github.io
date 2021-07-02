@@ -7,7 +7,8 @@ export default {
     myPage: '个人主页',
     logout: '登出',
     menu: '菜单',
-    myPatterns: '我的谱面'
+    myPatterns: '我的谱面',
+    lang: '语言'
   },
   index: {
     download: '下载',
