@@ -7,7 +7,8 @@ export default {
     myPage: 'マイページ',
     logout: 'ログアウト',
     menu: 'メニュー',
-    myPatterns: 'マイパターン'
+    myPatterns: 'マイパターン',
+    lang: '言語'
   },
   index: {
     download: 'ダウンロード',

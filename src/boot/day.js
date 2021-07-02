@@ -8,10 +8,4 @@ import 'dayjs/locale/ko'
 
 dayjs.extend(relativeTime)
 
-Object.defineProperties(Vue.prototype, {
-  $date: {
-    get () {
-      return dayjs
-    }
-  }
-})
+Vue.prototype.$date = dayjs

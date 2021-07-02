@@ -7,7 +7,8 @@ export default {
     myPage: '個人檔案',
     logout: '登出',
     menu: '選單',
-    myPatterns: '我的譜面'
+    myPatterns: '我的譜面',
+    lang: '語言'
   },
   index: {
     download: '遊戲下載',
