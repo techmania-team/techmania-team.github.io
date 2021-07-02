@@ -23,7 +23,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/11jgs4E46cm6swlt6CN4j7kkwjljSiDdj/view' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/yyj01004/techmania/releases/latest' target='_blank')
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p
@@ -38,7 +38,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'ios'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/latest' target='_blank')
                 q-icon(left name="img:./assets/icons/ios.svg" )
                 div {{ $t('index.download') }}
             p
@@ -173,7 +173,7 @@ export default {
     published () {
       return {
         win: this.publishDate.win.length > 0 ? new Date(this.publishDate.win).toLocaleString(this.user.locale) : 'Unknown',
-        android: new Date(this.publishDate.android).toLocaleString(this.user.locale),
+        android: this.publishDate.android.length > 0 ? new Date(this.publishDate.android).toLocaleString(this.user.locale) : 'Unknown',
         ios: this.publishDate.ios.length > 0 ? new Date(this.publishDate.ios).toLocaleString(this.user.locale) : 'Unknown',
         mac: this.publishDate.mac.length > 0 ? new Date(this.publishDate.mac).toLocaleString(this.user.locale) : 'Unknown'
       }
