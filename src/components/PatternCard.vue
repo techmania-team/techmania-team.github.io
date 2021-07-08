@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import parseISO from 'date-fns/fp/parseISO'
 export default {
   name: 'PatternCard',
   props: {
@@ -52,14 +53,14 @@ export default {
   computed: {
     formattedTime () {
       return {
-        relative: process.env.CLIENT ? this.$date(this.pattern.submitDate).locale(this.user.locale2).fromNow() : '',
-        text: process.env.CLIENT ? new Date(this.pattern.submitDate).toLocaleString(this.user.locale) : ''
+        relative: this.$date.formatDistanceToNow(parseISO(this.pattern.submitDate), { locale: this.$date.locales[this.user.locale2], addSuffix: true }),
+        text: new Date(this.pattern.submitDate).toLocaleString(this.user.locale)
       }
     },
     formattedUpdateTime () {
       return {
-        relative: process.env.CLIENT ? this.$date(this.pattern.updateDate).locale(this.user.locale2).fromNow() : '',
-        text: process.env.CLIENT ? new Date(this.pattern.updateDate).toLocaleString(this.user.locale) : ''
+        relative: this.$date.formatDistanceToNow(parseISO(this.pattern.updateDate), { locale: this.$date.locales[this.user.locale2], addSuffix: true }),
+        text: new Date(this.pattern.updateDate).toLocaleString(this.user.locale)
       }
     }
   }
