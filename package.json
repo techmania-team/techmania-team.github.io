@@ -23,7 +23,7 @@
     "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
-    "quasar": "^1.0.0",
+    "quasar": "1.15.23",
     "vue-i18n": "^8.0.0",
     "vuex-persistedstate": "3.0.1"
   },
