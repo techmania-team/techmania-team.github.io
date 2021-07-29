@@ -101,5 +101,8 @@ module.exports = {
     } catch (_) {
     }
     res.status(200).send({ success: true, message: '' })
+  },
+  async verify (req, res) {
+    res.status(200).send({ success: true, message: '' })
   }
 }
