@@ -52,26 +52,13 @@ export default async ({ Vue }) => {
         }
         return icon
       },
-      async extendToken () {
-        if (this.user.jwt.length > 0) {
-          try {
-            const response = await this.$axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
-              headers: { Authorization: `Bearer ${this.user.jwt}` }
-            })
-            this.getUserData(response.data.token)
-            this.$store.commit('user/addjwt', response.data.jwt)
-            this.$store.commit('user/addtoken', response.data.token)
-            this.$store.commit('user/addid', response.data.id)
-          } catch (error) {
-            this.$store.commit('user/logout')
-          }
-        }
-      },
       async logout () {
         try {
-          await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
-            headers: { Authorization: `Bearer ${this.user.jwt}` }
-          })
+          if (this.user.jwt.length > 0) {
+            await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
+              headers: { Authorization: `Bearer ${this.user.jwt}` }
+            })
+          }
         } catch (_) {}
         this.$store.commit('user/logout')
         if (this.$route.meta.login) this.$router.push('/')
