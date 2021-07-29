@@ -242,14 +242,8 @@ export default {
         if (error.response.data.message === 'Not in guild') {
           message = this.$t('submitForm.errorGuild')
         } else if (error.response.data.message === 'Unauthorized') {
-          if (this.user.jwt.length > 0) {
-            await this.extendToken()
-            this.submitForm()
-            return
-          } else {
-            this.logout()
-            message = this.$t('submitForm.errorUnauthorized')
-          }
+          this.logout()
+          message = this.$t('submitForm.errorUnauthorized')
         }
         this.$q.notify({
           icon: 'warning',
@@ -322,14 +316,8 @@ export default {
         if (error.response.data.message === 'Not in guild') {
           message = this.$t('submitForm.errorGuild')
         } else if (error.response.data.message === 'Unauthorized') {
-          if (this.user.jwt.length > 0) {
-            await this.extendToken()
-            this.submitForm()
-            return
-          } else {
-            this.logout()
-            message = this.$t('submitForm.errorUnauthorized')
-          }
+          this.logout()
+          message = this.$t('submitForm.errorUnauthorized')
         }
         this.$q.notify({
           icon: 'warning',
