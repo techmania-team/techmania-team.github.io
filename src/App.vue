@@ -50,7 +50,6 @@ export default {
         this.$store.commit('user/login', { ...data })
       }
     } catch (error) {
-      console.log(error)
       this.$store.commit('user/logout')
     }
   }
