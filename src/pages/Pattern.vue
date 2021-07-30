@@ -6,10 +6,10 @@
         .row
           .col-6.q-mx-auto
             h4 {{ pattern.name }}
-          .col-6.text-right
+          q-no-ssr.col-6.text-right
             h4
               q-btn.q-mr-xs(v-if="pattern.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
-              q-btn.q-mr-xs(flat icon="download" color="tech" @click="openLink(pattern.link)") DOWNLOAD
+              q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") DOWNLOAD
         q-separator
         .row.q-my-md
           .col-6
@@ -129,7 +129,7 @@ export default {
       return this.pattern.previews.length > 0 ? `http://i3.ytimg.com/vi/${this.pattern.previews[0].ytid}/hqdefault.jpg` : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     }
   },
-  created () {
+  mounted () {
     this.pattern = this.$store.getters['tempPattern/getPattern']
     if (this.pattern._id.length === 0) {
       this.$router.push('/404')
