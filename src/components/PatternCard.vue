@@ -1,11 +1,12 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" @click="$router.push('/patterns/'+pattern._id)" :ratio="16/9")
-      .absolute-bottom
-        .text-h6 {{ pattern.name }}
-        .text-subtitle2  {{ pattern.composer }}
+    router-link(:to="'/patterns/'+pattern._id")
+      q-img(:src="`http://i3.ytimg.com/vi/${pattern.previews[0].ytid}/hqdefault.jpg`" :ratio="16/9")
+        .absolute-bottom
+          .text-h6 {{ pattern.name }}
+          .text-subtitle2  {{ pattern.composer }}
     q-card-section
-      q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" @click="openLink(pattern.link)")
+      q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="pattern.link" target="__blank")
       q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push('/patterns/edit/' + pattern._id)")
       .row.no-wrap.items-center
       q-list
