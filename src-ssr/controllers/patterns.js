@@ -221,11 +221,15 @@ module.exports = {
     try {
       const result = await patterns.aggregate([
         { $unwind: '$previews' },
-        { $project: { 'previews.ytid': 1 } },
-        { $sample: { size: 7 } }
+        { $project: { ytid: '$previews.ytid' } },
+        { $sample: { size: 5 } }
       ])
+      result.unshift({ _id: '', ytid: 'PCfQ-6ZYyxY' })
+      result.unshift({ _id: '', ytid: 'qQAmkMlBvtg' })
+      result.unshift({ _id: '', ytid: 'hcqb0Rwm1xY' })
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
+      console.log(error)
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {

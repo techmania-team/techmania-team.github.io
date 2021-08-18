@@ -17,9 +17,8 @@ export async function fetchData ({ commit }, id) {
     commit('setTag', { win: win.data[0].tag_name, ios: ios.data[0].tag_name, mac: mac.data[0].tag_name, android: and.data[0].tag_name })
     commit('setPublish', { win: win.data[0].published_at, ios: ios.data[0].published_at, mac: mac.data[0].published_at, android: and.data[0].published_at })
     commit('setPt', pt.data.result)
-    vid = vid.data.result.map(v => 'https://www.youtube.com/embed/' + v.previews.ytid)
-    const videos = ['https://www.youtube.com/embed/qQAmkMlBvtg', ...vid]
-    commit('setVid', videos)
+    vid = vid.data.result.map(v => 'https://www.youtube.com/embed/' + v.ytid)
+    commit('setVid', vid)
   } catch (_) {
   }
 }
