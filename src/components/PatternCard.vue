@@ -30,7 +30,7 @@
         q-item
           q-item-section
             div.q-gutter-sm
-              q-icon(
+              q-icon.text-black(
                 v-for="(difficulty, index) in pattern.difficulties"
                 :key="'D'+index"
                 size="sm"
@@ -38,7 +38,7 @@
                 :class="getLevelFilter(difficulty.level)"
               )
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
-                  | {{ $t('pattern.'+controls[difficulty.control]) }} - {{ difficulty.name }}
+                  | {{ $t('pattern.'+controls[difficulty.control]) }} / {{ difficulty.lanes }}L / {{ difficulty.name }}
                   br
                   span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
 </template>

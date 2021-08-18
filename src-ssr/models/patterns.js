@@ -17,6 +17,12 @@ const difficultySchema = new mongoose.Schema({
     required: true,
     min: 0,
     max: 2
+  },
+  lanes: {
+    type: Number,
+    required: true,
+    min: 2,
+    max: 4
   }
 }, { versionKey: false })
 

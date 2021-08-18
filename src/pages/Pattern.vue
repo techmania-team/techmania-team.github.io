@@ -24,9 +24,10 @@
               div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
                 q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;{{ $t('pattern.keysounded') }}
-              div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index" :class="getLevelColor(difficulty.level)")
-                q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
-                | &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
+              div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index")
+                q-icon(size="sm" :name="`img:./assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
+                q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
+                span(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
           .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
             .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
             p(v-html="pattern.description")

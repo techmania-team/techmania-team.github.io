@@ -36,7 +36,7 @@
                     q-btn(flat size="10px" :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
             q-separator.q-my-md
             q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
-              .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
+              .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
                 PatternCard(:pattern="pattern" :mine="false")
               template(v-slot:loading)
                 q-spinner-dots(color="tech" size="40px")

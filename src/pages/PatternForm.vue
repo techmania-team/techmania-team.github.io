@@ -23,21 +23,19 @@
               q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
               q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
               p.q-mb-md {{ $t('submitForm.preview') }}
-                .row.items-start(v-for="(preview, index) in model.previews" :key="'A'+index")
+                .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
                   q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                  .col-1
                   q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
-                  .col-1.text-center
+                  .col-1.text-center.self-center
                     q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                     q-btn(flat round icon="add" v-else @click="addPreview")
               p.q-mb-md {{ $t('submitForm.difficulties') }}
-              .row.items-start(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                q-select.col-3(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
-                .col-1
-                q-input.col-3(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                .col-1
-                q-input.col-3(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
-                .col-1
+              .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
+                q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
+                q-select.col-2(v-model="difficulty.lanes" :options="lanesOptions" :placeholder="$t('submitForm.lanes')" emit-value map-options)
+                q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+                q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
+                .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
                   q-btn(flat round icon="add" v-else @click="addDifficulty")
               p.q-mb-md {{ $t('submitForm.description') }}
@@ -141,7 +139,7 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 0 }],
+        difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: '',
@@ -177,6 +175,13 @@ export default {
         { label: this.$t('pattern.' + this.controls[0]), value: 0 },
         { label: this.$t('pattern.' + this.controls[1]), value: 1 },
         { label: this.$t('pattern.' + this.controls[2]), value: 2 }
+      ]
+    },
+    lanesOptions () {
+      return [
+        { label: '2L', value: 2 },
+        { label: '3L', value: 3 },
+        { label: '4L', value: 4 }
       ]
     }
   },
@@ -262,7 +267,7 @@ export default {
       this.model.previews.splice(index, 1)
     },
     addDifficulty () {
-      this.model.difficulties.push({ name: '', level: 0, control: 0 })
+      this.model.difficulties.push({ name: '', level: 0, control: 0, lanes: 4 })
     },
     removeDifficulty (index) {
       this.model.difficulties.splice(index, 1)
@@ -272,7 +277,7 @@ export default {
         name: '',
         composer: '',
         keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 0 }],
+        difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
         link: '',
         previews: [{ link: '', name: '' }],
         description: '',
@@ -300,7 +305,7 @@ export default {
             name: '',
             composer: '',
             keysounded: false,
-            difficulties: [{ name: '', level: 0, control: 0 }],
+            difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
             link: '',
             previews: [{ link: '', name: '' }],
             description: '',
