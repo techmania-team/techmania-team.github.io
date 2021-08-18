@@ -35,7 +35,7 @@
                 :key="'D'+index"
                 size="sm"
                 :name="getControlIcon(difficulty.control, difficulty.level)"
-                :class="getLevelColor(difficulty.level)"
+                :class="getLevelFilter(difficulty.level)"
               )
                 q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
                   | {{ $t('pattern.'+controls[difficulty.control]) }} - {{ difficulty.name }}

@@ -37,6 +37,17 @@ export default async ({ Vue }) => {
         }
         return cls
       },
+      getLevelFilter (level) {
+        const cls = []
+        if (level <= 5) {
+          cls.push({ 'filter-nm': true })
+        } else if (level <= 10) {
+          cls.push({ 'filter-hd': true })
+        } else {
+          cls.push({ 'filter-mx': true })
+        }
+        return cls
+      },
       getControlIcon (control, level) {
         let icon = ''
         switch (control) {
@@ -47,7 +58,7 @@ export default async ({ Vue }) => {
             icon = 'keyboard'
             break
           case 2:
-            icon = level <= 5 ? 'img:./assets/icons/KM_NM.svg' : level <= 10 ? 'img:./assets/icons/KM_HD.svg' : 'img:./assets/icons/KM_MX.svg'
+            icon = 'img:./assets/icons/KM.svg'
             break
         }
         return icon

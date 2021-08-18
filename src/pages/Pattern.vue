@@ -25,7 +25,7 @@
                 q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;{{ $t('pattern.keysounded') }}
               div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index" :class="getLevelColor(difficulty.level)")
-                q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelColor(difficulty.level)")
+                q-icon(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
                 | &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
           .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
             .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
