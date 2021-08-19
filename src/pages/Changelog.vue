@@ -40,11 +40,11 @@ export default {
   name: 'PageChangelog',
   meta () {
     return {
-      title: 'Changelog | TECHMANIA',
+      title: 'TECHMANIA | Changelog',
       meta: {
         title: {
           name: 'title',
-          content: 'Changelog | TECHMANIA'
+          content: 'TECHMANIA | Changelog'
         },
         description: {
           name: 'description',
@@ -60,7 +60,7 @@ export default {
         },
         ogTitle: {
           property: 'og:title',
-          content: 'Changelog | TECHMANIA'
+          content: 'TECHMANIA | Changelog'
         },
         ogDescription: {
           property: 'og:description',
@@ -80,7 +80,7 @@ export default {
         },
         twTitle: {
           name: 'twitter:title',
-          content: 'Changelog | TECHMANIA'
+          content: 'TECHMANIA | Changelog'
         },
         twDescription: {
           name: 'twitter:description',

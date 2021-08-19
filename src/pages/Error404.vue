@@ -11,11 +11,11 @@ export default {
   name: 'Error404',
   meta () {
     return {
-      title: '404 | TECHMANIA',
+      title: 'TECHMANIA | 404',
       meta: {
         title: {
           name: 'title',
-          content: '404 | TECHMANIA'
+          content: 'TECHMANIA | 404'
         },
         description: {
           name: 'description',
@@ -31,7 +31,7 @@ export default {
         },
         ogTitle: {
           property: 'og:title',
-          content: '404 | TECHMANIA'
+          content: 'TECHMANIA | 404'
         },
         ogDescription: {
           property: 'og:description',
@@ -51,7 +51,7 @@ export default {
         },
         twTitle: {
           name: 'twitter:title',
-          content: '404 | TECHMANIA'
+          content: 'TECHMANIA | 404'
         },
         twDescription: {
           name: 'twitter:description',

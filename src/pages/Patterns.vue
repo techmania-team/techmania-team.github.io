@@ -49,11 +49,11 @@ export default {
   name: 'PagePatterns',
   meta () {
     return {
-      title: 'Patterns | TECHMANIA',
+      title: 'TECHMANIA | Patterns',
       meta: {
         title: {
           name: 'title',
-          content: 'Patterns | TECHMANIA'
+          content: 'TECHMANIA | Patterns'
         },
         description: {
           name: 'description',
@@ -69,7 +69,7 @@ export default {
         },
         ogTitle: {
           property: 'og:title',
-          content: 'Patterns | TECHMANIA'
+          content: 'TECHMANIA | Patterns'
         },
         ogDescription: {
           property: 'og:description',
@@ -89,7 +89,7 @@ export default {
         },
         twTitle: {
           name: 'twitter:title',
-          content: 'Patterns | TECHMANIA'
+          content: 'TECHMANIA | Patterns'
         },
         twDescription: {
           name: 'twitter:description',

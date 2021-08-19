@@ -42,16 +42,16 @@ export default {
   name: 'PagePattern',
   meta () {
     return {
-      title: `${this.pattern.name} | TECHMANIA`,
+      title: `TECHMANIA | ${this.pattern.name}`,
       meta: {
         title: {
           name: 'title',
-          content: `${this.pattern.name} | TECHMANIA`,
+          content: `${this.pattern.name}`,
           'data-dynamic': true
         },
         description: {
           name: 'description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          content: `Composed by ${this.pattern.composer}. Submitted by ${this.pattern.submitter.name}.`,
           'data-dynamic': true
         },
         ogType: {
@@ -66,12 +66,12 @@ export default {
         },
         ogTitle: {
           property: 'og:title',
-          content: `${this.pattern.name} | TECHMANIA`,
+          content: `TECHMANIA | ${this.pattern.name}`,
           'data-dynamic': true
         },
         ogDescription: {
           property: 'og:description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          content: `Composed by ${this.pattern.composer}. Submitted by ${this.pattern.submitter.name}.`,
           'data-dynamic': true
         },
         ogImage: {
@@ -91,12 +91,12 @@ export default {
         },
         twTitle: {
           name: 'twitter:title',
-          content: `${this.pattern.name} | TECHMANIA`,
+          content: `TECHMANIA | ${this.pattern.name}`,
           'data-dynamic': true
         },
         twDescription: {
           name: 'twitter:description',
-          content: `TECHMANIA >> Patterns >> ${this.pattern.name}`,
+          content: `Composed by ${this.pattern.composer}. Submitted by ${this.pattern.submitter.name}.`,
           'data-dynamic': true
         },
         twImage: {
@@ -136,7 +136,7 @@ export default {
       this.$router.push('/404')
     } else {
       if (process.env.CLIENT) {
-        document.title = `${this.pattern.name} | TECHMANIA`
+        document.title = `TECHMANIA | ${this.pattern.name}`
       }
     }
   }

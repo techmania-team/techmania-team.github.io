@@ -165,10 +165,10 @@ export default {
   },
   computed: {
     title () {
-      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern') + ' | TECHMANIA'
+      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
     },
     description () {
-      return (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
+      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
     },
     controlTypes () {
       return [

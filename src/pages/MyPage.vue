@@ -51,11 +51,11 @@ export default {
   name: 'PagePatterns',
   meta () {
     return {
-      title: 'My Page | TECHMANIA',
+      title: 'TECHMANIA | My Page',
       meta: {
         title: {
           name: 'title',
-          content: 'My Page | TECHMANIA'
+          content: 'TECHMANIA | My Page'
         },
         description: {
           name: 'description',
@@ -71,7 +71,7 @@ export default {
         },
         ogTitle: {
           property: 'og:title',
-          content: 'My Page | TECHMANIA'
+          content: 'TECHMANIA | My Page'
         },
         ogDescription: {
           property: 'og:description',
@@ -91,7 +91,7 @@ export default {
         },
         twTitle: {
           name: 'twitter:title',
-          content: 'My Page | TECHMANIA'
+          content: 'TECHMANIA | My Page'
         },
         twDescription: {
           name: 'twitter:description',
