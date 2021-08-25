@@ -32,7 +32,7 @@ module.exports = {
         const controls = ['Touch', 'Key', 'KM']
         let strDifficulty = ''
         for (const difficulty of req.body.difficulties) {
-          strDifficulty += `${controls[difficulty.control]} - ${difficulty.name}: lv.${difficulty.level}\n`
+          strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
         }
         const embeds = [{
           url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
