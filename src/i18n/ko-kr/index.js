@@ -62,6 +62,7 @@ export default {
     errorGuild: '새로운 패턴을 투고하려면 Discord 서버에 참가해야 합니다.',
     errorServer: '서버 오류',
     errorUnauthorized: '허가되지 않은 요청',
+    lanes: '트랙',
     level: '레벨',
     name: '이름',
     preview: 'YouTube 미리보기',

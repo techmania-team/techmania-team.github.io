@@ -62,6 +62,7 @@ export default {
     errorGuild: '您必須要加入 Discord 群組才能送出譜面。',
     errorServer: '伺服器錯誤',
     errorUnauthorized: '未驗證',
+    lanes: '軌道',
     level: '等級',
     name: '名稱',
     preview: 'YouTube 預覽',

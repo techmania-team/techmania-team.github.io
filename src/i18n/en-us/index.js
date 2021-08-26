@@ -62,6 +62,7 @@ export default {
     errorGuild: 'You must join our discord to submit new pattern.',
     errorServer: 'Server Error',
     errorUnauthorized: 'Unauthorized',
+    lanes: 'Lanes',
     level: 'Level',
     name: 'Name',
     preview: 'YouTube Preview',

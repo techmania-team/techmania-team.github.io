@@ -62,6 +62,7 @@ export default {
     errorGuild: '新しいパターンを投稿するにはDiscordサーバーに参加する必要があります。',
     errorServer: 'サーバーエラー',
     errorUnauthorized: '非許可',
+    lanes: 'レーン',
     level: 'レベル',
     name: '名前',
     preview: 'YouTubeプレビュー',

@@ -62,6 +62,7 @@ export default {
     errorGuild: '您需要加入 Discord 服务器才能上传谱面。',
     errorServer: '服务器错误',
     errorUnauthorized: '未验证',
+    lanes: '轨道',
     level: '等级',
     name: '名称',
     preview: 'YouTube 预览',
