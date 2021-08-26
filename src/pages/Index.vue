@@ -8,7 +8,7 @@
           img#logo(:src="'./assets/Logo.png'")
           div(v-if="platform === 'windows'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/macmillan333/techmania/releases/latest' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/macmillan333/techmania/releases/' target='_blank')
                 q-icon(left name="fab fa-windows" )
                 div {{ $t('index.download') }}
             p
@@ -23,7 +23,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/yyj01004/techmania/releases/latest' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/yyj01004/techmania/releases/' target='_blank')
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p
@@ -38,7 +38,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'ios'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/latest' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/' target='_blank')
                 q-icon(left name="img:./assets/icons/ios.svg" )
                 div {{ $t('index.download') }}
             p
@@ -53,7 +53,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'mac'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/fhalfkg/techmania/releases/latest' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/fhalfkg/techmania/releases/' target='_blank')
                 q-icon(left name="fab fa-apple" )
                 div {{ $t('index.download') }}
             p
