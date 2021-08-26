@@ -6,9 +6,10 @@
       q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push('/patterns/edit/' + pattern._id)")
       q-list
         q-item
-          q-item-section
-            .text-h6 {{ pattern.name }}
-            .text-subtitle2 {{ pattern.composer }}
+          q-item-section.card-title
+            router-link(:to="'/patterns/' + pattern._id")
+              .text-h6 {{ pattern.name }}
+              .text-subtitle {{ pattern.composer }}
         q-item
           q-item-section
             p
