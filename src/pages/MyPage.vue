@@ -28,6 +28,11 @@
                     q-btn(flat size="10px" :label="$t('pattern.keys')" :text-color="searchForm.control === 1 ? 'white' : 'grey'" @click="searchForm.control = 1")
                     q-btn(flat size="10px" :label="$t('pattern.km')" :text-color="searchForm.control === 2 ? 'white' : 'grey'" @click="searchForm.control = 2")
               q-item
+                q-item-section {{ $t('submitForm.lanes') }}
+                q-item-section
+                  div
+                    q-option-group(inline :options="[{label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}]" type="checkbox" v-model="searchForm.lanes")
+              q-item
                 q-item-section {{ $t('patterns.sort') }}
                 q-item-section
                   div
@@ -118,6 +123,7 @@ export default {
         keysounded: -1,
         control: -1,
         sort: -1,
+        lanes: [2, 3, 4],
         sortBy: 'submitDate'
       },
       search: {
@@ -125,6 +131,7 @@ export default {
         keysounded: -1,
         control: -1,
         sort: -1,
+        lanes: [2, 3, 4],
         sortBy: 'submitDate'
       },
       scrollDisable: false
@@ -138,7 +145,7 @@ export default {
         else if (this.search.keysounded === 1) keysounded = 'yes'
         const control = this.search.control > -1 ? this.search.control : ''
         const result = await this.$axios.get(
-          new URL(`/api/patterns?submitter=${this.user.id}&start=${this.patterns.length}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
+          new URL(`/api/patterns?start=${this.patterns.length}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&lanes=${this.search.lanes.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)
@@ -159,6 +166,7 @@ export default {
       this.search.keywords = this.searchForm.keywords
       this.search.keysounded = this.searchForm.keysounded
       this.search.control = this.searchForm.control
+      this.search.lanes = this.searchForm.lanes
       this.search.sort = this.searchForm.sort
       this.search.sortBy = this.searchForm.sortBy
       this.scrollDisable = false

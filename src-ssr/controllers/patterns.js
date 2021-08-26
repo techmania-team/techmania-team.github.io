@@ -118,6 +118,9 @@ module.exports = {
         query.$or.push({ composer: { $in: composers } })
         query.$or.push({ description: { $in: descriptions } })
       }
+      if (req.query.lanes) {
+        query.difficulties = { $elemMatch: { lanes: { $in: req.query.lanes.split(',').map(l => parseInt(l)) } } }
+      }
       if (req.query.sortBy) {
         const querySort = parseInt(req.query.sort)
         if (isNaN(querySort) || (querySort !== 1 && querySort !== -1)) {
