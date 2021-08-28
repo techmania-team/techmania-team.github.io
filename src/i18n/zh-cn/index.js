@@ -8,7 +8,8 @@ export default {
     logout: '登出',
     menu: '菜单',
     myPatterns: '我的谱面',
-    lang: '语言'
+    lang: '语言',
+    skins: '皮肤'
   },
   index: {
     download: '下载',

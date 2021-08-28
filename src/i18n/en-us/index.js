@@ -8,7 +8,8 @@ export default {
     logout: 'Logout',
     menu: 'Menu',
     myPatterns: 'My Patterns',
-    lang: 'Language'
+    lang: 'Language',
+    skins: 'Skins'
   },
   index: {
     download: 'Download',

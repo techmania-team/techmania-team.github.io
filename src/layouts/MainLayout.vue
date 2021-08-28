@@ -71,6 +71,10 @@ export default {
         {
           link: '/patterns',
           label: 'nav.patterns'
+        },
+        {
+          link: '/skins',
+          label: 'nav.skins'
         }
       ],
       localeOptions

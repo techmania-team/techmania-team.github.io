@@ -9,6 +9,10 @@ const routes = [
       { path: 'patterns/edit/:id', component: () => import('pages/PatternForm.vue'), meta: { title: 'Edit Pattern | TECHMANIA', login: true } },
       { path: 'patterns/:id', component: () => import('pages/Pattern.vue'), meta: { title: 'TECHMANIA', login: false } },
       { path: 'patterns', component: () => import('pages/Patterns.vue'), meta: { title: 'Patterns | TECHMANIA', login: false } },
+      { path: 'skins/new', component: () => import('pages/SkinForm.vue'), meta: { title: 'New Skin | TECHMANIA', login: true } },
+      { path: 'skins/edit/:id', component: () => import('pages/SkinForm.vue'), meta: { title: 'Edit Skin | TECHMANIA', login: true } },
+      { path: 'skins/:id', component: () => import('pages/Skin.vue'), meta: { title: 'TECHMANIA', login: false } },
+      { path: 'skins', component: () => import('pages/Skins.vue'), meta: { title: 'Skins | TECHMANIA', login: false } },
       { path: 'mypage', component: () => import('pages/MyPage.vue'), meta: { title: 'My Page | TECHMANIA', login: true } }
     ]
   },
