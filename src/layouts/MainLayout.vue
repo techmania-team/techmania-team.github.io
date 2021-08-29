@@ -9,7 +9,7 @@
                 q-avatar
                   img(:src="'./assets/notes/basic.png'")
                 | &nbsp;TECHMANIA
-            q-tabs
+            q-tabs(active-color="tech")
               q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
               q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
               q-tab.nav-desktop(v-if="!isLogin" @click="openLink(discordURL.login, '_self')" :label="$t('nav.login')")
