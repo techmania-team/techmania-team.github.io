@@ -7,9 +7,9 @@ export default {
     myPage: 'My Page',
     logout: 'Logout',
     menu: 'Menu',
-    myPatterns: 'My Patterns',
     lang: 'Language',
-    skins: 'Skins'
+    skins: 'Skins',
+    profile: 'Profile'
   },
   index: {
     download: 'Download',

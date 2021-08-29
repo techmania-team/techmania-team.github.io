@@ -4,16 +4,16 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue'), meta: { title: 'TECHMANIA', login: false } },
-      { path: 'changelog', component: () => import('pages/Changelog.vue'), meta: { title: 'Changelog | TECHMANIA', login: false } },
-      { path: 'patterns/new', component: () => import('pages/PatternForm.vue'), meta: { title: 'New Pattern | TECHMANIA', login: true } },
-      { path: 'patterns/edit/:id', component: () => import('pages/PatternForm.vue'), meta: { title: 'Edit Pattern | TECHMANIA', login: true } },
+      { path: 'changelog', component: () => import('pages/Changelog.vue'), meta: { title: 'TECHMANIA | Changelog', login: false } },
+      { path: 'patterns/new', component: () => import('pages/PatternForm.vue'), meta: { title: 'TECHMANIA | New Pattern', login: true } },
+      { path: 'patterns/edit/:id', component: () => import('pages/PatternForm.vue'), meta: { title: 'TECHMANIA | Edit Pattern', login: true } },
       { path: 'patterns/:id', component: () => import('pages/Pattern.vue'), meta: { title: 'TECHMANIA', login: false } },
-      { path: 'patterns', component: () => import('pages/Patterns.vue'), meta: { title: 'Patterns | TECHMANIA', login: false } },
-      { path: 'skins/new', component: () => import('pages/SkinForm.vue'), meta: { title: 'New Skin | TECHMANIA', login: true } },
-      { path: 'skins/edit/:id', component: () => import('pages/SkinForm.vue'), meta: { title: 'Edit Skin | TECHMANIA', login: true } },
+      { path: 'patterns', component: () => import('pages/Patterns.vue'), meta: { title: 'TECHMANIA | Patterns', login: false } },
+      { path: 'skins/new', component: () => import('pages/SkinForm.vue'), meta: { title: 'TECHMANIA | New Skin', login: true } },
+      { path: 'skins/edit/:id', component: () => import('pages/SkinForm.vue'), meta: { title: 'TECHMANIA | Edit Skin', login: true } },
       { path: 'skins/:id', component: () => import('pages/Skin.vue'), meta: { title: 'TECHMANIA', login: false } },
-      { path: 'skins', component: () => import('pages/Skins.vue'), meta: { title: 'Skins | TECHMANIA', login: false } },
-      { path: 'mypage', component: () => import('pages/MyPage.vue'), meta: { title: 'My Page | TECHMANIA', login: true } }
+      { path: 'skins', component: () => import('pages/Skins.vue'), meta: { title: 'TECHMANIA | Skins', login: false } },
+      { path: 'user/:id', component: () => import('src/pages/Profile.vue'), meta: { title: 'TECHMANIA', login: true } }
     ]
   },
 
