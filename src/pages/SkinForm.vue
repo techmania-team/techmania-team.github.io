@@ -18,7 +18,7 @@
               p.q-mb-none {{ $t('submitSkinForm.skinName') }}
               q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
               p.q-mb-none {{ $t('submitSkinForm.skinType') }}
-              q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitForm.skinType')" :options="typeOptions" emit-value map-options )
+              q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options )
               p.q-mb-none {{ $t('submitForm.dlLink') }}
               q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
               p.q-mb-md {{ $t('submitForm.preview') }}
