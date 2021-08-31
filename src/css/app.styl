@@ -88,13 +88,22 @@ body
 .q-img__content > div
   background rgba(0,0,0,0.8)
 
-.card-pattern 
+.card-pattern, .card-skin
   .description
     white-space pre-wrap
   .btn-dl
     top 0
     right 12px
     transform translateY(-50%)
+  .card-title
+    a
+      text-decoration none
+      width 100%
+    .text-h6, .text-subtitle2
+      width 100%
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
 
 .search .q-item
   min-height 25px
@@ -122,17 +131,6 @@ body
 
 #logo
   width 300px
-
-.card-pattern
-  .card-title
-    a
-      text-decoration none
-      width 100%
-    .text-h6, .text-subtitle2
-      width 100%
-      overflow hidden
-      text-overflow ellipsis
-      white-space nowrap
 
 .q-infinite-scroll__loading
   width 100%

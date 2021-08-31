@@ -48,6 +48,9 @@ export default {
     description: 'Pattern Description',
     previews: 'Previews'
   },
+  skins: {
+    sortName: 'Skin Name'
+  },
   skin: {
     note: 'Note',
     vfx: 'VFX',
