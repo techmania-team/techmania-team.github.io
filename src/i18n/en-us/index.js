@@ -48,6 +48,12 @@ export default {
     description: 'Pattern Description',
     previews: 'Previews'
   },
+  skin: {
+    note: 'Note',
+    vfx: 'VFX',
+    combo: 'Combo',
+    gameUI: 'Game UI'
+  },
   submitForm: {
     composer: 'Composer',
     control: 'Control',
@@ -82,5 +88,15 @@ export default {
     deleted: 'Deleted successfully.',
     agreetos: 'Submitting the patterns signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
     agreetos2: 'You need to accept the terms first.'
+  },
+  submitSkinForm: {
+    title: 'Submit New Skin',
+    editTitle: 'Edit Skin',
+    rules1: 'Skins using assets from DJMAX and DJMAX Respect are strictly prohibited.',
+    rules2: 'All assets must contain SFW content.',
+    rules3: 'Uploading other users skins are not allowed.',
+    rulesTitle: 'Please read the rules before you submit your skin.',
+    skinName: 'Skin Name',
+    skinType: 'Skin Type'
   }
 }
