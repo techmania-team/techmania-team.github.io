@@ -146,6 +146,10 @@ export default {
       tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
     }
   },
+  preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    if (currentRoute.params.id) return store.dispatch('tempSkin/fetchSkin', currentRoute.params.id)
+    else return 0
+  },
   computed: {
     title () {
       return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Skin' : 'New Skin')
@@ -315,15 +319,16 @@ export default {
   },
   created () {
     if (this.$route.params.id) {
-      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['tempPattern/getPattern']))
-      if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
+      const skindata = JSON.parse(JSON.stringify(this.$store.getters['tempSkin/getSkin']))
+      console.log(skindata)
+      if (skindata._id.length === 0 || skindata.submitter._id !== this.user.id) {
         this.$router.push('/404')
       } else {
-        patterndata.previews.map(preview => {
+        skindata.previews.map(preview => {
           preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
           return preview
         })
-        this.model = { ...patterndata, agree: false }
+        this.model = { ...skindata, agree: false }
       }
     }
   }
