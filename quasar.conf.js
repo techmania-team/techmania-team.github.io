@@ -53,7 +53,8 @@ module.exports = function (/* ctx */) {
         // I don't know why the fuck dotenv always parse wrong value, this trick should fix it
         DISCORD_CLIENT: process.env.DISCORD_CLIENT,
         DISCORD_SECRET: process.env.DISCORD_SECRET,
-        DISCORD_WEBHOOK: process.env.DISCORD_WEBHOOK,
+        DISCORD_WEBHOOK_PATTERNS: process.env.DISCORD_WEBHOOK_PATTERNS,
+        DISCORD_WEBHOOK_SKINS: process.env.DISCORD_WEBHOOK_SKINS,
         DISCORD_GUILD: process.env.DISCORD_GUILD,
         HOST_URL: process.env.HOST_URL,
         DB_URL: process.env.DB_URL,

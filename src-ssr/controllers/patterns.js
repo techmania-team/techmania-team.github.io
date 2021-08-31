@@ -50,7 +50,7 @@ module.exports = {
         if (req.body.description) {
           embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
         }
-        await axios.post(process.env.DISCORD_WEBHOOK, {
+        await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
           username: 'TECHMANIA',
           avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
           content: `New pattern submitted by <@${req.user.discord}>`,
