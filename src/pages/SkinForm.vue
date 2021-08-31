@@ -320,7 +320,6 @@ export default {
   created () {
     if (this.$route.params.id) {
       const skindata = JSON.parse(JSON.stringify(this.$store.getters['tempSkin/getSkin']))
-      console.log(skindata)
       if (skindata._id.length === 0 || skindata.submitter._id !== this.user.id) {
         this.$router.push('/404')
       } else {
