@@ -37,7 +37,7 @@
               hr.q-my-xl
               p.text-center
                 q-checkbox(v-model="model.agree")
-                  span(v-html="$t('submitForm.agreetos', {tosURL})")
+                  span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
                 br
                 q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
       q-dialog(v-model="confirm")

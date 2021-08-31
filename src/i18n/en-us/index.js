@@ -100,6 +100,7 @@ export default {
     rules3: 'Uploading other users skins are not allowed.',
     rulesTitle: 'Please read the rules before you submit your skin.',
     skinName: 'Skin Name',
-    skinType: 'Skin Type'
+    skinType: 'Skin Type',
+    agreetos: 'Submitting the skins signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.'
   }
 }
