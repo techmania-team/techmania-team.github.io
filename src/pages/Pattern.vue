@@ -16,13 +16,13 @@
             .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
             .q-gutter-sm
               div
-                q-icon(name="person")
+                q-icon(size="sm" name="person")
                 | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
               div
-                q-icon(name="upload")
+                q-icon(size="sm" name="upload")
                 | &nbsp;{{ $t('pattern.submittedBy') }} {{ pattern.submitter.name }}
               div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
-                q-icon(:name="!pattern.keysounded ? 'close' : 'check'")
+                q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;{{ $t('pattern.keysounded') }}
               div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index")
                 q-icon(size="sm" :name="`img:./assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
