@@ -71,10 +71,9 @@ module.exports = {
       if (req.query.submitter) {
         query.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
-      if (req.query.type) {
-        const type = parseInt(req.query.type)
-        if (type >= 0 && type <= 3) {
-          query.type = type
+      if (req.query.types) {
+        if (req.query.types) {
+          query.type = { $in: req.query.types.split(',').map(l => parseInt(l)) }
         }
       }
       if (req.query.start) {
