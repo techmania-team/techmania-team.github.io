@@ -32,7 +32,7 @@ export default {
     sort: 'Sort',
     sortSubmit: 'Submit Date',
     sortUpdate: 'Update Date',
-    sortName: 'Name'
+    sortName: 'Song Name'
   },
   pattern: {
     keysounded: 'Keysounded',
