@@ -136,14 +136,14 @@ export default {
     }
   },
   methods: {
-    async fetchPatterns () {
+    async fetchPatterns (start = 0) {
       try {
         let keysounded = 'all'
         if (this.search.keysounded === 0) keysounded = 'no'
         else if (this.search.keysounded === 1) keysounded = 'yes'
         const control = this.search.control > -1 ? this.search.control : ''
         const result = await this.$axios.get(
-          new URL(`/api/patterns?start=${this.patterns.length}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&lanes=${this.search.lanes.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
+          new URL(`/api/patterns?start=${start}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&lanes=${this.search.lanes.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)
@@ -156,7 +156,7 @@ export default {
       }
     },
     async loadScroll (index, done) {
-      await this.fetchPatterns()
+      await this.fetchPatterns((index - 1) * 12)
       done()
     },
     applySearch () {
