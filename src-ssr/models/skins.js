@@ -27,7 +27,9 @@ const schema = new mongoose.Schema({
   // 3 = Game UI
   type: {
     type: Number,
-    required: true
+    required: true,
+    min: 0,
+    max: 3
   },
   link: {
     type: String,
