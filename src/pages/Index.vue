@@ -1,9 +1,9 @@
 <template lang="pug">
   q-page#index
     q-parallax#header-video
-      template(v-slot:media)
+      template(#media)
         video(:src="'./assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
-      template(v-slot:content="scope")
+      template(#content="scope")
         .absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
           div(v-if="platform === 'windows'")

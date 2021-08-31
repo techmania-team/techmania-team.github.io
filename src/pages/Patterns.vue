@@ -8,7 +8,7 @@
             q-separator.q-my-md
             br
             q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
-              template(v-slot:after)
+              template(#after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
             br
             q-list.search
@@ -43,7 +43,7 @@
             q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
               .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
                 PatternCard(:pattern="pattern" :mine="false")
-              template(v-slot:loading)
+              template(#loading)
                 q-spinner-dots(color="tech" size="40px")
 </template>
 
