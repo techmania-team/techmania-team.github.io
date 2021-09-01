@@ -40,6 +40,73 @@ import SkinCard from '../components/SkinCard'
 
 export default {
   name: 'profile',
+  meta () {
+    return {
+      title: `TECHMANIA | ${this.profile.name}`,
+      meta: {
+        title: {
+          name: 'title',
+          content: `${this.profile.name}`,
+          'data-dynamic': true
+        },
+        description: {
+          name: 'description',
+          content: `${this.profile.name}'s profile on TECHMANIA.`,
+          'data-dynamic': true
+        },
+        ogType: {
+          property: 'og:type',
+          content: 'website',
+          'data-dynamic': true
+        },
+        ogUrl: {
+          property: 'og:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
+        },
+        ogTitle: {
+          property: 'og:title',
+          content: `TECHMANIA | ${this.profile.name}`,
+          'data-dynamic': true
+        },
+        ogDescription: {
+          property: 'og:description',
+          content: `${this.profile.name}'s profile on TECHMANIA.`,
+          'data-dynamic': true
+        },
+        ogImage: {
+          property: 'og:image',
+          content: this.profile.avatar,
+          'data-dynamic': true
+        },
+        twCard: {
+          name: 'twitter:card',
+          content: 'summary_large_image',
+          'data-dynamic': true
+        },
+        twUrl: {
+          name: 'twitter:url',
+          content: new URL(this.$route.fullPath, process.env.HOST_URL).toString(),
+          'data-dynamic': true
+        },
+        twTitle: {
+          name: 'twitter:title',
+          content: `TECHMANIA | ${this.profile.name}`,
+          'data-dynamic': true
+        },
+        twDescription: {
+          name: 'twitter:description',
+          content: `${this.profile.name}'s profile on TECHMANIA.`,
+          'data-dynamic': true
+        },
+        twImage: {
+          name: 'twitter:image',
+          content: this.profile.avatar,
+          'data-dynamic': true
+        }
+      }
+    }
+  },
   components: {
     PatternCard,
     SkinCard
@@ -123,6 +190,7 @@ export default {
       } else if (location.hash === '#patterns') {
         this.tab = 'patterns'
       }
+      document.title = `TECHMANIA | ${this.profile.name}`
     }
   }
 }
