@@ -33,7 +33,7 @@
               div(v-if="model._id.length > 0")
                 hr.q-my-xl
                 p.text-red {{ $t('submitForm.dangerZone') }}
-                q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
+                q-btn(color="red" @click="deleteConfirm") {{ $t('submitSkinForm.delete') }}
               hr.q-my-xl
               p.text-center
                 q-checkbox(v-model="model.agree")
