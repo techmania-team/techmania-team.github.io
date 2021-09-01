@@ -57,7 +57,9 @@ export default {
     note: 'Note',
     vfx: 'VFX',
     combo: 'Combo',
-    gameUI: 'Game UI'
+    gameUI: 'Game UI',
+    skinData: 'Skin Data',
+    description: 'Skin Description'
   },
   submitForm: {
     composer: 'Composer',
