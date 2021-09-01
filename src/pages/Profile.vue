@@ -19,12 +19,14 @@
           .col-12
             q-tab-panels(v-model="tab" animated keep-alive)
               q-tab-panel(name="pattern")
+                .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
                 q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")
                   .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
                     PatternCard(:pattern="pattern" :mine="mine")
                   template(#loading)
                     q-spinner-dots(color="tech" size="40px")
               q-tab-panel(name="skin")
+                .text-center.text-body1(v-if="skins.length === 0 && scrollSkinDisable") {{ $t('skins.notFound') }}
                 q-infinite-scroll.row.q-my-md(@load="loadSkinScroll" :offset="200" :disable="scrollSkinDisable")
                   .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
                     SkinCard(:skin="skin" :mine="mine")

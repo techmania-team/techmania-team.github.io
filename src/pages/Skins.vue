@@ -30,6 +30,7 @@
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
+            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
 </template>
 
 <script>

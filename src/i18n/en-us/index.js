@@ -32,7 +32,8 @@ export default {
     sort: 'Sort',
     sortSubmit: 'Submit Date',
     sortUpdate: 'Update Date',
-    sortName: 'Song Name'
+    sortName: 'Song Name',
+    notFound: 'No patterns found'
   },
   pattern: {
     keysounded: 'Keysounded',
@@ -49,7 +50,8 @@ export default {
     previews: 'Previews'
   },
   skins: {
-    sortName: 'Skin Name'
+    sortName: 'Skin Name',
+    notFound: 'No skins found'
   },
   skin: {
     note: 'Note',
