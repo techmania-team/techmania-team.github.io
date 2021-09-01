@@ -12,9 +12,9 @@
         .row
           .col-12
             q-tabs(v-model="tab" align="justify")
-              q-tab(name="patterns" label="Patterns" icon="music_note")
+              q-tab(name="patterns" :label="$t('nav.patterns')" icon="music_note")
                 q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-              q-tab(name="skins" label="Skins" icon="stars")
+              q-tab(name="skins" :label="$t('nav.skins')" icon="stars")
                 q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
           .col-12
             q-tab-panels(v-model="tab" animated keep-alive)
