@@ -13,7 +13,7 @@ const routes = [
       { path: 'skins/edit/:id', component: () => import('pages/SkinForm.vue'), meta: { title: 'TECHMANIA | Edit Skin', login: true } },
       { path: 'skins/:id', component: () => import('pages/Skin.vue'), meta: { title: 'TECHMANIA', login: false } },
       { path: 'skins', component: () => import('pages/Skins.vue'), meta: { title: 'TECHMANIA | Skins', login: false } },
-      { path: 'user/:id', component: () => import('src/pages/Profile.vue'), meta: { title: 'TECHMANIA', login: true } }
+      { path: 'users/:id/', component: () => import('src/pages/Profile.vue'), meta: { title: 'TECHMANIA', login: true } }
     ]
   },
 
