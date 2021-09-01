@@ -8,8 +8,7 @@ export default {
     logout: 'Logout',
     menu: 'Menu',
     lang: 'Language',
-    skins: 'Skins',
-    profile: 'Profile'
+    skins: 'Skins'
   },
   index: {
     download: 'Download',
