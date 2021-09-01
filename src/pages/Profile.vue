@@ -12,20 +12,20 @@
         .row
           .col-12
             q-tabs(v-model="tab" align="justify")
-              q-tab(name="pattern" label="Patterns" icon="music_note")
+              q-tab(name="patterns" label="Patterns" icon="music_note")
                 q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-              q-tab(name="skin" label="Skins" icon="stars")
+              q-tab(name="skins" label="Skins" icon="stars")
                 q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
           .col-12
             q-tab-panels(v-model="tab" animated keep-alive)
-              q-tab-panel(name="pattern")
+              q-tab-panel(name="patterns")
                 .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
                 q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")
                   .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
                     PatternCard(:pattern="pattern" :mine="mine")
                   template(#loading)
                     q-spinner-dots(color="tech" size="40px")
-              q-tab-panel(name="skin")
+              q-tab-panel(name="skins")
                 .text-center.text-body1(v-if="skins.length === 0 && scrollSkinDisable") {{ $t('skins.notFound') }}
                 q-infinite-scroll.row.q-my-md(@load="loadSkinScroll" :offset="200" :disable="scrollSkinDisable")
                   .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
@@ -53,7 +53,7 @@ export default {
         skinCount: 0,
         _id: ''
       },
-      tab: 'pattern',
+      tab: 'patterns',
       patterns: [],
       scrollPatternDisable: false,
       skins: [],
@@ -63,6 +63,11 @@ export default {
   computed: {
     mine () {
       return this.profile._id === this.user.id
+    }
+  },
+  watch: {
+    tab (val) {
+      location.hash = val
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
@@ -112,6 +117,12 @@ export default {
     this.profile = this.$store.getters['tempProfile/getProfile']
     if (this.profile._id.length === 0) {
       this.$router.push('/404')
+    } else if (process.env.CLIENT) {
+      if (location.hash === '#skins') {
+        this.tab = 'skins'
+      } else if (location.hash === '#patterns') {
+        this.tab = 'patterns'
+      }
     }
   }
 }
