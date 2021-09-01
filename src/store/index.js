@@ -4,6 +4,7 @@ import user from './user'
 import tempPattern from './temp-pattern'
 import tempSkin from './temp-skin'
 import tempIndex from './temp-index'
+import tempProfile from './temp-profile'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,7 @@ export default function ({ ssrContext }) {
       user,
       tempPattern,
       tempIndex,
+      tempProfile,
       tempSkin
     },
     // enable strict mode (adds overhead!)
