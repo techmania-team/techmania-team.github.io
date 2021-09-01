@@ -1,4 +1,4 @@
-export function cleanPattern (state, data) {
+export function cleanSkin (state, data) {
   state._id = ''
   state.name = ''
   state.type = 0
@@ -8,7 +8,7 @@ export function cleanPattern (state, data) {
   state.submitter = { name: '', _id: '' }
 }
 
-export function setPattern (state, data) {
+export function setSkin (state, data) {
   state._id = data._id
   state.name = data.name
   state.type = data.type
