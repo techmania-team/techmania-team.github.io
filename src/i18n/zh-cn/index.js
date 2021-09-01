@@ -32,7 +32,8 @@ export default {
     sort: '排序',
     sortSubmit: '上传时间',
     sortUpdate: '最后更新时间',
-    sortName: '曲名'
+    sortName: '曲名',
+    notFound: '找不到谱面'
   },
   pattern: {
     keysounded: '按键音',
@@ -45,8 +46,20 @@ export default {
     km: '键鼠',
     composer: '作曲家：',
     patternData: '谱面详情',
-    description: '描述',
+    description: '谱面描述',
     previews: '预览'
+  },
+  skins: {
+    sortName: '皮肤名',
+    notFound: '找不到皮肤'
+  },
+  skin: {
+    note: '音符',
+    vfx: '特效',
+    combo: '连击',
+    gameUI: '游戏内界面',
+    skinData: '皮肤详情',
+    description: '皮肤描述'
   },
   submitForm: {
     composer: '作曲家',
@@ -82,5 +95,17 @@ export default {
     updated: '编辑成功',
     agreetos: '送出谱面代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>',
     agreetos2: '您必须同意使用条款'
+  },
+  submitSkinForm: {
+    title: '上传新皮肤',
+    editTitle: '编辑皮肤',
+    rules1: '请勿上传使用 DJMAX 和 DJMAX RESPECT 素材制作的皮肤。',
+    rules2: '请勿上传包含成人内容的皮肤。',
+    rules3: '请勿上传其他人的作品。',
+    rulesTitle: '上传皮肤前请阅读以下规则：',
+    skinName: '名称',
+    skinType: '类型',
+    agreetos: '送出皮肤代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>',
+    delete: '删除谱面皮肤'
   }
 }
