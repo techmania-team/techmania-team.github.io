@@ -149,6 +149,10 @@ module.exports = {
           }
         }
       ])
+      // some old users do not have this
+      if (!result[0].avatar) {
+        result[0].avatar = ''
+      }
       res.status(200).send({ success: true, message: '', result: result[0] })
     } catch (error) {
       res.status(500).send({ success: false, message: 'Server Error' })
