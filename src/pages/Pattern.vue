@@ -20,7 +20,8 @@
                 | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
               div
                 q-icon(size="sm" name="upload")
-                | &nbsp;{{ $t('pattern.submittedBy') }} {{ pattern.submitter.name }}
+                | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
+                router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
               div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
                 q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
                 | &nbsp;{{ $t('pattern.keysounded') }}
