@@ -1,6 +1,7 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
 const patterns = require('../models/patterns.js')
+const users = require('../models/users.js')
 
 module.exports = {
   async create (req, res) {
@@ -108,15 +109,23 @@ module.exports = {
         const names = []
         const composers = []
         const descriptions = []
+        const submitters = []
         for (const i in keywords) {
           const re = new RegExp(keywords[i].replace(/"|'/g), 'i')
           names.push(re)
           composers.push(re)
           descriptions.push(re)
+          submitters.push(re)
         }
         query.$or.push({ name: { $in: names } })
         query.$or.push({ composer: { $in: composers } })
         query.$or.push({ description: { $in: descriptions } })
+
+        try {
+          const submittersID = await users.find({ name: { $in: submitters } }, '_id')
+          query.$or.push({ submitter: { $in: submittersID } })
+        } catch (_) {
+        }
       }
       if (req.query.lanes) {
         query.difficulties = { $elemMatch: { lanes: { $in: req.query.lanes.split(',').map(l => parseInt(l)) } } }

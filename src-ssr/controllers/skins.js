@@ -1,6 +1,7 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
 const skins = require('../models/skins.js')
+const users = require('../models/users.js')
 
 const types = ['Note', 'VFX', 'Combo', 'Game UI']
 
@@ -93,15 +94,23 @@ module.exports = {
         const names = []
         const composers = []
         const descriptions = []
+        const submitters = []
         for (const i in keywords) {
           const re = new RegExp(keywords[i].replace(/"|'/g), 'i')
           names.push(re)
           composers.push(re)
           descriptions.push(re)
+          submitters.push(re)
         }
         query.$or.push({ name: { $in: names } })
         query.$or.push({ composer: { $in: composers } })
         query.$or.push({ description: { $in: descriptions } })
+
+        try {
+          const submittersID = await users.find({ name: { $in: submitters } }, '_id')
+          query.$or.push({ submitter: { $in: submittersID } })
+        } catch (_) {
+        }
       }
       if (req.query.sortBy) {
         const querySort = parseInt(req.query.sort)
