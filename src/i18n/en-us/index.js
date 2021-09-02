@@ -16,6 +16,7 @@ export default {
     release: 'Released at ',
     videos: 'Videos',
     patterns: 'Latest Patterns',
+    skins: 'Latest Skins',
     platform: '{platform} users'
   },
   changelog: {

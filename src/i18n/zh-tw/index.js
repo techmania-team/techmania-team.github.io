@@ -17,6 +17,7 @@ export default {
     release: '發布於',
     videos: '遊戲影片',
     patterns: '最新譜面',
+    skins: '最新造型',
     platform: '{platform} 使用者'
   },
   changelog: {

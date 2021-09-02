@@ -17,6 +17,7 @@ export default {
     release: '发布于',
     videos: '视频',
     patterns: '最新谱面',
+    skins: '最新皮肤',
     platform: '{platform} 用户'
   },
   changelog: {
