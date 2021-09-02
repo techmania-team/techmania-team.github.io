@@ -1,7 +1,9 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
-const patterns = require('../models/patterns.js')
+const skins = require('../models/skins.js')
 const users = require('../models/users.js')
+
+const types = ['Note', 'VFX', 'Combo', 'Game UI']
 
 module.exports = {
   async create (req, res) {
@@ -16,12 +18,10 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       } else {
-        const result = await patterns.create({
+        const result = await skins.create({
           submitter: req.user._id,
           name: req.body.name,
-          composer: req.body.composer,
-          keysounded: req.body.keysounded,
-          difficulties: req.body.difficulties,
+          type: req.body.type,
           link: req.body.link,
           previews: req.body.previews,
           description: req.body.description
@@ -30,36 +30,30 @@ module.exports = {
         for (const preview of req.body.previews) {
           strPreveiw += `https://www.youtube.com/watch?v=${preview.ytid}\n`
         }
-        const controls = ['Touch', 'Key', 'KM']
-        let strDifficulty = ''
-        for (const difficulty of req.body.difficulties) {
-          strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
-        }
         const embeds = [{
-          url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
+          url: new URL(`/skins/${result._id}`, process.env.HOST_URL).toString(),
           image: { url: `http://i3.ytimg.com/vi/${req.body.previews[0].ytid}/hqdefault.jpg` },
           title: req.body.name,
           color: '15158332',
           fields: [
-            { name: 'Composer', value: req.body.composer, inline: true },
-            { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
+            { name: 'Type', value: types[req.body.type], inline: true },
             { name: 'Previews', value: strPreveiw, inline: false },
-            { name: 'Difficulties', value: strDifficulty, inline: false },
             { name: 'Download', value: req.body.link, inline: false }
           ]
         }]
         if (req.body.description) {
           embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
         }
-        await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
+        await axios.post(process.env.DISCORD_WEBHOOK_SKINS, {
           username: 'TECHMANIA',
           avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
-          content: `New pattern submitted by <@${req.user.discord}>`,
+          content: `New skin submitted by <@${req.user.discord}>`,
           embeds
         })
         res.status(200).send({ success: true, message: '', id: result._id })
       }
     } catch (error) {
+      console.log(error)
       if (error.name === 'ValidationError') {
         res.status(400).send({ success: false, message: 'Validation Failed' })
       } else if (error.name === 'CastError') {
@@ -78,6 +72,11 @@ module.exports = {
       if (req.query.submitter) {
         query.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
+      if (req.query.types) {
+        if (req.query.types) {
+          query.type = { $in: req.query.types.split(',').map(l => parseInt(l)) }
+        }
+      }
       if (req.query.start) {
         skip = parseInt(req.query.start)
         skip = isNaN(skip) ? 0 : skip
@@ -86,20 +85,6 @@ module.exports = {
         limit = parseInt(req.query.limit)
         if (limit >= 50 || isNaN(limit)) {
           res.status(400).send({ success: false, message: 'Invalid limit' })
-          return
-        }
-      }
-      if (req.query.keysounded === 'yes') {
-        query.keysounded = true
-      } else if (req.query.keysounded === 'no') {
-        query.keysounded = false
-      }
-      if (req.query.control) {
-        const control = parseInt(req.query.control)
-        if (!isNaN(control) && control <= 2 && control >= 0) {
-          query['difficulties.control'] = control
-        } else {
-          res.status(400).send({ success: false, message: 'Invalid control' })
           return
         }
       }
@@ -127,9 +112,6 @@ module.exports = {
         } catch (_) {
         }
       }
-      if (req.query.lanes) {
-        query.difficulties = { $elemMatch: { lanes: { $in: req.query.lanes.split(',').map(l => parseInt(l)) } } }
-      }
       if (req.query.sortBy) {
         const querySort = parseInt(req.query.sort)
         if (isNaN(querySort) || (querySort !== 1 && querySort !== -1)) {
@@ -145,7 +127,7 @@ module.exports = {
       } else {
         sort.submitDate = -1
       }
-      const result = await patterns.find(query, {}, { skip, limit }).sort(sort).populate('submitter', 'name').lean()
+      const result = await skins.find(query, {}, { skip, limit }).sort(sort).populate('submitter', 'name').lean()
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       if (error.name === 'CastError') {
@@ -157,7 +139,7 @@ module.exports = {
   },
   async searchID (req, res) {
     try {
-      const result = await patterns.findById(req.params.id).populate('submitter', 'name').lean()
+      const result = await skins.findById(req.params.id).populate('submitter', 'name').lean()
       if (result === null) {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
@@ -183,7 +165,7 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       } else {
-        await patterns.findOneAndDelete({ _id: mongoose.Types.ObjectId(req.params.id), submitter: req.user._id })
+        await skins.findOneAndDelete({ _id: mongoose.Types.ObjectId(req.params.id), submitter: req.user._id })
         res.status(200).send({ success: true, message: '' })
       }
     } catch (error) {
@@ -206,12 +188,10 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       } else {
-        await patterns.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
+        await skins.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
           submitter: req.user._id,
           name: req.body.name,
-          composer: req.body.composer,
-          keysounded: req.body.keysounded,
-          difficulties: req.body.difficulties,
+          type: req.body.type,
           link: req.body.link,
           previews: req.body.previews,
           description: req.body.description,
@@ -223,26 +203,6 @@ module.exports = {
       if (error.name === 'ValidationError') {
         res.status(400).send({ success: false, message: 'Validation Failed' })
       } else if (error.name === 'CastError') {
-        res.status(404).send({ success: false, message: 'Not found' })
-      } else {
-        res.status(500).send({ success: false, message: 'Server Error' })
-      }
-    }
-  },
-  async indexvideo (req, res) {
-    try {
-      const result = await patterns.aggregate([
-        { $unwind: '$previews' },
-        { $project: { ytid: '$previews.ytid' } },
-        { $sample: { size: 5 } }
-      ])
-      result.unshift({ _id: '', ytid: 'PCfQ-6ZYyxY' })
-      result.unshift({ _id: '', ytid: 'qQAmkMlBvtg' })
-      result.unshift({ _id: '', ytid: 'hcqb0Rwm1xY' })
-      res.status(200).send({ success: true, message: '', result })
-    } catch (error) {
-      console.log(error)
-      if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
         res.status(500).send({ success: false, message: 'Server Error' })

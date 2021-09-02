@@ -8,7 +8,8 @@ export default {
     logout: '登出',
     menu: '選單',
     myPatterns: '我的譜面',
-    lang: '語言'
+    lang: '語言',
+    skins: '造型'
   },
   index: {
     download: '遊戲下載',
@@ -16,6 +17,7 @@ export default {
     release: '發布於',
     videos: '遊戲影片',
     patterns: '最新譜面',
+    skins: '最新造型',
     platform: '{platform} 使用者'
   },
   changelog: {
@@ -31,7 +33,8 @@ export default {
     sort: '排序',
     sortSubmit: '上傳時間',
     sortUpdate: '最後更新時間',
-    sortName: '曲名'
+    sortName: '曲名',
+    notFound: '找不到譜面'
   },
   pattern: {
     keysounded: '按鍵音',
@@ -46,6 +49,18 @@ export default {
     patternData: '譜面資訊',
     description: '譜面說明',
     previews: '預覽'
+  },
+  skins: {
+    sortName: '造型名稱',
+    notFound: '找不到造型'
+  },
+  skin: {
+    note: '音符',
+    vfx: '特效',
+    combo: '連擊',
+    gameUI: '遊戲介面',
+    skinData: '造型資訊',
+    description: '造型說明'
   },
   submitForm: {
     composer: '作曲家',
@@ -81,5 +96,17 @@ export default {
     updated: '編輯成功',
     agreetos: '送出譜面代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
     agreetos2: '您必須同意使用條款'
+  },
+  submitSkinForm: {
+    title: '送出新造型',
+    editTitle: '編輯造型',
+    rules1: '嚴禁上傳使用 DJMAX 和 DJMAX RESPECT 素材製作的造型。',
+    rules2: '請勿上傳包含成人內容的造型。',
+    rules3: '請勿上傳其他人製作的造型。',
+    rulesTitle: '在送出您的造型前請先閱讀規則。',
+    skinName: '造型名稱',
+    skinType: '造型類型',
+    agreetos: '送出造型代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
+    delete: '刪除造型'
   }
 }

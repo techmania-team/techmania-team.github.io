@@ -8,7 +8,7 @@
             q-separator.q-my-md
             br
             q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
-              template(v-slot:after)
+              template(#after)
                 q-btn(icon="search" round desnse flat @click="applySearch")
             br
             q-list.search
@@ -43,8 +43,9 @@
             q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
               .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
                 PatternCard(:pattern="pattern" :mine="false")
-              template(v-slot:loading)
+              template(#loading)
                 q-spinner-dots(color="tech" size="40px")
+            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
 </template>
 
 <script>
@@ -136,14 +137,14 @@ export default {
     }
   },
   methods: {
-    async fetchPatterns () {
+    async fetchPatterns (start = 0) {
       try {
         let keysounded = 'all'
         if (this.search.keysounded === 0) keysounded = 'no'
         else if (this.search.keysounded === 1) keysounded = 'yes'
         const control = this.search.control > -1 ? this.search.control : ''
         const result = await this.$axios.get(
-          new URL(`/api/patterns?start=${this.patterns.length}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&lanes=${this.search.lanes.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
+          new URL(`/api/patterns?start=${start}&keysounded=${keysounded}&control=${control}&keywords=${this.search.keywords}&lanes=${this.search.lanes.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)
@@ -156,7 +157,7 @@ export default {
       }
     },
     async loadScroll (index, done) {
-      await this.fetchPatterns()
+      await this.fetchPatterns((index - 1) * 12)
       done()
     },
     applySearch () {

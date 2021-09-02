@@ -1,9 +1,9 @@
 <template lang="pug">
   q-page#index
     q-parallax#header-video
-      template(v-slot:media)
+      template(#media)
         video(:src="'./assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
-      template(v-slot:content="scope")
+      template(#content="scope")
         .absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
           div(v-if="platform === 'windows'")
@@ -79,6 +79,15 @@
       .container
         .row
           .col-12.q-mx-auto
+            h4.text-center {{ $t('index.skins') }}
+            q-separator
+            .row
+              .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin._id")
+                SkinCard(:skin="skin" :mine="false")
+    section.q-mx-auto.padding.q-my-md
+      .container
+        .row
+          .col-12.q-mx-auto
             h4.text-center {{ $t('index.videos') }}
             q-separator
             .row
@@ -88,11 +97,13 @@
 
 <script>
 import PatternCard from '../components/PatternCard.vue'
+import SkinCard from '../components/SkinCard.vue'
 
 export default {
   name: 'PageIndex',
   components: {
-    PatternCard
+    PatternCard,
+    SkinCard
   },
   meta () {
     return {
@@ -163,6 +174,9 @@ export default {
     },
     patterns () {
       return this.$store.getters['tempIndex/getPatterns']
+    },
+    skins () {
+      return this.$store.getters['tempIndex/getSkins']
     },
     videos () {
       return this.$store.getters['tempIndex/getVideos']

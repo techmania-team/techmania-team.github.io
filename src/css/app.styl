@@ -27,19 +27,19 @@ body
   .container
     max-width: 540px
 
-@media (max-width: 767px)
-  .nav-desktop
-    display none
-
 @media (min-width: 768px)
   .container
     max-width: 720px
-  .nav-mobile
-    display none !important
+
+@media (max-width: 991px)
+  .nav-desktop
+    display none
 
 @media (min-width: 992px)
   .container
     max-width: 960px
+  .nav-mobile
+    display none !important
 
 @media (min-width: 1200px)
   .container
@@ -88,13 +88,22 @@ body
 .q-img__content > div
   background rgba(0,0,0,0.8)
 
-.card-pattern 
+.card-pattern, .card-skin
   .description
     white-space pre-wrap
   .btn-dl
     top 0
     right 12px
     transform translateY(-50%)
+  .card-title
+    a
+      text-decoration none
+      width 100%
+    .text-h6, .text-subtitle2
+      width 100%
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
 
 .search .q-item
   min-height 25px
@@ -105,7 +114,7 @@ body
   .q-item
     min-height 23px
 
-#pattern
+#pattern, #skin
   .bg
     filter blur(7px) brightness(.1)
     position absolute
@@ -122,17 +131,6 @@ body
 
 #logo
   width 300px
-
-.card-pattern
-  .card-title
-    a
-      text-decoration none
-      width 100%
-    .text-h6, .text-subtitle2
-      width 100%
-      overflow hidden
-      text-overflow ellipsis
-      white-space nowrap
 
 .q-infinite-scroll__loading
   width 100%
@@ -155,3 +153,12 @@ a.no-underline
 
 .filter-mx
   filter invert(32%) sepia(37%) saturate(6358%) hue-rotate(346deg) brightness(114%) contrast(91%)
+
+.filter-negative
+  filter invert(38%) sepia(48%) saturate(5827%) hue-rotate(343deg) brightness(100%) contrast(91%)
+
+.filter-positive
+  filter invert(47%) sepia(90%) saturate(417%) hue-rotate(82deg) brightness(102%) contrast(95%)
+
+#profile .q-tab-panels
+  background none

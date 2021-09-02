@@ -6,6 +6,10 @@ export function getPatterns (state) {
   return state.patterns
 }
 
+export function getSkins (state) {
+  return state.skins
+}
+
 export function getVideos (state) {
   return state.videos
 }

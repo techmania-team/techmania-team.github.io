@@ -16,6 +16,10 @@ export function setPt (state, data) {
   state.patterns = data
 }
 
+export function setSkin (state, data) {
+  state.skins = data
+}
+
 export function setVid (state, data) {
   state.videos = data
 }

@@ -1,27 +1,26 @@
 <template lang="pug">
-  q-page#patternForm
+  q-page#skinForm
     section.q-mx-auto.padding
       .container
         .row
           .col-12.q-mx-auto
             q-form(@submit.prevent="submitForm")
-              h4.text-center {{ model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
+              h4.text-center {{ model._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
               q-separator.q-my-md
               br
               q-banner.text-white.bg-red(rounded inline-actions)
-                | {{ $t('submitForm.rulesTitle') }}
+                | {{ $t('submitSkinForm.rulesTitle') }}
                 ul
-                  li {{ $t('submitForm.rules1') }}
-                  li {{ $t('submitForm.rules2') }}
-                  li {{ $t('submitForm.rules3') }}
+                  li {{ $t('submitSkinForm.rules1') }}
+                  li {{ $t('submitSkinForm.rules2') }}
+                  li {{ $t('submitSkinForm.rules3') }}
               br
-              p.q-mb-none {{ $t('submitForm.songName') }}
+              p.q-mb-none {{ $t('submitSkinForm.skinName') }}
               q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
-              p.q-mb-none {{ $t('submitForm.composer') }}
-              q-input.q-mb-md(v-model="model.composer" dense :rules="[val => !!val || $t('submitForm.required')]")
+              p.q-mb-none {{ $t('submitSkinForm.skinType') }}
+              q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options )
               p.q-mb-none {{ $t('submitForm.dlLink') }}
               q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
-              q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
               p.q-mb-md {{ $t('submitForm.preview') }}
                 .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
                   q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
@@ -29,25 +28,16 @@
                   .col-1.text-center.self-center
                     q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                     q-btn(flat round icon="add" v-else @click="addPreview")
-              p.q-mb-md {{ $t('submitForm.difficulties') }}
-              .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
-                q-select.col-2(v-model="difficulty.lanes" :options="lanesOptions" :placeholder="$t('submitForm.lanes')" emit-value map-options)
-                q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
-                .col-1.text-center.self-center
-                  q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
-                  q-btn(flat round icon="add" v-else @click="addDifficulty")
               p.q-mb-md {{ $t('submitForm.description') }}
               q-editor(v-model="model.description" :toolbar="editor.toolbar")
               div(v-if="model._id.length > 0")
                 hr.q-my-xl
                 p.text-red {{ $t('submitForm.dangerZone') }}
-                q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
+                q-btn(color="red" @click="deleteConfirm") {{ $t('submitSkinForm.delete') }}
               hr.q-my-xl
               p.text-center
                 q-checkbox(v-model="model.agree")
-                  span(v-html="$t('submitForm.agreetos', {tosURL})")
+                  span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
                 br
                 q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
       q-dialog(v-model="confirm")
@@ -62,7 +52,7 @@
 
 <script>
 export default {
-  name: 'PagePatternForm',
+  name: 'PageSkinForm',
   meta () {
     return {
       title: this.title,
@@ -137,15 +127,12 @@ export default {
       model: {
         _id: '',
         name: '',
-        composer: '',
-        keysounded: false,
-        difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
+        type: 0,
         link: '',
         previews: [{ link: '', name: '' }],
         description: '',
         agree: false
       },
-      isedit: false,
       confirm: false,
       editor: {
         toolbar: [
@@ -160,28 +147,22 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    if (currentRoute.params.id) return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
+    if (currentRoute.params.id) return store.dispatch('tempSkin/fetchSkin', currentRoute.params.id)
     else return 0
   },
   computed: {
     title () {
-      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
+      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Skin' : 'New Skin')
     },
     description () {
-      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Pattern' : 'New Pattern')
+      return 'TECHMANIA | ' + (this.model._id.length > 0 ? 'Edit Skin' : 'New Skin')
     },
-    controlTypes () {
+    typeOptions () {
       return [
-        { label: this.$t('pattern.' + this.controls[0]), value: 0 },
-        { label: this.$t('pattern.' + this.controls[1]), value: 1 },
-        { label: this.$t('pattern.' + this.controls[2]), value: 2 }
-      ]
-    },
-    lanesOptions () {
-      return [
-        { label: '2L', value: 2 },
-        { label: '3L', value: 3 },
-        { label: '4L', value: 4 }
+        { label: this.$t('skin.note'), value: 0 },
+        { label: this.$t('skin.vfx'), value: 1 },
+        { label: this.$t('skin.combo'), value: 2 },
+        { label: this.$t('skin.gameUI'), value: 3 }
       ]
     }
   },
@@ -211,11 +192,11 @@ export default {
         })
         let result
         if (this.model._id.length > 0) {
-          result = await this.$axios.patch(new URL(`/api/patterns/${this.model._id}`, process.env.HOST_URL), post, {
+          result = await this.$axios.patch(new URL(`/api/skins/${this.model._id}`, process.env.HOST_URL), post, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         } else {
-          result = await this.$axios.post(new URL('/api/patterns', process.env.HOST_URL), post, {
+          result = await this.$axios.post(new URL('/api/skins', process.env.HOST_URL), post, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         }
@@ -228,7 +209,7 @@ export default {
               position: 'top',
               timeout: 2000
             })
-            this.$router.push('/patterns/' + this.model._id)
+            this.$router.push('/skins/' + this.model._id)
           } else {
             this.$q.notify({
               icon: 'check',
@@ -237,7 +218,7 @@ export default {
               position: 'top',
               timeout: 2000
             })
-            this.$router.push('/patterns/' + result.data.id)
+            this.$router.push('/skins/' + result.data.id)
           }
         } else {
           throw new Error('Server Error')
@@ -290,7 +271,7 @@ export default {
     async deletePattern () {
       this.deleting = true
       try {
-        const result = await this.$axios.delete(new URL(`/api/patterns/${this.model._id}`, process.env.HOST_URL), {
+        const result = await this.$axios.delete(new URL(`/api/skins/${this.model._id}`, process.env.HOST_URL), {
           headers: { Authorization: `Bearer ${this.user.jwt}` }
         })
         if (result.data.success) {
@@ -315,7 +296,7 @@ export default {
         } else {
           throw new Error('Server Error')
         }
-        this.$router.push(`/users/${this.user.id}/#patterns`)
+        this.$router.push(`/users/${this.user.id}/#skins`)
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
         if (error.response.data.message === 'Not in guild') {
@@ -338,15 +319,15 @@ export default {
   },
   created () {
     if (this.$route.params.id) {
-      const patterndata = JSON.parse(JSON.stringify(this.$store.getters['tempPattern/getPattern']))
-      if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
+      const skindata = JSON.parse(JSON.stringify(this.$store.getters['tempSkin/getSkin']))
+      if (skindata._id.length === 0 || skindata.submitter._id !== this.user.id) {
         this.$router.push('/404')
       } else {
-        patterndata.previews.map(preview => {
+        skindata.previews.map(preview => {
           preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
           return preview
         })
-        this.model = { ...patterndata, agree: false }
+        this.model = { ...skindata, agree: false }
       }
     }
   }

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const axios = require('axios')
 const FormData = require('form-data')
+const mongoose = require('mongoose')
 const users = require('../models/users.js')
 
 module.exports = {
@@ -104,5 +105,57 @@ module.exports = {
   },
   async verify (req, res) {
     res.status(200).send({ success: true, message: '' })
+  },
+  async getById (req, res) {
+    try {
+      const result = await users.aggregate([
+        {
+          $match: {
+            _id: mongoose.Types.ObjectId(req.params.id)
+          }
+        }, {
+          $project: {
+            name: 1,
+            avatar: 1,
+            discord: 1
+          }
+        }, {
+          $lookup: {
+            from: 'skins',
+            localField: '_id',
+            foreignField: 'submitter',
+            as: 'skins'
+          }
+        }, {
+          $lookup: {
+            from: 'patterns',
+            localField: '_id',
+            foreignField: 'submitter',
+            as: 'patterns'
+          }
+        }, {
+          $addFields: {
+            patternCount: {
+              $size: '$patterns'
+            },
+            skinCount: {
+              $size: '$skins'
+            }
+          }
+        }, {
+          $project: {
+            patterns: 0,
+            skins: 0
+          }
+        }
+      ])
+      // some old users do not have this
+      if (!result[0].avatar) {
+        result[0].avatar = ''
+      }
+      res.status(200).send({ success: true, message: '', result: result[0] })
+    } catch (error) {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
   }
 }

@@ -7,8 +7,8 @@ export default {
     myPage: 'My Page',
     logout: 'Logout',
     menu: 'Menu',
-    myPatterns: 'My Patterns',
-    lang: 'Language'
+    lang: 'Language',
+    skins: 'Skins'
   },
   index: {
     download: 'Download',
@@ -16,6 +16,7 @@ export default {
     release: 'Released at ',
     videos: 'Videos',
     patterns: 'Latest Patterns',
+    skins: 'Latest Skins',
     platform: '{platform} users'
   },
   changelog: {
@@ -31,7 +32,8 @@ export default {
     sort: 'Sort',
     sortSubmit: 'Submit Date',
     sortUpdate: 'Update Date',
-    sortName: 'Name'
+    sortName: 'Song Name',
+    notFound: 'No patterns found'
   },
   pattern: {
     keysounded: 'Keysounded',
@@ -46,6 +48,18 @@ export default {
     patternData: 'Pattern Data',
     description: 'Pattern Description',
     previews: 'Previews'
+  },
+  skins: {
+    sortName: 'Skin Name',
+    notFound: 'No skins found'
+  },
+  skin: {
+    note: 'Note',
+    vfx: 'VFX',
+    combo: 'Combo',
+    gameUI: 'Game UI',
+    skinData: 'Skin Data',
+    description: 'Skin Description'
   },
   submitForm: {
     composer: 'Composer',
@@ -81,5 +95,17 @@ export default {
     deleted: 'Deleted successfully.',
     agreetos: 'Submitting the patterns signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
     agreetos2: 'You need to accept the terms first.'
+  },
+  submitSkinForm: {
+    title: 'Submit New Skin',
+    editTitle: 'Edit Skin',
+    rules1: 'Skins using assets from DJMAX and DJMAX Respect are strictly prohibited.',
+    rules2: 'All assets must contain SFW content.',
+    rules3: 'Uploading other users skins are not allowed.',
+    rulesTitle: 'Please read the rules before you submit your skin.',
+    skinName: 'Skin Name',
+    skinType: 'Skin Type',
+    agreetos: 'Submitting the skins signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
+    delete: 'DELETE THIS SKIN'
   }
 }

@@ -13,6 +13,7 @@ export default function () {
       mac: ''
     },
     videos: [],
-    patterns: []
+    patterns: [],
+    skins: []
   }
 }

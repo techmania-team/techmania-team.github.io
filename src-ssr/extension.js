@@ -15,6 +15,7 @@ const bodyParser = require('body-parser')
 
 const routerUsers = require('./routes/users.js')
 const routerPatterns = require('./routes/patterns.js')
+const routerSkins = require('./routes/skins.js')
 
 require('dotenv').config()
 
@@ -27,4 +28,5 @@ module.exports.extendApp = function ({ app, ssr }) {
 
   app.use('/api/users', routerUsers)
   app.use('/api/patterns', routerPatterns)
+  app.use('/api/skins', routerSkins)
 }

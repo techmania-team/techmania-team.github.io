@@ -22,7 +22,7 @@
               :key="release.node_id"
               :subtitle="new Date(release.published_at).toLocaleString(user.locale)"
             )
-              template(v-slot:title)
+              template(#title)
                 h4.q.q-timeline__title
                   | {{ release.name.length === 0 ? release.tag_name : release.name }}
                   | &nbsp;

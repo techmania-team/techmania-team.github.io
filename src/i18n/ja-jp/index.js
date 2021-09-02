@@ -8,7 +8,8 @@ export default {
     logout: 'ログアウト',
     menu: 'メニュー',
     myPatterns: 'マイパターン',
-    lang: '言語'
+    lang: '言語',
+    skins: 'スキン'
   },
   index: {
     download: 'ダウンロード',
@@ -16,6 +17,7 @@ export default {
     release: 'リリーズ日: ',
     videos: 'ビデオ',
     patterns: '最新パターン',
+    skins: '最新スキン',
     platform: '{platform}ユーザー'
   },
   changelog: {
@@ -31,7 +33,8 @@ export default {
     sort: 'ソート',
     sortSubmit: '投稿日',
     sortUpdate: '更新日',
-    sortName: '曲名'
+    sortName: '曲名',
+    notFound: 'パターンがありません'
   },
   pattern: {
     keysounded: 'ノート音',
@@ -46,6 +49,18 @@ export default {
     patternData: 'パターンデータ',
     description: 'パターン詳細',
     previews: 'プレビュー'
+  },
+  skins: {
+    sortName: 'スキン名',
+    notFound: 'スキンがありません'
+  },
+  skin: {
+    note: 'ノート',
+    vfx: 'VFX',
+    combo: 'コンボ',
+    gameUI: 'ゲーム UI',
+    skinData: 'スキンデータ',
+    description: 'スキン詳細'
   },
   submitForm: {
     composer: '作曲家',
@@ -81,5 +96,17 @@ export default {
     deleted: '削除しました。',
     agreetos: 'パターンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。',
     agreetos2: 'まず規約に同意する必要があります。'
+  },
+  submitSkinForm: {
+    title: '新しいスキンを投稿',
+    editTitle: 'スキン編集',
+    rules1: 'DJMAXやDJMAX RESPECTのスキンは厳禁します。',
+    rules2: 'すべてのアセットは成人向けコンテンツを含めてはなりません。',
+    rules3: '他人のスキンを投稿することは許されません。',
+    rulesTitle: 'スキンを投稿する前にルールをお読みください。',
+    skinName: 'スキン名',
+    skinType: 'スキンの種類',
+    agreetos: 'スキンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。',
+    delete: 'このスキンを削除する'
   }
 }
