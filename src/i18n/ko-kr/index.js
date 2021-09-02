@@ -17,6 +17,7 @@ export default {
     release: '출시일: ',
     videos: '비디오',
     patterns: '최신 패턴',
+    skins: '최신 스킨',
     platform: '{platform} 사용자'
   },
   changelog: {
@@ -32,7 +33,8 @@ export default {
     sort: '분류',
     sortSubmit: '투고일',
     sortUpdate: '갱신일',
-    sortName: '곡명'
+    sortName: '곡명',
+    notFound: '패턴이 없습니다'
   },
   pattern: {
     keysounded: '키사운드',
@@ -47,6 +49,18 @@ export default {
     patternData: '패턴 데이터',
     description: '패턴 정보',
     previews: '미리보기'
+  },
+  skins: {
+    sortName: '이름',
+    notFound: '스킨이 없습니다'
+  },
+  skin: {
+    note: '노트',
+    vfx: '쿨밤',
+    combo: '콤보',
+    gameUI: '게임 UI',
+    skinData: '스킨 데이터',
+    description: '스킨 상세정보'
   },
   submitForm: {
     composer: '작곡가',
@@ -82,5 +96,17 @@ export default {
     deleted: '삭제되었습니다.',
     agreetos: '패턴을 투고할 시 <a href="{tosURL}" target="_blank">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.',
     agreetos2: '먼저 약관에 동의해야 합니다.'
+  },
+  submitSkinForm: {
+    title: '새 스킨 투고',
+    editTitle: '스킨 편집',
+    rules1: 'DJMAX 및 DJMAX RESPECT에서 가져온 스킨은 엄격히 금지됩니다.',
+    rules2: '모든 구성요소는 성인 컨텐츠를 포함해서는 안 됩니다.',
+    rules3: '다른 사람의 스킨을 업로드하는 것은 허용되지 않습니다.',
+    rulesTitle: '스킨을 투고하기 전에 규칙을 읽어 주세요.',
+    skinName: '스킨 이름',
+    skinType: '스킨 종류',
+    agreetos: '스킨을 투고할 시 <a href="{tosURL}" target="_blank">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.',
+    delete: '이 스킨을 삭제하기'
   }
 }
