@@ -23,7 +23,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/1XtSrUK0lkqIn46Ty_XDQeex02sf-0GI_/view' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/15hjDLvuMjeSOgIcG6HJ2VsVJTM6nhN2o/view?usp=sharing' target='_blank')
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p

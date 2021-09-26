@@ -16,8 +16,8 @@ export async function fetchData ({ commit }, id) {
     pt = await pt
     skin = await skin
     vid = await vid
-    commit('setTag', { win: win.data[0].tag_name, ios: ios.data[0].tag_name, mac: mac.data[0].tag_name, android: '1.0-beta.1' })
-    commit('setPublish', { win: win.data[0].published_at, ios: ios.data[0].published_at, mac: mac.data[0].published_at, android: '2021-09-13T05:19:56.267Z' })
+    commit('setTag', { win: win.data[0].tag_name, ios: ios.data[0].tag_name, mac: mac.data[0].tag_name, android: '1.0-beta.2' })
+    commit('setPublish', { win: win.data[0].published_at, ios: ios.data[0].published_at, mac: mac.data[0].published_at, android: '2021-09-24T13:20:27.104Z' })
     commit('setPt', pt.data.result)
     commit('setSkin', skin.data.result)
     vid = vid.data.result.map(v => 'https://www.youtube.com/embed/' + v.ytid)
