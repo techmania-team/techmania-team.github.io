@@ -23,7 +23,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'android'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://drive.google.com/file/d/15hjDLvuMjeSOgIcG6HJ2VsVJTM6nhN2o/view?usp=sharing' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/' target='_blank')
                 q-icon(left name="android" )
                 div {{ $t('index.download') }}
             p
@@ -38,7 +38,7 @@
               a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
           div(v-else-if="platform === 'ios'")
             .text-h3
-              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/' target='_blank')
+              q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://apps.apple.com/app/id1581524513' target='_blank')
                 q-icon(left name="img:./assets/icons/ios.svg" )
                 div {{ $t('index.download') }}
             p
