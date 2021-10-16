@@ -234,13 +234,14 @@ module.exports = {
       const result = await patterns.aggregate([
         { $unwind: '$previews' },
         { $project: { ytid: '$previews.ytid' } },
-        { $sample: { size: 3 } }
+        { $sample: { size: 2 } }
       ])
       result.unshift({ _id: '', ytid: 'rplTTHaEoPw' })
       result.unshift({ _id: '', ytid: 'PCfQ-6ZYyxY' })
-      result.unshift({ _id: '', ytid: 'qQAmkMlBvtg' })
+      result.unshift({ _id: '', ytid: '3a3XRaqvsWc' })
+      result.unshift({ _id: '', ytid: 'czRzORpQy3U' })
+      result.unshift({ _id: '', ytid: '1v_LVASKrsQ' })
       result.unshift({ _id: '', ytid: 'MtkxhEmCWwU' })
-      result.unshift({ _id: '', ytid: 'hcqb0Rwm1xY' })
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       console.log(error)
