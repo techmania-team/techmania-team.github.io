@@ -59,6 +59,7 @@
         q-toolbar
           p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA DEV TEAM
           q-space
+          q-btn.q-mr-xs(flat round icon="fab fa-youtube" color="tech" @click="openLink('https://www.youtube.com/channel/UCoHxk7shdAKf7W3yqUJlDaA')")
           q-btn.q-mr-xs(flat round icon="fab fa-discord" color="tech" @click="openLink('https://discord.gg/K4Nf7AnAZt')")
           q-btn.q-mr-xs(flat round icon="fab fa-github" color="tech" @click="openLink('https://github.com/techmania-team/techmania')")
           q-btn(flat round icon="fab fa-reddit-alien" color="tech" @click="openLink('https://www.reddit.com/r/TechMania/')")
