@@ -1,6 +1,10 @@
 <template lang="pug">
   q-card.full-height.card-pattern
-    q-video(:src="`https://www.youtube.com/embed/${pattern.previews[0].ytid}`")
+    q-video(v-if="video" :src="`https://www.youtube.com/embed/${pattern.previews[0].ytid}`" :ratio="16/9")
+    q-img.cursor-pointer(v-else :src="getYouTubeThumbnail(pattern.previews[0].ytid)" :ratio="16/9" @click="video = true")
+      .absolute.full-width.full-height.flex.justify-center.items-center
+        h1.q-ma-none
+          q-icon.text-white(name="play_circle_outline")
     q-card-section
       q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="pattern.link" target="__blank")
       q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push('/patterns/edit/' + pattern._id)")
@@ -58,6 +62,11 @@ export default {
   props: {
     pattern: Object,
     mine: Boolean
+  },
+  data () {
+    return {
+      video: false
+    }
   },
   computed: {
     formattedTime () {

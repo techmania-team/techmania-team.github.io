@@ -77,6 +77,9 @@ export default async ({ Vue }) => {
       updateLocale (value) {
         this.$i18n.locale = value
         this.$store.commit('user/setLocale', value)
+      },
+      getYouTubeThumbnail (ytid) {
+        return `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
       }
     },
     computed: {

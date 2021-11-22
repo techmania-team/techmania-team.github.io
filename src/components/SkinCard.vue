@@ -1,6 +1,10 @@
 <template lang="pug">
   q-card.full-height.card-skin
-    q-video(:src="`https://www.youtube.com/embed/${skin.previews[0].ytid}`")
+    q-video(v-if="video" :src="`https://www.youtube.com/embed/${skin.previews[0].ytid}`" :ratio="16/9")
+    q-img.cursor-pointer(v-else :src="getYouTubeThumbnail(skin.previews[0].ytid)" :ratio="16/9" @click="video = true")
+      .absolute.full-width.full-height.flex.justify-center.items-center
+        h1.q-ma-none
+          q-icon.text-white(name="play_circle_outline")
     q-card-section
       q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="skin.link" target="__blank")
       q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push('/skins/edit/' + skin._id)")
@@ -34,6 +38,11 @@ export default {
   props: {
     skin: Object,
     mine: Boolean
+  },
+  data () {
+    return {
+      video: false
+    }
   },
   computed: {
     formattedTime () {
