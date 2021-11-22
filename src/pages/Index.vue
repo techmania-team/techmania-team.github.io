@@ -4,7 +4,7 @@
       template(#media)
         video(:src="'./assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
       template(#content="scope")
-        .absolute.column.items-center.text-center
+        q-no-ssr.absolute.column.items-center.text-center
           img#logo(:src="'./assets/Logo.png'")
           div(v-if="platform === 'windows'")
             .text-h3
@@ -166,7 +166,12 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
-    return store.dispatch('tempIndex/fetchData', currentRoute.params.id)
+    return store.dispatch('tempIndex/fetchData')
+  },
+  created () {
+    if (process.env.CLIENT) {
+      this.$store.dispatch('tempIndex/fetchGitHub')
+    }
   },
   computed: {
     tag () {
