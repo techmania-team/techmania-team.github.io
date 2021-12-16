@@ -155,7 +155,11 @@ module.exports = {
       }
       res.status(200).send({ success: true, message: '', result: result[0] })
     } catch (error) {
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
     }
   }
 }
