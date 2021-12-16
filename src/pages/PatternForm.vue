@@ -1,63 +1,63 @@
 <template lang="pug">
-  q-page#patternForm
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-12.q-mx-auto
-            q-form(@submit.prevent="submitForm")
-              h4.text-center {{ model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
-              q-separator.q-my-md
-              br
-              q-banner.text-white.bg-red(rounded inline-actions)
-                | {{ $t('submitForm.rulesTitle') }}
-                ul
-                  li {{ $t('submitForm.rules1') }}
-                  li {{ $t('submitForm.rules2') }}
-                  li {{ $t('submitForm.rules3') }}
-              br
-              p.q-mb-none {{ $t('submitForm.songName') }}
-              q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
-              p.q-mb-none {{ $t('submitForm.composer') }}
-              q-input.q-mb-md(v-model="model.composer" dense :rules="[val => !!val || $t('submitForm.required')]")
-              p.q-mb-none {{ $t('submitForm.dlLink') }}
-              q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
-              q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
-              p.q-mb-md {{ $t('submitForm.preview') }}
-                .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                  q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                  q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
-                  .col-1.text-center.self-center
-                    q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
-                    q-btn(flat round icon="add" v-else @click="addPreview")
-              p.q-mb-md {{ $t('submitForm.difficulties') }}
-              .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
-                q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
-                q-select.col-2(v-model="difficulty.lanes" :options="lanesOptions" :placeholder="$t('submitForm.lanes')" emit-value map-options)
-                q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
+q-page#patternForm
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-12.q-mx-auto
+          q-form(@submit.prevent="submitForm")
+            h4.text-center {{ model._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
+            q-separator.q-my-md
+            br
+            q-banner.text-white.bg-red(rounded inline-actions)
+              | {{ $t('submitForm.rulesTitle') }}
+              ul
+                li {{ $t('submitForm.rules1') }}
+                li {{ $t('submitForm.rules2') }}
+                li {{ $t('submitForm.rules3') }}
+            br
+            p.q-mb-none {{ $t('submitForm.songName') }}
+            q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
+            p.q-mb-none {{ $t('submitForm.composer') }}
+            q-input.q-mb-md(v-model="model.composer" dense :rules="[val => !!val || $t('submitForm.required')]")
+            p.q-mb-none {{ $t('submitForm.dlLink') }}
+            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
+            q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
+            p.q-mb-md {{ $t('submitForm.preview') }}
+              .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
                 .col-1.text-center.self-center
-                  q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
-                  q-btn(flat round icon="add" v-else @click="addDifficulty")
-              p.q-mb-md {{ $t('submitForm.description') }}
-              q-editor(v-model="model.description" :toolbar="editor.toolbar")
-              div(v-if="model._id.length > 0")
-                hr.q-my-xl
-                p.text-red {{ $t('submitForm.dangerZone') }}
-                q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
+                  q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
+                  q-btn(flat round icon="add" v-else @click="addPreview")
+            p.q-mb-md {{ $t('submitForm.difficulties') }}
+            .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
+              q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
+              q-select.col-2(v-model="difficulty.lanes" :options="lanesOptions" :placeholder="$t('submitForm.lanes')" emit-value map-options)
+              q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+              q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
+              .col-1.text-center.self-center
+                q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
+                q-btn(flat round icon="add" v-else @click="addDifficulty")
+            p.q-mb-md {{ $t('submitForm.description') }}
+            q-editor(v-model="model.description" :toolbar="editor.toolbar")
+            div(v-if="model._id.length > 0")
               hr.q-my-xl
-              p.text-center
-                q-checkbox(v-model="model.agree")
-                  span(v-html="$t('submitForm.agreetos', {tosURL})")
-                br
-                q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
-      q-dialog(v-model="confirm")
-        q-card
-          q-card-section.row.items-center
-            q-avatar.q-mx-auto(icon="warning" text-color="red")
-            span.q-ml-sm {{ $t('submitForm.deleteText') }}
-          q-card-actions(align="right")
-            q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
-            q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+              p.text-red {{ $t('submitForm.dangerZone') }}
+              q-btn(color="red" @click="deleteConfirm") {{ $t('submitForm.delete') }}
+            hr.q-my-xl
+            p.text-center
+              q-checkbox(v-model="model.agree")
+                span(v-html="$t('submitForm.agreetos', {tosURL})")
+              br
+              q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
+    q-dialog(v-model="confirm")
+      q-card
+        q-card-section.row.items-center
+          q-avatar.q-mx-auto(icon="warning" text-color="red")
+          span.q-ml-sm {{ $t('submitForm.deleteText') }}
+        q-card-actions(align="right")
+          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
+          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
 </template>
 
 <script>

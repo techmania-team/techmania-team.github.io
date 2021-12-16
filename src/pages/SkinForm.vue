@@ -1,53 +1,53 @@
 <template lang="pug">
-  q-page#skinForm
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-12.q-mx-auto
-            q-form(@submit.prevent="submitForm")
-              h4.text-center {{ model._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
-              q-separator.q-my-md
-              br
-              q-banner.text-white.bg-red(rounded inline-actions)
-                | {{ $t('submitSkinForm.rulesTitle') }}
-                ul
-                  li {{ $t('submitSkinForm.rules1') }}
-                  li {{ $t('submitSkinForm.rules2') }}
-                  li {{ $t('submitSkinForm.rules3') }}
-              br
-              p.q-mb-none {{ $t('submitSkinForm.skinName') }}
-              q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
-              p.q-mb-none {{ $t('submitSkinForm.skinType') }}
-              q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options )
-              p.q-mb-none {{ $t('submitForm.dlLink') }}
-              q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
-              p.q-mb-md {{ $t('submitForm.preview') }}
-                .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                  q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                  q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
-                  .col-1.text-center.self-center
-                    q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
-                    q-btn(flat round icon="add" v-else @click="addPreview")
-              p.q-mb-md {{ $t('submitForm.description') }}
-              q-editor(v-model="model.description" :toolbar="editor.toolbar")
-              div(v-if="model._id.length > 0")
-                hr.q-my-xl
-                p.text-red {{ $t('submitForm.dangerZone') }}
-                q-btn(color="red" @click="deleteConfirm") {{ $t('submitSkinForm.delete') }}
+q-page#skinForm
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-12.q-mx-auto
+          q-form(@submit.prevent="submitForm")
+            h4.text-center {{ model._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
+            q-separator.q-my-md
+            br
+            q-banner.text-white.bg-red(rounded inline-actions)
+              | {{ $t('submitSkinForm.rulesTitle') }}
+              ul
+                li {{ $t('submitSkinForm.rules1') }}
+                li {{ $t('submitSkinForm.rules2') }}
+                li {{ $t('submitSkinForm.rules3') }}
+            br
+            p.q-mb-none {{ $t('submitSkinForm.skinName') }}
+            q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
+            p.q-mb-none {{ $t('submitSkinForm.skinType') }}
+            q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options )
+            p.q-mb-none {{ $t('submitForm.dlLink') }}
+            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
+            p.q-mb-md {{ $t('submitForm.preview') }}
+              .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
+                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
+                .col-1.text-center.self-center
+                  q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
+                  q-btn(flat round icon="add" v-else @click="addPreview")
+            p.q-mb-md {{ $t('submitForm.description') }}
+            q-editor(v-model="model.description" :toolbar="editor.toolbar")
+            div(v-if="model._id.length > 0")
               hr.q-my-xl
-              p.text-center
-                q-checkbox(v-model="model.agree")
-                  span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
-                br
-                q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
-      q-dialog(v-model="confirm")
-        q-card
-          q-card-section.row.items-center
-            q-avatar.q-mx-auto(icon="warning" text-color="red")
-            span.q-ml-sm {{ $t('submitForm.deleteText') }}
-          q-card-actions(align="right")
-            q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
-            q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+              p.text-red {{ $t('submitForm.dangerZone') }}
+              q-btn(color="red" @click="deleteConfirm") {{ $t('submitSkinForm.delete') }}
+            hr.q-my-xl
+            p.text-center
+              q-checkbox(v-model="model.agree")
+                span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
+              br
+              q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="submitting" style="width: 150px")
+    q-dialog(v-model="confirm")
+      q-card
+        q-card-section.row.items-center
+          q-avatar.q-mx-auto(icon="warning" text-color="red")
+          span.q-ml-sm {{ $t('submitForm.deleteText') }}
+        q-card-actions(align="right")
+          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
+          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
 </template>
 
 <script>

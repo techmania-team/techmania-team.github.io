@@ -1,37 +1,37 @@
 <template lang="pug">
-  q-page#profile
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-6.q-mx-auto.text-center
-            h4.q-mb-md
-              q-avatar(rounded size="100px")
-                img(:src="profile.avatar")
-            h4.q-my-md {{ profile.name }}
-        q-separator.q-mt-md
-        .row
-          .col-12
-            q-tabs(v-model="tab" align="justify")
-              q-tab(name="patterns" :label="$t('nav.patterns')" icon="music_note")
-                q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-              q-tab(name="skins" :label="$t('nav.skins')" icon="stars")
-                q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
-          .col-12
-            q-tab-panels(v-model="tab" animated keep-alive)
-              q-tab-panel(name="patterns")
-                .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
-                q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")
-                  .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
-                    PatternCard(:pattern="pattern" :mine="mine")
-                  template(#loading)
-                    q-spinner-dots(color="tech" size="40px")
-              q-tab-panel(name="skins")
-                .text-center.text-body1(v-if="skins.length === 0 && scrollSkinDisable") {{ $t('skins.notFound') }}
-                q-infinite-scroll.row.q-my-md(@load="loadSkinScroll" :offset="200" :disable="scrollSkinDisable")
-                  .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
-                    SkinCard(:skin="skin" :mine="mine")
-                  template(#loading)
-                    q-spinner-dots(color="tech" size="40px")
+q-page#profile
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-6.q-mx-auto.text-center
+          h4.q-mb-md
+            q-avatar(rounded size="100px")
+              img(:src="profile.avatar")
+          h4.q-my-md {{ profile.name }}
+      q-separator.q-mt-md
+      .row
+        .col-12
+          q-tabs(v-model="tab" align="justify")
+            q-tab(name="patterns" :label="$t('nav.patterns')" icon="music_note")
+              q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
+            q-tab(name="skins" :label="$t('nav.skins')" icon="stars")
+              q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
+        .col-12
+          q-tab-panels(v-model="tab" animated keep-alive)
+            q-tab-panel(name="patterns")
+              .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
+              q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")
+                .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
+                  PatternCard(:pattern="pattern" :mine="mine")
+                template(#loading)
+                  q-spinner-dots(color="tech" size="40px")
+            q-tab-panel(name="skins")
+              .text-center.text-body1(v-if="skins.length === 0 && scrollSkinDisable") {{ $t('skins.notFound') }}
+              q-infinite-scroll.row.q-my-md(@load="loadSkinScroll" :offset="200" :disable="scrollSkinDisable")
+                .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
+                  SkinCard(:skin="skin" :mine="mine")
+                template(#loading)
+                  q-spinner-dots(color="tech" size="40px")
 </template>
 
 <script>

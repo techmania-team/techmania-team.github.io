@@ -1,53 +1,53 @@
 <template lang="pug">
-  q-page#patterns
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-12.q-mx-auto
-            h4.text-center {{ $t('nav.patterns') }}
-            q-separator.q-my-md
-            br
-            q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
-              template(#after)
-                q-btn(icon="search" round desnse flat @click="applySearch")
-            br
-            q-list.search
-              q-item
-                q-item-section {{ $t('pattern.keysounded') }}
-                q-item-section
-                  div
-                    q-btn(flat size="10px" :label="$t('patterns.all')" :text-color="searchForm.keysounded === -1 ? 'white' : 'grey'" @click="searchForm.keysounded = -1")
-                    q-btn(flat size="10px" :label="$t('patterns.yes')" :text-color="searchForm.keysounded === 1 ? 'white' : 'grey'" @click="searchForm.keysounded = 1")
-                    q-btn(flat size="10px" :label="$t('patterns.no')" :text-color="searchForm.keysounded === 0 ? 'white' : 'grey'" @click="searchForm.keysounded = 0")
-              q-item
-                q-item-section {{ $t('submitForm.control') }}
-                q-item-section
-                  div
-                    q-btn(flat size="10px" :label="$t('patterns.all')" :text-color="searchForm.control === -1 ? 'white' : 'grey'" @click="searchForm.control = -1")
-                    q-btn(flat size="10px" :label="$t('pattern.touch')" :text-color="searchForm.control === 0 ? 'white' : 'grey'" @click="searchForm.control = 0")
-                    q-btn(flat size="10px" :label="$t('pattern.keys')" :text-color="searchForm.control === 1 ? 'white' : 'grey'" @click="searchForm.control = 1")
-                    q-btn(flat size="10px" :label="$t('pattern.km')" :text-color="searchForm.control === 2 ? 'white' : 'grey'" @click="searchForm.control = 2")
-              q-item
-                q-item-section {{ $t('submitForm.lanes') }}
-                q-item-section
-                  div
-                    q-option-group(inline :options="[{label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}]" type="checkbox" v-model="searchForm.lanes")
-              q-item
-                q-item-section {{ $t('patterns.sort') }}
-                q-item-section
-                  div
-                    q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
-                    q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
-                    q-btn(flat size="10px" :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
-            q-separator.q-my-md
-            q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
-              .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
-                PatternCard(:pattern="pattern" :mine="false")
-              template(#loading)
-                q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
-    q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
-      q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/patterns/new')")
+q-page#patterns
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-12.q-mx-auto
+          h4.text-center {{ $t('nav.patterns') }}
+          q-separator.q-my-md
+          br
+          q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
+            template(#after)
+              q-btn(icon="search" round desnse flat @click="applySearch")
+          br
+          q-list.search
+            q-item
+              q-item-section {{ $t('pattern.keysounded') }}
+              q-item-section
+                div
+                  q-btn(flat size="10px" :label="$t('patterns.all')" :text-color="searchForm.keysounded === -1 ? 'white' : 'grey'" @click="searchForm.keysounded = -1")
+                  q-btn(flat size="10px" :label="$t('patterns.yes')" :text-color="searchForm.keysounded === 1 ? 'white' : 'grey'" @click="searchForm.keysounded = 1")
+                  q-btn(flat size="10px" :label="$t('patterns.no')" :text-color="searchForm.keysounded === 0 ? 'white' : 'grey'" @click="searchForm.keysounded = 0")
+            q-item
+              q-item-section {{ $t('submitForm.control') }}
+              q-item-section
+                div
+                  q-btn(flat size="10px" :label="$t('patterns.all')" :text-color="searchForm.control === -1 ? 'white' : 'grey'" @click="searchForm.control = -1")
+                  q-btn(flat size="10px" :label="$t('pattern.touch')" :text-color="searchForm.control === 0 ? 'white' : 'grey'" @click="searchForm.control = 0")
+                  q-btn(flat size="10px" :label="$t('pattern.keys')" :text-color="searchForm.control === 1 ? 'white' : 'grey'" @click="searchForm.control = 1")
+                  q-btn(flat size="10px" :label="$t('pattern.km')" :text-color="searchForm.control === 2 ? 'white' : 'grey'" @click="searchForm.control = 2")
+            q-item
+              q-item-section {{ $t('submitForm.lanes') }}
+              q-item-section
+                div
+                  q-option-group(inline :options="[{label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}]" type="checkbox" v-model="searchForm.lanes")
+            q-item
+              q-item-section {{ $t('patterns.sort') }}
+              q-item-section
+                div
+                  q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
+                  q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
+                  q-btn(flat size="10px" :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
+          q-separator.q-my-md
+          q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+            .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
+              PatternCard(:pattern="pattern" :mine="false")
+            template(#loading)
+              q-spinner-dots(color="tech" size="40px")
+          .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
+  q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
+    q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/patterns/new')")
 </template>
 
 <script>

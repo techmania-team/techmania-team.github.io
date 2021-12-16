@@ -1,34 +1,34 @@
 <template lang="pug">
-  q-page#skin
-    section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-6.q-mx-auto
-            h4 {{ skin.name }}
-          q-no-ssr.col-6.text-right
-            h4
-              q-btn.q-mr-xs(v-if="skin.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/skins/edit/' + skin._id)") Edit
-              q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="skin.link" target="__blank") DOWNLOAD
-        q-separator
-        .row.q-my-md
-          .col-6
-            .text-h6.q-mt-md.q-mb-lg {{ $t('skin.skinData') }}
-            .q-gutter-sm
-              div
-                q-icon(size="sm" name="upload")
-                | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
-                router-link.no-underline(:to='`/users/${skin.submitter._id}/#skins`') {{ skin.submitter.name }}
-              div
-                q-icon(size="sm" name="star")
-                | &nbsp;{{ $t('submitSkinForm.skinType') }}: {{ skinType }}
-          .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
-            .text-h6.q-mt-md.q-mb-lg {{ $t('skin.description') }}
-            p(v-html="skin.description")
-        .row.justify-center
-          .col-12.text-h6.text-center {{ $t('pattern.previews') }}
-          .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
-            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+q-page#skin
+  section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-6.q-mx-auto
+          h4 {{ skin.name }}
+        q-no-ssr.col-6.text-right
+          h4
+            q-btn.q-mr-xs(v-if="skin.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/skins/edit/' + skin._id)") Edit
+            q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="skin.link" target="__blank") DOWNLOAD
+      q-separator
+      .row.q-my-md
+        .col-6
+          .text-h6.q-mt-md.q-mb-lg {{ $t('skin.skinData') }}
+          .q-gutter-sm
+            div
+              q-icon(size="sm" name="upload")
+              | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
+              router-link.no-underline(:to='`/users/${skin.submitter._id}/#skins`') {{ skin.submitter.name }}
+            div
+              q-icon(size="sm" name="star")
+              | &nbsp;{{ $t('submitSkinForm.skinType') }}: {{ skinType }}
+        .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
+          .text-h6.q-mt-md.q-mb-lg {{ $t('skin.description') }}
+          p(v-html="skin.description")
+      .row.justify-center
+        .col-12.text-h6.text-center {{ $t('pattern.previews') }}
+        .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
+          q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
 
 <script>

@@ -1,38 +1,38 @@
 <template lang="pug">
-  q-page#skins
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-12.q-mx-auto
-            h4.text-center {{ $t('nav.skins') }}
-            q-separator.q-my-md
-            br
-            q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
-              template(#after)
-                q-btn(icon="search" round desnse flat @click="applySearch")
-            br
-            q-list.search
-              q-item
-                q-item-section {{ $t('submitSkinForm.skinType') }}
-                q-item-section
-                  div
-                    q-option-group(inline :options="typeOptions" type="checkbox" v-model="searchForm.types")
-              q-item
-                q-item-section {{ $t('patterns.sort') }}
-                q-item-section
-                  div
-                    q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
-                    q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
-                    q-btn(flat size="10px" :label="$t('skins.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
-            q-separator.q-my-md
-            q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
-              .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
-                SkinCard(:skin="skin" :mine="false")
-              template(#loading)
-                q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
-    q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
-      q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/skins/new')")
+q-page#skins
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-12.q-mx-auto
+          h4.text-center {{ $t('nav.skins') }}
+          q-separator.q-my-md
+          br
+          q-input(rounded outlined v-model="searchForm.keywords" :placeholder="$t('patterns.search')" @keydown.enter="applySearch")
+            template(#after)
+              q-btn(icon="search" round desnse flat @click="applySearch")
+          br
+          q-list.search
+            q-item
+              q-item-section {{ $t('submitSkinForm.skinType') }}
+              q-item-section
+                div
+                  q-option-group(inline :options="typeOptions" type="checkbox" v-model="searchForm.types")
+            q-item
+              q-item-section {{ $t('patterns.sort') }}
+              q-item-section
+                div
+                  q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
+                  q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
+                  q-btn(flat size="10px" :label="$t('skins.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
+          q-separator.q-my-md
+          q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+            .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
+              SkinCard(:skin="skin" :mine="false")
+            template(#loading)
+              q-spinner-dots(color="tech" size="40px")
+          .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
+  q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
+    q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/skins/new')")
 </template>
 
 <script>

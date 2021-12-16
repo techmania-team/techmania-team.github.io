@@ -1,41 +1,41 @@
 <template lang="pug">
-  q-page#pattern
-    section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
-    section.q-mx-auto.padding
-      .container
-        .row
-          .col-6.q-mx-auto
-            h4 {{ pattern.name }}
-          q-no-ssr.col-6.text-right
-            h4
-              q-btn.q-mr-xs(v-if="pattern.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
-              q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") DOWNLOAD
-        q-separator
-        .row.q-my-md
-          .col-6
-            .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
-            .q-gutter-sm
-              div
-                q-icon(size="sm" name="person")
-                | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
-              div
-                q-icon(size="sm" name="upload")
-                | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
-                router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
-              div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
-                q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
-                | &nbsp;{{ $t('pattern.keysounded') }}
-              div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index")
-                q-icon(size="sm" :name="`img:./assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
-                q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
-                span(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
-          .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
-            .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
-            p(v-html="pattern.description")
-        .row.justify-center
-          .col-12.text-h6.text-center {{ $t('pattern.previews') }}
-          .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-            q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+q-page#pattern
+  section.bg(:style="{backgroundImage: `url(${this.backgroundImage})`}")
+  section.q-mx-auto.padding
+    .container
+      .row
+        .col-6.q-mx-auto
+          h4 {{ pattern.name }}
+        q-no-ssr.col-6.text-right
+          h4
+            q-btn.q-mr-xs(v-if="pattern.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") Edit
+            q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") DOWNLOAD
+      q-separator
+      .row.q-my-md
+        .col-6
+          .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
+          .q-gutter-sm
+            div
+              q-icon(size="sm" name="person")
+              | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
+            div
+              q-icon(size="sm" name="upload")
+              | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
+              router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
+            div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
+              q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
+              | &nbsp;{{ $t('pattern.keysounded') }}
+            div(v-for="(difficulty, index) in pattern.difficulties" :key="'D'+index")
+              q-icon(size="sm" :name="`img:./assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
+              q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
+              span(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
+        .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
+          .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
+          p(v-html="pattern.description")
+      .row.justify-center
+        .col-12.text-h6.text-center {{ $t('pattern.previews') }}
+        .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
+          q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
 </template>
 
 <script>
