@@ -45,6 +45,10 @@ export default {
     return {
       title: `TECHMANIA | ${this.pattern.name}`,
       meta: {
+        color: {
+          name: 'theme-color',
+          content: '#E74C3C'
+        },
         title: {
           name: 'title',
           content: `${this.pattern.name}`,

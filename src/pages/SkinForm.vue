@@ -57,6 +57,10 @@ export default {
     return {
       title: this.title,
       meta: {
+        color: {
+          name: 'theme-color',
+          content: '#E74C3C'
+        },
         title: {
           name: 'title',
           content: this.title,

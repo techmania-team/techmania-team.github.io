@@ -59,6 +59,10 @@ export default {
     return {
       title: 'TECHMANIA | Patterns',
       meta: {
+        color: {
+          name: 'theme-color',
+          content: '#E74C3C'
+        },
         title: {
           name: 'title',
           content: 'TECHMANIA | Patterns'

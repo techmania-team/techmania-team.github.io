@@ -109,6 +109,10 @@ export default {
     return {
       title: 'TECHMANIA',
       meta: {
+        color: {
+          name: 'theme-color',
+          content: '#E74C3C'
+        },
         title: {
           name: 'title',
           content: 'TECHMANIA'

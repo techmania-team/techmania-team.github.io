@@ -44,6 +44,10 @@ export default {
     return {
       title: `TECHMANIA | ${this.profile.name}`,
       meta: {
+        color: {
+          name: 'theme-color',
+          content: '#E74C3C'
+        },
         title: {
           name: 'title',
           content: `${this.profile.name}`,
