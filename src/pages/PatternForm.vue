@@ -198,7 +198,7 @@ export default {
     async submitForm () {
       if (!this.model.agree) {
         this.$q.notify({
-          color: 'red-5',
+          color: 'negative',
           textColor: 'white',
           icon: 'warning',
           message: this.$t('submitForm.agreetos2'),
