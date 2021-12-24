@@ -1,7 +1,5 @@
-import axios from 'axios'
-
 export function fetchSkin ({ commit }, id) {
-  return axios.get(new URL(`/api/skins/${id}`, process.env.HOST_URL).toString()).then(({ data }) => {
+  return this._vm.$api.get(`/skins/${id}`).then(({ data }) => {
     commit('setSkin', data.result)
   }, () => {})
 }

@@ -66,7 +66,7 @@ export default async ({ Vue }) => {
       async logout () {
         try {
           if (this.user.jwt.length > 0) {
-            await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
+            await this.$api.delete('/users/logout', {
               headers: { Authorization: `Bearer ${this.user.jwt}` }
             })
           }

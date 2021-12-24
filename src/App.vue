@@ -18,14 +18,14 @@ export default {
     try {
       // verify jwt
       if (this.user.jwt.length > 0) {
-        await this.$axios.get(new URL('/api/users/verify', process.env.HOST_URL).toString(),
+        await this.$api.get('/users/verify',
           {
             headers: {
               Authorization: `Bearer ${this.user.jwt}`
             }
           })
         if (Date.now() - this.user.jwtReceived > 432000000) {
-          const { data } = await this.$axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
+          const { data } = await this.$api.post('/users/extend', {}, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
           this.getUserData(data.token)

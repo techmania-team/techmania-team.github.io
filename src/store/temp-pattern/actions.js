@@ -1,7 +1,5 @@
-import axios from 'axios'
-
 export function fetchPattern ({ commit }, id) {
-  return axios.get(new URL(`/api/patterns/${id}`, process.env.HOST_URL).toString()).then(({ data }) => {
+  return this._vm.$api.get(`/patterns/${id}`).then(({ data }) => {
     commit('setPattern', data.result)
   }, () => {})
 }

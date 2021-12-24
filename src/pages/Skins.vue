@@ -136,8 +136,8 @@ export default {
   methods: {
     async fetchSkins (start = 0) {
       try {
-        const result = await this.$axios.get(
-          new URL(`/api/skins?start=${start}&keywords=${this.search.keywords}&types=${this.search.types.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`, process.env.HOST_URL)
+        const result = await this.$api.get(
+          `/skins?start=${start}&keywords=${this.search.keywords}&types=${this.search.types.join()}&sort=${this.search.sort}&sortBy=${this.search.sortBy}&limit=12`
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.skins = this.skins.concat(result.data.result)

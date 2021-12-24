@@ -196,11 +196,11 @@ export default {
         })
         let result
         if (this.model._id.length > 0) {
-          result = await this.$axios.patch(new URL(`/api/skins/${this.model._id}`, process.env.HOST_URL), post, {
+          result = await this.$api.patch(`/skins/${this.model._id}`, post, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         } else {
-          result = await this.$axios.post(new URL('/api/skins', process.env.HOST_URL), post, {
+          result = await this.$api.post('/skins', post, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         }
@@ -275,7 +275,7 @@ export default {
     async deletePattern () {
       this.deleting = true
       try {
-        const result = await this.$axios.delete(new URL(`/api/skins/${this.model._id}`, process.env.HOST_URL), {
+        const result = await this.$api.delete(`/skins/${this.model._id}`, {
           headers: { Authorization: `Bearer ${this.user.jwt}` }
         })
         if (result.data.success) {

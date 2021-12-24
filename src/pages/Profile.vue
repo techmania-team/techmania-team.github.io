@@ -147,8 +147,8 @@ export default {
   methods: {
     async fetchPatterns (start = 0) {
       try {
-        const result = await this.$axios.get(
-          new URL(`/api/patterns?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`, process.env.HOST_URL)
+        const result = await this.$api.get(
+          `/patterns?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)
@@ -166,8 +166,8 @@ export default {
     },
     async fetchSkins (start = 0) {
       try {
-        const result = await this.$axios.get(
-          new URL(`/api/skins?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`, process.env.HOST_URL)
+        const result = await this.$api.get(
+          `/skins?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.skins = this.skins.concat(result.data.result)

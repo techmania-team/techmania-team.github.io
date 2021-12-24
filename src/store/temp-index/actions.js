@@ -1,10 +1,8 @@
-import axios from 'axios'
-
 export async function fetchData ({ commit }) {
   try {
-    let pt = axios.get(new URL('/api/patterns?start=0&limit=8', process.env.HOST_URL).toString())
-    let skin = axios.get(new URL('/api/skins?start=0&limit=8', process.env.HOST_URL).toString())
-    let vid = axios.get(new URL('/api/patterns/indexvideo', process.env.HOST_URL).toString())
+    let pt = this._vm.$api.get(new URL('/api/patterns?start=0&limit=8', process.env.HOST_URL).toString())
+    let skin = this._vm.$api.get(new URL('/api/skins?start=0&limit=8', process.env.HOST_URL).toString())
+    let vid = this._vm.$api.get(new URL('/api/patterns/indexvideo', process.env.HOST_URL).toString())
     pt = await pt
     skin = await skin
     vid = await vid
@@ -18,10 +16,10 @@ export async function fetchData ({ commit }) {
 
 export async function fetchGitHub ({ commit }) {
   try {
-    let win = axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
-    let ios = axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
-    let mac = axios.get('https://api.github.com/repos/fhalfkg/techmania/releases')
-    let and = axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
+    let win = this._vm.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
+    let ios = this._vm.$axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
+    let mac = this._vm.$axios.get('https://api.github.com/repos/fhalfkg/techmania/releases')
+    let and = this._vm.$axios.get('https://api.github.com/repos/rogeraabbccdd/techmania/releases')
     win = await win
     ios = await ios
     mac = await mac
