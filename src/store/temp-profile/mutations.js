@@ -6,3 +6,12 @@ export function setProfile (state, data) {
   state.skinCount = data.skinCount
   state._id = data._id
 }
+
+export function resetProfile (state) {
+  state.name = ''
+  state.avatar = ''
+  state.discord = ''
+  state.patternCount = 0
+  state.skinCount = 0
+  state._id = ''
+}

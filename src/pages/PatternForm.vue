@@ -164,6 +164,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    store.commit('tempPattern/resetPattern')
     if (currentRoute.params.id) return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
     else return 0
   },

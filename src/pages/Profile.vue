@@ -142,6 +142,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    store.commit('tempProfile/resetProfile')
     return store.dispatch('tempProfile/fetchProfile', currentRoute.params.id)
   },
   methods: {

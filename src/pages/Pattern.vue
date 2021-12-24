@@ -113,6 +113,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    store.commit('tempPattern/resetPattern')
     return store.dispatch('tempPattern/fetchPattern', currentRoute.params.id)
   },
   data () {

@@ -106,6 +106,7 @@ export default {
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
+    store.commit('tempSkin/resetSkin')
     return store.dispatch('tempSkin/fetchSkin', currentRoute.params.id)
   },
   data () {

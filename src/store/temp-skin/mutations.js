@@ -1,4 +1,4 @@
-export function cleanSkin (state, data) {
+export function resetSkin (state, data) {
   state._id = ''
   state.name = ''
   state.type = 0

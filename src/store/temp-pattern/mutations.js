@@ -1,4 +1,4 @@
-export function cleanPattern (state, data) {
+export function resetPattern (state, data) {
   state._id = ''
   state.name = ''
   state.composer = ''
