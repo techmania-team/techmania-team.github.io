@@ -253,13 +253,17 @@ export default {
       }
       try {
         this.comment.submitting = true
-        const { data } = await this.$api.post(
+        let response = await this.$api.post(
           '/comments/',
           { rating: this.comment.rating, comment: this.comment.comment, pattern: this.pattern._id },
           { headers: { Authorization: `Bearer ${this.user.jwt}` } }
         )
         this.$store.commit(
-          'tempPattern/setMyComment', { ...data.result }
+          'tempPattern/setMyComment', { ...response.data.result }
+        )
+        response = await this.$api.get(`/comments/patterns/${this.pattern._id}/rating`)
+        this.$store.commit(
+          'tempPattern/updateRating', { ...response.data.result }
         )
       } catch (error) {
         this.$q.notify({
@@ -320,6 +324,10 @@ export default {
             }
           )
           this.$store.commit('tempPattern/editMyComment', { rating: this.replyModal.rating, comment: this.replyModal.comment })
+          const { data } = await this.$api.get(`/comments/patterns/${this.pattern._id}/rating`)
+          this.$store.commit(
+            'tempPattern/updateRating', { ...data.result }
+          )
         } else if (this.replyModal.mode === 1) {
           if (this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')

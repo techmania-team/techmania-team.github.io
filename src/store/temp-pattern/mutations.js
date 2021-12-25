@@ -120,3 +120,8 @@ export function createReply (state, data) {
     }
   }
 }
+
+export function updateRating (state, data) {
+  state.rating.rating = data.rating
+  state.rating.count = data.count
+}
