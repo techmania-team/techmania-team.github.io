@@ -113,5 +113,68 @@ module.exports = {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     }
+  },
+  async getMyCommmentByPattern (req, res) {
+    try {
+      const query = [
+        // Find matching pattern id
+        {
+          $match: {
+            pattern: mongoose.Types.ObjectId(req.params.id),
+            'replies.0.user': req.user._id
+          }
+        },
+        // Unwind replies for lookup
+        {
+          $unwind: {
+            path: '$replies'
+          }
+        },
+        // Lookup user
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'replies.user',
+            foreignField: '_id',
+            as: 'replies.user'
+          }
+        },
+        // Unwind lookup result, always an array with 1 element
+        {
+          $unwind: {
+            path: '$replies.user'
+          }
+        },
+        // Remove unnecessary user fields
+        {
+          $unset: [
+            'replies.user.accessInfo'
+          ]
+        },
+        // Group pattern result back
+        {
+          $group: {
+            _id: '$_id',
+            pattern: {
+              $first: '$pattern'
+            },
+            rating: {
+              $first: '$rating'
+            },
+            replies: {
+              $push: '$replies'
+            }
+          }
+        }
+      ]
+      const result = await comments.aggregate(query)
+      res.status(200).send({ success: true, message: '', result })
+    } catch (error) {
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
   }
 }
