@@ -35,4 +35,7 @@ module.exports.extendApp = function ({ app, ssr }) {
   app.use('/api/patterns', routerPatterns)
   app.use('/api/skins', routerSkins)
   app.use('/api/comments', routerComments)
+  app.use('/api/*', (req, res) => {
+    res.status(404).send({ success: false, message: 'Not Found.' })
+  })
 }
