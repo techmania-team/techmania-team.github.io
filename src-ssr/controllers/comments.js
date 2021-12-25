@@ -219,5 +219,32 @@ module.exports = {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     }
+  },
+  async updateReply (req, res) {
+    try {
+      await comments.findOneAndUpdate(
+        {
+          _id: mongoose.Types.ObjectId(req.params.cid),
+          'replies._id': mongoose.Types.ObjectId(req.params.rid),
+          'replies.user': req.user._id
+        },
+        {
+          $set: {
+            'replies.$[a].comment': req.body.comment
+          }
+        },
+        { new: true, runValidators: true, arrayFilters: [{ 'a._id': req.params.rid }] }
+      )
+      res.status(200).send({ success: true, message: '' })
+    } catch (error) {
+      console.log(error)
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else if (error.name === 'ValidationError') {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
   }
 }
