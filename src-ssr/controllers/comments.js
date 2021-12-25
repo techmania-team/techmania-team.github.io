@@ -176,5 +176,22 @@ module.exports = {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     }
+  },
+  async updateComment (req, res) {
+    try {
+      await comments.findByIdAndUpdate(req.params.id, {
+        rating: req.body.rating,
+        $set: { 'replies.0.comment': req.body.comment }
+      }, { new: true })
+      res.status(200).send({ success: true, message: '' })
+    } catch (error) {
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else if (error.name === 'ValidationError') {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
   }
 }
