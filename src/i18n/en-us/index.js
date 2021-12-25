@@ -47,7 +47,17 @@ export default {
     composer: 'Composed By',
     patternData: 'Pattern Data',
     description: 'Pattern Description',
-    previews: 'Previews'
+    previews: 'Previews',
+    noDescription: 'No description.',
+    rateThisPattern: 'Rate this pattern',
+    commentPlaceholder: 'Leave a comment',
+    edit: 'Edit',
+    download: 'Download',
+    noComments: 'No comments.',
+    myComment: 'My Comment',
+    reply: 'Reply',
+    rating: 'Rating',
+    ratingCount: '{count} comments'
   },
   skins: {
     sortName: 'Skin Name',
