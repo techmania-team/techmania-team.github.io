@@ -246,5 +246,55 @@ module.exports = {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     }
+  },
+  async updateReplyVote (req, res) {
+    try {
+      if (req.body.positive === null || isNaN(req.body.positive) || req.body.positive > 1 || req.body.positive < -1) {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+        return
+      }
+      const positive = parseInt(req.body.positive)
+      await comments.findOneAndUpdate(
+        {
+          _id: mongoose.Types.ObjectId(req.params.cid),
+          'replies._id': mongoose.Types.ObjectId(req.params.rid)
+        },
+        {
+          $pull: {
+            'replies.$[a].votes': {
+              user: mongoose.Types.ObjectId(req.user._id)
+            }
+          }
+        },
+        { new: true, runValidators: true, arrayFilters: [{ 'a._id': mongoose.Types.ObjectId(req.params.rid) }] }
+      )
+      if (positive !== 0) {
+        await comments.findOneAndUpdate(
+          {
+            _id: mongoose.Types.ObjectId(req.params.cid),
+            'replies._id': mongoose.Types.ObjectId(req.params.rid)
+          },
+          {
+            $push: {
+              'replies.$[a].votes': {
+                user: mongoose.Types.ObjectId(req.user._id),
+                positive
+              }
+            }
+          },
+          { new: true, runValidators: true, arrayFilters: [{ 'a._id': mongoose.Types.ObjectId(req.params.rid) }] }
+        )
+      }
+      res.status(200).send({ success: true, message: '' })
+    } catch (error) {
+      console.log(error)
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else if (error.name === 'ValidationError') {
+        res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
   }
 }
