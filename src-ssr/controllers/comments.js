@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const comments = require('../models/comments.js')
+const patterns = require('../models/patterns.js')
 
 module.exports = {
   async create (req, res) {
@@ -292,6 +293,47 @@ module.exports = {
         res.status(404).send({ success: false, message: 'Not found' })
       } else if (error.name === 'ValidationError') {
         res.status(400).send({ success: false, message: 'Validation Failed' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
+  },
+  async getRatingByPattern (req, res) {
+    try {
+      const exists = await patterns.findById(req.params.id)
+      if (!exists) {
+        res.status(404).send({ success: false, message: 'Not found' })
+        return
+      }
+      const result = await comments.aggregate([
+        {
+          $match: {
+            pattern: mongoose.Types.ObjectId(req.params.id)
+          }
+        },
+        {
+          $group: {
+            _id: '$pattern',
+            rating: {
+              $avg: '$rating'
+            },
+            count: {
+              $sum: 1
+            }
+          }
+        }
+      ])
+      res.status(200).send({
+        success: true,
+        message: '',
+        result: {
+          rating: result[0]?.rating || 0,
+          count: result[0]?.count || 0
+        }
+      })
+    } catch (error) {
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
       } else {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
