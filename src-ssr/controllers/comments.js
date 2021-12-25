@@ -22,7 +22,8 @@ module.exports = {
           }
         ]
       })
-      res.status(200).send({ success: true, message: '' })
+      result = result.toObject()
+      res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       console.log(error)
       if (error.name === 'ValidationError') {
