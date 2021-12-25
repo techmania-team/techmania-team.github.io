@@ -27,6 +27,10 @@ module.exports.extendApp = function ({ app, ssr }) {
 
   app.use(bodyParser.json())
 
+  app.use((_, req, res, next) => {
+    res.status(400).send({ success: false, message: 'Validation Failed' })
+  })
+
   app.use('/api/users', routerUsers)
   app.use('/api/patterns', routerPatterns)
   app.use('/api/skins', routerSkins)
