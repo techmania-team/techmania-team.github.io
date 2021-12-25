@@ -4,7 +4,15 @@ const comments = require('../models/comments.js')
 module.exports = {
   async create (req, res) {
     try {
-      await comments.create({
+      let result = await comments.findOne({
+        pattern: req.body.pattern,
+        'replies.0.user': req.user._id
+      })
+      if (result) {
+        res.status(400).send({ success: false, message: 'Already commented' })
+        return
+      }
+      result = await comments.create({
         pattern: req.body.pattern,
         rating: req.body.rating,
         replies: [
