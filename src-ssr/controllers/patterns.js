@@ -2,6 +2,7 @@ const axios = require('axios')
 const mongoose = require('mongoose')
 const patterns = require('../models/patterns.js')
 const users = require('../models/users.js')
+const comments = require('../models/comments.js')
 
 module.exports = {
   async create (req, res) {
@@ -158,6 +159,28 @@ module.exports = {
   async searchID (req, res) {
     try {
       const result = await patterns.findById(req.params.id).populate('submitter', 'name').lean()
+      const resultRating = await comments.aggregate([
+        {
+          $match: {
+            pattern: mongoose.Types.ObjectId(req.params.id)
+          }
+        },
+        {
+          $group: {
+            _id: '$pattern',
+            rating: {
+              $avg: '$rating'
+            },
+            count: {
+              $sum: 1
+            }
+          }
+        }
+      ])
+      result.rating = {
+        rating: resultRating[0]?.rating || 0,
+        count: resultRating[0]?.count || 0
+      }
       if (result === null) {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
