@@ -95,7 +95,7 @@ module.exports = {
         }
       ]
 
-      if (req.query.limit && !isNaN(req.query.limit)) {
+      if (req.query.limit && !isNaN(req.query.limit) && req.query.limit <= 10) {
         query[1].$limit = parseInt(req.query.limit)
       }
 
