@@ -72,40 +72,87 @@ module.exports = {
   },
   async search (req, res) {
     try {
-      const query = {}
-      let skip = 0
-      let limit = 0
-      const sort = {}
+      const query = [
+        { $match: {} },
+        { $sort: {} },
+        { $skip: 0 },
+        { $limit: 0 },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'pattern',
+            as: 'comments'
+          }
+        },
+        {
+          $addFields: {
+            rating: {
+              count: {
+                $size: '$comments'
+              },
+              rating: {
+                $ifNull: [{
+                  $avg: '$comments.rating'
+                },
+                0
+                ]
+              }
+            }
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'submitter',
+            foreignField: '_id',
+            as: 'submitter'
+          }
+        },
+        {
+          $unwind: {
+            path: '$submitter'
+          }
+        },
+        {
+          $unset: [
+            'submitter.discord',
+            'submitter.accessInfo',
+            'submitter.avatar'
+          ]
+        }
+      ]
       if (req.query.submitter) {
-        query.submitter = mongoose.Types.ObjectId(req.query.submitter)
+        query[0].$match.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
       if (req.query.start) {
-        skip = parseInt(req.query.start)
-        skip = isNaN(skip) ? 0 : skip
+        const start = parseInt(req.query.start)
+        query[2].$skip = isNaN(start) ? 0 : start
       }
       if (req.query.limit) {
-        limit = parseInt(req.query.limit)
+        const limit = parseInt(req.query.limit)
         if (limit >= 50 || isNaN(limit)) {
           res.status(400).send({ success: false, message: 'Invalid limit' })
           return
         }
+        query[3].$limit = limit
       }
       if (req.query.keysounded === 'yes') {
-        query.keysounded = true
+        query[0].$match.keysounded = true
       } else if (req.query.keysounded === 'no') {
-        query.keysounded = false
+        query[0].$match.keysounded = false
       }
       if (req.query.control) {
         const control = parseInt(req.query.control)
         if (!isNaN(control) && control <= 2 && control >= 0) {
-          query['difficulties.control'] = control
+          query[0].$match['difficulties.control'] = control
         } else {
           res.status(400).send({ success: false, message: 'Invalid control' })
           return
         }
       }
       if (req.query.keywords) {
-        if (!query.$or) query.$or = []
+        query[0].$match.$or = []
         const keywords = req.query.keywords.match(/[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g)
         const names = []
         const composers = []
@@ -118,18 +165,18 @@ module.exports = {
           descriptions.push(re)
           submitters.push(re)
         }
-        query.$or.push({ name: { $in: names } })
-        query.$or.push({ composer: { $in: composers } })
-        query.$or.push({ description: { $in: descriptions } })
+        query[0].$match.$or.push({ name: { $in: names } })
+        query[0].$match.$or.push({ composer: { $in: composers } })
+        query[0].$match.$or.push({ description: { $in: descriptions } })
 
         try {
           const submittersID = await users.find({ name: { $in: submitters } }, '_id')
-          query.$or.push({ submitter: { $in: submittersID } })
+          query[0].$match.$or.push({ submitter: { $in: submittersID } })
         } catch (_) {
         }
       }
       if (req.query.lanes) {
-        query.difficulties = { $elemMatch: { lanes: { $in: req.query.lanes.split(',').map(l => parseInt(l)) } } }
+        query[0].$match.difficulties = { $elemMatch: { lanes: { $in: req.query.lanes.split(',').map(l => parseInt(l)) } } }
       }
       if (req.query.sortBy) {
         const querySort = parseInt(req.query.sort)
@@ -142,13 +189,14 @@ module.exports = {
           res.status(400).send({ success: false, message: 'Invalid SortBy' })
           return
         }
-        sort[sortBy] = querySort
+        query[1].$sort[sortBy] = querySort
       } else {
-        sort.submitDate = -1
+        query[1].$sort.submitDate = -1
       }
-      const result = await patterns.find(query, {}, { skip, limit }).sort(sort).populate('submitter', 'name').lean()
+      const result = await patterns.aggregate(query)
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
+      console.log(error)
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
