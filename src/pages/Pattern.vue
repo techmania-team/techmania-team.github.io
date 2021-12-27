@@ -77,14 +77,14 @@ q-page#pattern
                 template(#default-body="prop")
                   p.text-white.comment {{ prop.node.comment }}
                   p.text-white.comment-actions
-                    q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" @click="vote(prop.node.cid, prop.node._id, 0)")
-                    q-btn(flat round color="tech" icon="thumb_up_off_alt" v-else @click="vote(prop.node.cid, prop.node._id, 1)")
+                    q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
+                    q-btn(flat round color="tech" icon="thumb_up_off_alt" v-else :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 1)")
                     | &nbsp;{{ reduceVote(1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" @click="vote(prop.node.cid, prop.node._id, 0)")
-                    q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else @click="vote(prop.node.cid, prop.node._id, -1)")
+                    q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
+                    q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
                     | &nbsp;{{ reduceVote(-1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" v-if="prop.node.user._id === user.id" icon="edit" @click="editReply(prop.node)")
-                    q-btn(flat round color="tech" v-if="prop.node.replies" icon="reply" @click="reply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user.id" icon="edit" :disable="!isLogin" @click="editReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.replies && isLogin" icon="reply" :disable="!isLogin" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
       q-form(@submit.prevent="submitModal")
