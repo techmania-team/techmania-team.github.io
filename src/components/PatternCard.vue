@@ -17,6 +17,9 @@ q-card.full-height.card-pattern
       q-item
         q-item-section
           p
+            q-rating(v-model="pattern.rating.rating" readonly icon="star" icon-half="star_half")
+            | &nbsp; {{ pattern.rating.rating.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+            br
             span(v-if="!mine")
               | {{ $t('pattern.submittedBy') }} &nbsp;
               router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
