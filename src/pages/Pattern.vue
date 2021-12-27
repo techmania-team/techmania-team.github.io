@@ -17,7 +17,7 @@ q-page#pattern
           .q-gutter-sm
             div
               q-rating(v-model="pattern.rating.rating" readonly icon="star" icon-half="star_half")
-              | &nbsp; {{ Math.round(pattern.rating.rating *100)/100 }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+              | &nbsp; {{ pattern.rating.rating.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
             div
               q-icon(size="sm" name="person")
               | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
