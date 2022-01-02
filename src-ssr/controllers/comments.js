@@ -21,6 +21,7 @@ module.exports = {
         return
       }
       delete query['replies.0.user']
+      query.rating = req.body.rating
       query.replies = [
         {
           user: req.user._id,
