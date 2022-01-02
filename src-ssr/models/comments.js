@@ -48,8 +48,17 @@ const schema = new mongoose.Schema({
   // Pattern ID
   pattern: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required () {
+      return !this.skin || this.skin.length === 0
+    },
     ref: 'patterns'
+  },
+  skin: {
+    type: mongoose.Schema.Types.ObjectId,
+    required () {
+      return !this.pattern || this.pattern.length === 0
+    },
+    ref: 'skins'
   },
   // Rating
   rating: {

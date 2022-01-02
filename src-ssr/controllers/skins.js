@@ -2,6 +2,7 @@ const axios = require('axios')
 const mongoose = require('mongoose')
 const skins = require('../models/skins.js')
 const users = require('../models/users.js')
+const comments = require('../models/comments.js')
 
 const types = ['Note', 'VFX', 'Combo', 'Game UI']
 
@@ -65,31 +66,87 @@ module.exports = {
   },
   async search (req, res) {
     try {
-      const query = {}
-      let skip = 0
-      let limit = 0
-      const sort = {}
-      if (req.query.submitter) {
-        query.submitter = mongoose.Types.ObjectId(req.query.submitter)
-      }
-      if (req.query.types) {
-        if (req.query.types) {
-          query.type = { $in: req.query.types.split(',').map(l => parseInt(l)) }
+      const query = [
+        { $match: {} },
+        { $sort: {} },
+        { $skip: 0 },
+        { $limit: 0 },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'skin',
+            as: 'comments'
+          }
+        },
+        {
+          $addFields: {
+            rating: {
+              count: {
+                $size: '$comments'
+              },
+              rating: {
+                $ifNull: [{
+                  $avg: '$comments.rating'
+                },
+                0
+                ]
+              }
+            }
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'submitter',
+            foreignField: '_id',
+            as: 'submitter'
+          }
+        },
+        {
+          $unwind: {
+            path: '$submitter'
+          }
+        },
+        {
+          $unset: [
+            'submitter.discord',
+            'submitter.accessInfo',
+            'submitter.avatar'
+          ]
         }
+      ]
+      if (req.query.submitter) {
+        query[0].$match.submitter = mongoose.Types.ObjectId(req.query.submitter)
       }
       if (req.query.start) {
-        skip = parseInt(req.query.start)
-        skip = isNaN(skip) ? 0 : skip
+        const start = parseInt(req.query.start)
+        query[2].$skip = isNaN(start) ? 0 : start
       }
       if (req.query.limit) {
-        limit = parseInt(req.query.limit)
+        const limit = parseInt(req.query.limit)
         if (limit >= 50 || isNaN(limit)) {
           res.status(400).send({ success: false, message: 'Invalid limit' })
           return
         }
+        query[3].$limit = limit
+      }
+      if (req.query.keysounded === 'yes') {
+        query[0].$match.keysounded = true
+      } else if (req.query.keysounded === 'no') {
+        query[0].$match.keysounded = false
+      }
+      if (req.query.control) {
+        const control = parseInt(req.query.control)
+        if (!isNaN(control) && control <= 2 && control >= 0) {
+          query[0].$match['difficulties.control'] = control
+        } else {
+          res.status(400).send({ success: false, message: 'Invalid control' })
+          return
+        }
       }
       if (req.query.keywords) {
-        if (!query.$or) query.$or = []
+        query[0].$match.$or = []
         const keywords = req.query.keywords.match(/[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g)
         const names = []
         const composers = []
@@ -102,13 +159,13 @@ module.exports = {
           descriptions.push(re)
           submitters.push(re)
         }
-        query.$or.push({ name: { $in: names } })
-        query.$or.push({ composer: { $in: composers } })
-        query.$or.push({ description: { $in: descriptions } })
+        query[0].$match.$or.push({ name: { $in: names } })
+        query[0].$match.$or.push({ composer: { $in: composers } })
+        query[0].$match.$or.push({ description: { $in: descriptions } })
 
         try {
           const submittersID = await users.find({ name: { $in: submitters } }, '_id')
-          query.$or.push({ submitter: { $in: submittersID } })
+          query[0].$match.$or.push({ submitter: { $in: submittersID } })
         } catch (_) {
         }
       }
@@ -123,13 +180,14 @@ module.exports = {
           res.status(400).send({ success: false, message: 'Invalid SortBy' })
           return
         }
-        sort[sortBy] = querySort
+        query[1].$sort[sortBy] = querySort
       } else {
-        sort.submitDate = -1
+        query[1].$sort.submitDate = -1
       }
-      const result = await skins.find(query, {}, { skip, limit }).sort(sort).populate('submitter', 'name').lean()
+      const result = await skins.aggregate(query)
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
+      console.log(error)
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
@@ -142,9 +200,31 @@ module.exports = {
       const result = await skins.findById(req.params.id).populate('submitter', 'name').lean()
       if (result === null) {
         res.status(404).send({ success: false, message: 'Not found' })
-      } else {
-        res.status(200).send({ success: true, message: '', result })
+        return
       }
+      const resultRating = await comments.aggregate([
+        {
+          $match: {
+            skin: mongoose.Types.ObjectId(req.params.id)
+          }
+        },
+        {
+          $group: {
+            _id: '$skin',
+            rating: {
+              $avg: '$rating'
+            },
+            count: {
+              $sum: 1
+            }
+          }
+        }
+      ])
+      result.rating = {
+        rating: resultRating[0]?.rating || 0,
+        count: resultRating[0]?.count || 0
+      }
+      res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
