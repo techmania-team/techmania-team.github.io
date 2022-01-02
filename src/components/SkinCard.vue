@@ -16,6 +16,9 @@ q-card.full-height.card-skin
       q-item
         q-item-section
           p
+            q-rating(v-model="skin.rating.rating" readonly icon="star" icon-half="star_half")
+            | &nbsp; {{ skin.rating.rating.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
+            br
             span(v-if="!mine")
               | {{ $t('pattern.submittedBy') }} &nbsp;
               router-link.no-underline(:to='`/users/${skin.submitter._id}/#skins`') {{ skin.submitter.name }}
