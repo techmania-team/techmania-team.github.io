@@ -69,7 +69,8 @@ export default {
     combo: 'Combo',
     gameUI: 'Game UI',
     skinData: 'Skin Data',
-    description: 'Skin Description'
+    description: 'Skin Description',
+    rateThisSkin: 'Rate this skin'
   },
   submitForm: {
     composer: 'Composer',
