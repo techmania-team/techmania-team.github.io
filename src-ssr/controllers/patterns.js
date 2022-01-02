@@ -207,6 +207,10 @@ module.exports = {
   async searchID (req, res) {
     try {
       const result = await patterns.findById(req.params.id).populate('submitter', 'name').lean()
+      if (result === null) {
+        res.status(404).send({ success: false, message: 'Not found' })
+        return
+      }
       const resultRating = await comments.aggregate([
         {
           $match: {
@@ -229,11 +233,7 @@ module.exports = {
         rating: resultRating[0]?.rating || 0,
         count: resultRating[0]?.count || 0
       }
-      if (result === null) {
-        res.status(404).send({ success: false, message: 'Not found' })
-      } else {
-        res.status(200).send({ success: true, message: '', result })
-      }
+      res.status(200).send({ success: true, message: '', result })
     } catch (error) {
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
