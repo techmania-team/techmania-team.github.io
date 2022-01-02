@@ -220,7 +220,7 @@ export default {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         } else {
-          result = await this.$api.post('/api/patterns', post, {
+          result = await this.$api.post('/patterns', post, {
             headers: { Authorization: `Bearer ${this.user.jwt}` }
           })
         }
