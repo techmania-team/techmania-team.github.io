@@ -29,7 +29,7 @@ module.exports = {
         })
         let strPreveiw = ''
         for (const preview of req.body.previews) {
-          strPreveiw += `https://www.youtube.com/watch?v=${preview.ytid}\n`
+          strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
         }
         const controls = ['Touch', 'Key', 'KM']
         let strDifficulty = ''
@@ -61,6 +61,7 @@ module.exports = {
         res.status(200).send({ success: true, message: '', id: result._id })
       }
     } catch (error) {
+      console.log(error)
       if (error.name === 'ValidationError') {
         res.status(400).send({ success: false, message: 'Validation Failed' })
       } else if (error.name === 'CastError') {

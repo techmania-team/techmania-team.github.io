@@ -29,7 +29,7 @@ module.exports = {
         })
         let strPreveiw = ''
         for (const preview of req.body.previews) {
-          strPreveiw += `https://www.youtube.com/watch?v=${preview.ytid}\n`
+          strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
         }
         const embeds = [{
           url: new URL(`/skins/${result._id}`, process.env.HOST_URL).toString(),
