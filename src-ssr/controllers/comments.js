@@ -188,7 +188,10 @@ module.exports = {
     try {
       await comments.findByIdAndUpdate(req.params.id, {
         rating: req.body.rating,
-        $set: { 'replies.0.comment': req.body.comment }
+        $set: {
+          'replies.0.comment': req.body.comment,
+          'replies.0.updateDate': Date.now()
+        }
       }, { new: true })
       res.status(200).send({ success: true, message: '' })
     } catch (error) {
@@ -237,7 +240,8 @@ module.exports = {
         },
         {
           $set: {
-            'replies.$[a].comment': req.body.comment
+            'replies.$[a].comment': req.body.comment,
+            'replies.$[a].updateDate': Date.now()
           }
         },
         { new: true, runValidators: true, arrayFilters: [{ 'a._id': req.params.rid }] }
