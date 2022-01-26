@@ -31,8 +31,9 @@ q-page#skins
             template(#loading)
               q-spinner-dots(color="tech" size="40px")
           .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
-  q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
-    q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/skins/new')")
+  q-no-ssr
+    q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="isLogin")
+      q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/skins/new')")
 </template>
 
 <script>
