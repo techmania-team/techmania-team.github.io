@@ -14,7 +14,7 @@
     "start": "cd dist/ssr && yarn start"
   },
   "dependencies": {
-    "@quasar/extras": "^1.12.2",
+    "@quasar/extras": "^1.12.4",
     "axios": "^0.18.1",
     "body-parser": "^1.19.0",
     "core-js": "^3.6.5",
@@ -23,15 +23,15 @@
     "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
-    "quasar": "1.16.3",
+    "quasar": "1.17.8",
     "vue-i18n": "^8.0.0",
     "vuex-persistedstate": "3.0.1"
   },
   "devDependencies": {
-    "@quasar/app": "^2.2.10",
+    "@quasar/app": "^2.2.11",
     "@quasar/icongenie": "^2.4.2",
     "@quasar/quasar-app-extension-dotenv": "^1.1.0",
-    "@quasar/quasar-app-extension-qmarkdown": "^1.4.3",
+    "@quasar/quasar-app-extension-qmarkdown": "^1.4.4",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
