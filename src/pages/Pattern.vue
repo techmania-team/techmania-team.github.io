@@ -376,6 +376,9 @@ export default {
         document.title = `TECHMANIA | ${this.pattern.name}`
       }
     }
+  },
+  destroyed () {
+    this.$store.commit('tempPattern/resetPattern')
   }
 }
 </script>

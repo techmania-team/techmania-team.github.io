@@ -354,6 +354,9 @@ export default {
         this.model = { ...patterndata, agree: false }
       }
     }
+  },
+  destroyed () {
+    this.$store.commit('tempPattern/resetPattern')
   }
 }
 </script>

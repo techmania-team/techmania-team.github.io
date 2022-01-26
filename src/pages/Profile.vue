@@ -197,6 +197,9 @@ export default {
       }
       document.title = `TECHMANIA | ${this.profile.name}`
     }
+  },
+  destroyed () {
+    this.$store.commit('tempProfile/resetProfile')
   }
 }
 </script>
