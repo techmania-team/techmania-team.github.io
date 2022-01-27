@@ -335,9 +335,6 @@ export default {
         this.model = { ...skindata, agree: false }
       }
     }
-  },
-  destroyed () {
-    this.$store.commit('tempSkin/resetSkin')
   }
 }
 </script>

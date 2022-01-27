@@ -386,9 +386,6 @@ export default {
         document.title = `TECHMANIA | ${this.skin.name}`
       }
     }
-  },
-  destroyed () {
-    this.$store.commit('tempSkin/resetSkin')
   }
 }
 </script>
