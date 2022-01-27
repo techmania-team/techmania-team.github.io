@@ -22,13 +22,15 @@ q-page#patternForm
             p.q-mb-none {{ $t('submitForm.dlLink') }}
             q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
             q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
+            p.q-mb-none {{ $t('submitForm.image') }}
+            q-input.q-mb-md(v-model="model.image" dense)
             p.q-mb-md {{ $t('submitForm.preview') }}
               .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')" :rules="[val => ValidYouTubeLink(val) || $t('submitForm.invalidLink')]")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')")
+                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')")
                 .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
-                  q-btn(flat round icon="add" v-else @click="addPreview")
+                  q-btn(flat round icon="add" v-else @click="addVideoPreview")
             p.q-mb-md {{ $t('submitForm.difficulties') }}
             .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
               q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
@@ -146,6 +148,7 @@ export default {
         difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
         link: '',
         previews: [{ link: '', name: '' }],
+        image: '',
         description: '',
         agree: false
       },
@@ -191,7 +194,17 @@ export default {
     }
   },
   methods: {
-    ValidYouTubeLink (url) {
+    checkPreview () {
+      if (this.model.previews.length > 0) {
+        for (const video of this.model.previews) {
+          if ((video.name.length > 0 && !this.validYouTubeLink(video.link)) || (video.name.length === 0 && this.validYouTubeLink(video.link))) {
+            return false
+          }
+        }
+      }
+      return true
+    },
+    validYouTubeLink (url) {
       const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
       const match = url.match(regExp)
       return (match && match[7].length === 11)
@@ -207,13 +220,27 @@ export default {
         })
         return
       }
+      if (!this.checkPreview()) {
+        this.$q.notify({
+          color: 'negative',
+          textColor: 'white',
+          icon: 'warning',
+          message: this.$t('submitForm.invalidPreviews'),
+          position: 'top'
+        })
+        return
+      }
       this.submitting = true
       try {
         const post = JSON.parse(JSON.stringify(this.model))
-        post.previews.map(preview => {
-          preview.ytid = this.GetIDFromYouTubeLink(preview.link)
-          return preview
-        })
+        if (post.previews[0].name.length !== 0 && post.previews[0].link.length !== 0) {
+          post.previews.map(preview => {
+            preview.ytid = this.GetIDFromYouTubeLink(preview.link)
+            return preview
+          })
+        } else {
+          post.previews = []
+        }
         let result
         if (this.model._id.length > 0) {
           result = await this.$api.patch(`/patterns/${this.model._id}`, post, {
@@ -225,23 +252,16 @@ export default {
           })
         }
         if (result.data.success) {
+          this.$q.notify({
+            icon: 'check',
+            message: this.$t('submitForm.updated'),
+            color: 'positive',
+            position: 'top',
+            timeout: 2000
+          })
           if (this.model._id.length > 0) {
-            this.$q.notify({
-              icon: 'check',
-              message: this.$t('submitForm.updated'),
-              color: 'positive',
-              position: 'top',
-              timeout: 2000
-            })
             this.$router.push('/patterns/' + this.model._id)
           } else {
-            this.$q.notify({
-              icon: 'check',
-              message: this.$t('submitForm.submitted'),
-              color: 'positive',
-              position: 'top',
-              timeout: 2000
-            })
             this.$router.push('/patterns/' + result.data.id)
           }
         } else {
@@ -265,7 +285,7 @@ export default {
       }
       this.submitting = false
     },
-    addPreview () {
+    addVideoPreview () {
       this.model.previews.push({ link: '' })
     },
     removePreview (index) {
@@ -352,6 +372,7 @@ export default {
           return preview
         })
         this.model = { ...patterndata, agree: false }
+        if (patterndata.previews.length === 0) this.model.previews = [{ link: '', name: '' }]
       }
     }
   }

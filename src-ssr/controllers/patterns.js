@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const patterns = require('../models/patterns.js')
 const users = require('../models/users.js')
 const comments = require('../models/comments.js')
+const { checkImage } = require('../utils')
 
 module.exports = {
   async create (req, res) {
@@ -16,50 +17,57 @@ module.exports = {
       if (!inGuild) {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
-      } else {
-        const result = await patterns.create({
-          submitter: req.user._id,
-          name: req.body.name,
-          composer: req.body.composer,
-          keysounded: req.body.keysounded,
-          difficulties: req.body.difficulties,
-          link: req.body.link,
-          previews: req.body.previews,
-          description: req.body.description
-        })
-        let strPreveiw = ''
-        for (const preview of req.body.previews) {
-          strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
-        }
-        const controls = ['Touch', 'Key', 'KM']
-        let strDifficulty = ''
-        for (const difficulty of req.body.difficulties) {
-          strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
-        }
-        const embeds = [{
-          url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
-          image: { url: `http://i3.ytimg.com/vi/${req.body.previews[0].ytid}/hqdefault.jpg` },
-          title: req.body.name,
-          color: '15158332',
-          fields: [
-            { name: 'Composer', value: req.body.composer, inline: true },
-            { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
-            { name: 'Previews', value: strPreveiw, inline: false },
-            { name: 'Difficulties', value: strDifficulty, inline: false },
-            { name: 'Download', value: req.body.link, inline: false }
-          ]
-        }]
-        if (req.body.description) {
-          embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
-        }
-        await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
-          username: 'TECHMANIA',
-          avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
-          content: `New pattern submitted by <@${req.user.discord}>`,
-          embeds
-        })
-        res.status(200).send({ success: true, message: '', id: result._id })
       }
+      if (req.body.image?.length > 0) {
+        const valid = await checkImage(req.body.image)
+        if (!valid) {
+          res.status(400).send({ success: false, message: 'Validation Failed' })
+          return
+        }
+      }
+      const result = await patterns.create({
+        submitter: req.user._id,
+        name: req.body.name,
+        composer: req.body.composer,
+        keysounded: req.body.keysounded,
+        difficulties: req.body.difficulties,
+        link: req.body.link,
+        previews: req.body.previews,
+        description: req.body.description,
+        image: req.body.image
+      })
+      let strPreveiw = ''
+      for (const preview of req.body.previews) {
+        strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+      }
+      const controls = ['Touch', 'Key', 'KM']
+      let strDifficulty = ''
+      for (const difficulty of req.body.difficulties) {
+        strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
+      }
+      const embeds = [{
+        url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
+        image: { url: req.body.image.length > 0 ? req.body.image : req.body.previews?.[0]?.ytid ? `http://i3.ytimg.com/vi/${req.body.previews?.[0]?.ytid}/hqdefault.jpg` : process.env.HOST_URL + '/assets/unknown.jpg' },
+        title: req.body.name,
+        color: '15158332',
+        fields: [
+          { name: 'Composer', value: req.body.composer, inline: true },
+          { name: 'Keysounded', value: req.body.keysounded === true ? 'Yes' : 'No', inline: true },
+          { name: 'Previews', value: strPreveiw || 'None', inline: false },
+          { name: 'Difficulties', value: strDifficulty, inline: false },
+          { name: 'Download', value: req.body.link, inline: false }
+        ]
+      }]
+      if (req.body.description) {
+        embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
+      }
+      await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
+        username: 'TECHMANIA',
+        avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
+        content: `New pattern submitted by <@${req.user.discord}>`,
+        embeds
+      })
+      res.status(200).send({ success: true, message: '', id: result._id })
     } catch (error) {
       console.log(error)
       if (error.name === 'ValidationError') {
@@ -277,20 +285,26 @@ module.exports = {
       if (!inGuild) {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
-      } else {
-        await patterns.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
-          submitter: req.user._id,
-          name: req.body.name,
-          composer: req.body.composer,
-          keysounded: req.body.keysounded,
-          difficulties: req.body.difficulties,
-          link: req.body.link,
-          previews: req.body.previews,
-          description: req.body.description,
-          updateDate: Date.now()
-        })
-        res.status(200).send({ success: true, message: '' })
       }
+      if (req.body.image?.length > 0) {
+        const valid = await checkImage(req.body.image)
+        if (!valid) {
+          res.status(400).send({ success: false, message: 'Validation Failed' })
+          return
+        }
+      }
+      await patterns.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
+        name: req.body.name,
+        composer: req.body.composer,
+        keysounded: req.body.keysounded,
+        difficulties: req.body.difficulties,
+        link: req.body.link,
+        previews: req.body.previews,
+        description: req.body.description,
+        image: req.body.image,
+        updateDate: Date.now()
+      })
+      res.status(200).send({ success: true, message: '' })
     } catch (error) {
       if (error.name === 'ValidationError') {
         res.status(400).send({ success: false, message: 'Validation Failed' })

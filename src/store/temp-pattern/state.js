@@ -7,6 +7,7 @@ export default function () {
     difficulties: [],
     link: '',
     previews: [],
+    image: '',
     description: '',
     submitter: { name: '', _id: '' },
     comments: [],

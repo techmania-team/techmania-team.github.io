@@ -1,8 +1,8 @@
 <template lang="pug">
 q-card.full-height.card-pattern
-  q-video(v-if="video" :src="`https://www.youtube.com/embed/${pattern.previews[0].ytid}`" :ratio="16/9")
-  q-img.cursor-pointer(v-else :src="getYouTubeThumbnail(pattern.previews[0].ytid)" :ratio="16/9" @click="video = true")
-    .absolute.full-width.full-height.flex.justify-center.items-center
+  q-video(v-if="video && hasVideo" :src="`https://www.youtube.com/embed/${videoLink}`" :ratio="16/9")
+  q-img.cursor-pointer(v-else :src="headerImage" :ratio="16/9" @click="clickHeader")
+    .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
   q-card-section
@@ -69,7 +69,11 @@ export default {
   },
   data () {
     return {
-      video: false
+      video: false,
+      videoLink: '',
+      hasVideo: false,
+      hasImage: false,
+      headerImage: ''
     }
   },
   computed: {
@@ -92,6 +96,18 @@ export default {
         { count: 4, value: this.pattern.difficulties.some(difficulty => difficulty.lanes === 4) }
       ]
     }
+  },
+  methods: {
+    clickHeader () {
+      if (this.hasVideo) this.video = true
+      else this.$router.push('/patterns/' + this.pattern._id)
+    }
+  },
+  created () {
+    this.videoLink = this.pattern.previews?.[0]?.ytid || ''
+    this.hasVideo = this.pattern.previews?.[0]?.ytid !== undefined
+    this.hasImage = this.pattern.image?.length > 0 || false
+    this.headerImage = this.pattern.image?.length > 0 ? this.pattern.image : this.pattern.previews.length > 0 ? this.getYouTubeThumbnail(this.pattern.previews[0].ytid) : './assets/unknown.jpg'
   }
 }
 </script>

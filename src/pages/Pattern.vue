@@ -45,6 +45,7 @@ q-page#pattern
             .row.w-100.justify-center
               .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
                 q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreviews') }}
       q-no-ssr
         q-separator(v-if="isLogin && $store.state.tempPattern.myComment._id.length === 0")
         .row.q-my-md(v-if="isLogin && $store.state.tempPattern.myComment._id.length === 0")
@@ -205,7 +206,7 @@ export default {
   },
   computed: {
     backgroundImage () {
-      return this.pattern.previews.length > 0 ? this.getYouTubeThumbnail(this.pattern.previews[0].ytid) : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+      return this.pattern.image?.length > 0 ? this.pattern.image : this.pattern.previews.length > 0 ? this.getYouTubeThumbnail(this.pattern.previews[0].ytid) : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     },
     pattern () {
       return this.$store.getters['tempPattern/getPattern']

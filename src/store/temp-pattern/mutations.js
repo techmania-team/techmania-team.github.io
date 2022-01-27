@@ -6,6 +6,7 @@ export function resetPattern (state, data) {
   state.difficulties = []
   state.link = ''
   state.previews = []
+  state.image = ''
   state.description = ''
   state.submitter.name = ''
   state.submitter._id = ''
@@ -28,6 +29,7 @@ export function setPattern (state, data) {
   state.submitter.name = data.submitter.name
   state.submitter._id = data.submitter._id
   state.rating = data.rating
+  state.image = data.image
 }
 
 export function setComments (state, data) {
