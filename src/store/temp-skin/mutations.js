@@ -11,6 +11,7 @@ export function resetSkin (state, data) {
   state.rating.rating = 0
   state.rating.count = 0
   state.commentsScrollDisabled = false
+  state.image = ''
 }
 
 export function setSkin (state, data) {
@@ -22,6 +23,7 @@ export function setSkin (state, data) {
   state.description = data.description
   state.submitter = data.submitter
   state.rating = data.rating
+  state.image = data.image
 }
 
 export function setComments (state, data) {

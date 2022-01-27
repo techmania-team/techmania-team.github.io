@@ -1,8 +1,8 @@
 <template lang="pug">
-q-card.full-height.card-skin
-  q-video(v-if="video" :src="`https://www.youtube.com/embed/${skin.previews[0].ytid}`" :ratio="16/9")
-  q-img.cursor-pointer(v-else :src="getYouTubeThumbnail(skin.previews[0].ytid)" :ratio="16/9" @click="video = true")
-    .absolute.full-width.full-height.flex.justify-center.items-center
+q-card.full-height.card-pattern
+  q-video(v-if="video && hasVideo" :src="`https://www.youtube.com/embed/${videoLink}`" :ratio="16/9")
+  q-img.cursor-pointer(v-else :src="headerImage" :ratio="16/9" @click="clickHeader")
+    .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
   q-card-section
@@ -45,7 +45,11 @@ export default {
   },
   data () {
     return {
-      video: false
+      video: false,
+      videoLink: '',
+      hasVideo: false,
+      hasImage: false,
+      headerImage: ''
     }
   },
   computed: {
@@ -65,6 +69,18 @@ export default {
       const type = [this.$t('skin.note'), this.$t('skin.vfx'), this.$t('skin.combo'), this.$t('skin.gameUI')]
       return type[this.skin.type]
     }
+  },
+  methods: {
+    clickHeader () {
+      if (this.hasVideo) this.video = true
+      else this.$router.push('/skins/' + this.skin._id)
+    }
+  },
+  created () {
+    this.videoLink = this.skin.previews?.[0]?.ytid || ''
+    this.hasVideo = this.skin.previews?.[0]?.ytid !== undefined
+    this.hasImage = this.skin.image?.length > 0 || false
+    this.headerImage = this.skin.image?.length > 0 ? this.skin.image : this.skin.previews.length > 0 ? this.getYouTubeThumbnail(this.skin.previews[0].ytid) : './assets/unknown.jpg'
   }
 }
 </script>

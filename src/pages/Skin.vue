@@ -37,6 +37,7 @@ q-page#skin
             .row.w-100.justify-center
               .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
                 q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              p.text-center(v-if='skin.previews.length === 0') {{ $t('pattern.noPreviews') }}
       q-no-ssr
         q-separator(v-if="isLogin && $store.state.tempSkin.myComment._id.length === 0")
         .row.q-my-md(v-if="isLogin && $store.state.tempSkin.myComment._id.length === 0")
@@ -197,7 +198,7 @@ export default {
   },
   computed: {
     backgroundImage () {
-      return this.skin.previews.length > 0 ? this.getYouTubeThumbnail(this.skin.previews[0].ytid) : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+      return this.skin.image?.length > 0 ? this.skin.image : this.skin.previews.length > 0 ? this.getYouTubeThumbnail(this.skin.previews[0].ytid) : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
     },
     skin () {
       return this.$store.getters['tempSkin/getSkin']

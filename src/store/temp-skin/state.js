@@ -13,6 +13,7 @@ export default function () {
       rating: 0,
       count: 0
     },
-    commentsScrollDisabled: false
+    commentsScrollDisabled: false,
+    image: ''
   }
 }
