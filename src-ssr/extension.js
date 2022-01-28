@@ -25,6 +25,8 @@ module.exports.extendApp = function ({ app, ssr }) {
 
   app.set('trust proxy', 1)
 
+  app.disable('x-powered-by')
+
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
 
