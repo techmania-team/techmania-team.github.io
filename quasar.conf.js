@@ -58,7 +58,9 @@ module.exports = function (/* ctx */) {
         DISCORD_GUILD: process.env.DISCORD_GUILD,
         HOST_URL: process.env.HOST_URL,
         DB_URL: process.env.DB_URL,
-        JWT_SECRET: process.env.JWT_SECRET
+        JWT_SECRET: process.env.JWT_SECRET,
+        RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+        RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY
       },
       // transpile: false,
 

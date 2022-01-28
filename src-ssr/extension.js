@@ -26,6 +26,7 @@ module.exports.extendApp = function ({ app, ssr }) {
   app.set('trust proxy', 1)
 
   app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true }))
 
   app.use((_, req, res, next) => {
     res.status(400).send({ success: false, message: 'Validation Failed' })
