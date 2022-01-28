@@ -24,7 +24,8 @@ module.exports = function (/* ctx */) {
       'mixin',
       { path: 'analytics', server: false },
       { path: 'persist', server: false },
-      'date-fns'
+      'date-fns',
+      'recaptcha'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

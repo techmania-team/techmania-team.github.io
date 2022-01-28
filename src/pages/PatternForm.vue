@@ -232,6 +232,8 @@ export default {
       }
       this.submitting = true
       try {
+        await this.$recaptchaLoaded()
+        const token = await this.$recaptcha('submitPattern')
         const post = JSON.parse(JSON.stringify(this.model))
         if (post.previews[0].name.length !== 0 && post.previews[0].link.length !== 0) {
           post.previews.map(preview => {
@@ -241,6 +243,7 @@ export default {
         } else {
           post.previews = []
         }
+        post['g-recaptcha-response'] = token
         let result
         if (this.model._id.length > 0) {
           result = await this.$api.patch(`/patterns/${this.model._id}`, post, {

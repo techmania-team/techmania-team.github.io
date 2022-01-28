@@ -254,9 +254,11 @@ export default {
       }
       try {
         this.comment.submitting = true
+        await this.$recaptchaLoaded()
+        const token = await this.$recaptcha('patternComment')
         let response = await this.$api.post(
           '/comments/',
-          { rating: this.comment.rating, comment: this.comment.comment, pattern: this.pattern._id },
+          { rating: this.comment.rating, comment: this.comment.comment, pattern: this.pattern._id, 'g-recaptcha-response': token },
           { headers: { Authorization: `Bearer ${this.user.jwt}` } }
         )
         this.$store.commit(
@@ -317,9 +319,11 @@ export default {
           if (this.replyModal.rating === 0 || this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')
           }
+          await this.$recaptchaLoaded()
+          const token = await this.$recaptcha('patternEditComment')
           await this.$api.patch(
             `/comments/${this.replyModal.cid}`,
-            { rating: this.replyModal.rating, comment: this.replyModal.comment },
+            { rating: this.replyModal.rating, comment: this.replyModal.comment, 'g-recaptcha-response': token },
             {
               headers: { Authorization: `Bearer ${this.user.jwt}` }
             }
@@ -333,9 +337,11 @@ export default {
           if (this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')
           }
+          await this.$recaptchaLoaded()
+          const token = await this.$recaptcha('patternEditReply')
           await this.$api.patch(
             `/comments/${this.replyModal.cid}/replies/${this.replyModal._id}`,
-            { comment: this.replyModal.comment },
+            { comment: this.replyModal.comment, 'g-recaptcha-response': token },
             {
               headers: { Authorization: `Bearer ${this.user.jwt}` }
             }
@@ -345,9 +351,11 @@ export default {
           if (this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')
           }
+          await this.$recaptchaLoaded()
+          const token = await this.$recaptcha('patternReply')
           const { data } = await this.$api.post(
             `/comments/${this.replyModal.cid}/replies`,
-            { comment: this.replyModal.comment },
+            { comment: this.replyModal.comment, 'g-recaptcha-response': token },
             {
               headers: { Authorization: `Bearer ${this.user.jwt}` }
             }

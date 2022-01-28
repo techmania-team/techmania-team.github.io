@@ -96,6 +96,16 @@ export default async ({ Vue }) => {
       } else {
         next()
       }
+    },
+    async mounted (to, from, next) {
+      if (process.env.CLIENT) {
+        await this.$recaptchaLoaded()
+        if (this.$route?.meta?.recaptcha && this.isLogin) {
+          this.$recaptchaInstance.showBadge()
+        } else {
+          this.$recaptchaInstance.hideBadge()
+        }
+      }
     }
   })
 }
