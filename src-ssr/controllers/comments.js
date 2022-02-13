@@ -337,8 +337,8 @@ module.exports = {
         success: true,
         message: '',
         result: {
-          rating: result[0]?.rating || 0,
-          count: result[0]?.count || 0
+          rating: result.length > 0 && result[0].rating ? result.length > 0 && result[0].rating : 0,
+          count: result.length > 0 && result[0].count ? result.length > 0 && result[0].count : 0
         }
       })
     } catch (error) {
@@ -378,8 +378,8 @@ module.exports = {
         success: true,
         message: '',
         result: {
-          rating: result[0]?.rating || 0,
-          count: result[0]?.count || 0
+          rating: result.length > 0 && result[0].rating ? result.length > 0 && result[0].rating : 0,
+          count: result.length > 0 && result[0].count ? result.length > 0 && result[0].count : 0
         }
       })
     } catch (error) {

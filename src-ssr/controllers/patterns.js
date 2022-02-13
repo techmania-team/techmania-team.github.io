@@ -18,12 +18,14 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       }
-      if (req.body.image?.length > 0) {
+      if (req.body.image && req.body.image.length > 0) {
         const valid = await checkImage(req.body.image)
         if (!valid) {
           res.status(400).send({ success: false, message: 'Validation Failed' })
           return
         }
+      } else {
+        req.body.image = ''
       }
       const result = await patterns.create({
         submitter: req.user._id,
@@ -45,9 +47,10 @@ module.exports = {
       for (const difficulty of req.body.difficulties) {
         strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
       }
+      const ytid = req.body.previews.length > 0 && req.body.previews[0].ytid && req.body.previews[0].ytid.length > 0 ? req.body.previews[0].ytid : ''
       const embeds = [{
         url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
-        image: { url: req.body.image.length > 0 ? req.body.image : req.body.previews?.[0]?.ytid ? `http://i3.ytimg.com/vi/${req.body.previews?.[0]?.ytid}/hqdefault.jpg` : process.env.HOST_URL + '/assets/unknown.jpg' },
+        image: { url: req.body.image.length > 0 ? req.body.image : ytid.length > 0 ? `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg` : process.env.HOST_URL + '/assets/unknown.jpg' },
         title: req.body.name,
         color: '15158332',
         fields: [
@@ -239,11 +242,12 @@ module.exports = {
         }
       ])
       result.rating = {
-        rating: resultRating[0]?.rating || 0,
-        count: resultRating[0]?.count || 0
+        rating: resultRating.length > 0 && resultRating[0].rating ? resultRating.length > 0 && resultRating[0].rating : 0,
+        count: resultRating.length > 0 && resultRating[0].count ? resultRating.length > 0 && resultRating[0].count : 0
       }
       res.status(200).send({ success: true, message: '', result })
     } catch (error) {
+      console.log(error)
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else {
@@ -286,7 +290,7 @@ module.exports = {
         res.status(403).send({ success: false, message: 'Not in guild' })
         return
       }
-      if (req.body.image?.length > 0) {
+      if (req.body.image && req.body.image.length > 0) {
         const valid = await checkImage(req.body.image)
         if (!valid) {
           res.status(400).send({ success: false, message: 'Validation Failed' })
