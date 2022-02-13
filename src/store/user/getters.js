@@ -18,8 +18,10 @@ export function getUserData (state) {
       break
   }
 
-  const data = Object.assign({}, state)
-  data.avatar_url = `https://cdn.discordapp.com/avatars/${state.discord}/${state.avatar}.png`
-  data.locale2 = locale2
-  return data
+  return {
+    ...state,
+    locale2,
+    avatar_url: `https://cdn.discordapp.com/avatars/${state.discord}/${state.avatar}.png`,
+    isLogin: state.id.length !== 0
+  }
 }

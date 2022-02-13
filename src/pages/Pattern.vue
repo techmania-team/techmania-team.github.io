@@ -47,8 +47,8 @@ q-page#pattern
                 q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
               p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreviews') }}
       q-no-ssr
-        q-separator(v-if="isLogin && $store.state.tempPattern.myComment._id.length === 0")
-        .row.q-my-md(v-if="isLogin && $store.state.tempPattern.myComment._id.length === 0")
+        q-separator(v-if="user.isLogin && $store.state.tempPattern.myComment._id.length === 0")
+        .row.q-my-md(v-if="user.isLogin && $store.state.tempPattern.myComment._id.length === 0")
           .col-12
             .text-h6.q-mt-md.q-mb-lg.text-center {{ $t('pattern.rateThisPattern') }}
             q-form(@submit.prevent="submitComment").q-gutter-sm
@@ -78,14 +78,14 @@ q-page#pattern
                 template(#default-body="prop")
                   p.text-white.comment {{ prop.node.comment }}
                   p.text-white.comment-actions
-                    q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
-                    q-btn(flat round color="tech" icon="thumb_up_off_alt" v-else :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 1)")
+                    q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
+                    q-btn(flat round color="tech" icon="thumb_up_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 1)")
                     | &nbsp;{{ reduceVote(1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
-                    q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
+                    q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
+                    q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
                     | &nbsp;{{ reduceVote(-1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" v-if="prop.node.user._id === user.id" icon="edit" :disable="!isLogin" @click="editReply(prop.node)")
-                    q-btn(flat round color="tech" v-if="prop.node.replies && isLogin" icon="reply" :disable="!isLogin" @click="reply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user.id" icon="edit" :disable="!user.isLogin" @click="editReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin" icon="reply" :disable="!user.isLogin" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
       q-form(@submit.prevent="submitModal")

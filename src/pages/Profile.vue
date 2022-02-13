@@ -17,7 +17,7 @@ q-page#profile
             q-tab(name="skins" :label="$t('nav.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
         .col-12
-          q-tab-panels(v-model="tab" animated keep-alive)
+          q-tab-panels(v-model="tab" animated)
             q-tab-panel(name="patterns")
               .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
               q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")

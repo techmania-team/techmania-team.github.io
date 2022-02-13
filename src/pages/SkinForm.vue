@@ -256,7 +256,7 @@ export default {
         if (error.response.data.message === 'Not in guild') {
           message = this.$t('submitForm.errorGuild')
         } else if (error.response.data.message === 'Unauthorized') {
-          this.logout()
+          this.$store.dispatch('user/logout')
           message = this.$t('submitForm.errorUnauthorized')
         }
         this.$q.notify({
@@ -330,7 +330,7 @@ export default {
         if (error.response.data.message === 'Not in guild') {
           message = this.$t('submitForm.errorGuild')
         } else if (error.response.data.message === 'Unauthorized') {
-          this.logout()
+          this.$store.dispatch('user/logout')
           message = this.$t('submitForm.errorUnauthorized')
         }
         this.$q.notify({
