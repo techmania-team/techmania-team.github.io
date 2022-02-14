@@ -50,7 +50,7 @@ module.exports = {
           discordRefresh: refreshToken
         })
         await user.save()
-        res.redirect(new URL(`?token=${accessToken}&jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
+        res.redirect(new URL(`?jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
       } catch (error) {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
@@ -104,7 +104,18 @@ module.exports = {
     res.status(200).send({ success: true, message: '' })
   },
   async verify (req, res) {
-    res.status(200).send({ success: true, message: '' })
+    const idx = req.user.accessInfo.findIndex(access => access.jwt === req.token)
+    res.status(200).send({
+      success: true,
+      message: '',
+      result: {
+        discord: req.user.discord,
+        name: req.user.name,
+        avatar: req.user.avatar,
+        token: req.user.accessInfo[idx].discord,
+        _id: req.user._id
+      }
+    })
   },
   async getById (req, res) {
     try {

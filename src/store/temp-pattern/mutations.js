@@ -37,7 +37,7 @@ export function setComments (state, data) {
 }
 
 export function setMyComment (state, data) {
-  data.replies[0].user = { _id: this.state.user.id, name: this.state.user.username, avatar: this.state.user.avatar, discord: this.state.user.discord }
+  data.replies[0].user = { _id: this.state.user._id, name: this.state.user.username, avatar: this.state.user.avatar, discord: this.state.user.discord }
   state.myComment = data
 }
 
@@ -47,12 +47,12 @@ export function setVote (state, data) {
   if (data.cid === state.myComment._id) {
     ridx = state.myComment.replies.findIndex(reply => reply._id === data.rid)
     if (ridx > -1) {
-      vidx = state.myComment.replies[ridx].votes.findIndex(vote => vote.user === this.state.user.id)
+      vidx = state.myComment.replies[ridx].votes.findIndex(vote => vote.user === this.state.user._id)
       if (vidx > -1) {
         if (data.positive === 0) state.myComment.replies[ridx].votes.splice(vidx, 1)
         else state.myComment.replies[ridx].votes[vidx].positive = data.positive
       } else {
-        state.myComment.replies[ridx].votes.push({ positive: data.positive, user: this.state.user.id })
+        state.myComment.replies[ridx].votes.push({ positive: data.positive, user: this.state.user._id })
       }
     }
   } else {
@@ -61,12 +61,12 @@ export function setVote (state, data) {
       else {
         ridx = state.comments[i].replies.findIndex(reply => reply._id === data.rid)
         if (ridx > -1) {
-          vidx = state.comments[i].replies[ridx].votes.findIndex(vote => vote.user === this.state.user.id)
+          vidx = state.comments[i].replies[ridx].votes.findIndex(vote => vote.user === this.state.user._id)
           if (vidx > -1) {
             if (data.positive === 0) state.comments[i].replies[ridx].votes.splice(vidx, 1)
             else state.comments[i].replies[ridx].votes[vidx].positive = data.positive
           } else {
-            state.comments[i].replies[ridx].votes.push({ positive: data.positive, user: this.state.user.id })
+            state.comments[i].replies[ridx].votes.push({ positive: data.positive, user: this.state.user._id })
           }
         }
       }
@@ -104,7 +104,7 @@ export function editReply (state, data) {
 }
 
 export function createReply (state, data) {
-  data.result.user = { _id: this.state.user.id, name: this.state.user.username, avatar: this.state.user.avatar, discord: this.state.user.discord }
+  data.result.user = { _id: this.state.user._id, name: this.state.user.username, avatar: this.state.user.avatar, discord: this.state.user.discord }
   if (state.myComment._id === data.cid) {
     console.log('my')
     state.myComment.replies.push({

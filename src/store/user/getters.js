@@ -22,6 +22,6 @@ export function getUserData (state) {
     ...state,
     locale2,
     avatar_url: `https://cdn.discordapp.com/avatars/${state.discord}/${state.avatar}.png`,
-    isLogin: state.id.length !== 0
+    isLogin: state._id.length !== 0
   }
 }

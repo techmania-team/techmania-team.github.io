@@ -3,7 +3,7 @@ import Quasar from 'quasar'
 export default function () {
   return {
     token: '',
-    id: '',
+    _id: '',
     discord: '',
     username: '',
     avatar: '',

@@ -3,21 +3,20 @@ import router from '../../router'
 export async function verify ({ commit, state }, query) {
   if (process.env.CLIENT) {
     try {
+      if (query.jwt) {
+        commit('addjwt', query.jwt)
+        router().replace({ query: {} })
+      }
+
       if (state.jwt.length > 0) {
-        await this._vm.$api.get('/users/verify',
+        const { data: loginData } = await this._vm.$api.get('/users/verify',
           {
             headers: {
               Authorization: `Bearer ${state.jwt}`
             }
-          })
-      } else if (query.jwt && query.token) {
-        commit('addjwt', query.jwt)
-        commit('addtoken', query.token)
-        commit('addid', query.id)
-        router().replace({ query: {} })
-      }
-
-      if (state.token.length > 0) {
+          }
+        )
+        commit('login', loginData.result)
         const { data } = await this._vm.$axios.get('https://discord.com/api/users/@me',
           {
             headers: {
@@ -25,7 +24,7 @@ export async function verify ({ commit, state }, query) {
             }
           }
         )
-        commit('login', data)
+        commit('loginDiscord', data)
       }
     } catch (error) {
       console.log(error)

@@ -8,7 +8,7 @@ q-page#skin
           h4 {{ skin.name }}
         q-no-ssr.col-6.text-right
           h4
-            q-btn.q-mr-xs(v-if="skin.submitter._id === user.id" flat icon="edit" color="tech" @click="$router.push('/skins/edit/' + skin._id)") {{ $t('pattern.edit') }}
+            q-btn.q-mr-xs(v-if="skin.submitter._id === user._id" flat icon="edit" color="tech" @click="$router.push('/skins/edit/' + skin._id)") {{ $t('pattern.edit') }}
             q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="skin.link" target="__blank") {{ $t('pattern.download') }}
       q-separator
       .row.q-my-md
@@ -76,7 +76,7 @@ q-page#skin
                     q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
                     q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
                     | &nbsp;{{ reduceVote(-1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" v-if="prop.node.user._id === user.id" icon="edit" :disable="!user.isLogin" @click="editReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id" icon="edit" :disable="!user.isLogin" @click="editReply(prop.node)")
                     q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin" icon="reply" :disable="!user.isLogin" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
@@ -243,7 +243,7 @@ export default {
       return (!votes || votes.length === 0) ? 0 : votes.filter(vote => vote.positive === value).length
     },
     isVoted (votes, positive) {
-      return votes ? votes.some(vote => vote.user === this.user.id && vote.positive === positive) : 0
+      return votes ? votes.some(vote => vote.user === this.user._id && vote.positive === positive) : 0
     },
     async vote (cid, rid, positive) {
       try {

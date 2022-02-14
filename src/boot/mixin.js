@@ -71,7 +71,7 @@ export default async ({ Vue }) => {
       }
     },
     beforeEnter (to, from, next) {
-      if (to.meta.login && this.user.id.length === 0) {
+      if (to.meta.login && this.user._id.length === 0) {
         next('/')
       } else {
         next()

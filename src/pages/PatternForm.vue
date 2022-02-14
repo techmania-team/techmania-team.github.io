@@ -343,7 +343,7 @@ export default {
         } else {
           throw new Error('Server Error')
         }
-        this.$router.push(`/users/${this.user.id}/#patterns`)
+        this.$router.push(`/users/${this.user._id}/#patterns`)
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
         if (error.response.data.message === 'Not in guild') {
@@ -367,7 +367,7 @@ export default {
   created () {
     if (this.$route.params.id) {
       const patterndata = JSON.parse(JSON.stringify(this.$store.getters['tempPattern/getPattern']))
-      if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user.id) {
+      if (patterndata._id.length === 0 || patterndata.submitter._id !== this.user._id) {
         this.$router.push('/404')
       } else {
         patterndata.previews.map(preview => {

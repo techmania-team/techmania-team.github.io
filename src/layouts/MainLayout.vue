@@ -18,7 +18,7 @@ q-layout(view='hHh lpR fff')
                 q-avatar
                   img(:src="user.avatar_url")
               q-list
-                q-item(clickable v-close-popup :to="'/users/'+user.id" active-class="text-white")
+                q-item(clickable v-close-popup :to="'/users/'+user._id" active-class="text-white")
                   q-item-section
                     q-item-label {{ $t('nav.myPage') }}
                 q-item(clickable @click="$store.dispatch('user/logout')")
@@ -43,7 +43,7 @@ q-layout(view='hHh lpR fff')
               q-item-section {{ $t(nav.label) }}
             q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink(discordLoginURL, '_self'); dropdown = !dropdown" active-class="text-white")
               q-item-section {{ $t('nav.login') }}
-            q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user.id" v-if="user.isLogin" active-class="text-white")
+            q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" v-if="user.isLogin" active-class="text-white")
               q-item-section {{ $t('nav.myPage') }}
             q-item.text-grey7(clickable v-if="user.isLogin" @click="$store.dispatch('user/logout')" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}

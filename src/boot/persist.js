@@ -6,7 +6,7 @@ export default async ({ app, router, store, Vue }) => {
     createPersistedState({
       key: 'techmania',
       paths: [
-        'user'
+        'user.jwt'
       ],
       storage: {
         getItem: key => LocalStorage.getItem(key),

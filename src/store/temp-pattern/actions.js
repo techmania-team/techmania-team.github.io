@@ -9,7 +9,7 @@ export function fetchComments ({ commit }, { id, start }) {
     // If user is logged in, remove user's comment
     if (this.state.user.jwt.length > 0) {
       data.result = data.result.filter(comment => {
-        return comment.replies[0].user._id !== this.state.user.id
+        return comment.replies[0].user._id !== this.state.user._id
       })
     }
     if (data.result.length === 0) commit('setCommentsScrollDisable')

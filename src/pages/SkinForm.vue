@@ -324,7 +324,7 @@ export default {
         } else {
           throw new Error('Server Error')
         }
-        this.$router.push(`/users/${this.user.id}/#skins`)
+        this.$router.push(`/users/${this.user._id}/#skins`)
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
         if (error.response.data.message === 'Not in guild') {
@@ -348,7 +348,7 @@ export default {
   created () {
     if (this.$route.params.id) {
       const skindata = JSON.parse(JSON.stringify(this.$store.getters['tempSkin/getSkin']))
-      if (skindata._id.length === 0 || skindata.submitter._id !== this.user.id) {
+      if (skindata._id.length === 0 || skindata.submitter._id !== this.user._id) {
         this.$router.push('/404')
       } else {
         skindata.previews.map(preview => {

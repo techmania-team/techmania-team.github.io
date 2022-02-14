@@ -133,7 +133,7 @@ export default {
   },
   computed: {
     mine () {
-      return this.profile._id === this.user.id
+      return this.profile._id === this.user._id
     }
   },
   watch: {
