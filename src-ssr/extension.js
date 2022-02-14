@@ -10,8 +10,8 @@
  * Note: Changes to this file (but not any file it imports!) are picked up by the
  * development server, but such updates are costly since the dev-server needs a reboot.
  */
+const express = require('express')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 
 const routerUsers = require('./routes/users.js')
 const routerPatterns = require('./routes/patterns.js')
@@ -27,8 +27,8 @@ module.exports.extendApp = function ({ app, ssr }) {
 
   app.disable('x-powered-by')
 
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
 
   app.use((_, req, res, next) => {
     res.status(400).send({ success: false, message: 'Validation Failed' })
