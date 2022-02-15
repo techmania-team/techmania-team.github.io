@@ -8,16 +8,6 @@ const { checkImage } = require('../utils')
 module.exports = {
   async create (req, res) {
     try {
-      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
-      // check in discord guild or not
-      const response = await axios.get('https://discord.com/api/users/@me/guilds', {
-        headers: { Authorization: `Bearer ${req.user.accessInfo[infoidx].discord}` }
-      })
-      const inGuild = response.data.find(guild => guild.id.toString() === process.env.DISCORD_GUILD.toString())
-      if (!inGuild) {
-        res.status(403).send({ success: false, message: 'Not in guild' })
-        return
-      }
       if (req.body.image && req.body.image.length > 0) {
         const valid = await checkImage(req.body.image)
         if (!valid) {
@@ -257,19 +247,8 @@ module.exports = {
   },
   async del (req, res) {
     try {
-      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
-      // check in discord guild or not
-      const response = await axios.get('https://discord.com/api/users/@me/guilds', {
-        headers: { Authorization: `Bearer ${req.user.accessInfo[infoidx].discord}` }
-      })
-      const inGuild = response.data.find(guild => guild.id.toString() === process.env.DISCORD_GUILD.toString())
-      if (!inGuild) {
-        res.status(403).send({ success: false, message: 'Not in guild' })
-        return
-      } else {
-        await patterns.findOneAndDelete({ _id: mongoose.Types.ObjectId(req.params.id), submitter: req.user._id })
-        res.status(200).send({ success: true, message: '' })
-      }
+      await patterns.findOneAndDelete({ _id: mongoose.Types.ObjectId(req.params.id), submitter: req.user._id })
+      res.status(200).send({ success: true, message: '' })
     } catch (error) {
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
@@ -280,16 +259,6 @@ module.exports = {
   },
   async update (req, res) {
     try {
-      const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
-      // check in discord guild or not
-      const response = await axios.get('https://discord.com/api/users/@me/guilds', {
-        headers: { Authorization: `Bearer ${req.user.accessInfo[infoidx].discord}` }
-      })
-      const inGuild = response.data.find(guild => guild.id.toString() === process.env.DISCORD_GUILD.toString())
-      if (!inGuild) {
-        res.status(403).send({ success: false, message: 'Not in guild' })
-        return
-      }
       if (req.body.image && req.body.image.length > 0) {
         const valid = await checkImage(req.body.image)
         if (!valid) {
