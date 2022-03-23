@@ -80,18 +80,25 @@ export function editMyComment (state, data) {
 export function editReply (state, data) {
   if (state.myComment._id === data.cid) {
     const ridx = state.myComment.replies.findIndex(reply => reply._id === data.rid)
-    console.log(ridx)
     if (ridx > -1) {
-      state.myComment.replies[ridx].comment = data.comment
+      if (data.comment) {
+        state.myComment.replies[ridx].comment = data.comment
+      }
+      if (data.deleted !== undefined) {
+        state.myComment.replies[ridx].deleted = data.deleted
+      }
     }
   } else {
     const cidx = state.comments.findIndex(comment => comment._id === data.cid)
-    console.log(cidx)
     if (cidx > -1) {
       const ridx = state.comments[cidx].replies.findIndex(reply => reply._id === data.rid)
-      console.log(ridx)
       if (ridx > -1) {
-        state.comments[cidx].replies[ridx].comment = data.comment
+        if (data.comment) {
+          state.comments[cidx].replies[ridx].comment = data.comment
+        }
+        if (data.deleted !== undefined) {
+          state.comments[cidx].replies[ridx].deleted = data.deleted
+        }
       }
     }
   }
@@ -100,14 +107,12 @@ export function editReply (state, data) {
 export function createReply (state, data) {
   data.result.user = { _id: this.state.user._id, name: this.state.user.username, avatar: this.state.user.avatar, discord: this.state.user.discord }
   if (state.myComment._id === data.cid) {
-    console.log('my')
     state.myComment.replies.push({
       ...data.result,
       comment: data.comment
     })
   } else {
     const cidx = state.comments.findIndex(comment => comment._id === data.cid)
-    console.log(cidx)
     if (cidx > -1) {
       state.comments[cidx].replies.push({
         ...data.result,
@@ -120,4 +125,11 @@ export function createReply (state, data) {
 export function updateRating (state, data) {
   state.rating.rating = data.rating
   state.rating.count = data.count
+}
+
+export function deleteMyComment (state, data) {
+  state.myComment._id = ''
+  state.myComment.rating = 0
+  state.myComment.comment = ''
+  state.myComment.replies = []
 }

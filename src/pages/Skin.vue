@@ -68,7 +68,8 @@ q-page#skin
                       q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
                         | {{ formatTime(prop.node.date) }}
                 template(#default-body="prop")
-                  p.text-white.comment {{ prop.node.comment }}
+                  p.text-white.comment.text-strike.text-weight-light.text-grey-5(v-if="prop.node.deleted") Deleted
+                  p.text-white.comment(v-else) {{ prop.node.comment }}
                   p.text-white.comment-actions
                     q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
                     q-btn(flat round color="tech" icon="thumb_up_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 1)")
@@ -76,8 +77,10 @@ q-page#skin
                     q-btn(flat round color="tech" icon="thumb_down" v-if="isVoted(prop.node.votes, -1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
                     q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
                     | &nbsp;{{ reduceVote(-1, prop.node.votes) }}&nbsp;
-                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id" icon="edit" :disable="!user.isLogin" @click="editReply(prop.node)")
-                    q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin" icon="reply" :disable="!user.isLogin" @click="reply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="edit" @click="editReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="delete" @click="deleteReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && prop.node.deleted" icon="undo" @click="recoverReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin" icon="reply" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
       q-form(@submit.prevent="submitModal")
@@ -93,6 +96,14 @@ q-page#skin
               q-rating(v-model="replyModal.rating" :max="5" icon="star" size="3em")
             .text-center
               q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="replyModal.submitting" style="width: 150px")
+  q-dialog(v-model="deleteReplyDialog.confirm")
+    q-card
+      q-card-section.row.items-center
+        q-avatar.q-mx-auto(icon="warning" text-color="red")
+        span.q-ml-sm Delete Comment?
+      q-card-actions(align="right")
+        q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="confirmDeleteReply" :loading="deleteReplyDialog.deleting")
+        q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
 </template>
 
 <script>
@@ -193,6 +204,13 @@ export default {
         open: false,
         cid: '',
         _id: ''
+      },
+      deleteReplyDialog: {
+        confirm: false,
+        deleting: false,
+        _id: '',
+        cid: '',
+        root: false
       }
     }
   },
@@ -245,13 +263,8 @@ export default {
     isVoted (votes, positive) {
       return votes ? votes.some(vote => vote.user === this.user._id && vote.positive === positive) : 0
     },
-    async vote (cid, rid, positive) {
-      try {
-        await this.$api.patch(`/comments/${cid}/replies/${rid}/votes`, { positive }, { headers: { Authorization: `Bearer ${this.user.jwt}` } })
-        this.$store.commit('tempSkin/setVote', { cid, rid, positive })
-      } catch (error) {
-        console.log(error)
-      }
+    vote (cid, rid, positive) {
+      this.$store.dispatch('tempPattern/vote', { cid, rid, positive })
     },
     async submitComment () {
       if (this.comment.comment.length === 0 || this.comment.rating === 0) {
@@ -266,23 +279,14 @@ export default {
         this.comment.submitting = true
         await this.$recaptchaLoaded()
         const token = await this.$recaptcha('skinComment')
-        let response = await this.$api.post(
-          '/comments/',
-          { rating: this.comment.rating, comment: this.comment.comment, skin: this.skin._id, 'g-recaptcha-response': token },
-          { headers: { Authorization: `Bearer ${this.user.jwt}` } }
-        )
-        this.$store.commit(
-          'tempSkin/setMyComment', { ...response.data.result }
-        )
-        response = await this.$api.get(`/comments/skins/${this.skin._id}/rating`)
-        this.$store.commit(
-          'tempSkin/updateRating', { ...response.data.result }
-        )
+        await this.$store.dispatch('tempSkin/submitComment', { rating: this.comment.rating, comment: this.comment.comment, token })
+        this.comment.rating = 0
+        this.comment.comment = ''
       } catch (error) {
         this.$q.notify({
           icon: 'warning',
           color: 'negative',
-          message: 'Server error, please try again.'
+          message: this.$t('submitForm.errorServer')
         })
       }
       this.comment.submitting = false
@@ -308,6 +312,56 @@ export default {
       this.replyModal.open = true
       this.replyModal.cid = node.cid
     },
+    deleteReply (node) {
+      this.deleteReplyDialog.root = 'replies' in node
+      this.deleteReplyDialog._id = node._id
+      this.deleteReplyDialog.cid = node.cid
+      this.deleteReplyDialog.confirm = true
+      this.deleteReplyDialog.deleting = false
+    },
+    async recoverReply (node) {
+      try {
+        await this.$recaptchaLoaded()
+        const token = await this.$recaptcha('skinRecoverComment')
+        await this.$api.patch(
+      `/comments/${node.cid}/replies/${node._id}`,
+      { deleted: false, 'g-recaptcha-response': token },
+      {
+        headers: { Authorization: `Bearer ${this.user.jwt}` }
+      }
+        )
+        this.$store.commit('tempSkin/editReply', { cid: node.cid, rid: node._id, deleted: false })
+      } catch (error) {
+        this.$q.notify({
+          icon: 'warning',
+          color: 'negative',
+          message: 'Server Error, please try again.'
+        })
+      }
+    },
+    async confirmDeleteReply () {
+      if (this.deleteReplyDialog._id === '' || this.deleteReplyDialog.cid === '') return
+      this.deleteReplyDialog.deleting = true
+      try {
+        await this.$recaptchaLoaded()
+        let token = ''
+        if (this.deleteReplyDialog.root) {
+          token = await this.$recaptcha('skinDeleteMyComment')
+          await this.$store.dispatch('tempSkin/deleteMyComment', { ...this.deleteReplyDialog, token })
+        } else {
+          token = await this.$recaptcha('skinDeleteReply')
+          this.$store.dispatch('tempSkin/deleteReply', { ...this.deleteReplyDialog, token })
+        }
+      } catch (error) {
+        this.$q.notify({
+          icon: 'warning',
+          color: 'negative',
+          message: 'Server Error, please try again.'
+        })
+      }
+      this.deleteReplyDialog.deleting = false
+      this.deleteReplyDialog.confirm = false
+    },
     resetReplyModal () {
       this.replyModal = {
         mode: 0,
@@ -331,46 +385,21 @@ export default {
           }
           await this.$recaptchaLoaded()
           const token = await this.$recaptcha('skinEditComment')
-          await this.$api.patch(
-            `/comments/${this.replyModal.cid}`,
-            { rating: this.replyModal.rating, comment: this.replyModal.comment, 'g-recaptcha-response': token },
-            {
-              headers: { Authorization: `Bearer ${this.user.jwt}` }
-            }
-          )
-          this.$store.commit('tempSkin/editMyComment', { rating: this.replyModal.rating, comment: this.replyModal.comment })
-          const { data } = await this.$api.get(`/comments/skins/${this.skin._id}/rating`)
-          this.$store.commit(
-            'tempSkin/updateRating', { ...data.result }
-          )
+          await this.$store.dispatch('tempSkin/editComment', { token, ...this.replyModal })
         } else if (this.replyModal.mode === 1) {
           if (this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')
           }
           await this.$recaptchaLoaded()
           const token = await this.$recaptcha('skinEditReply')
-          await this.$api.patch(
-            `/comments/${this.replyModal.cid}/replies/${this.replyModal._id}`,
-            { comment: this.replyModal.comment, 'g-recaptcha-response': token },
-            {
-              headers: { Authorization: `Bearer ${this.user.jwt}` }
-            }
-          )
-          this.$store.commit('tempSkin/editReply', { cid: this.replyModal.cid, rid: this.replyModal._id, comment: this.replyModal.comment })
+          await this.$store.dispatch('tempSkin/editReply', { token, ...this.replyModal })
         } else {
           if (this.replyModal.comment.length === 0) {
             throw new Error('Validate Fail')
           }
           await this.$recaptchaLoaded()
           const token = await this.$recaptcha('skinReply')
-          const { data } = await this.$api.post(
-            `/comments/${this.replyModal.cid}/replies`,
-            { comment: this.replyModal.comment, 'g-recaptcha-response': token },
-            {
-              headers: { Authorization: `Bearer ${this.user.jwt}` }
-            }
-          )
-          this.$store.commit('tempSkin/createReply', { result: data.result, cid: this.replyModal.cid, comment: this.replyModal.comment })
+          this.$store.dispatch('tempSkin/reply', { token, ...this.replyModal })
         }
         this.replyModal.open = false
       } catch (error) {
