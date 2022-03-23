@@ -10,7 +10,8 @@ const {
   updateComment,
   createReply,
   updateReply,
-  updateReplyVote
+  updateReplyVote,
+  deleteMyComment
 } = require('../controllers/comments.js')
 const auth = require('../middleware/auth')
 const recaptcha = require('../middleware/recaptcha')
@@ -27,5 +28,6 @@ router.patch('/:id', recaptcha, auth, updateComment)
 router.post('/:cid/replies', recaptcha, auth, createReply)
 router.patch('/:cid/replies/:rid', recaptcha, auth, updateReply)
 router.patch('/:cid/replies/:rid/votes', auth, updateReplyVote)
+router.delete('/:cid/', auth, deleteMyComment)
 
 module.exports = router

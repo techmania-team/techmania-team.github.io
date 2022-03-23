@@ -8,7 +8,8 @@ module.exports = {
     try {
       const query = {
         pattern: req.body.pattern,
-        'replies.0.user': req.user._id
+        'replies.0.user': req.user._id,
+        'replies.0.deleted': false
       }
       if (req.body.pattern) {
         query.pattern = req.body.pattern
@@ -46,7 +47,8 @@ module.exports = {
         // Find matching pattern id
         {
           $match: {
-            pattern: mongoose.Types.ObjectId(req.params.id)
+            pattern: mongoose.Types.ObjectId(req.params.id),
+            'replies.0.deleted': false
           }
         },
         // Sort by comment date
@@ -128,7 +130,8 @@ module.exports = {
         {
           $match: {
             pattern: mongoose.Types.ObjectId(req.params.id),
-            'replies.0.user': req.user._id
+            'replies.0.user': req.user._id,
+            'replies.0.deleted': false
           }
         },
         // Unwind replies for lookup
@@ -232,18 +235,18 @@ module.exports = {
   },
   async updateReply (req, res) {
     try {
+      const $set = {
+        'replies.$[a].updateDate': Date.now()
+      }
+      if (req.body.deleted !== undefined) $set['replies.$[a].deleted'] = req.body.deleted
+      if (req.body.comment) $set['replies.$[a].comment'] = req.body.comment
       await comments.findOneAndUpdate(
         {
           _id: mongoose.Types.ObjectId(req.params.cid),
           'replies._id': mongoose.Types.ObjectId(req.params.rid),
           'replies.user': req.user._id
         },
-        {
-          $set: {
-            'replies.$[a].comment': req.body.comment,
-            'replies.$[a].updateDate': Date.now()
-          }
-        },
+        { $set },
         { new: true, runValidators: true, arrayFilters: [{ 'a._id': req.params.rid }] }
       )
       res.status(200).send({ success: true, message: '' })
@@ -526,6 +529,18 @@ module.exports = {
       ]
       const result = await comments.aggregate(query)
       res.status(200).send({ success: true, message: '', result })
+    } catch (error) {
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
+  },
+  async deleteMyComment (req, res) {
+    try {
+      await comments.findOneAndDelete({ _id: req.params.cid, 'replies.0.user': req.user._id })
+      res.status(200).send({ success: true, message: '' })
     } catch (error) {
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })

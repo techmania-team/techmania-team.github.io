@@ -41,6 +41,10 @@ const ReplySchema = new mongoose.Schema({
   updateDate: {
     type: Date,
     default: Date.now
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 })
 
