@@ -88,7 +88,8 @@ q-page#pattern
                     q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="edit" @click="editReply(prop.node)")
                     q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="delete" @click="deleteReply(prop.node)")
                     q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && prop.node.deleted" icon="undo" @click="recoverReply(prop.node)")
-                    q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin" icon="reply" @click="reply(prop.node)")
+                      //- Only header has replies array
+                    q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin && (prop.node.user._id === user._id || pattern.submitter._id === user._id)" icon="reply" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
       q-form(@submit.prevent="submitModal")

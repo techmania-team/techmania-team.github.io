@@ -209,21 +209,21 @@ module.exports = {
   },
   async createReply (req, res) {
     try {
-      const result = await comments.findOneAndUpdate(
-        { _id: mongoose.Types.ObjectId(req.params.cid) },
-        {
-          $push: {
-            replies: {
-              user: mongoose.Types.ObjectId(req.user._id),
-              comment: req.body.comment
-            }
-          }
-        },
-        { new: true, runValidators: true }
-      )
-      res.status(200).send({ success: true, message: '', result: { ...result.toObject().replies.pop() } })
+      const comment = await comments.findById(mongoose.Types.ObjectId(req.params.cid))
+      if (!comment) return res.status(404).send({ success: false, message: 'Not found' })
+      const pattern = await patterns.findById(comment.pattern)
+      if (!pattern) return res.status(404).send({ success: false, message: 'Not found' })
+      if (comment.replies[0].user.toString() !== req.user._id.toString() && comment.replies[0].user !== pattern.submitter) {
+        return res.status(403).send({ success: false, message: 'No permission' })
+      }
+      comment.replies.push({
+        user: mongoose.Types.ObjectId(req.user._id),
+        comment: req.body.comment
+      })
+      comment.markModified('replies')
+      await comment.save()
+      res.status(200).send({ success: true, message: '', result: { ...comment.toObject().replies.pop() } })
     } catch (error) {
-      console.log(error)
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })
       } else if (error.name === 'ValidationError') {
