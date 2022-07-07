@@ -189,7 +189,10 @@ module.exports = {
   },
   async updateComment (req, res) {
     try {
-      await comments.findByIdAndUpdate(req.params.id, {
+      await comments.findOneAndUpdate({
+        _id: req.params.id,
+        'replies.0.user': req.user._id
+      }, {
         rating: req.body.rating,
         $set: {
           'replies.0.comment': req.body.comment,
