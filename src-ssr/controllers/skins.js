@@ -69,9 +69,6 @@ module.exports = {
     try {
       const query = [
         { $match: {} },
-        { $sort: {} },
-        { $skip: 0 },
-        { $limit: 0 },
         {
           $lookup: {
             from: 'comments',
@@ -96,6 +93,9 @@ module.exports = {
             }
           }
         },
+        { $sort: {} },
+        { $skip: 0 },
+        { $limit: 0 },
         {
           $lookup: {
             from: 'users',
@@ -122,7 +122,7 @@ module.exports = {
       }
       if (req.query.start) {
         const start = parseInt(req.query.start)
-        query[2].$skip = isNaN(start) ? 0 : start
+        query[4].$skip = isNaN(start) ? 0 : start
       }
       if (req.query.limit) {
         const limit = parseInt(req.query.limit)
@@ -130,7 +130,7 @@ module.exports = {
           res.status(400).send({ success: false, message: 'Invalid limit' })
           return
         }
-        query[3].$limit = limit
+        query[5].$limit = limit
       }
       if (req.query.keysounded === 'yes') {
         query[0].$match.keysounded = true
@@ -177,13 +177,13 @@ module.exports = {
           return
         }
         const sortBy = req.query.sortBy
-        if (sortBy !== 'submitDate' && sortBy !== 'updateDate' && sortBy !== 'name') {
+        if (sortBy !== 'submitDate' && sortBy !== 'updateDate' && sortBy !== 'name' && sortBy !== 'rating') {
           res.status(400).send({ success: false, message: 'Invalid SortBy' })
           return
         }
-        query[1].$sort[sortBy] = querySort
+        query[3].$sort[sortBy] = querySort
       } else {
-        query[1].$sort.submitDate = -1
+        query[3].$sort.submitDate = -1
       }
       const result = await skins.aggregate(query)
       res.status(200).send({ success: true, message: '', result })

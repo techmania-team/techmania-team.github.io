@@ -24,6 +24,7 @@ q-page#skins
                   q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
                   q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
                   q-btn(flat size="10px" :label="$t('skins.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
+                  q-btn(flat size="10px" :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="searchForm.sortBy === 'rating' ? 'white' : 'grey'" @click="changeSort('rating')")
           q-separator.q-my-md
           q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
             .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
