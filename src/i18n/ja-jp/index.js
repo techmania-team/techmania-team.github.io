@@ -48,7 +48,16 @@ export default {
     composer: '作曲家: ',
     patternData: 'パターンデータ',
     description: 'パターン詳細',
-    previews: 'プレビュー'
+    previews: 'プレビュー',
+    noPreview: 'プレビューなし',
+    noDescription: '詳細がありません。',
+    rateThisPattern: 'パターンを評価する',
+    commentPlaceholder: 'コメントを作成してください',
+    edit: '編集',
+    download: 'ダウンロード',
+    reply: '返信',
+    rating: '評価',
+    ratingCount: '{count}件の評価'
   },
   skins: {
     sortName: 'スキン名',
@@ -60,7 +69,8 @@ export default {
     combo: 'コンボ',
     gameUI: 'ゲーム UI',
     skinData: 'スキンデータ',
-    description: 'スキン詳細'
+    description: 'スキン詳細',
+    rateThisSkin: 'スキンを評価する'
   },
   submitForm: {
     composer: '作曲家',
@@ -95,7 +105,8 @@ export default {
     updated: '更新に成功しました。',
     deleted: '削除しました。',
     agreetos: 'パターンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。',
-    agreetos2: 'まず規約に同意する必要があります。'
+    agreetos2: 'まず規約に同意する必要があります。',
+    invalidPreviews: '正しいYouTubeプレビューリンクまたは名前です。'
   },
   submitSkinForm: {
     title: '新しいスキンを投稿',
@@ -108,5 +119,15 @@ export default {
     skinType: 'スキンの種類',
     agreetos: 'スキンを投稿した場合、<a href="{tosURL}" target="_blank">サービス利用規約</a>に同意したものとみなします。',
     delete: 'このスキンを削除する'
+  },
+  comment: {
+    comments: 'コメント',
+    deleted: '削除済み',
+    editComment: 'コメントを編集',
+    editReply: '返信を編集',
+    reply: '返信',
+    deleteCommentConfirm: 'コメントを削除しますか？',
+    deleteReplyConfirm: '返信を削除しますか？',
+    noComment: 'コメントがありません。'
   }
 }

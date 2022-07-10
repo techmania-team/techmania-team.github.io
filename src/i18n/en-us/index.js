@@ -48,14 +48,12 @@ export default {
     patternData: 'Pattern Data',
     description: 'Pattern Description',
     previews: 'Previews',
-    noPreviews: 'No Previews',
+    noPreview: 'No Preview',
     noDescription: 'No description.',
     rateThisPattern: 'Rate this pattern',
     commentPlaceholder: 'Leave a comment',
     edit: 'Edit',
     download: 'Download',
-    noComments: 'No comments.',
-    myComment: 'My Comment',
     reply: 'Reply',
     rating: 'Rating',
     ratingCount: '{count} comments'
@@ -121,5 +119,15 @@ export default {
     skinType: 'Skin Type',
     agreetos: 'Submitting the skins signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
     delete: 'DELETE THIS SKIN'
+  },
+  comment: {
+    comments: 'Comments',
+    deleted: 'Deleted',
+    editComment: 'Edit Comment',
+    editReply: 'Edit Reply',
+    reply: 'Reply',
+    deleteCommentConfirm: 'Delete Comment?',
+    deleteReplyConfirm: 'Delete Reply?',
+    noComment: 'No comment.'
   }
 }

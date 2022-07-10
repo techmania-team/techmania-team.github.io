@@ -37,7 +37,7 @@ q-page#skin
             .row.w-100.justify-center
               .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
                 q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
-              p.text-center(v-if='skin.previews.length === 0') {{ $t('pattern.noPreviews') }}
+              p.text-center(v-if='skin.previews.length === 0') {{ $t('pattern.noPreview') }}
       q-no-ssr
         q-separator(v-if="user.isLogin && $store.state.tempSkin.myComment._id.length === 0")
         .row.q-my-md(v-if="user.isLogin && $store.state.tempSkin.myComment._id.length === 0")
@@ -53,9 +53,9 @@ q-page#skin
         q-separator
         .row.q-my-md
           .col-12
-            .text-h6.q-mt-md.q-mb-lg.text-center Comments
+            .text-h6.q-mt-md.q-mb-lg.text-center {{ $t('comment.comments') }}
             q-infinite-scroll.q-gutter-sm(@load="loadScroll" :offset="200" :disable="commentsScrollDisabled")
-              q-tree(:nodes="formattedComments" node-key="_id" children-key="replies" default-expand-all :no-nodes-label="$t('pattern.noComments')")
+              q-tree(:nodes="formattedComments" node-key="_id" children-key="replies" default-expand-all :no-nodes-label="$t('comment.noComment')")
                 template(#default-header="prop")
                   .row.q-gutter-x-sm.items-center
                     .col-auto
@@ -68,7 +68,7 @@ q-page#skin
                       q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")
                         | {{ formatTime(prop.node.date) }}
                 template(#default-body="prop")
-                  p.text-white.comment.text-strike.text-weight-light.text-grey-5(v-if="prop.node.deleted") Deleted
+                  p.text-white.comment.text-strike.text-weight-light.text-grey-5(v-if="prop.node.deleted") {{ $t('comment.deleted') }}
                   p.text-white.comment(v-else) {{ prop.node.comment }}
                   p.text-white.comment-actions
                     q-btn(flat round color="tech" icon="thumb_up" v-if="isVoted(prop.node.votes, 1)" :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, 0)")
@@ -78,7 +78,7 @@ q-page#skin
                     q-btn(flat round color="tech" icon="thumb_down_off_alt" v-else :disable="!user.isLogin" @click="vote(prop.node.cid, prop.node._id, -1)")
                     | &nbsp;{{ reduceVote(-1, prop.node.votes) }}&nbsp;
                     q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="edit" @click="editReply(prop.node)")
-                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="delete" @click="deleteReply(prop.node)")
+                    q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="delete" @click="deleteReply(prop.node, prop.node.replies ? 0 : 1)")
                     q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && prop.node.deleted" icon="undo" @click="recoverReply(prop.node)")
                     //- Only header has replies array
                     q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin && (prop.node.user._id === user._id || pattern.submitter._id === user._id)" icon="reply" @click="reply(prop.node)")
@@ -86,9 +86,9 @@ q-page#skin
     q-card(style="width: 700px; max-width: 80vw;")
       q-form(@submit.prevent="submitModal")
         q-card-section
-          .text-h6(v-if="replyModal.mode === 0") Edit Comment
-          .text-h6(v-else-if="replyModal.mode === 1") Edit Reply
-          .text-h6(v-else-if="replyModal.mode === 2") Reply
+          .text-h6(v-if="replyModal.mode === 0") {{ $t('comment.editComment') }}
+          .text-h6(v-else-if="replyModal.mode === 1") {{ $t('comment.editReply') }}
+          .text-h6(v-else-if="replyModal.mode === 2") {{ $t('comment.reply') }}
         q-card-section
           .q-gutter-sm
             div
@@ -101,7 +101,7 @@ q-page#skin
     q-card
       q-card-section.row.items-center
         q-avatar.q-mx-auto(icon="warning" text-color="red")
-        span.q-ml-sm Delete Comment?
+        span.q-ml-sm {{ deleteReplyDialog.mode === 0 ? $t('comment.deleteCommentConfirm') : $t('comment.deleteReplyConfirm') }}
       q-card-actions(align="right")
         q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="confirmDeleteReply" :loading="deleteReplyDialog.deleting")
         q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
@@ -207,6 +207,7 @@ export default {
         _id: ''
       },
       deleteReplyDialog: {
+        mode: 0,
         confirm: false,
         deleting: false,
         _id: '',
@@ -313,7 +314,8 @@ export default {
       this.replyModal.open = true
       this.replyModal.cid = node.cid
     },
-    deleteReply (node) {
+    deleteReply (node, mode) {
+      this.deleteReplyDialog.mode = mode
       this.deleteReplyDialog.root = 'replies' in node
       this.deleteReplyDialog._id = node._id
       this.deleteReplyDialog.cid = node.cid

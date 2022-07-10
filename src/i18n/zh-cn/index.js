@@ -48,7 +48,16 @@ export default {
     composer: '作曲家：',
     patternData: '谱面详情',
     description: '谱面描述',
-    previews: '预览'
+    previews: '预览',
+    noPreview: '没有预览',
+    noDescription: '没有说明.',
+    rateThisPattern: '评分谱面',
+    commentPlaceholder: '留言',
+    edit: '编辑',
+    download: '下载',
+    reply: '回复',
+    rating: '评分',
+    ratingCount: '{count} 个评论'
   },
   skins: {
     sortName: '皮肤名',
@@ -60,7 +69,8 @@ export default {
     combo: '连击',
     gameUI: '游戏内界面',
     skinData: '皮肤详情',
-    description: '皮肤描述'
+    description: '皮肤描述',
+    rateThisSkin: '评分皮肤'
   },
   submitForm: {
     composer: '作曲家',
@@ -95,7 +105,8 @@ export default {
     deleted: '删除成功',
     updated: '编辑成功',
     agreetos: '送出谱面代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>',
-    agreetos2: '您必须同意使用条款'
+    agreetos2: '您必须同意使用条款',
+    invalidPreviews: '请输入有效的 YouTube 预览'
   },
   submitSkinForm: {
     title: '上传新皮肤',
@@ -108,5 +119,15 @@ export default {
     skinType: '类型',
     agreetos: '送出皮肤代表您已阅读并同意<a href="{tosURL}" target="_blank">使用条款</a>',
     delete: '删除谱面皮肤'
+  },
+  comment: {
+    comments: '评论',
+    deleted: '已删除',
+    editComment: '编辑评论',
+    editReply: '编辑回复',
+    reply: '回复',
+    deleteCommentConfirm: '删除评论?',
+    deleteReplyConfirm: '删除回复?',
+    noComment: '没有评论'
   }
 }

@@ -48,7 +48,16 @@ export default {
     composer: '작곡가: ',
     patternData: '패턴 데이터',
     description: '패턴 정보',
-    previews: '미리보기'
+    previews: '미리보기',
+    noPreview: '미리보기 없음',
+    noDescription: '정보가 없습니다.',
+    rateThisPattern: '패턴 평가하기',
+    commentPlaceholder: '댓글을 작성하세요',
+    edit: '편집',
+    download: '다운로드',
+    reply: '답글',
+    rating: '평가',
+    ratingCount: '{count}개의 평가'
   },
   skins: {
     sortName: '이름',
@@ -60,7 +69,8 @@ export default {
     combo: '콤보',
     gameUI: '게임 UI',
     skinData: '스킨 데이터',
-    description: '스킨 상세정보'
+    description: '스킨 상세정보',
+    rateThisSkin: '스킨 평가하기'
   },
   submitForm: {
     composer: '작곡가',
@@ -95,7 +105,8 @@ export default {
     updated: '업데이트에 성공했습니다.',
     deleted: '삭제되었습니다.',
     agreetos: '패턴을 투고할 시 <a href="{tosURL}" target="_blank">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.',
-    agreetos2: '먼저 약관에 동의해야 합니다.'
+    agreetos2: '먼저 약관에 동의해야 합니다.',
+    invalidPreviews: '유효하지 않은 YouTube 미리보기 링크 또는 이름입니다.'
   },
   submitSkinForm: {
     title: '새 스킨 투고',
@@ -108,5 +119,15 @@ export default {
     skinType: '스킨 종류',
     agreetos: '스킨을 투고할 시 <a href="{tosURL}" target="_blank">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.',
     delete: '이 스킨을 삭제하기'
+  },
+  comment: {
+    comments: '댓글',
+    deleted: '삭제됨',
+    editComment: '댓글 수정',
+    editReply: '답글 수정',
+    reply: '답글',
+    deleteCommentConfirm: '댓글을 삭제하시겠습니까?',
+    deleteReplyConfirm: '답글을 삭제하시겠습니까?',
+    noComment: '댓글이 없습니다.'
   }
 }
