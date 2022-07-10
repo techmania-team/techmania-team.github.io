@@ -23,7 +23,7 @@ q-card.full-height.card-pattern
           p
             span(v-if="!mine")
               | {{ $t('pattern.submittedBy') }} &nbsp;
-              router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
+              router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
             br(v-if="!mine")
             span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
               q-tooltip(anchor="top middle" self="bottom middle" content-style="background: #000")

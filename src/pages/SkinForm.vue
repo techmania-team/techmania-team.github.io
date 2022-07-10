@@ -324,7 +324,7 @@ export default {
         } else {
           throw new Error('Server Error')
         }
-        this.$router.push(`/users/${this.user._id}/#skins`)
+        this.$router.push(`/users/${this.user._id}/skins`)
       } catch (error) {
         let message = this.$t('submitForm.errorServer')
         if (error.response.data.message === 'Not in guild') {

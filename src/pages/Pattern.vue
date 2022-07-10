@@ -24,7 +24,7 @@ q-page#pattern
             div
               q-icon(size="sm" name="upload")
               | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
-              router-link.no-underline(:to='`/users/${pattern.submitter._id}/#patterns`') {{ pattern.submitter.name }}
+              router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
             div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
               q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
               | &nbsp;{{ $t('pattern.keysounded') }}

@@ -21,7 +21,7 @@ q-page#skin
             div
               q-icon(size="sm" name="upload")
               | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
-              router-link.no-underline(:to='`/users/${skin.submitter._id}/#skins`') {{ skin.submitter.name }}
+              router-link.no-underline(:to='`/users/${skin.submitter._id}/skins`') {{ skin.submitter.name }}
             div
               q-icon(size="sm" name="star")
               | &nbsp;{{ $t('submitSkinForm.skinType') }}: {{ skinType }}
