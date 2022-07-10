@@ -20,13 +20,13 @@ q-page#skinForm
             p.q-mb-none {{ $t('submitSkinForm.skinType') }}
             q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options)
             p.q-mb-none {{ $t('submitForm.dlLink') }}
-            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[rules.required, rules.url]")
+            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[rules.required]")
             p.q-mb-none {{ $t('submitForm.image') }}
-            q-input.q-mb-md(v-model="model.image" dense type="url" :rules="[rules.required, rules.url]")
+            q-input.q-mb-md(v-model="model.image" dense type="url" :rules="[rules.required]")
             p.q-mb-md {{ $t('submitForm.preview') }}
               .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
                 q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[rules.required]")
-                q-input.col-5(v-model="preview.link" type='url' :placeholder="$t('submitForm.ytLink')" :rules="[rules.required, rules.url, rules.yt]")
+                q-input.col-5(v-model="preview.link" type='url' :placeholder="$t('submitForm.ytLink')" :rules="[rules.required, rules.yt]")
                 .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                   q-btn(flat round icon="add" v-else @click="addVideoPreview")
@@ -154,7 +154,6 @@ export default {
       rules: {
         yt: v => this.validYouTubeLink(v) || this.$t('submitForm.invalidPreviews'),
         required: v => !!v || this.$t('submitForm.required'),
-        url: v => new URL(v) || this.$t('submitForm.invalidLink'),
         level: v => v > 0 || this.$t('submitForm.required')
       }
     }
