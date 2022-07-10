@@ -12,6 +12,7 @@
  */
 const express = require('express')
 const mongoose = require('mongoose')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const routerUsers = require('./routes/users.js')
 const routerPatterns = require('./routes/patterns.js')
@@ -29,6 +30,8 @@ module.exports.extendApp = function ({ app, ssr }) {
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+
+  app.use(mongoSanitize())
 
   app.use((_, req, res, next) => {
     res.status(400).send({ success: false, message: 'Validation Failed' })
