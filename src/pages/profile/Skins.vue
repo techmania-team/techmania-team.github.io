@@ -40,6 +40,7 @@ export default {
         }
       } catch (_) {
         this.error = true
+        this.scrollSkinDisable = true
       }
     },
     async loadSkinScroll (index, done) {

@@ -41,6 +41,7 @@ export default {
         }
       } catch (_) {
         this.error = true
+        this.scrollPatternDisable = true
       }
     },
     async loadPatternScroll (index, done) {

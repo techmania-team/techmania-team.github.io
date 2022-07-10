@@ -149,6 +149,7 @@ export default {
         }
       } catch (_) {
         this.error = true
+        this.scrollDisable = true
       }
     },
     async loadScroll (index, done) {

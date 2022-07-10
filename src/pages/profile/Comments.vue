@@ -41,6 +41,7 @@ export default {
         }
       } catch (_) {
         this.error = true
+        this.scrollCommentDisable = true
       }
     },
     async loadCommentScroll (index, done) {

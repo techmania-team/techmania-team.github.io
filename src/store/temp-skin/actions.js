@@ -17,7 +17,9 @@ export function fetchComments ({ commit }, { id, start }) {
     }
     if (data.result.length === 0) commit('setCommentsScrollDisable')
     else commit('setComments', data.result)
-  }, () => {})
+  }, () => {
+    commit('setCommentsScrollDisable')
+  })
 }
 
 export function fetchMyComment ({ commit }, id) {
