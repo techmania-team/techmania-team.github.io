@@ -551,5 +551,64 @@ module.exports = {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
     }
+  },
+  async getByUser (req, res) {
+    try {
+      const query = [
+        {
+          $match: {
+            'replies.0.user': mongoose.Types.ObjectId(req.params.id)
+          }
+        },
+        { $skip: 0 },
+        { $limit: 12 },
+        {
+          $project: {
+            comment: {
+              $first: '$replies.comment'
+            },
+            rating: '$rating',
+            date: {
+              $first: '$replies.date'
+            },
+            pattern: '$pattern'
+          }
+        },
+        {
+          $lookup: {
+            from: 'patterns',
+            localField: 'pattern',
+            foreignField: '_id',
+            as: 'pattern'
+          }
+        },
+        {
+          $unwind: {
+            path: '$pattern'
+          }
+        }
+      ]
+      if (req.query.start) {
+        const start = parseInt(req.query.start)
+        query[1].$skip = isNaN(start) ? 0 : start
+      }
+      if (req.query.limit) {
+        const limit = parseInt(req.query.limit)
+        if (limit >= 50 || isNaN(limit)) {
+          res.status(400).send({ success: false, message: 'Invalid limit' })
+          return
+        }
+        query[2].$limit = limit
+      }
+      const result = await comments.aggregate(query)
+      res.status(200).send({ success: true, message: '', result })
+    } catch (error) {
+      console.log(error)
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
   }
 }

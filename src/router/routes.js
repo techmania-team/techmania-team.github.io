@@ -13,7 +13,17 @@ const routes = [
       { path: 'skins/edit/:id', component: () => import('pages/SkinForm.vue'), meta: { title: 'TECHMANIA | Edit Skin', login: true, recaptcha: true } },
       { path: 'skins/:id', component: () => import('pages/Skin.vue'), meta: { title: 'TECHMANIA', login: false, recaptcha: true } },
       { path: 'skins', component: () => import('pages/Skins.vue'), meta: { title: 'TECHMANIA | Skins', login: false } },
-      { path: 'users/:id/', component: () => import('src/pages/Profile.vue'), meta: { title: 'TECHMANIA', login: true } }
+      {
+        path: 'users/:id',
+        component: () => import('src/pages/profile/Index.vue'),
+        meta: { title: 'TECHMANIA', login: false },
+        children: [
+          { path: '', component: () => import('src/pages/profile/Patterns.vue'), meta: { title: 'TECHMANIA', login: false } },
+          { path: 'patterns', component: () => import('src/pages/profile/Patterns.vue'), meta: { title: 'TECHMANIA', login: false } },
+          { path: 'skins', component: () => import('src/pages/profile/Skins.vue'), meta: { title: 'TECHMANIA', login: false } },
+          { path: 'comments', component: () => import('src/pages/profile/Comments.vue'), meta: { title: 'TECHMANIA', login: false } }
+        ]
+      }
     ]
   },
 

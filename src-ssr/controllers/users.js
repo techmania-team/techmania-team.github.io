@@ -3,6 +3,7 @@ const axios = require('axios')
 const FormData = require('form-data')
 const mongoose = require('mongoose')
 const users = require('../models/users.js')
+const comments = require('../models/comments.js')
 
 module.exports = {
   async login (req, res) {
@@ -164,7 +165,14 @@ module.exports = {
       if (!result[0].avatar) {
         result[0].avatar = ''
       }
-      res.status(200).send({ success: true, message: '', result: result[0] })
+      const result2 = await comments.aggregate([{
+        $match: {
+          'replies.0.user': mongoose.Types.ObjectId(req.params.id)
+        }
+      }, {
+        $count: 'replyCount'
+      }])
+      res.status(200).send({ success: true, message: '', result: { ...result[0], ...result2[0] } })
     } catch (error) {
       if (error.name === 'CastError') {
         res.status(404).send({ success: false, message: 'Not found' })

@@ -5,6 +5,7 @@ export default function () {
     discord: '',
     patternCount: 0,
     skinCount: 0,
+    replyCount: 0,
     _id: ''
   }
 }

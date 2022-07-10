@@ -11,33 +11,18 @@ q-page#profile
       q-separator.q-mt-md
       .row
         .col-12
-          q-tabs(v-model="tab" align="justify")
-            q-tab(name="patterns" :label="$t('nav.patterns')" icon="music_note")
+          q-tabs(align="justify")
+            q-route-tab(:to="'/users/' + $route.params.id + '/patterns'" :label="$t('nav.patterns')" icon="music_note")
               q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-            q-tab(name="skins" :label="$t('nav.skins')" icon="stars")
+            q-route-tab(:to="'/users/' + $route.params.id + '/skins'" :label="$t('nav.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
+            q-route-tab(:to="'/users/' + $route.params.id + '/comments'" :label="$t('comment.comments')" icon="comment")
+              q-badge(color="tech" text-color="black" floating) {{ profile.replyCount }}
         .col-12
-          q-tab-panels(v-model="tab" animated)
-            q-tab-panel(name="patterns")
-              .text-center.text-body1(v-if="patterns.length === 0 && scrollPatternDisable") {{ $t('patterns.notFound') }}
-              q-infinite-scroll.row.q-my-md(@load="loadPatternScroll" :offset="200" :disable="scrollPatternDisable")
-                .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern, index) in patterns" :key="pattern.id")
-                  PatternCard(:pattern="pattern" :mine="mine")
-                template(#loading)
-                  q-spinner-dots(color="tech" size="40px")
-            q-tab-panel(name="skins")
-              .text-center.text-body1(v-if="skins.length === 0 && scrollSkinDisable") {{ $t('skins.notFound') }}
-              q-infinite-scroll.row.q-my-md(@load="loadSkinScroll" :offset="200" :disable="scrollSkinDisable")
-                .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin, index) in skins" :key="skin.id")
-                  SkinCard(:skin="skin" :mine="mine")
-                template(#loading)
-                  q-spinner-dots(color="tech" size="40px")
+          router-view
 </template>
 
 <script>
-import PatternCard from '../components/PatternCard'
-import SkinCard from '../components/SkinCard'
-
 export default {
   name: 'profile',
   meta () {
@@ -111,10 +96,6 @@ export default {
       }
     }
   },
-  components: {
-    PatternCard,
-    SkinCard
-  },
   data () {
     return {
       profile: {
@@ -122,79 +103,21 @@ export default {
         avatar: '',
         patternCount: 0,
         skinCount: 0,
+        replyCount: 0,
         _id: ''
       },
-      tab: 'patterns',
-      patterns: [],
-      scrollPatternDisable: false,
-      skins: [],
-      scrollSkinDisable: false
-    }
-  },
-  computed: {
-    mine () {
-      return this.profile._id === this.user._id
-    }
-  },
-  watch: {
-    tab (val) {
-      location.hash = val
+      tab: 'patterns'
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
     store.commit('tempProfile/resetProfile')
     return store.dispatch('tempProfile/fetchProfile', currentRoute.params.id)
   },
-  methods: {
-    async fetchPatterns (start = 0) {
-      try {
-        const result = await this.$api.get(
-          `/patterns?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`
-        )
-        if (result.data.success) {
-          if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)
-          else this.scrollPatternDisable = true
-        } else {
-          throw new Error('Error')
-        }
-      } catch (_) {
-        this.error = true
-      }
-    },
-    async loadPatternScroll (index, done) {
-      await this.fetchPatterns((index - 1) * 12)
-      done()
-    },
-    async fetchSkins (start = 0) {
-      try {
-        const result = await this.$api.get(
-          `/skins?submitter=${this.profile._id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`
-        )
-        if (result.data.success) {
-          if (result.data.result.length > 0) this.skins = this.skins.concat(result.data.result)
-          else this.scrollSkinDisable = true
-        } else {
-          throw new Error('Error')
-        }
-      } catch (_) {
-        this.error = true
-      }
-    },
-    async loadSkinScroll (index, done) {
-      await this.fetchSkins((index - 1) * 12)
-      done()
-    }
-  },
   created () {
     this.profile = this.$store.getters['tempProfile/getProfile']
     if (this.profile._id.length === 0) {
       this.$router.push('/404')
     } else if (process.env.CLIENT) {
-      if (location.hash === '#skins') {
-        this.tab = 'skins'
-      } else if (location.hash === '#patterns') {
-        this.tab = 'patterns'
-      }
       document.title = `TECHMANIA | ${this.profile.name}`
     }
   }
