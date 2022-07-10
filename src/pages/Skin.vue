@@ -79,7 +79,7 @@ q-page#skin
                   q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="edit" @click="editReply(prop.node)")
                   q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && !prop.node.deleted" icon="delete" @click="deleteReply(prop.node, prop.node.replies ? 0 : 1)")
                   q-btn(flat round color="tech" v-if="prop.node.user._id === user._id && prop.node.deleted" icon="undo" @click="recoverReply(prop.node)")
-                  //- Only header has replies array
+                    //- Only header has replies array
                   q-btn(flat round color="tech" v-if="prop.node.replies && user.isLogin && (prop.node.user._id === user._id || pattern.submitter._id === user._id)" icon="reply" @click="reply(prop.node)")
   q-dialog(v-model="replyModal.open" @hide="resetReplyModal")
     q-card(style="width: 700px; max-width: 80vw;")
@@ -266,7 +266,7 @@ export default {
       return votes ? votes.some(vote => vote.user === this.user._id && vote.positive === positive) : 0
     },
     vote (cid, rid, positive) {
-      this.$store.dispatch('tempPattern/vote', { cid, rid, positive })
+      this.$store.dispatch('tempSkin/vote', { cid, rid, positive })
     },
     async submitComment () {
       if (this.comment.comment.length === 0 || this.comment.rating === 0) {
@@ -406,7 +406,6 @@ export default {
         }
         this.replyModal.open = false
       } catch (error) {
-        console.log(error)
         if (error.message === 'Validate Fail') {
           this.$q.notify({
             icon: 'warning',
@@ -419,7 +418,7 @@ export default {
     }
   },
   async created () {
-    await this.$store.dispatch('tempPattern/fetchMyComment', this.$route.params.id)
+    await this.$store.dispatch('tempSkin/fetchMyComment', this.$route.params.id)
     if (this.skin._id.length === 0) {
       this.$router.push('/404')
     } else {

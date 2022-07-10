@@ -214,9 +214,11 @@ module.exports = {
     try {
       const comment = await comments.findById(mongoose.Types.ObjectId(req.params.cid))
       if (!comment) return res.status(404).send({ success: false, message: 'Not found' })
-      const pattern = await patterns.findById(comment.pattern)
-      if (!pattern) return res.status(404).send({ success: false, message: 'Not found' })
-      if (comment.replies[0].user.toString() !== req.user._id.toString() && comment.replies[0].user !== pattern.submitter) {
+      let result = null
+      if (comment.pattern) result = await patterns.findById(comment.pattern)
+      else if (comment.skin) result = await skins.findById(comment.skin)
+      if (!result) return res.status(404).send({ success: false, message: 'Not found' })
+      if (comment.replies[0].user.toString() !== req.user._id.toString() && comment.replies[0].user !== result.submitter) {
         return res.status(403).send({ success: false, message: 'No permission' })
       }
       comment.replies.push({

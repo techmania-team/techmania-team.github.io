@@ -13,7 +13,7 @@ export function getFormattedComments (state) {
     comment.cid = cid
     if (comment.replies) {
       comment.replies = comment.replies.map(reply => {
-        reply.user.avatar = (reply.user.discord.length === 0 || reply.user.avatar.length === 0) ? 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png' : `https://cdn.discordapp.com/avatars/${reply.user.discord}/${reply.user.avatar}.png`
+        reply.user.avatar = ((reply.user.discord?.length || 0) === 0 || (reply.user.avatar?.length || 0) === 0) ? 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png' : `https://cdn.discordapp.com/avatars/${reply.user.discord}/${reply.user.avatar}.png`
         reply.cid = cid
         return reply
       })
