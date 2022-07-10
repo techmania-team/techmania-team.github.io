@@ -13,6 +13,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const mongoSanitize = require('express-mongo-sanitize')
+const rateLimit = require('express-rate-limit')
 
 const routerUsers = require('./routes/users.js')
 const routerPatterns = require('./routes/patterns.js')
@@ -21,12 +22,24 @@ const routerComments = require('./routes/comments.js')
 
 require('dotenv').config()
 
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 150,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler (req, res, next, options) {
+    res.status(429).json({ success: false, message: 'Too Many Requests' })
+  }
+})
+
 module.exports.extendApp = function ({ app, ssr }) {
   mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 
   app.set('trust proxy', 1)
 
   app.disable('x-powered-by')
+
+  app.use(limiter)
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
