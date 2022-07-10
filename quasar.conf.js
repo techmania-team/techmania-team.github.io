@@ -50,7 +50,21 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      env: require('dotenv').config().parsed,
+      // Heroku does not like this
+      // env: require('dotenv').config().parsed
+      env: {
+        // I don't know why the fuck dotenv always parse wrong value, this trick should fix it
+        DISCORD_CLIENT: process.env.DISCORD_CLIENT,
+        DISCORD_SECRET: process.env.DISCORD_SECRET,
+        DISCORD_WEBHOOK_PATTERNS: process.env.DISCORD_WEBHOOK_PATTERNS,
+        DISCORD_WEBHOOK_SKINS: process.env.DISCORD_WEBHOOK_SKINS,
+        DISCORD_GUILD: process.env.DISCORD_GUILD,
+        HOST_URL: process.env.HOST_URL,
+        DB_URL: process.env.DB_URL,
+        JWT_SECRET: process.env.JWT_SECRET,
+        RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+        RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY
+      },
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
