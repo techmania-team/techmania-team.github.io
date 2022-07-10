@@ -1,5 +1,6 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
+const _ = require('lodash')
 const patterns = require('../models/patterns.js')
 const users = require('../models/users.js')
 const comments = require('../models/comments.js')
@@ -161,7 +162,11 @@ module.exports = {
         const descriptions = []
         const submitters = []
         for (const i in keywords) {
-          const re = new RegExp(keywords[i].replace(/"|'/g), 'i')
+          let keyword = _.escapeRegExp(keywords[i])
+          if ((keyword[0] === '"' && keyword[keyword.length - 1] === '"') || (keyword[0] === '\'' && keyword[keyword.length - 1] === '\'')) {
+            keyword = keyword.slice(1, -1)
+          }
+          const re = new RegExp(keyword, 'i')
           names.push(re)
           composers.push(re)
           descriptions.push(re)
