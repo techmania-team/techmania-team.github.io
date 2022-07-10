@@ -23,11 +23,11 @@ q-page#patternForm
             q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[rules.required]")
             q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
             p.q-mb-none {{ $t('submitForm.image') }}
-            q-input.q-mb-md(v-model="model.image" type="url" dense :rules="[rules.required]")
+            q-input.q-mb-md(v-model="model.image" type="url" dense)
             p.q-mb-md {{ $t('submitForm.preview') }}
               .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[rules.required]")
-                q-input.col-5(v-model="preview.link" type="url" :placeholder="$t('submitForm.ytLink')" :rules="[rules.required, rules.yt]")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')")
+                q-input.col-5(v-model="preview.link" type="url" :placeholder="$t('submitForm.ytLink')" :rules="[rules.yt]")
                 .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                   q-btn(flat round icon="add" v-else @click="addVideoPreview")
@@ -165,7 +165,7 @@ export default {
       },
       tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md',
       rules: {
-        yt: v => this.validYouTubeLink(v) || this.$t('submitForm.invalidPreviews'),
+        yt: v => v.length === 0 || this.validYouTubeLink(v) || this.$t('submitForm.invalidPreviews'),
         required: v => !!v || this.$t('submitForm.required'),
         level: v => v > 0 || this.$t('submitForm.required')
       }
@@ -200,14 +200,15 @@ export default {
   },
   methods: {
     checkPreview () {
-      if (this.model.previews.length > 0) {
+      if (this.model.previews[0].name.length > 0) return this.validYouTubeLink(this.model.previews[0].link)
+      if (this.model.previews[0].link.length > 0) return this.model.previews[0].name.length > 0 && this.validYouTubeLink(this.model.previews[0].link)
+      if (this.model.previews.length > 1) {
         for (const video of this.model.previews) {
           if ((video.name.length > 0 && !this.validYouTubeLink(video.link)) || (video.name.length === 0 && this.validYouTubeLink(video.link))) {
             return false
           }
         }
-      }
-      return true
+      } else return this.model.image.length > 0
     },
     validYouTubeLink (url) {
       const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
