@@ -47,7 +47,16 @@ export default {
     composer: 'Composed By',
     patternData: 'Pattern Data',
     description: 'Pattern Description',
-    previews: 'Previews'
+    previews: 'Previews',
+    noPreview: 'No Preview',
+    noDescription: 'No description.',
+    rateThisPattern: 'Rate this pattern',
+    commentPlaceholder: 'Leave a comment',
+    edit: 'Edit',
+    download: 'Download',
+    reply: 'Reply',
+    rating: 'Rating',
+    ratingCount: '{count} comments'
   },
   skins: {
     sortName: 'Skin Name',
@@ -59,7 +68,8 @@ export default {
     combo: 'Combo',
     gameUI: 'Game UI',
     skinData: 'Skin Data',
-    description: 'Skin Description'
+    description: 'Skin Description',
+    rateThisSkin: 'Rate this skin'
   },
   submitForm: {
     composer: 'Composer',
@@ -79,7 +89,9 @@ export default {
     lanes: 'Lanes',
     level: 'Level',
     name: 'Name',
+    image: 'Image Preview',
     preview: 'YouTube Preview',
+    invalidPreviews: 'Invalid YouTube preview link or name.',
     rules1: 'Patterns using original music from DJMAX and DJMAX Respect are strictly prohibited.',
     rules2: 'All Artwork and BGAs must contain SFW content.',
     rules3: 'Uploading other users patterns are not allowed.',
@@ -107,5 +119,15 @@ export default {
     skinType: 'Skin Type',
     agreetos: 'Submitting the skins signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
     delete: 'DELETE THIS SKIN'
+  },
+  comment: {
+    comments: 'Comments',
+    deleted: 'Deleted',
+    editComment: 'Edit Comment',
+    editReply: 'Edit Reply',
+    reply: 'Reply',
+    deleteCommentConfirm: 'Delete Comment?',
+    deleteReplyConfirm: 'Delete Reply?',
+    noComment: 'No comment.'
   }
 }

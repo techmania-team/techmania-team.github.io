@@ -26,17 +26,6 @@ const difficultySchema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-const previewSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  ytid: {
-    type: String,
-    required: true
-  }
-}, { versionKey: false })
-
 const schema = new mongoose.Schema({
   submitter: {
     type: mongoose.Schema.Types.ObjectId,
@@ -64,8 +53,19 @@ const schema = new mongoose.Schema({
     required: true
   },
   previews: {
-    type: [previewSchema],
-    required: true
+    type: [
+      {
+        name: {
+          type: String,
+          required: true
+        },
+        ytid: {
+          type: String,
+          required: true
+        }
+      }
+    ],
+    default: []
   },
   description: {
     type: String
@@ -77,6 +77,10 @@ const schema = new mongoose.Schema({
   updateDate: {
     type: Date,
     default: Date.now
+  },
+  image: {
+    type: String,
+    default: ''
   }
 }, { versionKey: false })
 

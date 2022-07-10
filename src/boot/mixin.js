@@ -8,12 +8,6 @@ export default async ({ Vue }) => {
   Vue.mixin({
     data () {
       return {
-        discordURL: {
-          login: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`,
-          token: 'https://discord.com/api/oauth2/token',
-          identity: 'https://discord.com/api/users/@me',
-          guilds: 'https://discord.com/api/users/@me/guilds'
-        },
         controls: ['touch', 'keys', 'km']
       }
     },
@@ -63,17 +57,6 @@ export default async ({ Vue }) => {
         }
         return icon
       },
-      async logout () {
-        try {
-          if (this.user.jwt.length > 0) {
-            await this.$axios.delete(new URL('/api/users/logout', process.env.HOST_URL), {
-              headers: { Authorization: `Bearer ${this.user.jwt}` }
-            })
-          }
-        } catch (_) {}
-        this.$store.commit('user/logout')
-        if (this.$route.meta.login) this.$router.push('/')
-      },
       updateLocale (value) {
         this.$i18n.locale = value
         this.$store.commit('user/setLocale', value)
@@ -85,16 +68,23 @@ export default async ({ Vue }) => {
     computed: {
       user () {
         return this.$store.getters['user/getUserData']
-      },
-      isLogin () {
-        return this.user.id.length !== 0
       }
     },
     beforeEnter (to, from, next) {
-      if (to.meta.login && this.store.getters['user/getUserData'].id.length === 0) {
+      if (to.meta.login && this.user._id.length === 0) {
         next('/')
       } else {
         next()
+      }
+    },
+    async mounted (to, from, next) {
+      if (process.env.CLIENT) {
+        await this.$recaptchaLoaded()
+        if (this.$route?.meta?.recaptcha && this.user.isLogin) {
+          this.$recaptchaInstance.showBadge()
+        } else {
+          this.$recaptchaInstance.hideBadge()
+        }
       }
     }
   })

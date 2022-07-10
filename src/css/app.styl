@@ -70,6 +70,9 @@ body
 .note:not([src*="basic.png"])
   max-width 370px
 
+.text-md-center
+  text-align left
+
 @media (max-width: 1023px)
   #how-to-play .description
     text-align center
@@ -77,8 +80,10 @@ body
 @media (min-width: 1024px)
   #how-to-play .description
     text-align left
+  .text-md-center
+    text-align center
 
-.q-markdown 
+.q-markdown
   a
     color $techColor
   h1
@@ -105,7 +110,7 @@ body
       text-overflow ellipsis
       white-space nowrap
   .q-img__content > div
-    background rgba(0,0,0,0.7)
+    background rgba(0,0,0,0.5)
     i
       transition all .25s
     &:hover i
@@ -122,15 +127,21 @@ body
 
 #pattern, #skin
   .bg
-    filter blur(7px) brightness(.1)
+    filter blur(7px) brightness(.15)
     position absolute
     top 0
     z-index -1
-    background-repeat no-repeat 
+    background-repeat no-repeat
     background-size cover
     background-position center
+    background-attachment fixed
     width 100%
     height 100%
+  .comment
+    white-space pre-wrap
+    word-wrap break-word
+  .q-tree__node-header + .q-tree__node-body
+    padding 5px 0 8px 27px !important
 
 .pre-line
   white-space pre-line
@@ -166,5 +177,12 @@ a.no-underline
 .filter-positive
   filter invert(47%) sepia(90%) saturate(417%) hue-rotate(82deg) brightness(102%) contrast(95%)
 
-#profile .q-tab-panels
-  background none
+#profile
+  .q-tab-panels
+    background none
+  .q-tree__node-header, .q-tree__node-body
+    padding-left 0
+
+.grecaptcha-badge
+  z-index 3000
+  bottom 75px !important

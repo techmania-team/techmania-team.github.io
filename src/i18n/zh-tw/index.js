@@ -48,7 +48,16 @@ export default {
     composer: '作曲家: ',
     patternData: '譜面資訊',
     description: '譜面說明',
-    previews: '預覽'
+    previews: '預覽',
+    noPreview: '沒有預覽',
+    noDescription: '沒有說明.',
+    rateThisPattern: '評分譜面',
+    commentPlaceholder: '留言',
+    edit: '編輯',
+    download: '下載',
+    reply: '回覆',
+    rating: '評分',
+    ratingCount: '{count} 個評論'
   },
   skins: {
     sortName: '造型名稱',
@@ -60,7 +69,8 @@ export default {
     combo: '連擊',
     gameUI: '遊戲介面',
     skinData: '造型資訊',
-    description: '造型說明'
+    description: '造型說明',
+    rateThisSkin: '評分造型'
   },
   submitForm: {
     composer: '作曲家',
@@ -95,7 +105,8 @@ export default {
     deleted: '刪除成功',
     updated: '編輯成功',
     agreetos: '送出譜面代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
-    agreetos2: '您必須同意使用條款'
+    agreetos2: '您必須同意使用條款',
+    invalidPreviews: '請輸入有效的 YouTube 預覽'
   },
   submitSkinForm: {
     title: '送出新造型',
@@ -108,5 +119,15 @@ export default {
     skinType: '造型類型',
     agreetos: '送出造型代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
     delete: '刪除造型'
+  },
+  comment: {
+    comments: '評論',
+    deleted: '已刪除',
+    editComment: '編輯評論',
+    editReply: '編輯回覆',
+    reply: '回覆',
+    deleteCommentConfirm: '刪除評論?',
+    deleteReplyConfirm: '刪除回覆?',
+    noComment: '沒有評論'
   }
 }

@@ -6,6 +6,14 @@ export default function () {
     link: '',
     previews: [{ link: '', name: '' }],
     description: '',
-    submitter: { name: '', _id: '' }
+    submitter: { name: '', _id: '' },
+    comments: [],
+    myComment: { rating: 0, comment: '', replies: [], _id: '' },
+    rating: {
+      rating: 0,
+      count: 0
+    },
+    commentsScrollDisabled: false,
+    image: ''
   }
 }

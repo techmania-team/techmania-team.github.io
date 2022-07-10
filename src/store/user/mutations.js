@@ -1,4 +1,12 @@
 export function login (state, data) {
+  state.discord = data.discord
+  state.username = data.username
+  state.avatar = data.avatar
+  state._id = data._id
+  state.token = data.token
+}
+
+export function loginDiscord (state, data) {
   state.discord = data.id
   state.username = data.username
   state.avatar = data.avatar
@@ -14,12 +22,12 @@ export function addtoken (state, data) {
 }
 
 export function addid (state, data) {
-  state.id = data
+  state._id = data
 }
 
 export function logout (state) {
   state.token = ''
-  state.id = ''
+  state._id = ''
   state.username = ''
   state.avatar = ''
   state.jwt = ''

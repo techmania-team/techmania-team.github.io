@@ -1,18 +1,23 @@
 import axios from 'axios'
 
+const api = axios.create({
+  baseURL: new URL('/api', process.env.HOST_URL).toString()
+})
+
 export default ({ Vue, router, store }) => {
   Vue.prototype.$axios = axios
 
-  Vue.prototype.$axios.interceptors.response.use((response) => {
+  Vue.prototype.$api = api
+
+  Vue.prototype.$api.interceptors.response.use((response) => {
     return response
   }, (error) => {
     if (error.response) {
       if (error.response.status === 401) {
-        const extendUrl = '/api/users/extend'
-        if (!error.config.url.href.includes(extendUrl) && !error.config.url.href.includes('discord')) {
+        const extendUrl = '/users/extend'
+        if (!error.config.url.href.includes(extendUrl)) {
           const originalRequest = error.config
-
-          return axios.post(new URL('/api/users/extend', process.env.HOST_URL), {}, {
+          return axios.post(extendUrl, {}, {
             headers: { Authorization: `Bearer ${store.state.user.jwt}` }
           }).then(({ data }) => {
             store.commit('user/addjwt', data.jwt)

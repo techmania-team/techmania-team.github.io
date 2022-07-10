@@ -3,6 +3,7 @@ const axios = require('axios')
 const FormData = require('form-data')
 const mongoose = require('mongoose')
 const users = require('../models/users.js')
+const comments = require('../models/comments.js')
 
 module.exports = {
   async login (req, res) {
@@ -50,7 +51,7 @@ module.exports = {
           discordRefresh: refreshToken
         })
         await user.save()
-        res.redirect(new URL(`?token=${accessToken}&jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
+        res.redirect(new URL(`?jwt=${token}&id=${user._id}`, process.env.HOST_URL).toString())
       } catch (error) {
         res.status(500).send({ success: false, message: 'Server Error' })
       }
@@ -104,7 +105,18 @@ module.exports = {
     res.status(200).send({ success: true, message: '' })
   },
   async verify (req, res) {
-    res.status(200).send({ success: true, message: '' })
+    const idx = req.user.accessInfo.findIndex(access => access.jwt === req.token)
+    res.status(200).send({
+      success: true,
+      message: '',
+      result: {
+        discord: req.user.discord,
+        name: req.user.name,
+        avatar: req.user.avatar,
+        token: req.user.accessInfo[idx].discord,
+        _id: req.user._id
+      }
+    })
   },
   async getById (req, res) {
     try {
@@ -153,9 +165,29 @@ module.exports = {
       if (!result[0].avatar) {
         result[0].avatar = ''
       }
-      res.status(200).send({ success: true, message: '', result: result[0] })
+      const result2 = await comments.aggregate([{
+        $match: {
+          'replies.0.user': mongoose.Types.ObjectId(req.params.id)
+        }
+      }, {
+        $count: 'replyCount'
+      }])
+      res.status(200).send({ success: true, message: '', result: { ...result[0], ...result2[0] } })
     } catch (error) {
-      res.status(500).send({ success: false, message: 'Server Error' })
+      if (error.name === 'CastError') {
+        res.status(404).send({ success: false, message: 'Not found' })
+      } else {
+        res.status(500).send({ success: false, message: 'Server Error' })
+      }
+    }
+  },
+  async getAvatarById (req, res) {
+    try {
+      const result = await users.findById(req.params.id)
+      if (!result.avatar) throw new Error()
+      res.redirect(`https://cdn.discordapp.com/avatars/${result.discord}/${result.avatar}.png`)
+    } catch (error) {
+      res.redirect('https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png')
     }
   }
 }
