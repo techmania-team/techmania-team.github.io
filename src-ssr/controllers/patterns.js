@@ -53,7 +53,7 @@ module.exports = {
         ]
       }]
       if (req.body.description) {
-        embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/&\S*;|<[^>]+>/g, ' '), inline: false })
+        embeds[0].fields.push({ name: 'Description', value: req.body.description.replace(/<[^>]+>/g, ' '), inline: false })
       }
       await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
         username: 'TECHMANIA',
