@@ -273,7 +273,7 @@ export default {
         this.$q.notify({
           icon: 'warning',
           color: 'negative',
-          message: 'Please fill out the form.'
+          message: this.$t('submitForm.required')
         })
         return
       }
@@ -410,7 +410,7 @@ export default {
           this.$q.notify({
             icon: 'warning',
             color: 'negative',
-            message: 'Please fill out the form.'
+            message: this.$t('submitForm.required')
           })
         }
       }
