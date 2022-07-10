@@ -16,18 +16,18 @@ q-page#patternForm
                 li {{ $t('submitForm.rules3') }}
             br
             p.q-mb-none {{ $t('submitForm.songName') }}
-            q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
+            q-input.q-mb-md(v-model="model.name" dense :rules="[rules.required]")
             p.q-mb-none {{ $t('submitForm.composer') }}
-            q-input.q-mb-md(v-model="model.composer" dense :rules="[val => !!val || $t('submitForm.required')]")
+            q-input.q-mb-md(v-model="model.composer" dense :rules="[rules.required]")
             p.q-mb-none {{ $t('submitForm.dlLink') }}
-            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
+            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[rules.required, rules.url]")
             q-toggle.q-mb-md(v-model="model.keysounded" :label="$t('pattern.keysounded')" left-label)
             p.q-mb-none {{ $t('submitForm.image') }}
-            q-input.q-mb-md(v-model="model.image" dense)
+            q-input.q-mb-md(v-model="model.image" type="url" dense :rules="[rules.required, rules.url]")
             p.q-mb-md {{ $t('submitForm.preview') }}
               .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')")
-                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[rules.required]")
+                q-input.col-5(v-model="preview.link" type="url" :placeholder="$t('submitForm.ytLink')" :rules="[rules.required, rules.url, rules.yt]")
                 .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                   q-btn(flat round icon="add" v-else @click="addVideoPreview")
@@ -35,8 +35,8 @@ q-page#patternForm
             .row.items-start.justify-between(v-for="(difficulty, index) in model.difficulties" :key="'B'+index")
               q-select.col-2(v-model="difficulty.control" :options="controlTypes" :placeholder="$t('submitForm.control')" emit-value map-options)
               q-select.col-2(v-model="difficulty.lanes" :options="lanesOptions" :placeholder="$t('submitForm.lanes')" emit-value map-options)
-              q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[val => !!val || $t('submitForm.required')]")
-              q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" :rules="[val => !!val && val > 0 || $t('submitForm.required')]")
+              q-input.col-2(v-model="difficulty.name" :placeholder="$t('submitForm.name')" :rules="[rules.required]")
+              q-input.col-2(v-model.number="difficulty.level" type="number" :placeholder="$t('submitForm.level')" min='1' :rules="[rules.level]")
               .col-1.text-center.self-center
                 q-btn(flat round icon="clear" v-if="index !== 0" @click="removeDifficulty(index)")
                 q-btn(flat round icon="add" v-else @click="addDifficulty")
@@ -163,7 +163,13 @@ export default {
           ['viewsource']
         ]
       },
-      tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
+      tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md',
+      rules: {
+        yt: v => this.validYouTubeLink(v) || this.$t('submitForm.invalidPreviews'),
+        required: v => !!v || this.$t('submitForm.required'),
+        url: v => new URL(v) || this.$t('submitForm.invalidLink'),
+        level: v => v > 0 || this.$t('submitForm.required')
+      }
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {

@@ -16,17 +16,17 @@ q-page#skinForm
                 li {{ $t('submitSkinForm.rules3') }}
             br
             p.q-mb-none {{ $t('submitSkinForm.skinName') }}
-            q-input.q-mb-md(v-model="model.name" dense :rules="[val => !!val || $t('submitForm.required')]")
+            q-input.q-mb-md(v-model="model.name" dense :rules="[rules.required]")
             p.q-mb-none {{ $t('submitSkinForm.skinType') }}
-            q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options )
+            q-select.q-mb-md(v-model="model.type" :placeholder="$t('submitSkinForm.skinType')" :options="typeOptions" emit-value map-options)
             p.q-mb-none {{ $t('submitForm.dlLink') }}
-            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[val => !!val || $t('submitForm.required')]")
+            q-input.q-mb-md(v-model="model.link" dense type="url" :rules="[rules.required, rules.url]")
             p.q-mb-none {{ $t('submitForm.image') }}
-            q-input.q-mb-md(v-model="model.image" dense)
+            q-input.q-mb-md(v-model="model.image" dense type="url" :rules="[rules.required, rules.url]")
             p.q-mb-md {{ $t('submitForm.preview') }}
               .row.items-start.justify-between(v-for="(preview, index) in model.previews" :key="'A'+index")
-                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')")
-                q-input.col-5(v-model="preview.link" :placeholder="$t('submitForm.ytLink')")
+                q-input.col-5(v-model="preview.name" :placeholder="$t('submitForm.name')" :rules="[rules.required]")
+                q-input.col-5(v-model="preview.link" type='url' :placeholder="$t('submitForm.ytLink')" :rules="[rules.required, rules.url, rules.yt]")
                 .col-1.text-center.self-center
                   q-btn(flat round icon="clear" v-if="index !== 0" @click="removePreview(index)")
                   q-btn(flat round icon="add" v-else @click="addVideoPreview")
@@ -150,7 +150,13 @@ export default {
           ['viewsource']
         ]
       },
-      tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
+      tosURL: 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md',
+      rules: {
+        yt: v => this.validYouTubeLink(v) || this.$t('submitForm.invalidPreviews'),
+        required: v => !!v || this.$t('submitForm.required'),
+        url: v => new URL(v) || this.$t('submitForm.invalidLink'),
+        level: v => v > 0 || this.$t('submitForm.required')
+      }
     }
   },
   preFetch ({ store, currentRoute, previousRoute, redirect, ssrContext, urlPath, publicPath }) {
