@@ -1,7 +1,7 @@
 // "async" is optional;
 // more info on params: https://quasar.dev/quasar-cli/boot-files
-export default async ({ Vue }) => {
-  Vue.mixin({
+export default async ({ app }) => {
+  app.mixin({
     data () {
       return {
         controls: ['touch', 'keys', 'km']
