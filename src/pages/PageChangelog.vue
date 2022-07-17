@@ -37,7 +37,6 @@ q-page#changelog
 
 <script>
 export default {
-  name: 'PageChangelog',
   meta () {
     return {
       title: 'TECHMANIA | Changelog',
