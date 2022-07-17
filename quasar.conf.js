@@ -7,7 +7,11 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
 
-module.exports = function (/* ctx */) {
+const ESLintPlugin = require('eslint-webpack-plugin')
+
+const { configure } = require('quasar/wrappers')
+
+module.exports = configure(function (ctx) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
@@ -52,19 +56,20 @@ module.exports = function (/* ctx */) {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // Heroku does not like this
       // env: require('dotenv').config().parsed
-      env: {
-        // I don't know why the fuck dotenv always parse wrong value, this trick should fix it
-        DISCORD_CLIENT: process.env.DISCORD_CLIENT,
-        DISCORD_SECRET: process.env.DISCORD_SECRET,
-        DISCORD_WEBHOOK_PATTERNS: process.env.DISCORD_WEBHOOK_PATTERNS,
-        DISCORD_WEBHOOK_SKINS: process.env.DISCORD_WEBHOOK_SKINS,
-        DISCORD_GUILD: process.env.DISCORD_GUILD,
-        HOST_URL: process.env.HOST_URL,
-        DB_URL: process.env.DB_URL,
-        JWT_SECRET: process.env.JWT_SECRET,
-        RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
-        RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY
-      },
+      env: ctx.dev
+        ? require('dotenv').config().parsed
+        : {
+            DISCORD_CLIENT: process.env.DISCORD_CLIENT,
+            DISCORD_SECRET: process.env.DISCORD_SECRET,
+            DISCORD_WEBHOOK_PATTERNS: process.env.DISCORD_WEBHOOK_PATTERNS,
+            DISCORD_WEBHOOK_SKINS: process.env.DISCORD_WEBHOOK_SKINS,
+            DISCORD_GUILD: process.env.DISCORD_GUILD,
+            HOST_URL: process.env.HOST_URL,
+            DB_URL: process.env.DB_URL,
+            JWT_SECRET: process.env.JWT_SECRET,
+            RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+            RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY
+          },
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
@@ -84,17 +89,13 @@ module.exports = function (/* ctx */) {
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
         cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /node_modules/
-        })
-        cfg.module.rules.push({
           test: /\.pug$/,
           loader: 'pug-plain-loader'
         })
       },
       chainWebpack (chain) {
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
         chain.module.rule('pug')
           .test(/\.pug$/)
           .use('pug-plain-loader')
@@ -112,7 +113,7 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-us', // Quasar language pack
+      lang: 'en-US', // Quasar language pack
       config: {
         dark: true
       },
@@ -140,7 +141,26 @@ module.exports = function (/* ctx */) {
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
-      pwa: false
+      pwa: false,
+
+      // manualStoreHydration: true,
+      // manualPostHydrationTrigger: true,
+
+      prodPort: 3000, // The default port that the production server should use
+      // (gets superseded if process.env.PORT is specified at runtime)
+
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      // Tell browser when a file from the server should expire from cache (in ms)
+
+      chainWebpackWebserver (chain) {
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: ['js'] }])
+      },
+
+      middlewares: [
+        ctx.prod ? 'compression' : '',
+        'render' // keep this as last one
+      ]
     },
 
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
@@ -227,4 +247,4 @@ module.exports = function (/* ctx */) {
       }
     }
   }
-}
+})
