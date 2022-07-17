@@ -159,6 +159,7 @@ module.exports = configure(function (ctx) {
 
       middlewares: [
         ctx.prod ? 'compression' : '',
+        'api',
         'render' // keep this as last one
       ]
     },

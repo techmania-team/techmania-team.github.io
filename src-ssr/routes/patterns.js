@@ -1,8 +1,8 @@
-const express = require('express')
-const { create, search, searchID, del, update, indexvideo } = require('../controllers/patterns.js')
-const auth = require('../middleware/auth')
-const recaptcha = require('../middleware/recaptcha')
-const guild = require('../middleware/guild')
+import express from 'express'
+import { create, search, searchID, del, update, indexvideo } from '../controllers/patterns.js'
+import auth from '../middlewares/auth'
+import recaptcha from '../middlewares/recaptcha'
+import guild from '../middlewares/guild'
 const router = express.Router()
 
 router.post('/', recaptcha, auth, guild, create)
@@ -12,4 +12,4 @@ router.get('/:id', searchID)
 router.delete('/:id', auth, guild, del)
 router.patch('/:id', recaptcha, auth, guild, update)
 
-module.exports = router
+export default router

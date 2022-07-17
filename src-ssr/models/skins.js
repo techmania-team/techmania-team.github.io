@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema({
   submitter: {
@@ -56,4 +56,4 @@ const schema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-module.exports = mongoose.model('skins', schema)
+export default mongoose.model('skins', schema)

@@ -1,6 +1,6 @@
-const axios = require('axios')
+import axios from 'axios'
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   try {
     const infoidx = req.user.accessInfo.findIndex(info => info.jwt === req.token)
     // check in discord guild or not
