@@ -6,7 +6,8 @@ const i18n = createI18n({
   locale: 'en-US',
   fallbackLocale: 'en-US',
   messages,
-  silentFallbackWarn: true
+  silentFallbackWarn: true,
+  globalInjection: true
 })
 
 export default boot(({ app }) => {
