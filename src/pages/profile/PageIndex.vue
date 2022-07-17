@@ -24,7 +24,6 @@ q-page#profile
 
 <script>
 export default {
-  name: 'profile',
   meta () {
     return {
       title: `TECHMANIA | ${this.profile.name}`,

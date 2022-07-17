@@ -64,7 +64,6 @@ q-page#patternForm
 
 <script>
 export default {
-  name: 'PagePatternForm',
   meta () {
     return {
       title: this.title,

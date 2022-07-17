@@ -8,7 +8,6 @@
 
 <script>
 export default {
-  name: 'Error404',
   meta () {
     return {
       title: 'TECHMANIA | 404',

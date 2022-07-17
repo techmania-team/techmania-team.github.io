@@ -1,0 +1,188 @@
+// app global css in Sass form
+$techColor : #a5d6a7
+$techgreyColor : #1e1e1e
+
+body
+  background: #121212
+
+.text-tech
+  color: $techColor
+.text-techgrey
+  color: $techgreyColor
+.bg-tech
+  background: $techColor
+.border-tech
+  border-color: $techColor
+.bg-techgrey
+  background: $techgreyColor
+
+.container
+  width: 100%
+  padding-right: 0.75rem
+  padding-left: 0.75rem
+  margin-right: auto
+  margin-left: auto
+
+@media (min-width: 576px)
+  .container
+    max-width: 540px
+
+@media (min-width: 768px)
+  .container
+    max-width: 720px
+
+@media (max-width: 991px)
+  .nav-desktop
+    display: none
+
+@media (min-width: 992px)
+  .container
+    max-width: 960px
+  .nav-mobile
+    display: none !important
+
+@media (min-width: 1200px)
+  .container
+    max-width: 1140px
+
+@media (min-width: 1400px)
+  .container
+    max-width: 1320px
+
+#header-video > .q-parallax__content
+  background: rgba(0,0,0,0.7)
+  img
+    max-width: 897px
+
+#how-to-play
+  .q-tab-panel
+    h4
+      margin: 26 0
+    .row
+      min-height: 200px
+      img
+        height: 100px
+        max-width: 370px
+
+#keyboard-scheme
+  max-width: 681px
+
+.note:not([src*="basic.png"])
+  max-width: 370px
+
+.text-md-center
+  text-align: left
+
+@media (max-width: 1023px)
+  #how-to-play .description
+    text-align: center
+
+@media (min-width: 1024px)
+  #how-to-play .description
+    text-align: left
+  .text-md-center
+    text-align: center
+
+.q-markdown
+  a
+    color: $techColor
+  h1
+    font-size: 1.8rem
+    color: $techColor
+
+.q-img__content > div
+  background: rgba(0,0,0,0.8)
+
+.card-pattern, .card-skin
+  .description
+    white-space: pre-wrap
+  .btn-dl
+    top: 0
+    right: 12px
+    transform: translateY(-50%)
+  .card-title
+    a
+      text-decoration: none
+      width: 100%
+    .text-h6, .text-subtitle2
+      width: 100%
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+  .q-img__content > div
+    background: rgba(0,0,0,0.5)
+    i
+      transition: all .25s
+    &:hover i
+        filter: drop-shadow(0px 0px 6px white)
+
+.search .q-item
+  min-height: 25px
+
+.card-pattern
+  .q-img
+    cursor: pointer
+  .q-item
+    min-height: 23px
+
+#pattern, #skin
+  .bg
+    filter: blur(7px) brightness(.15)
+    position: absolute
+    top: 0
+    z-index: -1
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center
+    background-attachment: fixed
+    width: 100%
+    height: 100%
+  .comment
+    white-space: pre-wrap
+    word-wrap: break-word
+  .q-tree__node-header + .q-tree__node-body
+    padding: 5px 0 8px 27px !important
+
+.pre-line
+  white-space: pre-line
+
+#logo
+  width: 300px
+
+.q-infinite-scroll__loading
+  width: 100%
+  text-align: center
+
+a
+  color: $techColor
+
+a.no-underline
+  text-decoration: none
+
+.filter-tech
+  filter: invert(94%) sepia(10%) saturate(1000%) hue-rotate(61deg) brightness(85%) contrast(96%)
+
+.filter-nm
+  filter: invert(85%) sepia(46%) saturate(3755%) hue-rotate(338deg) brightness(115%) contrast(97%)
+
+.filter-hd
+  filter: invert(48%) sepia(58%) saturate(1863%) hue-rotate(183deg) brightness(96%) contrast(99%)
+
+.filter-mx
+  filter: invert(32%) sepia(37%) saturate(6358%) hue-rotate(346deg) brightness(114%) contrast(91%)
+
+.filter-negative
+  filter: invert(38%) sepia(48%) saturate(5827%) hue-rotate(343deg) brightness(100%) contrast(91%)
+
+.filter-positive
+  filter: invert(47%) sepia(90%) saturate(417%) hue-rotate(82deg) brightness(102%) contrast(95%)
+
+#profile
+  .q-tab-panels
+    background: none
+  .q-tree__node-header, .q-tree__node-body
+    padding-left: 0
+
+.grecaptcha-badge
+  z-index: 3000
+  bottom: 75px !important

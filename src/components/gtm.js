@@ -4,10 +4,10 @@ export default {
   logEvent (category, action, label, value) {
     window.dataLayer.push({
       event: 'customEvent',
-      category: category,
-      action: action,
-      label: label,
-      value: value,
+      category,
+      action,
+      label,
+      value,
       cid: this.getCid()
     })
   },
@@ -15,7 +15,7 @@ export default {
     // Here you can preprocess the path, if needed
     window.dataLayer.push({
       event: 'customPageView',
-      path: path,
+      path,
       cid: this.getCid()
     })
   },

@@ -1,6 +1,5 @@
 <template lang="pug">
-#q-app
-  router-view
+router-view
 </template>
 
 <script>

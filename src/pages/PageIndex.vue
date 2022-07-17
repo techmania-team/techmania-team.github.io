@@ -100,7 +100,6 @@ import PatternCard from '../components/PatternCard.vue'
 import SkinCard from '../components/SkinCard.vue'
 
 export default {
-  name: 'PageIndex',
   components: {
     PatternCard,
     SkinCard

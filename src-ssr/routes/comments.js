@@ -1,5 +1,5 @@
-const express = require('express')
-const {
+import express from 'express'
+import {
   create,
   getRatingByPattern,
   getByPattern,
@@ -13,9 +13,9 @@ const {
   updateReplyVote,
   deleteMyComment,
   getByUser
-} = require('../controllers/comments.js')
-const auth = require('../middleware/auth')
-const recaptcha = require('../middleware/recaptcha')
+} from '../controllers/comments'
+import auth from '../middlewares/auth'
+import recaptcha from '../middlewares/recaptcha'
 const router = express.Router()
 
 router.post('/', recaptcha, auth, create)
@@ -32,4 +32,4 @@ router.patch('/:cid/replies/:rid', recaptcha, auth, updateReply)
 router.patch('/:cid/replies/:rid/votes', auth, updateReplyVote)
 router.delete('/:cid/', auth, deleteMyComment)
 
-module.exports = router
+export default router

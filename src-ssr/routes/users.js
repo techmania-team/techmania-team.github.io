@@ -1,6 +1,6 @@
-const express = require('express')
-const { login, extend, logout, verify, getById, getAvatarById } = require('../controllers/users.js')
-const auth = require('../middleware/auth')
+import express from 'express'
+import { login, extend, logout, verify, getById, getAvatarById } from '../controllers/users.js'
+import auth from '../middlewares/auth'
 const router = express.Router()
 
 router.get('/login', login)
@@ -10,4 +10,4 @@ router.get('/verify', auth, verify)
 router.get('/avatar/:id', getAvatarById)
 router.get('/:id', getById)
 
-module.exports = router
+export default router

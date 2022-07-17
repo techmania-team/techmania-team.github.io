@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const VoteSchema = new mongoose.Schema({
   // User ID
@@ -78,4 +78,4 @@ const schema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-module.exports = mongoose.model('comments', schema)
+export default mongoose.model('comments', schema)

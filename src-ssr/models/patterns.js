@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const difficultySchema = new mongoose.Schema({
   name: {
@@ -84,4 +84,4 @@ const schema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-module.exports = mongoose.model('patterns', schema)
+export default mongoose.model('patterns', schema)

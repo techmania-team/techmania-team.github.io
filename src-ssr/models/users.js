@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const AccessInfoSchema = new mongoose.Schema({
   jwt: {
@@ -33,4 +33,4 @@ const schema = new mongoose.Schema({
   }
 }, { versionKey: false })
 
-module.exports = mongoose.model('users', schema)
+export default mongoose.model('users', schema)
