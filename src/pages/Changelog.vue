@@ -103,6 +103,11 @@ export default {
       error: false
     }
   },
+  methods: {
+    openLink (url, target) {
+      window.open(url, target)
+    }
+  },
   mounted () {
     this.$axios.get('https://api.github.com/repos/techmania-team/techmania/releases')
       .then(result => {

@@ -35,5 +35,14 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     }
   })
 
+  Router.beforeEach((to, from, next) => {
+    const store = useStore()
+    if (to.meta.login && store.user.getters.getUserData._id.length === 0) {
+      next('/')
+    } else {
+      next()
+    }
+  })
+
   return Router
 })

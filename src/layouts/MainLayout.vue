@@ -90,6 +90,15 @@ export default {
       localeOptions,
       discordLoginURL: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`
     }
+  },
+  methods: {
+    updateLocale (value) {
+      this.$i18n.locale = value
+      this.$store.commit('user/setLocale', value)
+    },
+    openLink (url, target) {
+      window.open(url, target)
+    }
   }
 }
 </script>
