@@ -1,6 +1,6 @@
-const Recaptcha = require('express-recaptcha').RecaptchaV3
+import Recaptcha from 'express-recaptcha'
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   const recaptcha = new Recaptcha(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET_KEY)
   recaptcha.verify(req, (error, data) => {
     if (!error && data.score >= 0.5) {

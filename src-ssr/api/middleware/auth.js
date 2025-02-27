@@ -1,10 +1,12 @@
-const jwt = require('jsonwebtoken')
-const users = require('../models/users.js')
+import jwt from 'jsonwebtoken'
+import users from '../models/users.js'
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   let decoded = {}
   try {
-    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : ''
+    const token = req.header('Authorization')
+      ? req.header('Authorization').replace('Bearer ', '')
+      : ''
     // a trick to get decoded data when verify error.
     decoded = jwt.decode(token, process.env.JWT_SECRET)
     const _id = decoded._id
@@ -17,7 +19,11 @@ module.exports = async (req, res, next) => {
       throw new Error()
     }
   } catch (error) {
-    if (error.name === 'TokenExpiredError' && req.baseUrl === '/api/users' && (req.path === '/extend' || req.path === '/logout')) {
+    if (
+      error.name === 'TokenExpiredError' &&
+      req.baseUrl === '/api/users' &&
+      (req.path === '/extend' || req.path === '/logout')
+    ) {
       next()
     } else {
       res.status(401).send({ success: false, message: 'Unauthorized' })

@@ -146,6 +146,7 @@ export default defineConfig((ctx) => {
                       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
+        'api',
         'render', // keep this as last one
       ],
 
