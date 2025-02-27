@@ -1,8 +1,11 @@
+import { defineBoot } from '#q-app/wrappers'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, ja, ko, zhCN, zhTW } from 'date-fns/locale'
-import Vue from 'vue'
 
-Vue.prototype.$date = {
-  formatDistanceToNow,
-  locales: { enUS, ja, ko, zhCN, zhTW }
-}
+export default defineBoot(({ app }) => {
+  app.config.globalProperties.$date = {
+    formatDistanceToNow,
+    locales: { enUS, ja, ko, zhCN, zhTW }
+  }
+})
+

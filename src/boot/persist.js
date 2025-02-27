@@ -1,7 +1,8 @@
+import { defineBoot } from '#q-app/wrappers'
 import createPersistedState from 'vuex-persistedstate'
 import { LocalStorage } from 'quasar'
 
-export default async ({ app, router, store, Vue }) => {
+export default defineBoot(({ store }) => {
   window.setTimeout(() => {
     createPersistedState({
       key: 'techmania',
@@ -16,4 +17,4 @@ export default async ({ app, router, store, Vue }) => {
       }
     })(store)
   }, 0)
-}
+})
