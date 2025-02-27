@@ -1,6 +1,8 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import { useStore } from 'vuex'
 import routes from './routes'
+import gtm from '../components/gtm.js'
 
 /*
  * If not building with SSR mode, you can
@@ -26,9 +28,10 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.afterEach((to, from) => {
+  Router.afterEach((to) => {
     if (process.env.CLIENT) {
       document.title = to.meta.title
+      gtm.logPage(to.path)
     }
   })
 
