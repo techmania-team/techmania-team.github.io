@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
 import api from 'src/utils/api'
@@ -88,3 +88,7 @@ export const useTempIndexStore = defineStore('temp-index', () => {
     clearData,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useTempIndexStore, import.meta.hot))
+}

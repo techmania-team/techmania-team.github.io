@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
 import handleError from 'src/utils/handleError'
@@ -45,3 +45,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
     clearData,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useTempProfileStore, import.meta.hot))
+}

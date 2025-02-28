@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import { Lang } from 'quasar'
 import { useRouter } from 'vue-router'
@@ -91,3 +91,7 @@ export const useUserStore = defineStore(
     key: 'techmania-v2',
   },
 )
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
+}

@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
 import { useUserStore } from './user'
@@ -373,3 +373,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     clearData,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useTempSkinStore, import.meta.hot))
+}

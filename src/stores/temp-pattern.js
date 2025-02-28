@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
 import { useUserStore } from './user'
@@ -384,3 +384,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     clearData,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useTempPatternStore, import.meta.hot))
+}
