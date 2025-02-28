@@ -5,17 +5,11 @@ import jaJP from './ja-jp'
 import koKR from './ko-kr'
 
 export default {
-  'en-us': enUS,
-  'zh-tw': zhTW,
-  'zh-cn': zhCN,
-  'ja-jp': jaJP,
-  'ko-kr': koKR
+  'en-US': enUS,
+  'zh-TW': zhTW,
+  'zh-CN': zhCN,
+  'ja-JP': jaJP,
+  'ko-KR': koKR,
 }
 
-export const localeOptions = [
-  'en-us',
-  'zh-tw',
-  'zh-cn',
-  'ja-jp',
-  'ko-kr'
-]
+export const localeOptions = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP', 'ko-KR']
