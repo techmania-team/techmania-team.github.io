@@ -75,6 +75,7 @@ export default defineConfig((ctx) => {
             include: [fileURLToPath(new URL('./src/i18n', import.meta.url))],
           },
         ],
+
         [
           'vite-plugin-checker',
           {
