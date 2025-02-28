@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Lang } from 'quasar'
 import { useRouter } from 'vue-router'
 import api from 'src/utils/api'
@@ -17,6 +17,8 @@ export const useUserStore = defineStore(
     const locale = ref(Lang.getLocale())
 
     const router = useRouter()
+
+    const isLogin = computed(() => _id.value.length > 0)
 
     const verify = async (query) => {
       if (process.env.CLIENT) {
@@ -80,6 +82,7 @@ export const useUserStore = defineStore(
       avatar,
       jwt,
       locale,
+      isLogin,
       verify,
       logout,
       clearData,
