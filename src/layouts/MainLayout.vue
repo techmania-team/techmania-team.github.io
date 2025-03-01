@@ -1,59 +1,84 @@
 <template lang="pug">
 q-layout(view='hHh lpR fff')
+  //- Header
   q-header.bg-techgrey.text-white(reveal elevated)
     q-no-ssr
       .container
+        //- Navbar
         q-toolbar
+          //- Site Title
           q-toolbar-title
             q-btn(to="/" flat)
               q-avatar
                 img(:src="'./assets/notes/basic.png'")
               | &nbsp;TECHMANIA
+          //- PC navigation item
           q-tabs(active-color="tech")
+            //- Docs
             q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
+            //- Links
             q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
+            //- Login
             q-tab.nav-desktop(v-if="!user.isLogin" @click="openLink(discordLoginURL, '_self')" :label="$t('nav.login')")
+            //- User dropdown
             q-btn-dropdown.nav-desktop(stretch flat v-if="user.isLogin")
+              //- User avatar
               template(#label)
                 q-avatar
                   img(:src="user.avatar_url")
+              //- User dropdown items
               q-list
+                //- User Profile
                 q-item(clickable v-close-popup :to="'/users/'+user._id" active-class="text-white")
                   q-item-section
                     q-item-label {{ $t('nav.myPage') }}
+                //- Logout
                 q-item(clickable @click="$store.dispatch('user/logout')")
                   q-item-section
                     q-item-label {{ $t('nav.logout') }}
+            //- Language options
             q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
               q-list
                 q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
                   q-item-section
                     q-item-label {{ locale.toUpperCase() }}
+            //-   Nav Collapse button for mobile
             q-btn.nav-mobile(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
               q-avatar(v-if="user.isLogin")
                 img(:src="user.avatar_url")
               | &emsp;
+        //- Separator for mobile dropdown
         q-separator.nav-mobile(v-show="dropdown")
+      //- Mobile dropdown
       q-slide-transition
         .container.nav-mobile(v-show="dropdown")
+          //- Nav items
           q-list
+            //- Docs
             q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank'); dropdown = !dropdown" active-class="text-white")
               q-item-section {{ $t('nav.manual') }}
+            //- Links
             q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
               q-item-section {{ $t(nav.label) }}
+            //- Login
             q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink(discordLoginURL, '_self'); dropdown = !dropdown" active-class="text-white")
               q-item-section {{ $t('nav.login') }}
+            //- User Profile
             q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" v-if="user.isLogin" active-class="text-white")
               q-item-section {{ $t('nav.myPage') }}
+            //- Logout
             q-item.text-grey7(clickable v-if="user.isLogin" @click="$store.dispatch('user/logout')" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
+            //- Language options
             q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
               q-list
                 q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click=" updateLocale(locale)")
                   q-item-section
                     q-item-label {{ locale.toUpperCase() }}
+  //- Page Content
   q-page-container
     router-view.q-mb-xl(:key="$route.fullPath")
+  //- Footer
   q-footer.bg-techgrey.text-white.relative-position(bordered)
     .container
       q-toolbar
@@ -65,40 +90,53 @@ q-layout(view='hHh lpR fff')
         q-btn(flat round icon="fab fa-reddit-alien" color="tech" @click="openLink('https://www.reddit.com/r/TechMania/')")
 </template>
 
-<script>
-import { localeOptions } from '../i18n'
+<script setup>
+import { ref } from 'vue'
+import { localeOptions } from 'src/i18n'
+import { useUserStore } from 'src/stores/user'
+import { useI18n } from 'vue-i18n'
 
-export default {
-  name: 'MainLayout',
-  data () {
-    return {
-      dropdown: false,
-      navs: [
-        {
-          link: '/changelog',
-          label: 'nav.changelog'
-        },
-        {
-          link: '/patterns',
-          label: 'nav.patterns'
-        },
-        {
-          link: '/skins',
-          label: 'nav.skins'
-        }
-      ],
-      localeOptions,
-      discordLoginURL: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`
-    }
+const user = useUserStore()
+const { locale } = useI18n()
+
+// Dropdown state
+const dropdown = ref(false)
+
+// Nav items
+const navs = [
+  {
+    link: '/changelog',
+    label: 'nav.changelog',
   },
-  methods: {
-    updateLocale (value) {
-      this.$i18n.locale = value
-      this.$store.commit('user/setLocale', value)
-    },
-    openLink (url, target) {
-      window.open(url, target)
-    }
-  }
+  {
+    link: '/patterns',
+    label: 'nav.patterns',
+  },
+  {
+    link: '/skins',
+    label: 'nav.skins',
+  },
+]
+
+// Discord login URL
+const discordLoginURL = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`
+
+/**
+ * Open a link in target
+ * @param url link to open
+ * @param target target
+ */
+const openLink = (url, target) => {
+  if (!process.env.SERVER) return
+  window.open(url, target)
+}
+
+/**
+ * Update the locale of the user
+ * @param {string} value - The new locale
+ */
+const updateLocale = (value) => {
+  locale.value = value
+  user.locale = value
 }
 </script>
