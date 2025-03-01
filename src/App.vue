@@ -1,21 +1,30 @@
 <template lang="pug">
-#q-app
   router-view
-</template>
+  </template>
 
-<script>
-export default {
-  name: 'App',
-  async created () {
-    if (this.user.locale) {
-      this.$i18n.locale = this.user.locale
+<script setup>
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
+import { useUserStore } from 'src/stores/user'
+
+const route = useRoute()
+const $q = useQuasar()
+const i18n = useI18n()
+const user = useUserStore()
+
+onMounted(async () => {
+  if (process.env.CLIENT) {
+    if (user.locale) {
+      i18n.locale.value = user.locale
     } else {
-      const locale = this.$q.lang.getLocale()
-      this.$store.commit('user/setLocale', locale)
-      this.$i18n.locale = locale
+      const localeDetected = $q.lang.getLocale()
+      user.locale = localeDetected
+      i18n.locale.value = localeDetected
     }
 
-    this.$store.dispatch('user/verify', this.$route.query)
+    await user.verify(route.query)
   }
-}
+})
 </script>
