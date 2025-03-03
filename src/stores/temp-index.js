@@ -6,10 +6,10 @@ import handleError from 'src/utils/handleError'
 
 export const useTempIndexStore = defineStore('temp-index', () => {
   const tag = ref({
-    win: '',
-    ios: '',
-    android: '',
-    mac: '',
+    win: '-',
+    ios: '-',
+    android: '-',
+    mac: '-',
   })
   const publishDate = ref({
     win: '',
