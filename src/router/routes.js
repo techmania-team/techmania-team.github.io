@@ -30,7 +30,7 @@ const routes = [
       },
       {
         path: 'patterns',
-        component: () => import('pages/Patterns.vue'),
+        component: () => import('pages/PatternsPage.vue'),
         meta: { title: 'TECHMANIA | Patterns', login: false },
       },
       {
