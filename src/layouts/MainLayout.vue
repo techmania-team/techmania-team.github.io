@@ -95,6 +95,7 @@ import { ref } from 'vue'
 import { localeOptions } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
 import { useI18n } from 'vue-i18n'
+import { openLink } from 'src/utils/link'
 
 const user = useUserStore()
 const { locale } = useI18n()
@@ -120,16 +121,6 @@ const navs = [
 
 // Discord login URL
 const discordLoginURL = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`
-
-/**
- * Open a link in target
- * @param url link to open
- * @param target target
- */
-const openLink = (url, target) => {
-  if (!process.env.SERVER) return
-  window.open(url, target)
-}
 
 /**
  * Update the locale of the user

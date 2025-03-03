@@ -49,6 +49,7 @@ import { useMeta } from 'quasar'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { useUserStore } from 'src/stores/user'
+import { openLink } from 'src/utils/link'
 
 const route = useRoute()
 const user = useUserStore()
@@ -133,14 +134,4 @@ onMounted(async () => {
     }
   }
 })
-
-/**
- * Open a link in target
- * @param url link to open
- * @param target target
- */
-const openLink = (url, target) => {
-  if (!process.env.SERVER) return
-  window.open(url, target)
-}
 </script>
