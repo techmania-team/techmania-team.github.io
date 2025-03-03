@@ -10,7 +10,7 @@ const routes = [
       },
       {
         path: 'changelog',
-        component: () => import('pages/Changelog.vue'),
+        component: () => import('pages/ChangelogPage.vue'),
         meta: { title: 'TECHMANIA | Changelog', login: false },
       },
       {
