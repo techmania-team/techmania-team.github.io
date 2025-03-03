@@ -31,9 +31,9 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue'),
-    meta: { title: '404 | TECHMANIA', login: false }
-  }
+    component: () => import('pages/ErrorNotFound.vue'),
+    meta: { title: '404 | TECHMANIA', login: false },
+  },
 ]
 
 export default routes
