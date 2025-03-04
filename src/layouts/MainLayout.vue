@@ -20,6 +20,12 @@ q-layout(view='hHh lpR fff')
             q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
             //- Login
             q-tab.nav-desktop(v-if="!user.isLogin" @click="openLink('/api/auth/login', '_self')" :label="$t('nav.login')")
+            //- Language options
+            q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
+              q-list
+                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                  q-item-section
+                    q-item-label {{ locale.toUpperCase() }}
             //- User dropdown
             q-btn-dropdown.nav-desktop(stretch flat v-if="user.isLogin")
               //- User avatar
@@ -36,12 +42,6 @@ q-layout(view='hHh lpR fff')
                 q-item(clickable @click="$store.dispatch('user/logout')")
                   q-item-section
                     q-item-label {{ $t('nav.logout') }}
-            //- Language options
-            q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
-              q-list
-                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
-                  q-item-section
-                    q-item-label {{ locale.toUpperCase() }}
             //-   Nav Collapse button for mobile
             q-btn.nav-mobile(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
               q-avatar(v-if="user.isLogin")
