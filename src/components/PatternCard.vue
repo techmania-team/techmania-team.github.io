@@ -50,7 +50,7 @@ q-card.full-height.card-pattern
       q-item
         q-item-section
           div.q-gutter-sm.q-my-sm
-            span(v-for="(value, key) in hasLanes" :key="key")
+            template(v-for="(value, key) in hasLanes" :key="key")
               q-icon(v-if="value" class="filter-positive" size="sm" :name="`img:/assets/icons/${key}L.png`")
       //- Difficulties and controls
       q-item
