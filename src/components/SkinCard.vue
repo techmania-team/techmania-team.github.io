@@ -108,6 +108,6 @@ onMounted(() => {
       ? props.skin.image
       : props.skin.previews.length > 0
         ? getYouTubeThumbnail(props.skin.previews[0].ytid)
-        : './assets/unknown.jpg'
+        : '/assets/unknown.jpg'
 })
 </script>

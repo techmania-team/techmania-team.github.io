@@ -10,7 +10,7 @@ q-layout(view='hHh lpR fff')
           q-toolbar-title
             q-btn(to="/" flat)
               q-avatar
-                img(:src="'./assets/notes/basic.png'")
+                img(:src="'/assets/notes/basic.png'")
               | &nbsp;TECHMANIA
           //- PC navigation item
           q-tabs(active-color="tech")

@@ -10,7 +10,7 @@ export const getControlIcon = (control) => {
       icon = 'keyboard'
       break
     case 2:
-      icon = 'img:./assets/icons/KM.svg'
+      icon = 'img:/assets/icons/KM.svg'
       break
   }
   return icon

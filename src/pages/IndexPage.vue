@@ -4,12 +4,12 @@ q-page#index
   q-parallax#header-video
     //- Header Video background
     template(#media)
-      video(:src="'./assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
+      video(:src="'/assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
     //- Header content
     template(#content)
       .absolute.column.items-center.text-center
         //- Logo
-        img#logo(:src="'./assets/Logo.png'")
+        img#logo(:src="'/assets/Logo.png'")
         //- Windows
         div(v-if="platform === 'windows'")
           //- Download
@@ -53,7 +53,7 @@ q-page#index
           //- Download
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://apps.apple.com/app/id1581524513' target='_blank')
-              q-icon(left name="img:./assets/icons/ios.svg" )
+              q-icon(left name="img:/assets/icons/ios.svg" )
               div {{ $t('index.download') }}
           //- Version and release date
           p
