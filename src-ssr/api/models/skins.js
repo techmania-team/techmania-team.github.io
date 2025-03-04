@@ -59,4 +59,4 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
-export default mongoose.model('skins', schema)
+export default mongoose.models.skins || mongoose.model('skins', schema)

@@ -81,4 +81,4 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
-export default mongoose.model('comments', schema)
+export default mongoose.models.comments || mongoose.model('comments', schema)

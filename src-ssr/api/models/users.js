@@ -39,4 +39,4 @@ schema.pre('save', function (next) {
   next()
 })
 
-export default mongoose.model('users', schema)
+export default mongoose.models.users || mongoose.model('users', schema)

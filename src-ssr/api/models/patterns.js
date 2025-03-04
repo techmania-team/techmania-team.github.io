@@ -90,4 +90,4 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
-export default mongoose.model('patterns', schema)
+export default mongoose.models.patterns || mongoose.model('patterns', schema)
