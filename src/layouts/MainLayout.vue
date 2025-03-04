@@ -94,10 +94,12 @@ q-layout(view='hHh lpR fff')
 import { ref } from 'vue'
 import { localeOptions } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
+import { useSettingsStore } from 'src/stores/settings'
 import { useI18n } from 'vue-i18n'
 import { openLink } from 'src/utils/link'
 
 const user = useUserStore()
+const settings = useSettingsStore()
 const { locale } = useI18n()
 
 // Dropdown state
@@ -125,6 +127,6 @@ const navs = [
  */
 const updateLocale = (value) => {
   locale.value = value
-  user.locale = value
+  settings.locale = value
 }
 </script>

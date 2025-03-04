@@ -48,7 +48,7 @@ q-card.full-height.card-skin
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import parseISO from 'date-fns/fp/parseISO'
-import { useUserStore } from 'src/stores/user'
+import { useSettingsStore } from 'src/stores/settings'
 import date from 'src/utils/date-fns'
 import { useRouter } from 'vue-router'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
@@ -65,27 +65,27 @@ const hasVideo = ref(false)
 const hasImage = ref(false)
 const headerImage = ref('')
 
-const user = useUserStore()
+const settings = useSettingsStore()
 const router = useRouter()
 const { t } = useI18n()
 
 const formattedTime = computed(() => {
   return {
     relative: date.formatDistanceToNow(parseISO(props.skin.submitDate), {
-      locale: date.locales[user.locale],
+      locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.skin.submitDate).toLocaleString(user.locale),
+    text: new Date(props.skin.submitDate).toLocaleString(settings.locale),
   }
 })
 
 const formattedUpdateTime = computed(() => {
   return {
     relative: date.formatDistanceToNow(parseISO(props.skin.updateDate), {
-      locale: date.locales[user.locale],
+      locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.skin.updateDate).toLocaleString(user.locale),
+    text: new Date(props.skin.updateDate).toLocaleString(settings.locale),
   }
 })
 

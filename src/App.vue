@@ -1,24 +1,24 @@
 <template lang="pug">
-  router-view
-  </template>
+router-view
+</template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { useUserStore } from 'src/stores/user'
+import { useQuasar } from 'quasar'
+import { useSettingsStore } from 'src/stores/settings'
 
-const $q = useQuasar()
 const i18n = useI18n()
-const user = useUserStore()
+const $q = useQuasar()
+const settings = useSettingsStore()
 
 onMounted(async () => {
   if (process.env.CLIENT) {
-    if (user.locale) {
-      i18n.locale.value = user.locale
+    if (settings.locale) {
+      i18n.locale.value = settings.locale
     } else {
       const localeDetected = $q.lang.getLocale()
-      user.locale = localeDetected
+      settings.locale = localeDetected
       i18n.locale.value = localeDetected
     }
   }

@@ -123,14 +123,14 @@ import { ref, computed, onUnmounted, onMounted } from 'vue'
 import { useMeta, useQuasar } from 'quasar'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useUserStore } from 'src/stores/user'
+import { useSettingsStore } from 'src/stores/settings'
 import { useTempIndexStore } from 'src/stores/temp-index'
 import PatternCard from 'src/components/PatternCard.vue'
 import SkinCard from 'src/components/SkinCard.vue'
 
 const $q = useQuasar()
 const route = useRoute()
-const user = useUserStore()
+const settings = useSettingsStore()
 const tempIndex = useTempIndexStore()
 const { tag, patterns, skins, videos, publishDate } = storeToRefs(tempIndex)
 
@@ -206,19 +206,19 @@ const published = computed(() => {
   return {
     win:
       publishDate.value.win.length > 0
-        ? new Date(publishDate.value.win).toLocaleString(user.locale)
+        ? new Date(publishDate.value.win).toLocaleString(settings.locale)
         : '-',
     android:
       publishDate.value.android.length > 0
-        ? new Date(publishDate.value.android).toLocaleString(user.locale)
+        ? new Date(publishDate.value.android).toLocaleString(settings.locale)
         : '-',
     ios:
       publishDate.value.ios.length > 0
-        ? new Date(publishDate.value.ios).toLocaleString(user.locale)
+        ? new Date(publishDate.value.ios).toLocaleString(settings.locale)
         : '-',
     mac:
       publishDate.value.mac.length > 0
-        ? new Date(publishDate.value.mac).toLocaleString(user.locale)
+        ? new Date(publishDate.value.mac).toLocaleString(settings.locale)
         : '-',
   }
 })
