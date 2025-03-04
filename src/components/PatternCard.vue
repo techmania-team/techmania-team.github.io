@@ -50,9 +50,8 @@ q-card.full-height.card-pattern
       q-item
         q-item-section
           div.q-gutter-sm.q-my-sm
-            span(v-for="lanes in hasLanes" :key="lanes.count")
-              //- q-icon(:class="[{'text-red': !lanes.value, 'text-positive': lanes.value}]" size="sm" :name="!lanes.value ? 'close' : 'check'")
-              q-icon(:class="[{'filter-negative': !lanes.value, 'filter-positive': lanes.value}]" size="sm" :name="`img:./assets/icons/${lanes.count}L.png`")
+            span(v-for="(value, key) in hasLanes" :key="key")
+              q-icon(v-if="value" class="filter-positive" size="sm" :name="`img:/assets/icons/${key}L.png`")
       //- Difficulties and controls
       q-item
         q-item-section
@@ -116,11 +115,11 @@ const formattedUpdateTime = computed(() => {
 })
 
 const hasLanes = computed(() => {
-  return [
-    { count: 2, value: props.pattern.difficulties.some((difficulty) => difficulty.lanes === 2) },
-    { count: 3, value: props.pattern.difficulties.some((difficulty) => difficulty.lanes === 3) },
-    { count: 4, value: props.pattern.difficulties.some((difficulty) => difficulty.lanes === 4) },
-  ]
+  const lanes = { 2: false, 3: false, 4: false }
+  props.pattern.difficulties.forEach((difficulty) => {
+    lanes[difficulty.lanes] = true
+  })
+  return lanes
 })
 
 const clickHeader = () => {
