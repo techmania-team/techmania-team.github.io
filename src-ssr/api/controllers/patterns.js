@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 import _ from 'lodash'
 import patterns from '../models/patterns.js'
 import users from '../models/users.js'
-import comments from '../models/comments.js'
 import { checkImage } from '../utils/image'
 
 export const create = async (req, res) => {
@@ -251,34 +250,6 @@ export const searchID = async (req, res) => {
       res.status(404).send({ success: false, message: 'Not found' })
       return
     }
-    const resultRating = await comments.aggregate([
-      {
-        $match: {
-          pattern: mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      {
-        $group: {
-          _id: '$pattern',
-          rating: {
-            $avg: '$rating',
-          },
-          count: {
-            $sum: 1,
-          },
-        },
-      },
-    ])
-    result.rating = {
-      rating:
-        resultRating.length > 0 && resultRating[0].rating
-          ? resultRating.length > 0 && resultRating[0].rating
-          : 0,
-      count:
-        resultRating.length > 0 && resultRating[0].count
-          ? resultRating.length > 0 && resultRating[0].count
-          : 0,
-    }
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)
@@ -340,17 +311,16 @@ export const update = async (req, res) => {
 
 export const indexvideo = async (req, res) => {
   try {
-    const result = await patterns.aggregate([
-      { $unwind: '$previews' },
-      { $project: { ytid: '$previews.ytid' } },
-      { $sample: { size: 2 } },
-    ])
-    result.unshift({ _id: '', ytid: 'rplTTHaEoPw' })
-    result.unshift({ _id: '', ytid: 'PCfQ-6ZYyxY' })
-    result.unshift({ _id: '', ytid: '3a3XRaqvsWc' })
-    result.unshift({ _id: '', ytid: 'czRzORpQy3U' })
-    result.unshift({ _id: '', ytid: '1v_LVASKrsQ' })
-    result.unshift({ _id: '', ytid: 'MtkxhEmCWwU' })
+    const result = [
+      { _id: '', ytid: 'MtkxhEmCWwU' },
+      { _id: '', ytid: '1v_LVASKrsQ' },
+      { _id: '', ytid: 'czRzORpQy3U' },
+      { _id: '', ytid: '3a3XRaqvsWc' },
+      { _id: '', ytid: '74f7p-t3YeU' },
+      { _id: '', ytid: 'fmJ_BRHP3w0' },
+      { _id: '', ytid: 'peH2TjiPSfI' },
+      { _id: '', ytid: '3qlUwAas-wY' },
+    ]
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)

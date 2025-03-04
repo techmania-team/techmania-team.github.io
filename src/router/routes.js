@@ -25,7 +25,7 @@ const routes = [
       },
       {
         path: 'patterns/:id',
-        component: () => import('pages/Pattern.vue'),
+        component: () => import('pages/PatternPage.vue'),
         meta: { title: 'TECHMANIA', login: false, recaptcha: true },
       },
       {
