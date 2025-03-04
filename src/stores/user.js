@@ -1,99 +1,41 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, computed } from 'vue'
-import { Lang } from 'quasar'
-import { useRouter } from 'vue-router'
-import api from 'src/utils/api'
-import axios from 'axios'
-import handleError from 'src/utils/handleError'
+import api from '../utils/api'
 
-export const useUserStore = defineStore(
-  'user',
-  () => {
-    const token = ref('')
-    const _id = ref('')
-    const username = ref('')
-    const avatar = ref('')
-    const jwt = ref('')
-    const locale = ref(Lang.getLocale())
+export const useUserStore = defineStore('user', () => {
+  const _id = ref('')
+  const name = ref('')
+  const avatar = ref('')
 
-    const router = useRouter()
+  const isLogin = computed(() => _id.value.length > 0)
 
-    const isLogin = computed(() => _id.value.length > 0)
-
-    const verify = async (query) => {
-      if (process.env.CLIENT) {
-        try {
-          if (query.jwt) {
-            jwt.value = query.jwt
-            router.replace({ query: {} })
-          }
-
-          if (jwt.value.length > 0) {
-            const { data: loginData } = await api.get('/users/verify', {
-              headers: {
-                Authorization: `Bearer ${jwt.value}`,
-              },
-            })
-            username.value = loginData.resultusername
-            avatar.value = loginData.resultavatar
-            _id.value = loginData.result_id
-            token.value = loginData.resulttoken
-            const { data } = await axios.get('https://discord.com/api/users/@me', {
-              headers: {
-                Authorization: `Bearer ${token.value}`,
-              },
-            })
-            username.value = data.username
-            avatar.value = data.avatar
-          }
-        } catch (error) {
-          console.log(error)
-          clearData()
-        }
-      }
-    }
-
-    const logout = async () => {
-      try {
-        if (jwt.value.length > 0) {
-          await api.delete('/users/logout', {
-            headers: { Authorization: `Bearer ${jwt.value}` },
-          })
-        }
-      } catch (error) {
-        handleError(error)
-      }
+  const fetchData = async () => {
+    try {
+      const { data } = await api.get('/auth/user')
+      _id.value = data.result._id
+      name.value = data.result.name
+      avatar.value = data.result.avatar
+    } catch (error) {
       clearData()
-      router.push('/')
+      console.error(error)
     }
+  }
 
-    const clearData = () => {
-      token.value = ''
-      _id.value = ''
-      username.value = ''
-      avatar.value = ''
-      jwt.value = ''
-    }
+  const clearData = () => {
+    _id.value = ''
+    name.value = ''
+    avatar.value = ''
+  }
 
-    return {
-      token,
-      _id,
-      username,
-      avatar,
-      jwt,
-      locale,
-      isLogin,
-      verify,
-      logout,
-      clearData,
-    }
-  },
-  {
-    persist: true,
-    pick: ['locale', 'jwt'],
-    key: 'techmania-v2',
-  },
-)
+  return {
+    _id,
+    name,
+    avatar,
+    isLogin,
+    fetchData,
+    clearData,
+  }
+})
 
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

@@ -1,32 +1,36 @@
-import jwt from 'jsonwebtoken'
-import users from '../models/users.js'
+import passport from 'passport'
 
-export default async (req, res, next) => {
-  let decoded = {}
-  try {
-    const token = req.header('Authorization')
-      ? req.header('Authorization').replace('Bearer ', '')
-      : ''
-    // a trick to get decoded data when verify error.
-    decoded = jwt.decode(token, process.env.JWT_SECRET)
-    const _id = decoded._id
-    req.user = await users.findOne({ _id, 'accessInfo.jwt': token })
-    req.token = token
-    jwt.verify(token, process.env.JWT_SECRET)
-    if (req.user !== null) {
-      next()
-    } else {
-      throw new Error()
-    }
-  } catch (error) {
-    if (
-      error.name === 'TokenExpiredError' &&
-      req.baseUrl === '/api/users' &&
-      (req.path === '/extend' || req.path === '/logout')
-    ) {
-      next()
-    } else {
-      res.status(401).send({ success: false, message: 'Unauthorized' })
-    }
+export const discordLogin = passport.authenticate('discord')
+
+export const discordCallback = (req, res, next) => {
+  // Authenticate with Discord
+  passport.authenticate(
+    'discord',
+    {
+      failureRedirect: '/api/auth/login',
+    },
+    (error, user) => {
+      // Handle error
+      if (error || !user) {
+        return res.status(500).send({ success: false, message: 'Server Error' })
+      }
+      // Login
+      req.logIn(user, (error) => {
+        // Handle error
+        if (error) {
+          return res.status(500).send({ success: false, message: 'Server Error' })
+        }
+        // Next middleware
+        next()
+      })
+    },
+  )(req, res, next)
+}
+
+export const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next()
+  } else {
+    res.status(401).json({ success: false, message: 'Unauthorized' })
   }
 }

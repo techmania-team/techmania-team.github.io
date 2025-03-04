@@ -34,9 +34,10 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async (to, from, next) => {
     const user = useUserStore()
-    if (to.meta.login && user._id.length === 0) {
+    await user.fetchData()
+    if (to.meta.login && !user.isLogin) {
       next('/')
     } else {
       next()

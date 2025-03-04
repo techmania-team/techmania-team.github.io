@@ -19,13 +19,13 @@ q-layout(view='hHh lpR fff')
             //- Links
             q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
             //- Login
-            q-tab.nav-desktop(v-if="!user.isLogin" @click="openLink(discordLoginURL, '_self')" :label="$t('nav.login')")
+            q-tab.nav-desktop(v-if="!user.isLogin" @click="openLink('/api/auth/login', '_self')" :label="$t('nav.login')")
             //- User dropdown
             q-btn-dropdown.nav-desktop(stretch flat v-if="user.isLogin")
               //- User avatar
               template(#label)
                 q-avatar
-                  img(:src="user.avatar_url")
+                  img(:src="user.avatar")
               //- User dropdown items
               q-list
                 //- User Profile
@@ -45,7 +45,7 @@ q-layout(view='hHh lpR fff')
             //-   Nav Collapse button for mobile
             q-btn.nav-mobile(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
               q-avatar(v-if="user.isLogin")
-                img(:src="user.avatar_url")
+                img(:src="user.avatar")
               | &emsp;
         //- Separator for mobile dropdown
         q-separator.nav-mobile(v-show="dropdown")
@@ -55,7 +55,7 @@ q-layout(view='hHh lpR fff')
           //- Nav items
           q-list
             //- Docs
-            q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank'); dropdown = !dropdown" active-class="text-white")
+            q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink('/api/auth/login', '_self'); dropdown = !dropdown" active-class="text-white")
               q-item-section {{ $t('nav.manual') }}
             //- Links
             q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
@@ -118,9 +118,6 @@ const navs = [
     label: 'nav.skins',
   },
 ]
-
-// Discord login URL
-const discordLoginURL = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT.replace(/abc/g, '')}&redirect_uri=${encodeURIComponent(new URL('/api/users/login', process.env.HOST_URL))}&response_type=code&scope=identify%20guilds`
 
 /**
  * Update the locale of the user

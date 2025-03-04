@@ -1,16 +1,16 @@
 import express from 'express'
 import { create, search, searchID, del, update, indexvideo } from '../controllers/patterns.js'
-import auth from '../middleware/auth'
+import { isAuthenticated } from '../middleware/auth'
 import recaptcha from '../middleware/recaptcha'
 import guild from '../middleware/guild'
 
 const router = express.Router()
 
-router.post('/', recaptcha, auth, guild, create)
+router.post('/', recaptcha, isAuthenticated, guild, create)
 router.get('/', search)
 router.get('/indexvideo', indexvideo)
 router.get('/:id', searchID)
-router.delete('/:id', auth, guild, del)
-router.patch('/:id', recaptcha, auth, guild, update)
+router.delete('/:id', isAuthenticated, guild, del)
+router.patch('/:id', recaptcha, isAuthenticated, guild, update)
 
 export default router
