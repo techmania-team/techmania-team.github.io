@@ -27,6 +27,12 @@ export const discordCallback = (req, res, next) => {
   )(req, res, next)
 }
 
+export const discordLogout = (req, res) => {
+  req.logout(() => {
+    res.redirect('/')
+  })
+}
+
 export const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     next()

@@ -39,7 +39,7 @@ q-layout(view='hHh lpR fff')
                   q-item-section
                     q-item-label {{ $t('nav.myPage') }}
                 //- Logout
-                q-item(clickable @click="$store.dispatch('user/logout')")
+                q-item(clickable @click="openLink('/api/auth/logout', '_self')")
                   q-item-section
                     q-item-label {{ $t('nav.logout') }}
             //-   Nav Collapse button for mobile
@@ -67,7 +67,7 @@ q-layout(view='hHh lpR fff')
             q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" v-if="user.isLogin" active-class="text-white")
               q-item-section {{ $t('nav.myPage') }}
             //- Logout
-            q-item.text-grey7(clickable v-if="user.isLogin" @click="$store.dispatch('user/logout')" active-class="text-white")
+            q-item.text-grey7(clickable v-if="user.isLogin" @click="openLink('/api/auth/logout', '_self')" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
             //- Language options
             q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
