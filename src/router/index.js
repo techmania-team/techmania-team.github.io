@@ -5,7 +5,6 @@ import {
   createWebHistory,
   createWebHashHistory,
 } from 'vue-router'
-import { useUserStore } from 'src/stores/user'
 import routes from './routes'
 
 /*
@@ -32,16 +31,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
-  })
-
-  Router.beforeEach(async (to, from, next) => {
-    const user = useUserStore()
-    await user.fetchData()
-    if (to.meta.login && !user.isLogin) {
-      next('/')
-    } else {
-      next()
-    }
   })
 
   return Router
