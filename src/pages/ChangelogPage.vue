@@ -31,7 +31,7 @@ q-page#changelog
                 | {{ release.name.length === 0 ? release.tag_name : release.name }}
                 | &nbsp;
                 //- Download button
-                q-btn.q-mr-xs(flat round icon="download" color="tech" @click="openLink(release.html_url)")
+                q-btn.q-mr-xs(flat round icon="download" color="tech" :href="release.html_url" target="_blank")
                 //- Downloads count
                 img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total?label=' + $t('changelog.downloads')")
             q-separator
@@ -49,7 +49,6 @@ import { useMeta } from 'quasar'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { useSettingsStore } from 'src/stores/settings'
-import { openLink } from 'src/utils/link'
 
 const route = useRoute()
 const settings = useSettingsStore()

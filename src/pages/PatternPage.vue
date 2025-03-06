@@ -10,7 +10,7 @@ q-page#pattern
           h4 {{ pattern.name }}
         q-no-ssr.col-6.text-right
           h4
-            q-btn.q-mr-xs(v-if="pattern.submitter._id === user._id" flat icon="edit" color="tech" @click="$router.push('/patterns/edit/' + pattern._id)") {{ $t('pattern.edit') }}
+            q-btn.q-mr-xs(v-if="pattern.submitter._id === user._id" flat icon="edit" color="tech" :to="'/patterns/edit/' + pattern._id") {{ $t('pattern.edit') }}
             q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
       q-separator
       .row.q-my-md
@@ -69,7 +69,7 @@ const backgroundImage = computed(() => {
       : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
 })
 
-const metaData = {
+const metaData = () => ({
   title: `TECHMANIA | ${pattern.name}`,
   meta: {
     color: {
@@ -137,7 +137,7 @@ const metaData = {
       'data-dynamic': true,
     },
   },
-}
+})
 useMeta(metaData)
 
 defineOptions({
@@ -145,7 +145,6 @@ defineOptions({
     // Prefetch pattern data
     const pattern = useTempPatternStore()
     pattern.clearData()
-    console.log('aaaa', currentRoute.params.id)
     await pattern.fetchPattern(currentRoute.params.id)
   },
 })

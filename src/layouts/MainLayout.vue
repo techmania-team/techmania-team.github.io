@@ -15,11 +15,11 @@ q-layout(view='hHh lpR fff')
           //- PC navigation item
           q-tabs(active-color="tech")
             //- Docs
-            q-tab.nav-desktop(@click="openLink('https://techmania-team.github.io/techmania-docs/', '_blank')" :label="$t('nav.manual')")
+            q-route-tab.nav-desktop(href="https://techmania-team.github.io/techmania-docs/" target="_blank" :label="$t('nav.manual')")
             //- Links
             q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
             //- Login
-            q-tab.nav-desktop(v-if="!user.isLogin" @click="openLink('/api/auth/login', '_self')" :label="$t('nav.login')")
+            q-route-tab.nav-desktop(v-if="!user.isLogin" href="/api/auth/login" :label="$t('nav.login')")
             //- Language options
             q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
               q-list
@@ -39,7 +39,7 @@ q-layout(view='hHh lpR fff')
                   q-item-section
                     q-item-label {{ $t('nav.myPage') }}
                 //- Logout
-                q-item(clickable @click="openLink('/api/auth/logout', '_self')")
+                q-item(clickable href="/api/auth/logout")
                   q-item-section
                     q-item-label {{ $t('nav.logout') }}
             //-   Nav Collapse button for mobile
@@ -55,19 +55,19 @@ q-layout(view='hHh lpR fff')
           //- Nav items
           q-list
             //- Docs
-            q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink('/api/auth/login', '_self'); dropdown = !dropdown" active-class="text-white")
+            q-item.text-grey7(clickable href="https://techmania-team.github.io/techmania-docs/" active-class="text-white")
               q-item-section {{ $t('nav.manual') }}
             //- Links
             q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
               q-item-section {{ $t(nav.label) }}
             //- Login
-            q-item.text-grey7(clickable v-if="!user.isLogin" @click="openLink(discordLoginURL, '_self'); dropdown = !dropdown" active-class="text-white")
+            q-item.text-grey7(clickable v-if="!user.isLogin" href="/api/auth/login" active-class="text-white")
               q-item-section {{ $t('nav.login') }}
             //- User Profile
             q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" v-if="user.isLogin" active-class="text-white")
               q-item-section {{ $t('nav.myPage') }}
             //- Logout
-            q-item.text-grey7(clickable v-if="user.isLogin" @click="openLink('/api/auth/logout', '_self')" active-class="text-white")
+            q-item.text-grey7(clickable v-if="user.isLogin"  href="/api/auth/logout" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
             //- Language options
             q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
@@ -84,10 +84,10 @@ q-layout(view='hHh lpR fff')
       q-toolbar
         p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA DEV TEAM
         q-space
-        q-btn.q-mr-xs(flat round icon="fab fa-youtube" color="tech" @click="openLink('https://www.youtube.com/channel/UCoHxk7shdAKf7W3yqUJlDaA')")
-        q-btn.q-mr-xs(flat round icon="fab fa-discord" color="tech" @click="openLink('https://discord.gg/K4Nf7AnAZt')")
-        q-btn.q-mr-xs(flat round icon="fab fa-github" color="tech" @click="openLink('https://github.com/techmania-team/techmania')")
-        q-btn(flat round icon="fab fa-reddit-alien" color="tech" @click="openLink('https://www.reddit.com/r/TechMania/')")
+        q-btn.q-mr-xs(flat round icon="fab fa-youtube" color="tech" href="https://www.youtube.com/channel/UCoHxk7shdAKf7W3yqUJlDaA" target="_blank")
+        q-btn.q-mr-xs(flat round icon="fab fa-discord" color="tech" href="https://discord.gg/K4Nf7AnAZt" target="_blank")
+        q-btn.q-mr-xs(flat round icon="fab fa-github" color="tech" href="https://github.com/techmania-team/techmania" target="_blank")
+        q-btn(flat round icon="fab fa-reddit-alien" color="tech" href="https://www.reddit.com/r/TechMania/" target="_blank")
 </template>
 
 <script setup>
@@ -96,7 +96,6 @@ import { localeOptions } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
 import { useSettingsStore } from 'src/stores/settings'
 import { useI18n } from 'vue-i18n'
-import { openLink } from 'src/utils/link'
 
 const user = useUserStore()
 const settings = useSettingsStore()
