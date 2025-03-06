@@ -1,7 +1,7 @@
-import { defineRouter } from '#q-app/wrappers'
+import { defineBoot } from '#q-app/wrappers'
 import { useUserStore } from 'src/stores/user'
 
-export default defineRouter(({ router }) => {
+export default defineBoot(({ router }) => {
   router.beforeEach(async (to, from, next) => {
     const user = useUserStore()
     await user.fetchData()
