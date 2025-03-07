@@ -9,9 +9,13 @@ export const useUserStore = defineStore('user', () => {
 
   const isLogin = computed(() => _id.value.length > 0)
 
-  const fetchData = async () => {
+  const fetchData = async (sid) => {
     try {
-      const { data } = await api.get('/auth/user')
+      const { data } = await api.get('/auth/user', {
+        headers: {
+          Cookie: `connect.sid=${sid}`,
+        },
+      })
       _id.value = data.result._id
       name.value = data.result.name
       avatar.value = data.result.avatar
