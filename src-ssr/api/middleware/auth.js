@@ -29,7 +29,10 @@ export const discordCallback = (req, res, next) => {
 
 export const discordLogout = (req, res) => {
   req.logout(() => {
-    res.redirect('/')
+    // Not cleaning cookie
+    // res.clearCookie('connect.sid', { path: '/', httpOnly: true })
+    req.session = null
+    return res.redirect('/')
   })
 }
 
