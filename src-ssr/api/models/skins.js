@@ -59,4 +59,8 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
+// Create indexes for searching
+schema.index({ name: 'text', description: 'text' })
+schema.index({ submitter: 1 })
+
 export default mongoose.models.skins || mongoose.model('skins', schema)
