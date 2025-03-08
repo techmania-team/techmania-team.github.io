@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 
 const difficultySchema = new mongoose.Schema(
   {
@@ -10,14 +11,10 @@ const difficultySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // 0 = Touch
-    // 1 = Keyboard
-    // 2 = KM
     control: {
       type: Number,
       required: true,
-      min: 0,
-      max: 2,
+      enum: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
     },
     lanes: {
       type: Number,

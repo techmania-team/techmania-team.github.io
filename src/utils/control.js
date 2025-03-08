@@ -1,5 +1,9 @@
 export const controls = ['touch', 'keys', 'km']
 
+export const CONTROL_TOUCH = 0
+export const CONTROL_KEYS = 1
+export const CONTROL_KM = 2
+
 export const getControlIcon = (control) => {
   let icon = ''
   switch (control) {
