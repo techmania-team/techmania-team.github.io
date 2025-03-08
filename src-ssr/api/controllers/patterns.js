@@ -1,9 +1,11 @@
 import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
+import * as yup from 'yup'
 import patterns from '../models/patterns.js'
 import users from '../models/users.js'
 import { checkImage } from '../utils/image'
+import validator from 'validator'
 
 export const create = async (req, res) => {
   try {
@@ -96,14 +98,33 @@ export const create = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
+    // Mongoose query
     const query = [
-      { $match: {} },
+      {
+        $match: {
+          $or: [
+            {
+              $text: {
+                $search: '',
+              },
+            },
+          ],
+        },
+      },
       {
         $lookup: {
           from: 'comments',
           localField: '_id',
           foreignField: 'pattern',
           as: 'comments',
+          pipeline: [
+            {
+              $project: {
+                pattern: 0,
+                skin: 0,
+              },
+            },
+          ],
         },
       },
       {
@@ -112,7 +133,7 @@ export const search = async (req, res) => {
             count: {
               $size: '$comments',
             },
-            rating: {
+            avg: {
               $ifNull: [
                 {
                   $avg: '$comments.rating',
@@ -140,103 +161,152 @@ export const search = async (req, res) => {
         },
       },
       {
-        $unset: ['submitter.discord', 'submitter.accessInfo', 'submitter.avatar'],
+        $unset: ['submitter.discord', 'submitter.avatar'],
       },
     ]
-    if (req.query.submitter) {
+
+    // Request query validation schema
+    const querySchema = yup.object().shape({
+      start: yup.number().integer().min(0),
+      limit: yup.number().integer().min(1),
+      keysounded: yup
+        .string()
+        .trim()
+        .oneOf(['0', '1', 'true', 'false', 'yes', 'no', undefined, '']),
+      keywords: yup.string(),
+      controls: yup
+        .string()
+        .matches(
+          /^(0|1|2)?(,(0|1|2))*$/,
+          'Controls must be a comma-separated list of numbers between 0 and 2, without duplicates',
+        )
+        .test('unique', 'Controls values must be unique', (value) => {
+          if (!value) return true
+          const values = value.split(',')
+          return new Set(values).size === values.length
+        }),
+      lanes: yup
+        .string()
+        .matches(
+          /^(2|3|4)?(,(2|3|4))*$/,
+          'Lanes must be a comma-separated list of numbers between 2 and 4, without duplicates',
+        )
+        .test('unique', 'Lanes values must be unique', (value) => {
+          if (!value) return true
+          const values = value.split(',')
+          return new Set(values).size === values.length
+        }),
+      sortBy: yup.string().oneOf(['submitDate', 'updateDate', 'name', 'rating']),
+      sort: yup
+        .number()
+        .integer()
+        .oneOf([1, -1])
+        .when('sortBy', {
+          is: (value) => value !== undefined,
+          then: (schema) => schema.required(),
+        }),
+      submitter: yup.string().test('mongoID', 'Invalid ID', (value) => {
+        if (!value) return true
+        return validator.isMongoId(value)
+      }),
+    })
+    // Parsed request query
+    const parseedQuery = await querySchema.validate(req.query, { stripUnknown: true })
+
+    // Add filters to query - Submitter
+    if (parseedQuery.submitter) {
       query[0].$match.submitter = mongoose.Types.ObjectId(req.query.submitter)
     }
-    if (req.query.start) {
-      const start = parseInt(req.query.start)
-      query[4].$skip = isNaN(start) ? 0 : start
-    }
-    if (req.query.limit) {
-      const limit = parseInt(req.query.limit)
-      if (limit >= 50 || isNaN(limit)) {
-        res.status(400).send({ success: false, message: 'Invalid limit' })
-        return
-      }
-      query[5].$limit = limit
-    }
-    if (req.query.keysounded === 'yes') {
+    // Add filters to query - Keysounded
+    if (['true', 'yes', '1'].includes(parseedQuery.keysounded)) {
       query[0].$match.keysounded = true
-    } else if (req.query.keysounded === 'no') {
+    } else if (['false', 'no', '0'].includes(parseedQuery.keysounded)) {
       query[0].$match.keysounded = false
     }
-    if (req.query.control) {
-      const control = parseInt(req.query.control)
-      if (!isNaN(control) && control <= 2 && control >= 0) {
-        query[0].$match['difficulties.control'] = control
-      } else {
-        res.status(400).send({ success: false, message: 'Invalid control' })
-        return
+    // Add filters to query - Control
+    console.log('controls', parseedQuery.controls)
+    if (parseedQuery.controls) {
+      query[0].$match.difficulties = {
+        $elemMatch: {
+          control: { $in: parseedQuery.controls.split(',').map((control) => parseInt(control)) },
+        },
       }
     }
-    if (req.query.keywords) {
-      query[0].$match.$or = []
+    // Add filters to query - Lanes
+    if (parseedQuery.lanes) {
+      const lanesQuery = { $in: parseedQuery.lanes.split(',').map((lane) => parseInt(lane)) }
+
+      if (!query[0].$match.difficulties) {
+        query[0].$match.difficulties = {
+          $elemMatch: {
+            lanes: lanesQuery,
+          },
+        }
+      } else {
+        query[0].$match.difficulties.$elemMatch.lanes = lanesQuery
+      }
+    }
+    // Add filters to query - Keywords
+    if (parseedQuery.keywords) {
+      // Pattern keywords
+      query[0].$match.$or[0].$text.$search = parseedQuery.keywords
+      // Submitter keywords
+      const submitters = []
       const keywords = req.query.keywords.match(
         /[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g,
       )
-      const names = []
-      const composers = []
-      const descriptions = []
-      const submitters = []
       for (const i in keywords) {
         let keyword = _.escapeRegExp(keywords[i])
-        if (
-          (keyword[0] === '"' && keyword[keyword.length - 1] === '"') ||
-          (keyword[0] === "'" && keyword[keyword.length - 1] === "'")
-        ) {
-          keyword = keyword.slice(1, -1)
-        }
         const re = new RegExp(keyword, 'i')
-        names.push(re)
-        composers.push(re)
-        descriptions.push(re)
         submitters.push(re)
       }
-      query[0].$match.$or.push({ name: { $in: names } })
-      query[0].$match.$or.push({ composer: { $in: composers } })
-      query[0].$match.$or.push({ description: { $in: descriptions } })
-
-      try {
-        const submittersID = await users.find({ name: { $in: submitters } }, '_id')
-        query[0].$match.$or.push({ submitter: { $in: submittersID } })
-      } catch (error) {
-        console.error(error)
-      }
+      // Search users by regex name, and get their IDs
+      const submittersID = await users.find({ name: { $in: submitters } }, '_id')
+      // Add submitters to query
+      query[0].$match.$or.push({
+        submitter: { $in: submittersID.map((submitterID) => submitterID._id) },
+      })
     }
-    if (req.query.lanes) {
-      query[0].$match.difficulties = {
-        $elemMatch: { lanes: { $in: req.query.lanes.split(',').map((l) => parseInt(l)) } },
-      }
+    // Add filters to query - Start
+    if (parseedQuery.start) {
+      query[4].$skip = parseedQuery.start
     }
-    if (req.query.sortBy) {
-      const querySort = parseInt(req.query.sort)
-      if (isNaN(querySort) || (querySort !== 1 && querySort !== -1)) {
-        res.status(400).send({ success: false, message: 'Invalid Sort' })
-        return
+    // Add filters to query - Limit
+    if (parseedQuery.limit) {
+      query[5].$limit = parseedQuery.limit
+    }
+    // Add filters to query - Sort
+    if (parseedQuery.sortBy) {
+      if (parseedQuery.sortBy === 'rating') {
+        parseedQuery.sortBy = 'rating.rating'
       }
-      const sortBy = req.query.sortBy
-      if (
-        sortBy !== 'submitDate' &&
-        sortBy !== 'updateDate' &&
-        sortBy !== 'name' &&
-        sortBy !== 'rating'
-      ) {
-        res.status(400).send({ success: false, message: 'Invalid SortBy' })
-        return
-      }
-      query[3].$sort[sortBy] = querySort
+      query[3].$sort[parseedQuery.sortBy] = parseedQuery.sort
     } else {
       query[3].$sort.submitDate = -1
     }
+
+    // Remove unused query fields
+    if (query[5].$limit === 0) {
+      query.splice(5, 1)
+    }
+    if (query[0].$match.$or[0].$text.$search === '') {
+      delete query[0].$match.$or.splice(0, 1)
+    }
+    if (query[0].$match.$or.length === 0) {
+      delete query[0].$match.$or
+    }
+
+    // Execute query
+    console.log(JSON.stringify(query, null, 2))
     const result = await patterns.aggregate(query)
+    // Send response
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
+    } else if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: error.message })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
     }
