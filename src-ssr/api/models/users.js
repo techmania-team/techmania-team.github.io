@@ -31,12 +31,4 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
-schema.pre('save', function (next) {
-  const MAX_LENGTH = 5
-  if (this.accessInfo.length > MAX_LENGTH) {
-    this.accessInfo.splice(0, this.accessInfo.length - MAX_LENGTH) // 移除第一個元素
-  }
-  next()
-})
-
 export default mongoose.models.users || mongoose.model('users', schema)
