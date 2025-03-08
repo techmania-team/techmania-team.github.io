@@ -308,26 +308,3 @@ export const update = async (req, res) => {
     }
   }
 }
-
-export const indexvideo = async (req, res) => {
-  try {
-    const result = [
-      { _id: '', ytid: 'MtkxhEmCWwU' },
-      { _id: '', ytid: '1v_LVASKrsQ' },
-      { _id: '', ytid: 'czRzORpQy3U' },
-      { _id: '', ytid: '3a3XRaqvsWc' },
-      { _id: '', ytid: '74f7p-t3YeU' },
-      { _id: '', ytid: 'fmJ_BRHP3w0' },
-      { _id: '', ytid: 'peH2TjiPSfI' },
-      { _id: '', ytid: '3qlUwAas-wY' },
-    ]
-    res.status(200).send({ success: true, message: '', result })
-  } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
-      res.status(404).send({ success: false, message: 'Not found' })
-    } else {
-      res.status(500).send({ success: false, message: 'Server Error' })
-    }
-  }
-}

@@ -132,7 +132,7 @@ const $q = useQuasar()
 const route = useRoute()
 const settings = useSettingsStore()
 const tempIndex = useTempIndexStore()
-const { tag, patterns, skins, videos, publishDate } = storeToRefs(tempIndex)
+const { tag, patterns, skins, publishDate } = storeToRefs(tempIndex)
 
 const metaData = {
   title: 'TECHMANIA',
@@ -223,9 +223,21 @@ const published = computed(() => {
   }
 })
 
+// Videos
+const videos = [
+  'https://www.youtube.com/embed/MtkxhEmCWwU',
+  'https://www.youtube.com/embed/1v_LVASKrsQ',
+  'https://www.youtube.com/embed/czRzORpQy3U',
+  'https://www.youtube.com/embed/3a3XRaqvsWc',
+  'https://www.youtube.com/embed/74f7p-t3YeU',
+  'https://www.youtube.com/embed/fmJ_BRHP3w0',
+  'https://www.youtube.com/embed/peH2TjiPSfI',
+  'https://www.youtube.com/embed/3qlUwAas-wY',
+]
+
 defineOptions({
   async preFetch() {
-    // Prefetch patterns, skins and videos
+    // Prefetch patterns, skins
     const tempIndex = useTempIndexStore()
     await tempIndex.fetchData()
   },
@@ -233,7 +245,7 @@ defineOptions({
 
 onMounted(() => {
   // Fetch Release data from GitHub
-  if (process.env.CLIENT) tempIndex.fetchGitHub()
+  // if (process.env.CLIENT) tempIndex.fetchGitHub()
 })
 
 onUnmounted(() => {

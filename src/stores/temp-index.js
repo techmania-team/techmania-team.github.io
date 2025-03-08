@@ -17,20 +17,18 @@ export const useTempIndexStore = defineStore('temp-index', () => {
     android: '',
     mac: '',
   })
-  const videos = ref([])
+
   const patterns = ref([])
   const skins = ref([])
 
   const fetchData = async () => {
     try {
-      const [pt, skin, vid] = await Promise.all([
+      const [pt, skin] = await Promise.all([
         api.get(new URL('/api/patterns?start=0&limit=8', process.env.HOST_URL).toString()),
         api.get(new URL('/api/skins?start=0&limit=8', process.env.HOST_URL).toString()),
-        api.get(new URL('/api/patterns/indexvideo', process.env.HOST_URL).toString()),
       ])
       patterns.value = pt.data.result
       skins.value = skin.data.result
-      videos.value = vid.data.result.map((v) => 'https://www.youtube.com/embed/' + v.ytid)
     } catch (error) {
       handleError(error)
     }
@@ -72,7 +70,6 @@ export const useTempIndexStore = defineStore('temp-index', () => {
       android: '',
       mac: '',
     }
-    videos.value = []
     patterns.value = []
     skins.value = []
   }
@@ -80,7 +77,6 @@ export const useTempIndexStore = defineStore('temp-index', () => {
   return {
     tag,
     publishDate,
-    videos,
     patterns,
     skins,
     fetchData,
