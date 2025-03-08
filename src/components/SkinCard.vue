@@ -71,21 +71,21 @@ const { t } = useI18n()
 
 const formattedTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.skin.submitDate), {
+    relative: date.formatDistanceToNow(parseISO(props.skin.createdAt), {
       locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.skin.submitDate).toLocaleString(settings.locale),
+    text: new Date(props.skin.createdAt).toLocaleString(settings.locale),
   }
 })
 
 const formattedUpdateTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.skin.updateDate), {
+    relative: date.formatDistanceToNow(parseISO(props.skin.updatedAt), {
       locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.skin.updateDate).toLocaleString(settings.locale),
+    text: new Date(props.skin.updatedAt).toLocaleString(settings.locale),
   }
 })
 

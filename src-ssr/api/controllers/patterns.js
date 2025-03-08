@@ -196,7 +196,7 @@ export const search = async (req, res) => {
           const values = value.split(',')
           return new Set(values).size === values.length
         }),
-      sortBy: yup.string().oneOf(['submitDate', 'updateDate', 'name', 'rating']),
+      sortBy: yup.string().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
       sort: yup
         .number()
         .integer()
@@ -282,7 +282,7 @@ export const search = async (req, res) => {
       }
       query[3].$sort[parseedQuery.sortBy] = parseedQuery.sort
     } else {
-      query[3].$sort.submitDate = -1
+      query[3].$sort.createdAt = -1
     }
 
     // Remove unused query fields
@@ -365,7 +365,7 @@ export const update = async (req, res) => {
       previews: req.body.previews,
       description: req.body.description,
       image: req.body.image,
-      updateDate: Date.now(),
+      updatedAt: Date.now(),
     })
     res.status(200).send({ success: true, message: '' })
   } catch (error) {

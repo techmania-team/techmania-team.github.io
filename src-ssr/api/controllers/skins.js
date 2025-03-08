@@ -204,8 +204,8 @@ export const search = async (req, res) => {
       }
       const sortBy = req.query.sortBy
       if (
-        sortBy !== 'submitDate' &&
-        sortBy !== 'updateDate' &&
+        sortBy !== 'createdAt' &&
+        sortBy !== 'updatedAt' &&
         sortBy !== 'name' &&
         sortBy !== 'rating'
       ) {
@@ -214,7 +214,7 @@ export const search = async (req, res) => {
       }
       query[3].$sort[sortBy] = querySort
     } else {
-      query[3].$sort.submitDate = -1
+      query[3].$sort.createdAt = -1
     }
     const result = await skins.aggregate(query)
     res.status(200).send({ success: true, message: '', result })
@@ -306,7 +306,7 @@ export const update = async (req, res) => {
       previews: req.body.previews,
       description: req.body.description,
       image: req.body.image,
-      updateDate: Date.now(),
+      updatedAt: Date.now(),
     })
     res.status(200).send({ success: true, message: '' })
   } catch (error) {

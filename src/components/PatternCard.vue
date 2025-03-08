@@ -96,21 +96,21 @@ const router = useRouter()
 
 const formattedTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.pattern.submitDate), {
+    relative: date.formatDistanceToNow(parseISO(props.pattern.createdAt), {
       locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.pattern.submitDate).toLocaleString(settings.locale),
+    text: new Date(props.pattern.createdAt).toLocaleString(settings.locale),
   }
 })
 
 const formattedUpdateTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.pattern.updateDate), {
+    relative: date.formatDistanceToNow(parseISO(props.pattern.updatedAt), {
       locale: date.locales[settings.locale],
       addSuffix: true,
     }),
-    text: new Date(props.pattern.updateDate).toLocaleString(settings.locale),
+    text: new Date(props.pattern.updatedAt).toLocaleString(settings.locale),
   }
 })
 

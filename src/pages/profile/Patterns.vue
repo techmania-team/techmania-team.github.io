@@ -31,7 +31,7 @@ export default {
       console.log('fetchPatterns')
       try {
         const result = await this.$api.get(
-          `/patterns?submitter=${this.$route.params.id}&start=${start}&sort=-1&sortBy=submitDate&limit=12`
+          `/patterns?submitter=${this.$route.params.id}&start=${start}&sort=-1&sortBy=createdAt&limit=12`,
         )
         if (result.data.success) {
           if (result.data.result.length > 0) this.patterns = this.patterns.concat(result.data.result)

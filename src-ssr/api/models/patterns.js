@@ -71,20 +71,12 @@ const schema = new mongoose.Schema(
     description: {
       type: String,
     },
-    submitDate: {
-      type: Date,
-      default: Date.now,
-    },
-    updateDate: {
-      type: Date,
-      default: Date.now,
-    },
     image: {
       type: String,
       default: '',
     },
   },
-  { versionKey: false },
+  { versionKey: false, timestamps: true },
 )
 
 // Create indexes for searching

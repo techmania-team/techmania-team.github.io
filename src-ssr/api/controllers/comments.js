@@ -196,7 +196,7 @@ export const updateComment = async (req, res) => {
         rating: req.body.rating,
         $set: {
           'replies.0.comment': req.body.comment,
-          'replies.0.updateDate': Date.now(),
+          'replies.0.updatedAt': Date.now(),
         },
       },
       { new: true },
@@ -250,7 +250,7 @@ export const createReply = async (req, res) => {
 export const updateReply = async (req, res) => {
   try {
     const $set = {
-      'replies.$[a].updateDate': Date.now(),
+      'replies.$[a].updatedAt': Date.now(),
     }
     if (req.body.deleted !== undefined) $set['replies.$[a].deleted'] = req.body.deleted
     if (req.body.comment) $set['replies.$[a].comment'] = req.body.comment

@@ -38,7 +38,7 @@ const ReplySchema = new mongoose.Schema({
     default: Date.now,
   },
   // Update date
-  updateDate: {
+  updatedAt: {
     type: Date,
     default: Date.now,
   },

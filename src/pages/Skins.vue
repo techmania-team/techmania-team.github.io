@@ -21,8 +21,8 @@ q-page#skins
               q-item-section {{ $t('patterns.sort') }}
               q-item-section
                 div
-                  q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('submitDate')" :text-color="searchForm.sortBy === 'submitDate' ? 'white' : 'grey'" @click="changeSort('submitDate')")
-                  q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updateDate')" :text-color="searchForm.sortBy === 'updateDate' ? 'white' : 'grey'" @click="changeSort('updateDate')")
+                  q-btn(flat size="10px" :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('createdAt')" :text-color="searchForm.sortBy === 'createdAt' ? 'white' : 'grey'" @click="changeSort('createdAt')")
+                  q-btn(flat size="10px" :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updatedAt')" :text-color="searchForm.sortBy === 'updatedAt' ? 'white' : 'grey'" @click="changeSort('updatedAt')")
                   q-btn(flat size="10px" :label="$t('skins.sortName')" :icon-right="getSortIcon('name')" :text-color="searchForm.sortBy === 'name' ? 'white' : 'grey'" @click="changeSort('name')")
                   q-btn(flat size="10px" :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="searchForm.sortBy === 'rating' ? 'white' : 'grey'" @click="changeSort('rating')")
           q-separator.q-my-md
@@ -114,13 +114,13 @@ export default {
         keywords: '',
         sort: -1,
         types: [0, 1, 2, 3],
-        sortBy: 'submitDate'
+        sortBy: 'createdAt',
       },
       search: {
         keywords: '',
         sort: -1,
         types: [0, 1, 2, 3],
-        sortBy: 'submitDate'
+        sortBy: 'createdAt',
       },
       scrollDisable: false
     }
