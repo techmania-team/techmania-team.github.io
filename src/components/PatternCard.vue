@@ -23,8 +23,8 @@ q-card.full-height.card-pattern
       //- Rating
       q-item
         q-item-section
-          q-rating(:model-value="pattern.rating.rating" readonly icon="star" icon-half="star_half" size='xs')
-          | {{ pattern.rating.rating.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+          q-rating(:model-value="pattern.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
+          | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
       //- Date
       q-item
         q-item-section
