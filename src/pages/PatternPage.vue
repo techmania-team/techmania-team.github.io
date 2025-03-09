@@ -1,50 +1,84 @@
 <template lang="pug">
 q-page#pattern
-  //- Background image
-  section.bg(:style="{backgroundImage: `url(${backgroundImage})`}")
+  //- Header
+  q-parallax.header-parallax.header-blur(:height="200")
+    //- Header image background
+    template(#media)
+      img(:src="backgroundImage")
+      br
+    //- Header content
+    template(#content)
+      .column.items-center
+        .text-h4.text-center {{ pattern.name }}
+        .text-h6.text-center {{ pattern.composer }}
+        .row.q-my-md
+          q-btn.q-mr-xs(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('pattern.edit') }}
+          q-btn.q-mr-xs(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
   //- Content
-  section.q-mx-auto.padding
+  section.q-mx-auto.padding.q-mt-lg
     .container
-      //- Title
-      .row
-        //- Title name
-        .col-9.q-mx-auto
-          h4 {{ pattern.name }}
-        //- Edit and download buttons
-        .col-3.text-right.self-center
-          q-btn.q-mr-xs(v-if="pattern.submitter._id === user._id" flat icon="edit" color="tech" :to="'/patterns/edit/' + pattern._id") {{ $t('pattern.edit') }}
-          q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
-      q-separator
       //- Information
-      .row.q-my-md
+      .row.q-gutter-y-lg
+        //- Pattern info list
         .col-12.col-md-6
-          .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
-          .q-gutter-sm
-            div
-              q-icon(size="sm" name="person")
-              | &nbsp;{{ $t('pattern.composer') }} {{ pattern.composer }}
-            div
-              q-icon(size="sm" name="upload")
-              | &nbsp;{{ $t('pattern.submittedBy') }}&nbsp;
-              router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
-            div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
-              q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
-              | &nbsp;{{ $t('pattern.keysounded') }}
-            .q-gutter-sm
-              div.inline-block.q-mx-md(v-for="(difficulty, idx) in pattern.difficulties" :key="idx")
-                q-icon(size="sm" :name="`img:/assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
-                q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
-                span(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
-        .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
-          h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
-          .q-gutter-sm
-            p(v-html="pattern.description" v-if="pattern.description")
-            p(v-else) {{ $t('pattern.noDescription') }}
-      //- Previews
-      .row.q-my-md
+          q-list
+            //- List header
+            q-item-label.text-h6.text-tech(header) {{ $t('pattern.patternData') }}
+            q-separator.q-mb-md(inset)
+            //- List items - Composer
+            q-item
+              q-item-section(avatar)
+                q-icon(name="person")
+              q-item-section
+                q-item-label {{ $t('pattern.composer') }}
+                q-item-label(caption) {{ pattern.composer }}
+            //- List items - Submitted by
+            q-item
+              q-item-section(avatar)
+                q-icon(name="upload")
+              q-item-section
+                q-item-label {{ $t('pattern.submittedBy') }}
+                q-item-label(caption)
+                  router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
+            //- List items - Keysounded
+            q-item
+              q-item-section(avatar)
+                q-icon(name="music_note")
+              q-item-section
+                q-item-label {{ $t('pattern.keysounded') }}
+                q-item-label(caption :class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
+                  | {{ $t(`patterns.${pattern.keysounded ? 'yes' : 'no'}`) }}
+        //- Difficulty list
+        .col-12.col-md-6
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('submitForm.difficulties')}}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                .row.q-gutter-y-sm
+                  .col-2.text-center(v-for="(difficulty, idx) in pattern.difficulties" :key="idx")
+                    div.q-mx-auto
+                      q-icon(:name="`img:/assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
+                      q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
+                    div(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
+        //- Description
+        //- NOTE:
+        //- Use q-no-ssr to prevent hydration error
+        .col-12.pre-line
+          q-no-ssr
+            q-list
+              q-item-label.text-h6.text-tech(header) {{ $t('pattern.description') }}
+              q-separator.q-mb-md(inset)
+              q-item
+                q-item-section
+                  p(v-html="pattern.description" v-if="pattern.description")
+                  p(v-else) {{ $t('pattern.noDescription') }}
+        //- Previews
         .col-12
-          h6.q-mt-md.q-mb-lg.text-md-center {{ $t('pattern.previews') }}
-          .row.w-100.justify-center.q-gutter-sm
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('pattern.previews') }}
+            q-separator.q-mb-md(inset)
+          .row.w-100.justify-center.q-gutter-y-sm
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
