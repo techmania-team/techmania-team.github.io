@@ -224,7 +224,6 @@ export const search = async (req, res) => {
       query[0].$match.keysounded = false
     }
     // Add filters to query - Control
-    console.log('controls', parseedQuery.controls)
     if (parseedQuery.controls) {
       query[0].$match.difficulties = {
         $elemMatch: {
@@ -297,7 +296,6 @@ export const search = async (req, res) => {
     }
 
     // Execute query
-    console.log(JSON.stringify(query, null, 2))
     const result = await patterns.aggregate(query)
     // Send response
     res.status(200).send({ success: true, message: '', result })
