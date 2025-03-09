@@ -277,7 +277,7 @@ export const search = async (req, res) => {
     // Add filters to query - Sort
     if (parseedQuery.sortBy) {
       if (parseedQuery.sortBy === 'rating') {
-        parseedQuery.sortBy = 'rating.rating'
+        parseedQuery.sortBy = 'rating.avg'
       }
       query[3].$sort[parseedQuery.sortBy] = parseedQuery.sort
     } else {
