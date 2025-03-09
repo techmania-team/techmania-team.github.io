@@ -48,7 +48,7 @@ q-page#pattern
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
 import { useUserStore } from 'src/stores/user'
@@ -147,5 +147,9 @@ defineOptions({
     pattern.clearData()
     await pattern.fetchPattern(currentRoute.params.id)
   },
+})
+
+onUnmounted(() => {
+  pattern.clearData()
 })
 </script>
