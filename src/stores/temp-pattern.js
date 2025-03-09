@@ -6,7 +6,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
   const _id = ref('')
   const name = ref('')
   const composer = ref('')
-  const keysounded = ref('')
+  const keysounded = ref(false)
   const difficulties = ref([])
   const link = ref('')
   const previews = ref([])
@@ -31,7 +31,6 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
   const fetchPattern = async (id) => {
     try {
       const { data } = await api.get(`/patterns/${id}`)
-      console.log(data)
       setPattern(data.result)
     } catch (error) {
       console.error(error)
@@ -42,7 +41,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     _id.value = ''
     name.value = ''
     composer.value = ''
-    keysounded.value = ''
+    keysounded.value = false
     difficulties.value = []
     link.value = ''
     previews.value = []
