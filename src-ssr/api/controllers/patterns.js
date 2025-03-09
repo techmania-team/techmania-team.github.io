@@ -223,8 +223,8 @@ export const search = async (req, res) => {
     } else if (['false', 'no', '0'].includes(parseedQuery.keysounded)) {
       query[0].$match.keysounded = false
     }
-    // Add filters to query - Control
-    if (parseedQuery.controls) {
+    // Add filters to query - Controls
+    if ('controls' in req.query) {
       query[0].$match.difficulties = {
         $elemMatch: {
           control: { $in: parseedQuery.controls.split(',').map((control) => parseInt(control)) },
@@ -232,7 +232,7 @@ export const search = async (req, res) => {
       }
     }
     // Add filters to query - Lanes
-    if (parseedQuery.lanes) {
+    if ('lanes' in req.query) {
       const lanesQuery = { $in: parseedQuery.lanes.split(',').map((lane) => parseInt(lane)) }
 
       if (!query[0].$match.difficulties) {
