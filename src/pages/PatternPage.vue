@@ -5,14 +5,17 @@ q-page#pattern
   //- Content
   section.q-mx-auto.padding
     .container
+      //- Title
       .row
-        .col-6.q-mx-auto
+        //- Title name
+        .col-9.q-mx-auto
           h4 {{ pattern.name }}
-        q-no-ssr.col-6.text-right
-          h4
-            q-btn.q-mr-xs(v-if="pattern.submitter._id === user._id" flat icon="edit" color="tech" :to="'/patterns/edit/' + pattern._id") {{ $t('pattern.edit') }}
-            q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
+        //- Edit and download buttons
+        .col-3.text-right.self-center
+          q-btn.q-mr-xs(v-if="pattern.submitter._id === user._id" flat icon="edit" color="tech" :to="'/patterns/edit/' + pattern._id") {{ $t('pattern.edit') }}
+          q-btn.q-mr-xs(flat icon="download" color="tech" type="a" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
       q-separator
+      //- Information
       .row.q-my-md
         .col-12.col-md-6
           .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.patternData') }}
@@ -33,18 +36,18 @@ q-page#pattern
                 q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
                 span(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
         .col-12.col-md-6.pre-line.q-my-md.q-my-md-none
-          .text-h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
+          h6.q-mt-md.q-mb-lg {{ $t('pattern.description') }}
           .q-gutter-sm
             p(v-html="pattern.description" v-if="pattern.description")
             p(v-else) {{ $t('pattern.noDescription') }}
+      //- Previews
       .row.q-my-md
         .col-12
-          .text-h6.q-mt-md.q-mb-lg.text-md-center {{ $t('pattern.previews') }}
-          .q-gutter-sm
-            .row.w-100.justify-center
-              .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-                q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
-              p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
+          h6.q-mt-md.q-mb-lg.text-md-center {{ $t('pattern.previews') }}
+          .row.w-100.justify-center.q-gutter-sm
+            .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
+              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+            p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
 </template>
 
 <script setup>
