@@ -1,7 +1,7 @@
 <template lang="pug">
 q-page#index
   //- Header
-  q-parallax#header-video
+  q-parallax.header-parallax
     //- Header Video background
     template(#media)
       video(:src="'/assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
