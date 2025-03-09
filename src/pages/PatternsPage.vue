@@ -2,7 +2,7 @@
 q-page#patterns
   q-no-ssr.q-mx-auto.padding
     //- Header
-    q-parallax.q-mb-xl.header-parallax(:height="170")
+    q-parallax.q-mb-xl.header-parallax(:height="200")
       //- Header image background
       template(#media)
         img(src="/assets/header-pattern.png")
