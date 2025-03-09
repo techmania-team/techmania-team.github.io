@@ -100,7 +100,7 @@ q-page#patterns
 </template>
 
 <script setup>
-import { ref, useTemplateRef, onMounted } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
 import * as yup from 'yup'
@@ -292,8 +292,4 @@ const changeSort = (sortBy) => {
     form.value.setFieldValue('sortBy', sortBy)
   }
 }
-
-onMounted(() => {
-  fetchPatterns()
-})
 </script>
