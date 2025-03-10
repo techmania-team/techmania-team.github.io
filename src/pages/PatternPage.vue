@@ -187,6 +187,10 @@ defineOptions({
 })
 
 onUnmounted(() => {
-  pattern.clearData()
+  // NOTE:
+  // When going to pattern edit page
+  // Clear pattern data when unmounting will cause pattern edit page to lose data
+  // Edit (Prefetch) --> Pattern(onUnmounted) --> Edit (onMounted)
+  // pattern.clearData()
 })
 </script>
