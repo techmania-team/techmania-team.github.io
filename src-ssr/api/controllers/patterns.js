@@ -363,24 +363,54 @@ export const del = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    if (req.body.image && req.body.image.length > 0) {
-      const valid = await checkImage(req.body.image)
-      if (!valid) {
-        res.status(400).send({ success: false, message: 'Validation Failed' })
-        return
-      }
-    }
-    await patterns.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
-      name: req.body.name,
-      composer: req.body.composer,
-      keysounded: req.body.keysounded,
-      difficulties: req.body.difficulties,
-      link: req.body.link,
-      previews: req.body.previews,
-      description: req.body.description,
-      image: req.body.image,
-      updatedAt: Date.now(),
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
     })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    // Request body validation schema
+    const bodySchema = yup.object({
+      name: yup.string().required(),
+      composer: yup.string().required(),
+      link: yup.string().url().required(),
+      keysounded: yup.boolean().required(),
+      image: yup
+        .string()
+        .url()
+        .test('valid', 'Invalid image URL', async (value) => {
+          if (!value) return true
+          return await checkImage(value)
+        }),
+      previews: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
+      difficulties: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          level: yup.number().required().min(1),
+          control: yup.number().required().min(0).max(2),
+          lanes: yup.number().required().min(2).max(4),
+        }),
+      ),
+      description: yup.string(),
+    })
+    // Parsed request query
+    const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Update pattern
+    await patterns.findByIdAndUpdate(parsedParams.id, parseedBody)
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
     if (error.name === 'ValidationError') {
