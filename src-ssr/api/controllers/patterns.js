@@ -2,78 +2,94 @@ import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
 import * as yup from 'yup'
-import patterns from '../models/patterns.js'
-import users from '../models/users.js'
+import patterns from '../models/patterns'
+import users from '../models/users'
 import { checkImage } from '../utils/image'
 import validator from 'validator'
+import { controls } from 'src/utils/control'
 
 export const create = async (req, res) => {
   try {
-    if (req.body.image && req.body.image.length > 0) {
-      const valid = await checkImage(req.body.image)
-      if (!valid) {
-        res.status(400).send({ success: false, message: 'Validation Failed' })
-        return
-      }
-    } else {
-      req.body.image = ''
-    }
-    const result = await patterns.create({
-      submitter: req.user._id,
-      name: req.body.name,
-      composer: req.body.composer,
-      keysounded: req.body.keysounded,
-      difficulties: req.body.difficulties,
-      link: req.body.link,
-      previews: req.body.previews,
-      description: req.body.description,
-      image: req.body.image,
+    // Request body validation schema
+    const bodySchema = yup.object({
+      name: yup.string().required(),
+      composer: yup.string().required(),
+      link: yup.string().url().required(),
+      keysounded: yup.boolean().required(),
+      image: yup
+        .string()
+        .url()
+        .test('valid', 'Invalid image URL', async (value) => {
+          if (!value) return true
+          return await checkImage(value)
+        }),
+      previews: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
+      difficulties: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          level: yup.number().required().min(1),
+          control: yup.number().required().min(0).max(2),
+          lanes: yup.number().required().min(2).max(4),
+        }),
+      ),
+      description: yup.string(),
     })
+    // Parsed request query
+    const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Create pattern
+    const result = await patterns.create({ ...parseedBody, submitter: req.user._id })
+
+    // Setup Discord webhook embed message
     let strPreveiw = ''
-    for (const preview of req.body.previews) {
+    for (const preview of parseedBody.previews) {
       strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
     }
-    const controls = ['Touch', 'Key', 'KM']
     let strDifficulty = ''
-    for (const difficulty of req.body.difficulties) {
+    for (const difficulty of parseedBody.difficulties) {
       strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
     }
     const ytid =
-      req.body.previews.length > 0 &&
-      req.body.previews[0].ytid &&
-      req.body.previews[0].ytid.length > 0
-        ? req.body.previews[0].ytid
+      parseedBody.previews.length > 0 &&
+      parseedBody.previews[0].ytid &&
+      parseedBody.previews[0].ytid.length > 0
+        ? parseedBody.previews[0].ytid
         : ''
     const embeds = [
       {
         url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
         image: {
           url:
-            req.body.image.length > 0
-              ? req.body.image
+            parseedBody.image.length > 0
+              ? parseedBody.image
               : ytid.length > 0
                 ? `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
                 : process.env.HOST_URL + '/assets/unknown.jpg',
         },
-        title: req.body.name,
+        title: parseedBody.name,
         color: '15158332',
         fields: [
-          { name: 'Composer', value: req.body.composer, inline: true },
+          { name: 'Composer', value: parseedBody.composer, inline: true },
           {
             name: 'Keysounded',
-            value: req.body.keysounded === true ? 'Yes' : 'No',
+            value: parseedBody.keysounded === true ? 'Yes' : 'No',
             inline: true,
           },
           { name: 'Previews', value: strPreveiw || 'None', inline: false },
           { name: 'Difficulties', value: strDifficulty, inline: false },
-          { name: 'Download', value: req.body.link, inline: false },
+          { name: 'Download', value: parseedBody.link, inline: false },
         ],
       },
     ]
-    if (req.body.description) {
+    if (parseedBody.description) {
       embeds[0].fields.push({
         name: 'Description',
-        value: req.body.description.replace(/<[^>]+>/g, ' '),
+        value: parseedBody.description.replace(/<[^>]+>/g, ' '),
         inline: false,
       })
     }
