@@ -15,12 +15,12 @@ const routes = [
       },
       {
         path: 'patterns/new',
-        component: () => import('pages/PatternForm.vue'),
+        component: () => import('pages/PatternFormPage.vue'),
         meta: { login: true, recaptcha: true },
       },
       {
         path: 'patterns/edit/:id',
-        component: () => import('pages/PatternForm.vue'),
+        component: () => import('pages/PatternFormPage.vue'),
         meta: { login: true, recaptcha: true },
       },
       {
