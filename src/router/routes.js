@@ -19,7 +19,7 @@ const routes = [
         meta: { login: true, recaptcha: true },
       },
       {
-        path: 'patterns/edit/:id',
+        path: 'patterns/:id/edit',
         component: () => import('pages/PatternFormPage.vue'),
         meta: { login: true, recaptcha: true },
       },
