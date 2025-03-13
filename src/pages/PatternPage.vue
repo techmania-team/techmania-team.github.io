@@ -58,9 +58,10 @@ q-page#pattern
                 .row.q-gutter-y-sm
                   .col-2.text-center(v-for="(difficulty, idx) in pattern.difficulties" :key="idx")
                     div.q-mx-auto
-                      q-icon(:name="`img:/assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
+                      q-icon(size="24px" :name="`img:/assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
                       q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
-                    div(:class="getLevelColor(difficulty.level)") &nbsp;{{ difficulty.name }} Lv.{{ difficulty.level }}
+                    div(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
+                    div(:class="getLevelColor(difficulty.level)") {{ difficulty.name }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error
