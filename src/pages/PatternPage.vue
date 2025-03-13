@@ -103,7 +103,7 @@ const backgroundImage = computed(() => {
     ? pattern.image
     : pattern.previews.length > 0
       ? getYouTubeThumbnail(pattern.previews[0].ytid)
-      : 'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png'
+      : '/assets/header-pattern.png'
 })
 
 const metaData = () => ({
