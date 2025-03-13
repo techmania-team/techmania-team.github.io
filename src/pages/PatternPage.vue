@@ -47,6 +47,15 @@ q-page#pattern
                 q-item-label {{ $t('pattern.keysounded') }}
                 q-item-label(caption :class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
                   | {{ $t(`patterns.${pattern.keysounded ? 'yes' : 'no'}`) }}
+            //- List items - Rating
+            q-item
+              q-item-section(avatar)
+                q-icon(name="thumb_up_alt")
+              q-item-section
+                q-item-label
+                  q-rating(:model-value="pattern.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
+                q-item-label(caption)
+                  | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
         //- Difficulty list
         .col-12.col-md-6
           q-list
