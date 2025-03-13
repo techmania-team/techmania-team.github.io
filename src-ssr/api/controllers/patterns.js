@@ -341,7 +341,6 @@ export const searchID = async (req, res) => {
         .string()
         .required()
         .test('mongoID', 'Invalid ID', (value) => {
-          if (!value) return true
           return validator.isMongoId(value)
         }),
     })
@@ -418,8 +417,9 @@ export const searchID = async (req, res) => {
     // Aggregation returns an array, but we only need the first element
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -435,7 +435,6 @@ export const del = async (req, res) => {
         .string()
         .required()
         .test('mongoID', 'Invalid ID', (value) => {
-          if (!value) return true
           return validator.isMongoId(value)
         }),
     })
@@ -448,7 +447,9 @@ export const del = async (req, res) => {
     })
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -464,7 +465,6 @@ export const update = async (req, res) => {
         .string()
         .required()
         .test('mongoID', 'Invalid ID', (value) => {
-          if (!value) return true
           return validator.isMongoId(value)
         }),
     })
