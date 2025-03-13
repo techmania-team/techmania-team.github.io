@@ -329,7 +329,20 @@ export const search = async (req, res) => {
 
 export const searchID = async (req, res) => {
   try {
-    const result = await patterns.findById(req.params.id).populate('submitter', 'name').lean()
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const result = await patterns.findById(parsedParams.id).populate('submitter', 'name').lean()
     if (result === null) {
       res.status(404).send({ success: false, message: 'Not found' })
       return
