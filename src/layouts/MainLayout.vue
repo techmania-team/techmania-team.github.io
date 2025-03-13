@@ -83,7 +83,8 @@ q-layout(view='hHh lpR fff')
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
   q-page-container
-    router-view.q-mb-xl(:key="$route.fullPath")
+    router-view.q-mb-xl(:key="$route.path")
+
   //- Footer
   q-footer.bg-techgrey.text-white.relative-position(bordered)
     .container

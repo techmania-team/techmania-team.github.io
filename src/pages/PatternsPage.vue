@@ -16,7 +16,7 @@ q-page#patterns
           //- Search form
           .col-12.q-mx-auto
             //- Search form
-            Form(v-slot="{ handleSubmit, isSubmitting }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
+            Form(v-slot="{ handleSubmit, isSubmitting }" :validation-schema="schema" :initial-values="initialValues" ref="formRef" as="")
               q-form(@submit="handleSubmit(onSearchSubmit)")
                 //- Keywords
                 Field(name="keywords" v-slot="{ field, errorMessage }")
@@ -89,7 +89,7 @@ q-page#patterns
       .container
         .row
           .col-12.q-mx-auto
-            q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+            q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable" ref="infiniteScrollRef")
               .col-xs-12.col-sm-6.col-md-4.col-lg-3.q-pa-md.q-my-xs(v-for="pattern in patterns" :key="pattern.id")
                 PatternCard(:pattern="pattern" :mine="false")
               template(#loading)
@@ -101,16 +101,18 @@ q-page#patterns
 </template>
 
 <script setup>
-import { ref, useTemplateRef } from 'vue'
+import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { Form, Field } from 'vee-validate'
 import PatternCard from 'src/components/PatternCard.vue'
 import api from 'src/utils/api'
+import handleError from 'src/utils/handleError'
 import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 
 const route = useRoute()
+const router = useRouter()
 
 const metaData = {
   title: 'TECHMANIA | Patterns',
@@ -179,16 +181,7 @@ const patterns = ref([])
 const lanesOptions = [2, 3, 4]
 const controlOptions = [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]
 // Search form template ref
-const form = useTemplateRef('form')
-// Search form validation schema
-const schema = yup.object({
-  keywords: yup.string(),
-  keysounded: yup.string().oneOf(['', 'true', 'false']),
-  controls: yup.array().of(yup.number().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM])),
-  lanes: yup.array().of(yup.number().min(2).max(4)),
-  sort: yup.number().required().min(-1).max(1),
-  sortBy: yup.string().required().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
-})
+const formRef = useTemplateRef('formRef')
 // Search form initial values
 const initialValues = {
   keywords: '',
@@ -198,7 +191,17 @@ const initialValues = {
   sort: -1,
   sortBy: 'createdAt',
 }
-
+// Search form validation schema
+const schema = yup
+  .object({
+    keywords: yup.string(),
+    keysounded: yup.string().oneOf(['', 'true', 'false']),
+    controls: yup.array().of(yup.number().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM])),
+    lanes: yup.array().of(yup.number().min(2).max(4)),
+    sort: yup.number().required().min(-1).max(1),
+    sortBy: yup.string().required().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
+  })
+  .default(initialValues)
 // Current search filters for API request
 const search = ref({
   keywords: '',
@@ -208,8 +211,15 @@ const search = ref({
   sort: -1,
   sortBy: 'createdAt',
 })
+
 // Infinite scroll disable flag
-const scrollDisable = ref(false)
+const scrollDisable = ref(true)
+
+// Is the component mounted?
+// Infinite scroll fires load event on mounted
+// This will cause a fetch request before we parsed the query parameters
+// And patterns will be duplicated
+let mounted = false
 
 /**
  * Fetch patterns from API
@@ -229,10 +239,14 @@ const fetchPatterns = async (start = 0) => {
         limit: 12,
       },
     })
-    if (data.result.length > 0) patterns.value = patterns.value.concat(data.result)
-    else scrollDisable.value = true
+    if (data.result.length > 0) {
+      patterns.value = patterns.value.concat(data.result)
+      scrollDisable.value = false
+    } else {
+      scrollDisable.value = true
+    }
   } catch (error) {
-    console.error(error)
+    handleError(error)
     scrollDisable.value = true
   }
 }
@@ -243,6 +257,7 @@ const fetchPatterns = async (start = 0) => {
  * @param done - The callback function
  */
 const loadScroll = async (index, done) => {
+  if (!mounted) return done()
   await fetchPatterns((index - 1) * 12)
   done()
 }
@@ -261,9 +276,19 @@ const onSearchSubmit = async (values) => {
   search.value.sort = values.sort
   search.value.sortBy = values.sortBy
   // Reset infinite scroll disable flag
-  scrollDisable.value = false
+  scrollDisable.value = true
   // Fetch patterns
   await fetchPatterns()
+  router.replace({
+    query: {
+      keywords: values.keywords,
+      keysounded: values.keysounded,
+      controls: values.controls.join(),
+      lanes: values.lanes.join(),
+      sort: values.sort,
+      sortBy: values.sortBy,
+    },
+  })
 }
 
 /**
@@ -272,9 +297,9 @@ const onSearchSubmit = async (values) => {
  * @returns The icon name
  */
 const getSortIcon = (sortBy) => {
-  if (!form.value) return undefined
-  if (form.value.values.sortBy === sortBy)
-    return form.value.values.sort > 0 ? 'arrow_drop_up' : 'arrow_drop_down'
+  if (!formRef.value) return undefined
+  if (formRef.value.values.sortBy === sortBy)
+    return formRef.value.values.sort > 0 ? 'arrow_drop_up' : 'arrow_drop_down'
   else return undefined
 }
 
@@ -283,12 +308,51 @@ const getSortIcon = (sortBy) => {
  * @param sortBy - The sort by field
  */
 const changeSort = (sortBy) => {
-  const currentSortBy = form.value.values.sortBy
-  const currentSort = form.value.values.sort
-  if (currentSortBy === sortBy) form.value.setFieldValue('sort', currentSort * -1)
+  const currentSortBy = formRef.value.values.sortBy
+  const currentSort = formRef.value.values.sort
+  if (currentSortBy === sortBy) formRef.value.setFieldValue('sort', currentSort * -1)
   else {
-    form.value.setFieldValue('sort', -1)
-    form.value.setFieldValue('sortBy', sortBy)
+    formRef.value.setFieldValue('sort', -1)
+    formRef.value.setFieldValue('sortBy', sortBy)
   }
 }
+
+onMounted(async () => {
+  if (route.query) {
+    // Wait for the form to be ready to get template ref
+    await nextTick()
+
+    // Parse query parameters
+    const values = {
+      keywords: route.query.keywords || initialValues.keywords,
+      keysounded: route.query.keysounded || initialValues.keysounded,
+      controls: route.query.controls ? route.query.controls.split(',') : initialValues.controls,
+      lanes: route.query.lanes ? route.query.lanes.split(',') : initialValues.lanes,
+      sort: route.query.sort || initialValues.sort,
+      sortBy: route.query.sortBy || initialValues.sortBy,
+    }
+    const parsed = schema.cast(values, { stripUnknown: true })
+
+    // Set form values
+    formRef.value.setValues(parsed)
+
+    // Update query parameters
+    router.replace({
+      query: {
+        keywords: formRef.value.values.keywords,
+        keysounded: formRef.value.values.keysounded,
+        controls: formRef.value.values.controls.join(),
+        lanes: formRef.value.values.lanes.join(),
+        sort: formRef.value.values.sort,
+        sortBy: formRef.value.values.sortBy,
+      },
+    })
+    // Apply search filters
+    await onSearchSubmit(parsed)
+  } else {
+    // Fetch patterns
+    await fetchPatterns()
+  }
+  mounted = true
+})
 </script>
