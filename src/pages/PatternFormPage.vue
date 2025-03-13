@@ -15,7 +15,7 @@ q-page#patternForm
       .row
         .col-12
           //- Form
-          Form(v-slot="{ handleSubmit, isSubmitting }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
+          Form(v-slot="{ handleSubmit }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
             q-form(@submit.prevent="handleSubmit($event, onSubmit)")
               //- Rules
               q-card.text-white.bg-red.q-my-lg(rounded)
@@ -274,7 +274,7 @@ q-page#patternForm
                     .text-negative {{ errorMessage }}
                 br
                 //- Submit button
-                q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="isSubmitting" style="width: 150px")
+                q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
     //- Delete confirmation dialog
     q-dialog(v-model="deleteDialog" persistent)
       q-card(rounded)
@@ -458,6 +458,7 @@ const initialValues = {
 }
 // On form submit
 const onSubmit = async (values) => {
+  $q.loading.show()
   try {
     if (route.params.id) {
       // Has pattern ID, update pattern
@@ -502,6 +503,7 @@ const onSubmit = async (values) => {
       })
       router.push(`/patterns/${data.id}`)
     }
+    $q.loading.hide()
     // Notify success
     $q.notify({
       icon: 'check',

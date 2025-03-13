@@ -118,7 +118,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'LocalStorage', 'Meta'],
+      plugins: ['Notify', 'LocalStorage', 'Meta', 'Loading'],
       cssAddon: true,
     },
 
