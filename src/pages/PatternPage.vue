@@ -178,11 +178,16 @@ const metaData = () => ({
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute }) {
+  async preFetch({ currentRoute, redirect }) {
     // Prefetch pattern data
     const pattern = useTempPatternStore()
     pattern.clearData()
     await pattern.fetchPattern(currentRoute.params.id)
+
+    // Check if pattern exists and user is the submitter
+    if (pattern._id.length === 0) {
+      redirect('/404')
+    }
   },
 })
 
