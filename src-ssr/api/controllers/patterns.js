@@ -177,7 +177,13 @@ export const search = async (req, res) => {
         },
       },
       {
-        $unset: ['submitter.discord', 'submitter.avatar'],
+        $unset: [
+          'submitter.discord',
+          'submitter.avatar',
+          'submitter.discordRefreshToken',
+          'submitter.discordToken',
+          'submitter.accessInfo',
+        ],
       },
     ]
 
