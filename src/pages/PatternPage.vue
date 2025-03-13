@@ -5,15 +5,14 @@ q-page#pattern
     //- Header image background
     template(#media)
       img(:src="backgroundImage")
-      br
     //- Header content
     template(#content)
-      .column.items-center
+      .column.items-center.q-mb-md
         .text-h4.text-center {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
-        .row.q-my-md
-          q-btn.q-mr-xs(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('pattern.edit') }}
-          q-btn.q-mr-xs(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
+      .row.q-gutter-x-md
+        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
+        q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('pattern.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
     .container
