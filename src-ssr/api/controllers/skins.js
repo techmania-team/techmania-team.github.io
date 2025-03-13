@@ -1,9 +1,9 @@
 import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
-import skins from '../models/skins.js'
-import users from '../models/users.js'
-import comments from '../models/comments.js'
+import skins from '../models/skins'
+import users from '../models/users'
+import comments from '../models/comments'
 import { checkImage } from '../utils/image'
 
 const types = ['Note', 'VFX', 'Combo', 'Game UI']

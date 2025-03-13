@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import comments from '../models/comments.js'
-import patterns from '../models/patterns.js'
-import skins from '../models/skins.js'
+import comments from '../models/comments'
+import patterns from '../models/patterns'
+import skins from '../models/skins'
 
 export const create = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import users from '../models/users.js'
-import comments from '../models/comments.js'
+import users from '../models/users'
+import comments from '../models/comments'
 
 export const getById = async (req, res) => {
   try {

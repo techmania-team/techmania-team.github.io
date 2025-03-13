@@ -1,5 +1,5 @@
 import express from 'express'
-import { create, search, searchID, del, update } from '../controllers/skins.js'
+import { create, search, searchID, del, update } from '../controllers/skins'
 import { isAuthenticated } from '../middleware/auth'
 import recaptcha from '../middleware/recaptcha'
 import guild from '../middleware/guild'
