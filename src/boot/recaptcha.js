@@ -1,5 +1,6 @@
 import { defineBoot } from '#q-app/wrappers'
 import { VueReCaptcha, useReCaptcha } from 'vue-recaptcha-v3'
+import { useUserStore } from 'src/stores/user'
 
 export default defineBoot(({ app, router }) => {
   app.use(VueReCaptcha, {
@@ -11,12 +12,14 @@ export default defineBoot(({ app, router }) => {
     if (!process.env.CLIENT) return
 
     const recaptcha = useReCaptcha()
+    const user = useUserStore()
 
     // Wait for recaptcha to be loaded
     await recaptcha.recaptchaLoaded()
 
     // Show or hide the badge based on the route meta
-    if (to.meta.recaptcha) {
+    // Recaptcha only applies to submission pages and comment sections, which require login
+    if (to.meta.recaptcha && user.isLogin) {
       recaptcha.instance.value.showBadge()
     } else {
       recaptcha.instance.value.hideBadge()
