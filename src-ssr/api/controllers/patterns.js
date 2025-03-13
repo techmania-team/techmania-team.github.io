@@ -347,8 +347,21 @@ export const searchID = async (req, res) => {
 
 export const del = async (req, res) => {
   try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     await patterns.findOneAndDelete({
-      _id: mongoose.Types.ObjectId(req.params.id),
+      _id: parsedParams.id,
       submitter: req.user._id,
     })
     res.status(200).send({ success: true, message: '' })
