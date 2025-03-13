@@ -348,12 +348,75 @@ export const searchID = async (req, res) => {
     // Parsed request params
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
-    const result = await patterns.findById(parsedParams.id).populate('submitter', 'name').lean()
-    if (result === null) {
+    const result = await patterns.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(parsedParams.id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'pattern',
+          as: 'comments',
+          pipeline: [
+            {
+              $project: {
+                pattern: 0,
+                skin: 0,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          rating: {
+            count: {
+              $size: '$comments',
+            },
+            avg: {
+              $ifNull: [
+                {
+                  $avg: '$comments.rating',
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'submitter',
+          foreignField: '_id',
+          as: 'submitter',
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: '$submitter',
+        },
+      },
+    ])
+
+    if (result.length === 0) {
       res.status(404).send({ success: false, message: 'Not found' })
       return
     }
-    res.status(200).send({ success: true, message: '', result })
+
+    // Note:
+    // Aggregation returns an array, but we only need the first element
+    res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
     console.error(error)
     if (error.name === 'CastError') {
