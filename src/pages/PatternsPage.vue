@@ -95,8 +95,9 @@ q-page#patterns
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
             .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
-    q-page-sticky(position="bottom-right" :offset="[36,36]" v-if="user.isLogin")
-      q-btn(fab icon="add" color="tech" text-color="black" @click="$router.push('/patterns/new')")
+    //- Back to top button
+    q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
+      q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
 </template>
 
 <script setup>
@@ -105,13 +106,11 @@ import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
 import * as yup from 'yup'
 import { Form, Field } from 'vee-validate'
-import { useUserStore } from 'src/stores/user'
 import PatternCard from 'src/components/PatternCard.vue'
 import api from 'src/utils/api'
 import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 
 const route = useRoute()
-const user = useUserStore()
 
 const metaData = {
   title: 'TECHMANIA | Patterns',
