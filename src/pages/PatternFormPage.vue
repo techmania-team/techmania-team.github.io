@@ -503,7 +503,6 @@ const onSubmit = async (values) => {
       })
       router.push(`/patterns/${data.id}`)
     }
-    $q.loading.hide()
     // Notify success
     $q.notify({
       icon: 'check',
@@ -515,6 +514,7 @@ const onSubmit = async (values) => {
   } catch (error) {
     handleError(error)
   }
+  $q.loading.hide()
 }
 
 // Delete confirmation dialog state
