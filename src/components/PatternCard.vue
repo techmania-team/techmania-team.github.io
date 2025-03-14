@@ -71,9 +71,7 @@ q-card.full-height.card-pattern
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import parseISO from 'date-fns/fp/parseISO'
-import { useSettingsStore } from 'src/stores/settings'
-import date from 'src/utils/date-fns'
+import * as date from 'src/utils/date'
 import { useRouter } from 'vue-router'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { getControlIcon } from 'src/utils/control'
@@ -91,26 +89,19 @@ const hasVideo = ref(false)
 const hasImage = ref(false)
 const headerImage = ref('')
 
-const settings = useSettingsStore()
 const router = useRouter()
 
 const formattedTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.pattern.createdAt), {
-      locale: date.locales[settings.locale],
-      addSuffix: true,
-    }),
-    text: new Date(props.pattern.createdAt).toLocaleString(settings.locale),
+    relative: date.toRelative(props.pattern.createdAt),
+    text: date.toLocaleString(props.pattern.createdAt),
   }
 })
 
 const formattedUpdateTime = computed(() => {
   return {
-    relative: date.formatDistanceToNow(parseISO(props.pattern.updatedAt), {
-      locale: date.locales[settings.locale],
-      addSuffix: true,
-    }),
-    text: new Date(props.pattern.updatedAt).toLocaleString(settings.locale),
+    relative: date.toRelative(props.pattern.updatedAt),
+    text: date.toLocaleString(props.pattern.updatedAt),
   }
 })
 
