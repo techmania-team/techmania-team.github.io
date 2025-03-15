@@ -11,50 +11,52 @@ q-layout(view='hHh lpR fff')
             q-avatar
               img(:src="'/assets/notes/basic.png'")
             | &nbsp;TECHMANIA
-        //- PC navigation item
+        //- Navbar items
         q-tabs(active-color="tech")
-          //- Docs
-          q-route-tab.nav-desktop(href="https://techmania-team.github.io/techmania-docs/" target="_blank" :label="$t('nav.manual')")
-          //- Links
-          q-route-tab.nav-desktop(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
-          //- Login
-          q-route-tab.nav-desktop(v-if="!user.isLogin" href="/api/auth/login" :label="$t('nav.login')")
-          //- Language options
-          q-btn-dropdown.nav-desktop(stretch flat :label="$t('nav.lang')")
-            q-list
-              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
-                q-item-section
-                  q-item-label {{ locale.toUpperCase() }}
-          //- User dropdown
-          q-btn-dropdown.nav-desktop(stretch flat v-if="user.isLogin")
-            //- User avatar
-            template(#label)
-              q-avatar
-                img(:src="user.avatar")
-            //- User dropdown items
-            q-list
-              //- User Profile
-              q-item(clickable v-close-popup :to="'/users/'+user._id" active-class="text-white")
-                q-item-section
-                  q-item-label {{ $t('nav.myPage') }}
-              //- Create new pattern
-              q-item.text-grey7(clickable v-close-popup to="/patterns/new" :active="false")
-                q-item-section
-                  q-item-label {{ $t('submitForm.title') }}
-              //- Logout
-              q-item(clickable href="/api/auth/logout")
-                q-item-section
-                  q-item-label {{ $t('nav.logout') }}
+          //- PC navigation item
+          template(v-if="$q.screen.gt.sm")
+            //- Docs
+            q-route-tab(href="https://techmania-team.github.io/techmania-docs/" target="_blank" :label="$t('nav.manual')")
+            //- Links
+            q-route-tab(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
+            //- Login
+            q-route-tab(v-if="!user.isLogin" href="/api/auth/login" :label="$t('nav.login')")
+            //- Language options
+            q-btn-dropdown(stretch flat :label="$t('nav.lang')")
+              q-list
+                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                  q-item-section
+                    q-item-label {{ locale.toUpperCase() }}
+            //- User dropdown
+            q-btn-dropdown(stretch flat v-if="user.isLogin")
+              //- User avatar
+              template(#label)
+                q-avatar
+                  img(:src="user.avatar")
+              //- User dropdown items
+              q-list
+                //- User Profile
+                q-item(clickable v-close-popup :to="'/users/'+user._id" active-class="text-white")
+                  q-item-section
+                    q-item-label {{ $t('nav.myPage') }}
+                //- Create new pattern
+                q-item.text-grey7(clickable v-close-popup to="/patterns/new" :active="false")
+                  q-item-section
+                    q-item-label {{ $t('submitForm.title') }}
+                //- Logout
+                q-item(clickable href="/api/auth/logout")
+                  q-item-section
+                    q-item-label {{ $t('nav.logout') }}
           //-   Nav Collapse button for mobile
-          q-btn.nav-mobile(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
-            q-avatar(v-if="user.isLogin")
-              img(:src="user.avatar")
-            | &emsp;
+          template(v-else)
+            q-btn(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
+              q-avatar(v-if="user.isLogin")
+                img(:src="user.avatar")
       //- Separator for mobile dropdown
-      q-separator.nav-mobile(v-show="dropdown")
+      q-separator(v-if="!$q.screen.gt.sm && dropdown")
     //- Mobile dropdown
     q-slide-transition
-      .container.nav-mobile(v-show="dropdown")
+      .container(v-if="!$q.screen.gt.sm && dropdown")
         //- Nav items
         q-list
           //- Docs
