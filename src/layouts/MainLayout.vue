@@ -91,7 +91,7 @@ q-layout(view='hHh lpR fff')
   q-footer.bg-techgrey.text-white.relative-position(bordered)
     .container
       q-toolbar
-        p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA DEV TEAM
+        p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA
         q-space
         q-btn.q-mr-xs(flat round icon="fab fa-youtube" color="tech" href="https://www.youtube.com/channel/UCoHxk7shdAKf7W3yqUJlDaA" target="_blank")
         q-btn.q-mr-xs(flat round icon="fab fa-discord" color="tech" href="https://discord.gg/K4Nf7AnAZt" target="_blank")
