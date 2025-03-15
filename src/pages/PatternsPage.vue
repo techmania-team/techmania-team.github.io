@@ -38,51 +38,59 @@ q-page#patterns
                 q-list
                   //- Keysounded
                   q-item
-                    q-item-section {{ $t('pattern.keysounded') }}
-                    q-item-section
-                      div.q-gutter-xs
-                        Field(name="keysounded" v-slot="{ field }")
-                          q-btn(flat :label="$t('patterns.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
-                          q-btn(flat :label="$t('patterns.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
-                          q-btn(flat :label="$t('patterns.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
+                    q-item-section.no-wrap
+                      .row.align.items-center.q-gutter-y-md
+                        .col-12.col-sm-6.col-lg-6 {{ $t('pattern.keysounded') }}
+                        .col-12.col-sm-6.col-lg-6
+                          .q-gutter-md-xs
+                            Field(name="keysounded" v-slot="{ field }")
+                              q-btn(flat :label="$t('patterns.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
+                              q-btn(flat :label="$t('patterns.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
+                              q-btn(flat :label="$t('patterns.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
                   //- Controls
                   q-item
-                    q-item-section {{ $t('submitForm.control') }}
-                    q-item-section
-                      div.q-gutter-xs
-                        template(v-for="(controlOption) in controlOptions" :key="controlOption")
-                          Field(name="controls" v-slot="{ field }" type="checkbox" :value="controlOption")
-                            q-checkbox(
-                              keep-color color="tech"
-                              :name="`controls`+controlOption"
-                              :model-value="field.checked"
-                              @update:model-value="field.onInput($event)"
-                              :label="$t('pattern.'+controls[controlOption])"
-                            )
+                    q-item-section.no-wrap
+                      .row.align.items-center.q-gutter-y-md
+                        .col-12.col-sm-6.col-lg-6 {{ $t('submitForm.control') }}
+                        .col-12.col-sm-6.col-lg-6
+                          .q-gutter-md-xs
+                            template(v-for="(controlOption) in controlOptions" :key="controlOption")
+                              Field(name="controls" v-slot="{ field }" type="checkbox" :value="controlOption")
+                                q-checkbox(
+                                  keep-color color="tech"
+                                  :name="`controls`+controlOption"
+                                  :model-value="field.checked"
+                                  @update:model-value="field.onInput($event)"
+                                  :label="$t('pattern.'+controls[controlOption])"
+                                )
                   //- Lanes
                   q-item
-                    q-item-section {{ $t('submitForm.lanes') }}
-                    q-item-section
-                      div.q-gutter-xs
-                        template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
-                          Field(name="lanes" v-slot="{ field }" type="checkbox" :value="lanesOption")
-                            q-checkbox(
-                              keep-color color="tech"
-                              :name="`lanes`+lanesOption"
-                              :model-value="field.checked"
-                              @update:model-value="field.onInput($event)"
-                              :label="lanesOption + `L`"
-                            )
+                    q-item-section.no-wrap
+                      .row.align.items-center.q-gutter-y-md
+                        .col-12.col-sm-6.col-lg-6 {{ $t('submitForm.lanes') }}
+                        .col-12.col-sm-6.col-lg-6
+                          .q-gutter-md-xs
+                            template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
+                              Field(name="lanes" v-slot="{ field }" type="checkbox" :value="lanesOption")
+                                q-checkbox(
+                                  keep-color color="tech"
+                                  :name="`lanes`+lanesOption"
+                                  :model-value="field.checked"
+                                  @update:model-value="field.onInput($event)"
+                                  :label="lanesOption + `L`"
+                                )
                   //- Sort
                   q-item
-                    q-item-section {{ $t('patterns.sort') }}
-                    q-item-section
-                      div.q-gutter-xs
-                        Field(name="sortBy" v-slot="{ field }")
-                          q-btn(flat :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
-                          q-btn(flat :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
-                          q-btn(flat :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
-                          q-btn(flat :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
+                    q-item-section.no-wrap
+                      .row.align.items-center.q-gutter-y-md
+                        .col-12.col-sm-6.col-lg-6 {{ $t('patterns.sort') }}
+                        .col-12.col-sm-6.col-lg-6
+                          .q-gutter-md-xs
+                            Field(name="sortBy" v-slot="{ field }")
+                              q-btn(flat :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
+                              q-btn(flat :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
+                              q-btn(flat :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
+                              q-btn(flat :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
         q-separator.q-my-md
     //- Patterns
     section.q-mx-auto.padding.q-my-md
