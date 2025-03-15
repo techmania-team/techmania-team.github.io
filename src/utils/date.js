@@ -21,5 +21,5 @@ export const toRelative = (date) => {
 
 export const toLocaleString = (date) => {
   const settings = useSettingsStore()
-  return date.toLocaleString(settings.locale)
+  return new Date(date).toLocaleString(settings.locale)
 }
