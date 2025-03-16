@@ -44,6 +44,12 @@ export const initializeApi = async (app) => {
         saveUninitialized: false,
         resave: true,
         store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+        cookie: {
+          secure: process.env.PROD,
+          // 14 days, same as connect mongo default ttl
+          // https://www.npmjs.com/package/connect-mongo#session-expiration
+          maxAge: 14 * 24 * 60 * 60 * 1000,
+        },
       }),
     )
 
