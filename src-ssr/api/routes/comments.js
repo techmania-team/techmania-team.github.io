@@ -1,17 +1,14 @@
 import express from 'express'
 import {
   create,
-  getRatingByPattern,
   getByPattern,
   getMyCommmentByPattern,
-  getRatingBySkin,
   getBySkin,
   getMyCommmentBySkin,
-  updateComment,
+  updateMyComment,
   createReply,
-  updateReply,
+  updateMyReply,
   updateReplyVote,
-  deleteMyComment,
   getByUser,
 } from '../controllers/comments.js'
 import { isAuthenticated } from '../middleware/auth'
@@ -19,18 +16,21 @@ import recaptcha from '../middleware/recaptcha'
 
 const router = express.Router()
 
+// Params description:
+// pid = pattern id
+// sid = skin id
+// uid = user id
+// cid = comment id
+// rid = reply id
 router.post('/', recaptcha, isAuthenticated, create)
-router.get('/patterns/:id/rating', getRatingByPattern)
-router.get('/patterns/:id/my', isAuthenticated, getMyCommmentByPattern)
-router.get('/patterns/:id', getByPattern)
-router.get('/skins/:id/rating', getRatingBySkin)
-router.get('/skins/:id/my', isAuthenticated, getMyCommmentBySkin)
-router.get('/skins/:id', getBySkin)
-router.get('/user/:id', getByUser)
-router.patch('/:id', recaptcha, isAuthenticated, updateComment)
+router.get('/pattern/:pid/my', isAuthenticated, getMyCommmentByPattern)
+router.get('/pattern/:pid', getByPattern)
+router.get('/skin/:sid/my', isAuthenticated, getMyCommmentBySkin)
+router.get('/skin/:sid', getBySkin)
+router.get('/user/:uid', getByUser)
+router.patch('/:cid', recaptcha, isAuthenticated, updateMyComment)
 router.post('/:cid/replies', recaptcha, isAuthenticated, createReply)
-router.patch('/:cid/replies/:rid', recaptcha, isAuthenticated, updateReply)
-router.patch('/:cid/replies/:rid/votes', isAuthenticated, updateReplyVote)
-router.delete('/:cid/', isAuthenticated, deleteMyComment)
+router.patch('/:cid/replies/:rid', recaptcha, isAuthenticated, updateMyReply)
+router.patch('/:cid/replies/:rid/votes', recaptcha, isAuthenticated, updateReplyVote)
 
 export default router

@@ -1,52 +1,37 @@
 import mongoose from 'mongoose'
 
-const VoteSchema = new mongoose.Schema({
-  // User ID
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'users',
+const ReplySchema = new mongoose.Schema(
+  {
+    // User ID
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'users',
+    },
+    // Comment text
+    comment: {
+      type: String,
+      required: true,
+    },
+    // Votes
+    votes: {
+      // user id string as key, vote as value
+      // { id1: 1, id2: -1 }
+      type: Map,
+      of: {
+        type: Number,
+        enum: [1, -1],
+      },
+      default: {},
+    },
+    // Deleted
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  // Upvote or downvote
-  positive: {
-    type: Number,
-    enum: [1, -1],
-    required: true,
-  },
-})
-
-const ReplySchema = new mongoose.Schema({
-  // User ID
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'users',
-  },
-  // Comment text
-  comment: {
-    type: String,
-    required: true,
-  },
-  // Votes
-  votes: {
-    type: [VoteSchema],
-    default: [],
-  },
-  // Post date
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  // Update date
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  deleted: {
-    type: Boolean,
-    default: false,
-  },
-})
+  { versionKey: false, timestamps: true },
+)
 
 const schema = new mongoose.Schema(
   {

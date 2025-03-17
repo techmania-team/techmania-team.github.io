@@ -1,35 +1,84 @@
 import mongoose from 'mongoose'
+import validator from 'validator'
+import * as yup from 'yup'
 import comments from '../models/comments'
-import patterns from '../models/patterns'
-import skins from '../models/skins'
 
 export const create = async (req, res) => {
   try {
-    const query = {
-      pattern: req.body.pattern,
+    // Request body validation schema
+    const schema = yup
+      .object({
+        pattern: yup.string().test('mongoID', 'Invalid pattern ID', (value) => {
+          // Allow empty value for mutual exclusion
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
+        skin: yup.string().test('mongoID', 'Invalid skin ID', (value) => {
+          // Allow empty value for mutual exclusion
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
+        rating: yup.number().required().min(1).max(5),
+        comment: yup.string().required(),
+      })
+      .test(
+        'pattern-skin-mutual-exclusion',
+        'Must provide either pattern or skin, but not both',
+        function (value) {
+          const { pattern, skin } = value
+          if ((pattern && skin) || (!pattern && !skin)) {
+            return this.createError({
+              message: 'Must provide either pattern or skin, but not both',
+              path: 'pattern', // Which field should the error be attached to?
+            })
+          }
+          return true
+        },
+      )
+    // Parsed request body
+    const parsedBody = await schema.validate(req.body, { stripUnknown: true })
+
+    // Check if user already commented on the pattern or skin
+    const checkQuery = {
       'replies.0.user': req.user._id,
       'replies.0.deleted': false,
     }
-    if (req.body.pattern) {
-      query.pattern = req.body.pattern
-    } else if (req.body.skin) {
-      query.skin = req.body.skin
+    if (parsedBody.pattern) {
+      checkQuery.pattern = parsedBody.pattern
+    } else if (parsedBody.skin) {
+      checkQuery.skin = parsedBody.skin
     }
-    let result = await comments.findOne(query)
+    let result = await comments.findOne(checkQuery)
     if (result) {
-      res.status(400).send({ success: false, message: 'Already commented' })
+      res.status(409).send({ success: false, message: 'Already commented' })
       return
     }
-    delete query['replies.0.user']
-    query.rating = req.body.rating
-    query.replies = [
-      {
-        user: req.user._id,
-        comment: req.body.comment,
-      },
-    ]
+
+    // Create new comment
+    const query = {
+      replies: [
+        {
+          user: req.user._id,
+          comment: parsedBody.comment,
+        },
+      ],
+      rating: parsedBody.rating,
+    }
+    if (parsedBody.pattern) {
+      query.pattern = parsedBody.pattern
+    } else if (parsedBody.skin) {
+      query.skin = parsedBody.skin
+    }
     result = await comments.create(query)
+
+    // Add user info to the result
     result = result.toObject()
+    result.replies[0].user = {
+      _id: req.user._id,
+      avatar: `https://cdn.discordapp.com/avatars/${req.user.discord}/${req.user.avatar}.png`,
+      name: req.user.name,
+    }
+
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)
@@ -43,27 +92,42 @@ export const create = async (req, res) => {
 
 export const getByPattern = async (req, res) => {
   try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      pid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     const query = [
       // Find matching pattern id
       {
         $match: {
-          pattern: mongoose.Types.ObjectId(req.params.id),
+          pattern: new mongoose.Types.ObjectId(parsedParams.pid),
           'replies.0.deleted': false,
         },
       },
       // Sort by comment date
       {
         $sort: {
-          'replies.date': -1,
+          'replies.createdAt': -1,
         },
-      },
-      {
-        $limit: 10,
       },
       // Unwind replies for lookup
       {
         $unwind: {
           path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
         },
       },
       // Lookup user
@@ -73,6 +137,35 @@ export const getByPattern = async (req, res) => {
           localField: 'replies.user',
           foreignField: '_id',
           as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
         },
       },
       // Unwind lookup result, always an array with 1 element
@@ -81,9 +174,62 @@ export const getByPattern = async (req, res) => {
           path: '$replies.user',
         },
       },
-      // Remove unnecessary user fields
+      // Calculate sum of votes and user's vote
       {
-        $unset: ['replies.user.accessInfo'],
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: req.user
+                ? {
+                    $getField: {
+                      field: { $toString: new mongoose.Types.ObjectId(req.user._id) },
+                      input: '$replies.votes',
+                    },
+                  }
+                : 0,
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          pattern: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
       },
       // Group pattern result back
       {
@@ -102,19 +248,23 @@ export const getByPattern = async (req, res) => {
       },
     ]
 
-    if (req.query.limit && !isNaN(req.query.limit) && req.query.limit <= 10) {
-      query[1].$limit = parseInt(req.query.limit)
-    }
-
-    if (req.query.skip && !isNaN(req.query.skip) && req.query.skip > 0) {
-      query.splice(2, 0, { $skip: parseInt(req.query.skip) })
+    // User is logged in, exclude own replies
+    // Own comments must be displayed first on the page, so we handle them separately
+    if (req.user?._id) {
+      query[0].$match['replies.0.user'] = {
+        $not: {
+          $eq: new mongoose.Types.ObjectId(req.user._id),
+        },
+      }
     }
 
     const result = await comments.aggregate(query)
+
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -124,19 +274,43 @@ export const getByPattern = async (req, res) => {
 
 export const getMyCommmentByPattern = async (req, res) => {
   try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      pid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     const query = [
       // Find matching pattern id
       {
         $match: {
-          pattern: mongoose.Types.ObjectId(req.params.id),
-          'replies.0.user': req.user._id,
+          pattern: new mongoose.Types.ObjectId(parsedParams.pid),
+          'replies.0.user': new mongoose.Types.ObjectId(req.user._id),
           'replies.0.deleted': false,
+        },
+      },
+      // Sort by comment date
+      {
+        $sort: {
+          'replies.createdAt': -1,
         },
       },
       // Unwind replies for lookup
       {
         $unwind: {
           path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
         },
       },
       // Lookup user
@@ -146,6 +320,35 @@ export const getMyCommmentByPattern = async (req, res) => {
           localField: 'replies.user',
           foreignField: '_id',
           as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
         },
       },
       // Unwind lookup result, always an array with 1 element
@@ -154,9 +357,68 @@ export const getMyCommmentByPattern = async (req, res) => {
           path: '$replies.user',
         },
       },
-      // Remove unnecessary user fields
+      // Calculate sum of votes and user's vote
       {
-        $unset: ['replies.user.accessInfo'],
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: {
+                $ifNull: [
+                  {
+                    $getField: {
+                      field: {
+                        $toString: new mongoose.Types.ObjectId(req.user._id),
+                      },
+                      input: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          pattern: 1,
+          skin: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
       },
       // Group pattern result back
       {
@@ -174,10 +436,18 @@ export const getMyCommmentByPattern = async (req, res) => {
         },
       },
     ]
+
     const result = await comments.aggregate(query)
-    res.status(200).send({ success: true, message: '', result })
+
+    if (result.length === 0) {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(200).send({ success: true, message: '', result: result[0] })
+    }
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -185,24 +455,55 @@ export const getMyCommmentByPattern = async (req, res) => {
   }
 }
 
-export const updateComment = async (req, res) => {
+export const updateMyComment = async (req, res) => {
   try {
-    await comments.findOneAndUpdate(
-      {
-        _id: req.params.id,
-        'replies.0.user': req.user._id,
-      },
-      {
-        rating: req.body.rating,
-        $set: {
-          'replies.0.comment': req.body.comment,
-          'replies.0.updatedAt': Date.now(),
-        },
-      },
-      { new: true },
-    )
+    // Request body validation schema
+    const bodyschema = yup
+      .object({
+        comment: yup.string(),
+        rating: yup.number().min(1).max(5),
+        deleted: yup.boolean(),
+      })
+      .test('at-least-one', 'At least one field is required', (value) => {
+        return value.comment || value.rating
+      })
+    // Parsed request body
+    const parsedBody = await bodyschema.validate(req.body, { stripUnknown: true })
+
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      cid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    // Find comment with matching comment id
+    const comment = await comments.findById(parsedParams.cid).orFail()
+
+    // Check if user is the owner of the comment
+    if (comment.replies[0].user.toString() !== req.user._id.toString()) {
+      throw new Error('No permission')
+    }
+
+    // Update comment
+    if (parsedBody.comment) comment.replies[0].comment = parsedBody.comment
+    if (parsedBody.rating) comment.rating = parsedBody.rating
+    if (parsedBody.deleted) comment.replies[0].deleted = parsedBody.deleted
+
+    await comment.save()
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
+    if (error.message === 'No permission') {
+      res.status(403).send({ success: false, message: 'No permission' })
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    }
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
@@ -215,29 +516,40 @@ export const updateComment = async (req, res) => {
 
 export const createReply = async (req, res) => {
   try {
-    const comment = await comments.findById(mongoose.Types.ObjectId(req.params.cid))
-    if (!comment) return res.status(404).send({ success: false, message: 'Not found' })
-    let result = null
-    if (comment.pattern) result = await patterns.findById(comment.pattern)
-    else if (comment.skin) result = await skins.findById(comment.skin)
-    if (!result) return res.status(404).send({ success: false, message: 'Not found' })
-    if (
-      comment.replies[0].user.toString() !== req.user._id.toString() &&
-      comment.replies[0].user !== result.submitter
-    ) {
-      return res.status(403).send({ success: false, message: 'No permission' })
-    }
-    comment.replies.push({
-      user: mongoose.Types.ObjectId(req.user._id),
-      comment: req.body.comment,
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      cid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
     })
-    comment.markModified('replies')
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    // Request body validation schema
+    const bodySchema = yup.object({
+      comment: yup.string().required(),
+    })
+    // Parsed request body
+    const parsedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Find comment with matching comment id
+    const comment = await comments.findById(parsedParams.cid).orFail()
+    // Create new reply
+    const reply = {
+      user: req.user._id,
+      comment: parsedBody.comment,
+    }
+    comment.replies.push(reply)
     await comment.save()
+
     res
       .status(200)
       .send({ success: true, message: '', result: { ...comment.toObject().replies.pop() } })
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
@@ -247,26 +559,59 @@ export const createReply = async (req, res) => {
   }
 }
 
-export const updateReply = async (req, res) => {
+export const updateMyReply = async (req, res) => {
   try {
-    const $set = {
-      'replies.$[a].updatedAt': Date.now(),
+    const bodyschema = yup
+      .object({
+        comment: yup.string(),
+        deleted: yup.boolean(),
+      })
+      .test('at-least-one', 'At least one field is required', (value) => {
+        return value.comment || value.deleted
+      })
+    const parsedBody = await bodyschema.validate(req.body, { stripUnknown: true })
+
+    const paramsSchema = yup.object({
+      cid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+      rid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const $set = {}
+    if (parsedBody.comment) $set['comment'] = parsedBody.comment
+    if (parsedBody.deleted) $set['deleted'] = parsedBody.deleted
+
+    // Find comment with matching comment id and reply id
+    const comment = await comments
+      .findOne({
+        _id: new mongoose.Types.ObjectId(parsedParams.cid),
+        'replies._id': new mongoose.Types.ObjectId(parsedParams.rid),
+      })
+      .orFail()
+
+    // Check if user is the owner of the comment
+    if (comment.replies.id(parsedParams.rid).user.toString() !== req.user._id.toString()) {
+      throw new Error('No permission')
     }
-    if (req.body.deleted !== undefined) $set['replies.$[a].deleted'] = req.body.deleted
-    if (req.body.comment) $set['replies.$[a].comment'] = req.body.comment
-    await comments.findOneAndUpdate(
-      {
-        _id: mongoose.Types.ObjectId(req.params.cid),
-        'replies._id': mongoose.Types.ObjectId(req.params.rid),
-        'replies.user': req.user._id,
-      },
-      { $set },
-      { new: true, runValidators: true, arrayFilters: [{ 'a._id': req.params.rid }] },
-    )
+    // Update comment
+    comment.replies.id(parsedParams.rid).set($set)
+    await comment.save()
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
+    if (error.message === 'No permission') {
+      res.status(403).send({ success: false, message: 'No permission' })
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
@@ -278,59 +623,68 @@ export const updateReply = async (req, res) => {
 
 export const updateReplyVote = async (req, res) => {
   try {
-    if (
-      req.body.positive === null ||
-      isNaN(req.body.positive) ||
-      req.body.positive > 1 ||
-      req.body.positive < -1
-    ) {
-      res.status(400).send({ success: false, message: 'Validation Failed' })
-      return
-    }
-    const positive = parseInt(req.body.positive)
-    await comments.findOneAndUpdate(
-      {
-        _id: mongoose.Types.ObjectId(req.params.cid),
-        'replies._id': mongoose.Types.ObjectId(req.params.rid),
-      },
-      {
-        $pull: {
-          'replies.$[a].votes': {
-            user: mongoose.Types.ObjectId(req.user._id),
+    // Request body validation schema
+    const bodySchema = yup.object({
+      vote: yup.number().required().min(-1).max(1),
+    })
+    // Parsed request body
+    const parsedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      cid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+      rid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    if (parsedBody.vote === 0) {
+      // Delete vote
+      await comments
+        .findOneAndUpdate(
+          {
+            _id: new mongoose.Types.ObjectId(parsedParams.cid),
+            'replies._id': new mongoose.Types.ObjectId(parsedParams.rid),
           },
-        },
-      },
-      {
-        new: true,
-        runValidators: true,
-        arrayFilters: [{ 'a._id': mongoose.Types.ObjectId(req.params.rid) }],
-      },
-    )
-    if (positive !== 0) {
-      await comments.findOneAndUpdate(
-        {
-          _id: mongoose.Types.ObjectId(req.params.cid),
-          'replies._id': mongoose.Types.ObjectId(req.params.rid),
-        },
-        {
-          $push: {
-            'replies.$[a].votes': {
-              user: mongoose.Types.ObjectId(req.user._id),
-              positive,
+          {
+            $unset: {
+              [`replies.$[a].votes.${req.user._id}`]: '',
             },
           },
-        },
-        {
-          new: true,
-          runValidators: true,
-          arrayFilters: [{ 'a._id': mongoose.Types.ObjectId(req.params.rid) }],
-        },
-      )
+          { arrayFilters: [{ 'a._id': new mongoose.Types.ObjectId(parsedParams.rid) }] },
+        )
+        .orFail()
+    } else {
+      // Update vote
+      await comments
+        .findOneAndUpdate(
+          {
+            _id: new mongoose.Types.ObjectId(parsedParams.cid),
+            'replies._id': new mongoose.Types.ObjectId(parsedParams.rid),
+          },
+          {
+            $set: {
+              [`replies.$[a].votes.${req.user._id}`]: parsedBody.vote,
+            },
+          },
+          { arrayFilters: [{ 'a._id': new mongoose.Types.ObjectId(parsedParams.rid) }] },
+        )
+        .orFail()
     }
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
+    if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
@@ -340,112 +694,44 @@ export const updateReplyVote = async (req, res) => {
   }
 }
 
-export const getRatingByPattern = async (req, res) => {
-  try {
-    const exists = await patterns.findById(req.params.id)
-    if (!exists) {
-      res.status(404).send({ success: false, message: 'Not found' })
-      return
-    }
-    const result = await comments.aggregate([
-      {
-        $match: {
-          pattern: mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      {
-        $group: {
-          _id: '$pattern',
-          rating: {
-            $avg: '$rating',
-          },
-          count: {
-            $sum: 1,
-          },
-        },
-      },
-    ])
-    res.status(200).send({
-      success: true,
-      message: '',
-      result: {
-        rating: result.length > 0 && result[0].rating ? result.length > 0 && result[0].rating : 0,
-        count: result.length > 0 && result[0].count ? result.length > 0 && result[0].count : 0,
-      },
-    })
-  } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(404).send({ success: false, message: 'Not found' })
-    } else {
-      res.status(500).send({ success: false, message: 'Server Error' })
-    }
-  }
-}
-
-export const getRatingBySkin = async (req, res) => {
-  try {
-    const exists = await skins.findById(req.params.id)
-    if (!exists) {
-      res.status(404).send({ success: false, message: 'Not found' })
-      return
-    }
-    const result = await comments.aggregate([
-      {
-        $match: {
-          skin: mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      {
-        $group: {
-          _id: '$skin',
-          rating: {
-            $avg: '$rating',
-          },
-          count: {
-            $sum: 1,
-          },
-        },
-      },
-    ])
-    res.status(200).send({
-      success: true,
-      message: '',
-      result: {
-        rating: result.length > 0 && result[0].rating ? result.length > 0 && result[0].rating : 0,
-        count: result.length > 0 && result[0].count ? result.length > 0 && result[0].count : 0,
-      },
-    })
-  } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(404).send({ success: false, message: 'Not found' })
-    } else {
-      res.status(500).send({ success: false, message: 'Server Error' })
-    }
-  }
-}
-
 export const getBySkin = async (req, res) => {
   try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      sid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     const query = [
       // Find matching skin id
       {
         $match: {
-          skin: mongoose.Types.ObjectId(req.params.id),
+          skin: new mongoose.Types.ObjectId(parsedParams.sid),
+          'replies.0.deleted': false,
         },
       },
       // Sort by comment date
       {
         $sort: {
-          'replies.date': -1,
+          'replies.createdAt': -1,
         },
-      },
-      {
-        $limit: 10,
       },
       // Unwind replies for lookup
       {
         $unwind: {
           path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
         },
       },
       // Lookup user
@@ -455,6 +741,35 @@ export const getBySkin = async (req, res) => {
           localField: 'replies.user',
           foreignField: '_id',
           as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
         },
       },
       // Unwind lookup result, always an array with 1 element
@@ -463,9 +778,62 @@ export const getBySkin = async (req, res) => {
           path: '$replies.user',
         },
       },
-      // Remove unnecessary user fields
+      // Calculate sum of votes and user's vote
       {
-        $unset: ['replies.user.accessInfo'],
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: req.user
+                ? {
+                    $getField: {
+                      field: { $toString: new mongoose.Types.ObjectId(req.user._id) },
+                      input: '$replies.votes',
+                    },
+                  }
+                : 0,
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          skin: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
       },
       // Group skin result back
       {
@@ -484,19 +852,23 @@ export const getBySkin = async (req, res) => {
       },
     ]
 
-    if (req.query.limit && !isNaN(req.query.limit) && req.query.limit <= 10) {
-      query[1].$limit = parseInt(req.query.limit)
-    }
-
-    if (req.query.skip && !isNaN(req.query.skip) && req.query.skip > 0) {
-      query.splice(2, 0, { $skip: parseInt(req.query.skip) })
+    // User is logged in, exclude own replies
+    // Own comments must be displayed first on the page, so we handle them separately
+    if (req.user?._id) {
+      query[0].$match['replies.0.user'] = {
+        $not: {
+          $eq: new mongoose.Types.ObjectId(req.user._id),
+        },
+      }
     }
 
     const result = await comments.aggregate(query)
+
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -506,18 +878,43 @@ export const getBySkin = async (req, res) => {
 
 export const getMyCommmentBySkin = async (req, res) => {
   try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      sid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     const query = [
-      // Find matching skin id
+      // Find matching pattern id
       {
         $match: {
-          skin: mongoose.Types.ObjectId(req.params.id),
-          'replies.0.user': req.user._id,
+          pattern: new mongoose.Types.ObjectId(parsedParams.sid),
+          'replies.0.user': new mongoose.Types.ObjectId(req.user._id),
+          'replies.0.deleted': false,
+        },
+      },
+      // Sort by comment date
+      {
+        $sort: {
+          'replies.createdAt': -1,
         },
       },
       // Unwind replies for lookup
       {
         $unwind: {
           path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
         },
       },
       // Lookup user
@@ -527,6 +924,35 @@ export const getMyCommmentBySkin = async (req, res) => {
           localField: 'replies.user',
           foreignField: '_id',
           as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
         },
       },
       // Unwind lookup result, always an array with 1 element
@@ -535,9 +961,68 @@ export const getMyCommmentBySkin = async (req, res) => {
           path: '$replies.user',
         },
       },
-      // Remove unnecessary user fields
+      // Calculate sum of votes and user's vote
       {
-        $unset: ['replies.user.accessInfo'],
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: {
+                $ifNull: [
+                  {
+                    $getField: {
+                      field: {
+                        $toString: new mongoose.Types.ObjectId(req.user._id),
+                      },
+                      input: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          pattern: 1,
+          skin: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
       },
       // Group skin result back
       {
@@ -555,23 +1040,18 @@ export const getMyCommmentBySkin = async (req, res) => {
         },
       },
     ]
+
     const result = await comments.aggregate(query)
-    res.status(200).send({ success: true, message: '', result })
-  } catch (error) {
-    if (error.name === 'CastError') {
+
+    if (result.length === 0) {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
-      res.status(500).send({ success: false, message: 'Server Error' })
+      res.status(200).send({ success: true, message: '', result: result[0] })
     }
-  }
-}
-
-export const deleteMyComment = async (req, res) => {
-  try {
-    await comments.findOneAndDelete({ _id: req.params.cid, 'replies.0.user': req.user._id })
-    res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -581,14 +1061,22 @@ export const deleteMyComment = async (req, res) => {
 
 export const getByUser = async (req, res) => {
   try {
+    const paramsSchema = yup.object({
+      uid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
     const query = [
       {
         $match: {
-          'replies.0.user': mongoose.Types.ObjectId(req.params.id),
+          'replies.0.user': new mongoose.Types.ObjectId(parsedParams.uid),
         },
       },
-      { $skip: 0 },
-      { $limit: 12 },
       {
         $project: {
           comment: {
@@ -596,9 +1084,10 @@ export const getByUser = async (req, res) => {
           },
           rating: '$rating',
           date: {
-            $first: '$replies.date',
+            $first: '$replies.createdAt',
           },
           pattern: '$pattern',
+          skin: '$skin',
         },
       },
       {
@@ -614,20 +1103,22 @@ export const getByUser = async (req, res) => {
           path: '$pattern',
         },
       },
+      {
+        $lookup: {
+          from: 'skins',
+          localField: 'skin',
+          foreignField: '_id',
+          as: 'skin',
+        },
+      },
+      {
+        $unwind: {
+          path: '$skin',
+        },
+      },
     ]
-    if (req.query.start) {
-      const start = parseInt(req.query.start)
-      query[1].$skip = isNaN(start) ? 0 : start
-    }
-    if (req.query.limit) {
-      const limit = parseInt(req.query.limit)
-      if (limit >= 50 || isNaN(limit)) {
-        res.status(400).send({ success: false, message: 'Invalid limit' })
-        return
-      }
-      query[2].$limit = limit
-    }
     const result = await comments.aggregate(query)
+
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)
