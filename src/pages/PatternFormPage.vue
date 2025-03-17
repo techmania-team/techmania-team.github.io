@@ -275,20 +275,20 @@ q-page#patternForm
                 br
                 //- Submit button
                 q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
-    //- Delete confirmation dialog
-    q-dialog(v-model="deleteDialog" persistent)
-      q-card(rounded)
-        //- Dialog header
-        q-card-section.text-center
-          q-icon(name="warning" color="red" size="100px")
-          .text-h6 {{ $t('submitForm.deleteText') }}
-        q-separator
-        //- Dialog actions
-        q-card-actions(align="around")
-          //- Confirm
-          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
-          //- Cancel
-          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+  //- Delete confirmation dialog
+  q-dialog(v-model="deleteDialog" persistent)
+    q-card(rounded)
+      //- Dialog header
+      q-card-section.text-center
+        q-icon(name="warning" color="red" size="100px")
+        .text-h6 {{ $t('submitForm.deleteText') }}
+      q-separator
+      //- Dialog actions
+      q-card-actions(align="around")
+        //- Confirm
+        q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
+        //- Cancel
+        q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
 </template>
 
 <script setup>
