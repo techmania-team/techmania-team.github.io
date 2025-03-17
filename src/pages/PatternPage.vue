@@ -87,10 +87,12 @@ q-page#pattern
           q-list
             q-item-label.text-h6.text-tech(header) {{ $t('pattern.previews') }}
             q-separator.q-mb-md(inset)
-          .row.w-100.justify-center.q-gutter-y-sm
+          .row.justify-center.q-gutter-y-sm
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
+      //- Comments
+      CommentList(type="pattern" :id="pattern._id")
 </template>
 
 <script setup>
@@ -102,6 +104,7 @@ import { useTempPatternStore } from 'src/stores/temp-pattern'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { getLevelFilter, getLevelColor } from 'src/utils/level'
 import { getControlIcon } from 'src/utils/control'
+import CommentList from 'src/components/CommentList.vue'
 
 const route = useRoute()
 const user = useUserStore()
@@ -191,6 +194,7 @@ defineOptions({
     // Prefetch pattern data
     const pattern = useTempPatternStore()
     pattern.clearData()
+
     await pattern.fetchPattern(currentRoute.params.id)
 
     // Check if pattern exists and user is the submitter
