@@ -36,17 +36,6 @@ q-page#skins
                       q-btn(icon="search" round desnse flat @click="handleSubmit($event, onSearchSubmit)" :loading="isSubmitting")
                 //- Filters
                 q-list
-                  //- Keysounded
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('pattern.keysounded') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            Field(name="keysounded" v-slot="{ field }")
-                              q-btn(flat :label="$t('patterns.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
-                              q-btn(flat :label="$t('patterns.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
-                              q-btn(flat :label="$t('patterns.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
                   //- Types
                   q-item
                     q-item-section.no-wrap
