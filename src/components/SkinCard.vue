@@ -22,12 +22,12 @@ q-card.full-height.card-skin
       //- Type
       q-item
         q-item-section
-          span {{ $t('submitSkinForm.skinType') }}: {{ typeName }}
+          span {{ $t('submitSkinForm.skinType') }}: {{ $t('skin.' + types[skin.type]) }}
       //- Rating
       q-item
         q-item-section
           q-rating(:model-value="skin.rating.rating" readonly icon="star" icon-half="star_half" size='xs')
-          | {{ skin.rating.rating.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
+          | {{ skin.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
       //- Date
       q-item
         q-item-section
@@ -50,7 +50,7 @@ import { ref, computed, onMounted } from 'vue'
 import * as date from 'src/utils/date'
 import { useRouter } from 'vue-router'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { useI18n } from 'vue-i18n'
+import { types } from 'src/utils/skin'
 
 const props = defineProps({
   skin: Object,
@@ -64,7 +64,6 @@ const hasImage = ref(false)
 const headerImage = ref('')
 
 const router = useRouter()
-const { t } = useI18n()
 
 const formattedTime = computed(() => {
   return {
@@ -78,11 +77,6 @@ const formattedUpdateTime = computed(() => {
     relative: date.toRelative(props.skin.updatedAt),
     text: date.toLocaleString(props.skin.updatedAt),
   }
-})
-
-const typeName = computed(() => {
-  const type = [t('skin.note'), t('skin.vfx'), t('skin.combo'), t('skin.gameUI')]
-  return type[props.skin.type]
 })
 
 const clickHeader = () => {
