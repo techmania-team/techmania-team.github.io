@@ -35,12 +35,12 @@ const routes = [
       },
       {
         path: 'skins/new',
-        component: () => import('pages/SkinForm.vue'),
+        component: () => import('pages/SkinFormPage.vue'),
         meta: { login: true, recaptcha: true },
       },
       {
-        path: 'skins/edit/:id',
-        component: () => import('pages/SkinForm.vue'),
+        path: 'skins/:id/edit',
+        component: () => import('pages/SkinFormPage.vue'),
         meta: { login: true, recaptcha: true },
       },
       {
