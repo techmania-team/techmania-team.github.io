@@ -1,13 +1,14 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
+import { SKIN_NOTE } from 'src/utils/skin'
 
 export const useTempSkinStore = defineStore('temp-skin', () => {
   const _id = ref('')
   const name = ref('')
-  const type = ref(0)
+  const type = ref(SKIN_NOTE)
   const link = ref('')
-  const previews = ref([{ link: '', name: '' }])
+  const previews = ref([])
   const image = ref('')
   const description = ref('')
   const submitter = ref({ name: '', _id: '' })
@@ -40,9 +41,9 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const clearData = () => {
     _id.value = ''
     name.value = ''
-    type.value = 0
+    type.value = SKIN_NOTE
     link.value = ''
-    previews.value = [{ link: '', name: '' }]
+    previews.value = []
     description.value = ''
     submitter.value = { name: '', _id: '' }
     rating.value.rating = 0
