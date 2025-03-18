@@ -440,16 +440,19 @@ export const del = async (req, res) => {
     // Parsed request params
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
-    await patterns
-      .findOneAndDelete({
-        _id: parsedParams.id,
-        submitter: req.user._id,
-      })
-      .orFail()
+    const pattern = await patterns.findById(parsedParams.id).orFail()
+
+    if (pattern.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    await pattern.findByIdAndDelete(parsedParams.id)
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
@@ -506,11 +509,28 @@ export const update = async (req, res) => {
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
 
     // Update pattern
-    await patterns.findByIdAndUpdate(parsedParams.id, parseedBody).orFail()
+    const pattern = await patterns.findById(parsedParams.id).orFail()
+
+    if (pattern.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    pattern.name = parseedBody.name
+    pattern.composer = parseedBody.composer
+    pattern.link = parseedBody.link
+    pattern.keysounded = parseedBody.keysounded
+    pattern.image = parseedBody.image
+    pattern.previews = parseedBody.previews
+    pattern.difficulties = parseedBody.difficulties
+    pattern.description = parseedBody.description
+
+    await pattern.save()
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
