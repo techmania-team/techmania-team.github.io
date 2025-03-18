@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 
 const schema = new mongoose.Schema(
   {
@@ -11,15 +12,10 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // 0 = Note
-    // 1 = VFX
-    // 2 = Combo
-    // 3 = Game UI
     type: {
       type: Number,
       required: true,
-      min: 0,
-      max: 3,
+      enum: [SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME],
     },
     link: {
       type: String,
