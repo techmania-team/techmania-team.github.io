@@ -75,16 +75,3 @@ export const getById = async (req, res) => {
     }
   }
 }
-
-export const getAvatarById = async (req, res) => {
-  try {
-    const result = await users.findById(req.params.id)
-    if (!result.avatar) throw new Error()
-    res.redirect(`https://cdn.discordapp.com/avatars/${result.discord}/${result.avatar}.png`)
-  } catch (error) {
-    console.error(error)
-    res.redirect(
-      'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    )
-  }
-}
