@@ -238,7 +238,7 @@ export const search = async (req, res) => {
 
     // Add filters to query - Submitter
     if (parseedQuery.submitter) {
-      query[0].$match.submitter = mongoose.Types.ObjectId(req.query.submitter)
+      query[0].$match.submitter = new mongoose.Types.ObjectId(req.query.submitter)
     }
     // Add filters to query - Keysounded
     if (['true', 'yes', '1'].includes(parseedQuery.keysounded)) {
