@@ -412,18 +412,13 @@ export const searchID = async (req, res) => {
       },
     ])
 
-    if (result.length === 0) {
-      res.status(404).send({ success: false, message: 'Not found' })
-      return
-    }
-
     // Note:
     // Aggregation returns an array, but we only need the first element
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
-    } else if (error.name === 'CastError') {
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -445,15 +440,18 @@ export const del = async (req, res) => {
     // Parsed request params
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
-    await patterns.findOneAndDelete({
-      _id: parsedParams.id,
-      submitter: req.user._id,
-    })
+    await patterns
+      .findOneAndDelete({
+        _id: parsedParams.id,
+        submitter: req.user._id,
+      })
+      .orFail()
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
-    } else if (error.name === 'CastError') {
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -508,13 +506,13 @@ export const update = async (req, res) => {
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
 
     // Update pattern
-    await patterns.findByIdAndUpdate(parsedParams.id, parseedBody)
+    await patterns.findByIdAndUpdate(parsedParams.id, parseedBody).orFail()
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
-    } else if (error.name === 'CastError') {
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
