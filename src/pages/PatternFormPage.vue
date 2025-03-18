@@ -409,9 +409,9 @@ const lanesOptions = [
   { label: '4L', value: 4 },
 ]
 const controlTypes = computed(() => [
-  { label: t('pattern.' + controls[0]), value: 0 },
-  { label: t('pattern.' + controls[1]), value: 1 },
-  { label: t('pattern.' + controls[2]), value: 2 },
+  { label: t('pattern.' + controls[CONTROL_TOUCH]), value: CONTROL_TOUCH },
+  { label: t('pattern.' + controls[CONTROL_KEYS]), value: CONTROL_KEYS },
+  { label: t('pattern.' + controls[CONTROL_KM]), value: CONTROL_KM },
 ])
 
 // Template refs
