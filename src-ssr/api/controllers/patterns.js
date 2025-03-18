@@ -6,7 +6,7 @@ import patterns from '../models/patterns'
 import users from '../models/users'
 import { checkImage } from '../utils/image'
 import validator from 'validator'
-import { controls } from 'src/utils/control'
+import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 
 export const create = async (req, res) => {
   try {
@@ -33,7 +33,7 @@ export const create = async (req, res) => {
         yup.object().shape({
           name: yup.string().required(),
           level: yup.number().required().min(1),
-          control: yup.number().required().min(0).max(2),
+          control: yup.number().required().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]),
           lanes: yup.number().required().min(2).max(4),
         }),
       ),
@@ -499,7 +499,7 @@ export const update = async (req, res) => {
         yup.object().shape({
           name: yup.string().required(),
           level: yup.number().required().min(1),
-          control: yup.number().required().min(0).max(2),
+          control: yup.number().required().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]),
           lanes: yup.number().required().min(2).max(4),
         }),
       ),
