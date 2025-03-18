@@ -55,27 +55,27 @@ const routes = [
       },
       {
         path: 'users/:id',
-        component: () => import('src/pages/profile/Index.vue'),
+        component: () => import('src/pages/profile/IndexPage.vue'),
         meta: { login: false },
         children: [
           {
             path: '',
-            component: () => import('src/pages/profile/Patterns.vue'),
+            component: () => import('src/pages/profile/PatternsPage.vue'),
             meta: { login: false },
           },
           {
             path: 'patterns',
-            component: () => import('src/pages/profile/Patterns.vue'),
+            component: () => import('src/pages/profile/PatternsPage.vue'),
             meta: { login: false },
           },
           {
             path: 'skins',
-            component: () => import('src/pages/profile/Skins.vue'),
+            component: () => import('src/pages/profile/SkinsPage.vue'),
             meta: { login: false },
           },
           {
             path: 'comments',
-            component: () => import('src/pages/profile/Comments.vue'),
+            component: () => import('src/pages/profile/CommentsPage.vue'),
             meta: { login: false },
           },
         ],
