@@ -83,9 +83,6 @@ export default defineConfig((ctx) => {
               lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
               useFlatConfig: true,
             },
-            overlay: {
-              initialIsOpen: false,
-            },
           },
           { server: false },
         ],
