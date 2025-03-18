@@ -185,7 +185,7 @@ useMeta(metaData)
 
 const patterns = ref([])
 
-// // Search form schema lanes select options
+// Search form schema lanes select options
 const lanesOptions = [2, 3, 4]
 const controlOptions = [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]
 // Search form template ref
