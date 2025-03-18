@@ -23,6 +23,9 @@ q-page#profile
               q-badge(color="tech" text-color="black" floating) {{ profile.replyCount }}
   section
     router-view
+  //- Back to top button
+  q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
+    q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
 </template>
 
 <script setup>
