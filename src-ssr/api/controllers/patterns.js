@@ -414,6 +414,10 @@ export const searchID = async (req, res) => {
 
     // Note:
     // Aggregation returns an array, but we only need the first element
+    if (!result || result.length === 0) {
+      throw new mongoose.Error.DocumentNotFoundError()
+    }
+
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
     if (error.name === 'ValidationError') {

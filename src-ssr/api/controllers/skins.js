@@ -363,9 +363,8 @@ export const searchID = async (req, res) => {
       },
     ])
 
-    if (result.length === 0) {
-      res.status(404).send({ success: false, message: 'Not found' })
-      return
+    if (!result || result.length === 0) {
+      throw new mongoose.Error.DocumentNotFoundError()
     }
 
     // Note:
@@ -374,7 +373,7 @@ export const searchID = async (req, res) => {
   } catch (error) {
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
-    } else if (error.name === 'CastError') {
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
