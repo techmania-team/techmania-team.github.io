@@ -50,7 +50,7 @@ const routes = [
       },
       {
         path: 'skins',
-        component: () => import('pages/Skins.vue'),
+        component: () => import('pages/SkinsPage.vue'),
         meta: { login: false },
       },
       {
