@@ -26,7 +26,7 @@ q-card.full-height.card-skin
       //- Rating
       q-item
         q-item-section
-          q-rating(:model-value="skin.rating.rating" readonly icon="star" icon-half="star_half" size='xs')
+          q-rating(:model-value="skin.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
           | {{ skin.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
       //- Date
       q-item
