@@ -22,7 +22,9 @@ q-layout(view='hHh lpR fff')
             //- Login
             q-route-tab(v-if="!user.isLogin" href="/api/auth/login" :label="$t('nav.login')")
             //- Language options
-            q-btn-dropdown(stretch flat :label="$t('nav.lang')")
+            q-btn-dropdown(stretch flat)
+              template(#label)
+                q-icon(name="translate")
               q-list
                 q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
                   q-item-section
