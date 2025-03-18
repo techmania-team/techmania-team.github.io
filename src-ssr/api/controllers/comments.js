@@ -1071,12 +1071,20 @@ export const getByUser = async (req, res) => {
     })
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
+    const querySchema = yup.object({
+      start: yup.number().integer().min(0),
+      limit: yup.number().integer().min(1),
+    })
+    const parseedQuery = await querySchema.validate(req.query, { stripUnknown: true })
+
     const query = [
       {
         $match: {
           'replies.0.user': new mongoose.Types.ObjectId(parsedParams.uid),
         },
       },
+      { $skip: 0 },
+      { $limit: 0 },
       {
         $project: {
           comment: {
@@ -1101,6 +1109,7 @@ export const getByUser = async (req, res) => {
       {
         $unwind: {
           path: '$pattern',
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
@@ -1114,9 +1123,22 @@ export const getByUser = async (req, res) => {
       {
         $unwind: {
           path: '$skin',
+          preserveNullAndEmptyArrays: true,
         },
       },
     ]
+
+    // Add filters to query - Start
+    if (parseedQuery.start) {
+      query[1].$skip = parseedQuery.start
+    }
+    // Add filters to query - Limit
+    if (parseedQuery.limit) {
+      query[2].$limit = parseedQuery.limit
+    } else {
+      query.splice(2, 1)
+    }
+
     const result = await comments.aggregate(query)
 
     res.status(200).send({ success: true, message: '', result })
