@@ -1090,6 +1090,12 @@ export const getByUser = async (req, res) => {
           comment: {
             $first: '$replies.comment',
           },
+          createdAt: {
+            $first: '$replies.createdAt',
+          },
+          updatedAt: {
+            $first: '$replies.updatedAt',
+          },
           rating: '$rating',
           date: {
             $first: '$replies.createdAt',
@@ -1104,6 +1110,14 @@ export const getByUser = async (req, res) => {
           localField: 'pattern',
           foreignField: '_id',
           as: 'pattern',
+          pipeline: [
+            {
+              $project: {
+                composer: 1,
+                name: 1,
+              },
+            },
+          ],
         },
       },
       {
@@ -1118,6 +1132,13 @@ export const getByUser = async (req, res) => {
           localField: 'skin',
           foreignField: '_id',
           as: 'skin',
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+              },
+            },
+          ],
         },
       },
       {
