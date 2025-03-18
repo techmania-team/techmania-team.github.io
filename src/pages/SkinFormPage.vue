@@ -443,6 +443,7 @@ const deleteSkin = async () => {
 defineOptions({
   async preFetch({ currentRoute, redirect, ssrContext }) {
     const skin = useTempSkinStore()
+    const user = useUserStore()
 
     // Clear store
     skin.clearData()
@@ -450,13 +451,18 @@ defineOptions({
     // New skin form, no need to prefetch data
     if (!currentRoute.params.id) return
 
-    const user = ssrContext.req.session.passport?.user
+    // Note:
+    // ssrContext is only available on server side
+    // We need to check if it's available before using it
+    // router change --> client side --> ssrContext is undefined
+    // direct access or refresh page --> server side --> ssrContext is available
+    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
 
     // Prefetch skin data
     await skin.fetchSkin(currentRoute.params.id)
 
     // Check if skin exists and user is the submitter
-    if (skin._id.length === 0 || skin.submitter._id !== user._id) {
+    if (skin._id.length === 0 || skin.submitter._id !== userId) {
       redirect('/404')
     }
   },

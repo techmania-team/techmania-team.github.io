@@ -550,19 +550,27 @@ const deletePattern = async () => {
 
 defineOptions({
   async preFetch({ currentRoute, redirect, ssrContext }) {
+    const pattern = useTempPatternStore()
+    const user = useUserStore()
+
+    // Clear store
+    pattern.clearData()
+
     // New pattern form, no need to prefetch data
     if (!currentRoute.params.id) return
 
-    const user = ssrContext.req.session.passport?.user
-
-    const pattern = useTempPatternStore()
+    // Note:
+    // ssrContext is only available on server side
+    // We need to check if it's available before using it
+    // router change --> client side --> ssrContext is undefined
+    // direct access or refresh page --> server side --> ssrContext is available
+    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
 
     // Prefetch pattern data
-    pattern.clearData()
     await pattern.fetchPattern(currentRoute.params.id)
 
     // Check if pattern exists and user is the submitter
-    if (pattern._id.length === 0 || pattern.submitter._id !== user._id) {
+    if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
       redirect('/404')
     }
   },
