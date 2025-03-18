@@ -69,9 +69,9 @@ q-page#skins
     section.q-mx-auto.padding.q-my-md
       .container
         .row
-          .col-12.q-mx-auto
-            q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable" ref="infiniteScrollRef")
-              .col-xs-12.col-sm-6.col-md-4.col-lg-3.q-pa-md.q-my-xs(v-for="skin in skins" :key="skin._id")
+          .col-12
+            q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable" ref="infiniteScrollRef")
+              .col-12.col-sm-6.col-md-4.col-lg-3(v-for="skin in skins" :key="skin._id")
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
