@@ -1,206 +1,207 @@
 <template lang="pug">
 q-page#skinForm
-  //- Header
-  q-parallax.header-parallax(:height="200" :class="{ 'header-blur': backgroundImage != '/assets/header-skin.png' }")
-    //- Header image background
-    template(#media)
-      img(:src="backgroundImage")
-    //- Header content
-    template(#content)
-      .column.items-center.q-mb-md
-        .text-h4.text-center {{ skin._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
-  //- Content
-  section.q-mx-auto.padding
-    .container
-      .row
-        .col-12
-          //- Form
-          Form(v-slot="{ handleSubmit }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
-            q-form(@submit.prevent="handleSubmit($event, onSubmit)")
-              //- Rules
-              q-card.text-white.bg-red.q-my-lg(rounded)
-                q-card-section
-                  p {{ $t('submitSkinForm.rulesTitle') }}
-                  ul.q-mb-none
-                    li {{ $t('submitSkinForm.rules1') }}
-                    li {{ $t('submitSkinForm.rules2') }}
-                    li {{ $t('submitSkinForm.rules3') }}
-              //- Basic informations
-              q-list.q-mb-lg
-                //- List header
-                q-item-label.text-h6.text-tech(header) Basic informations
-                q-separator.q-mb-md(inset)
-                //- Field - Name
-                //- NOTE:
-                //- QItem has a hardcoded no-wrap class
-                //- so we need to wrap it in a div to make it wrap
-                q-item.q-py-lg.q-py-md-md
-                  q-item-section
-                    .row.justify-center.items-center
-                      .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinName') }}
-                      .col-12.col-md-10
-                        Field(name="name" v-slot="{ field, errorMessage }")
-                          q-input.q-pb-none(
-                            outlined square color="tech"
-                            :model-value="field.value"
-                            @update:model-value="field.onChange($event)"
-                            @blur="field.onBlur($event)"
-                            :error-message="errorMessage"
-                            :error="!!errorMessage"
-                          )
-                //- Field - Skin type
-                q-item.q-py-lg.q-py-md-md
-                  q-item-section
-                    .row.justify-center.items-center
-                      .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinType') }}
-                      .col-12.col-md-10
-                        template(v-for="(typeOption) in typeOptions" :key="typeOption")
-                          //- NOTE:
-                          //- DO NOT USE TYPE RADIO EVEN THOUGH IT'S A RADIO BUTTON
-                          //- type radio only have name and checked attribute, no current value
-                          Field(name="type" v-slot="{ field, errorMessage }" :value="typeOption.value")
-                            q-radio(
-                              name="type"
-                              keep-color color="tech"
+  q-no-ssr
+    //- Header
+    q-parallax.header-parallax(:height="200" :class="{ 'header-blur': backgroundImage != '/assets/header-skin.png' }")
+      //- Header image background
+      template(#media)
+        img(:src="backgroundImage")
+      //- Header content
+      template(#content)
+        .column.items-center.q-mb-md
+          .text-h4.text-center {{ skin._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
+    //- Content
+    section.q-mx-auto.padding
+      .container
+        .row
+          .col-12
+            //- Form
+            Form(v-slot="{ handleSubmit }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
+              q-form(@submit.prevent="handleSubmit($event, onSubmit)")
+                //- Rules
+                q-card.text-white.bg-red.q-my-lg(rounded)
+                  q-card-section
+                    p {{ $t('submitSkinForm.rulesTitle') }}
+                    ul.q-mb-none
+                      li {{ $t('submitSkinForm.rules1') }}
+                      li {{ $t('submitSkinForm.rules2') }}
+                      li {{ $t('submitSkinForm.rules3') }}
+                //- Basic informations
+                q-list.q-mb-lg
+                  //- List header
+                  q-item-label.text-h6.text-tech(header) Basic informations
+                  q-separator.q-mb-md(inset)
+                  //- Field - Name
+                  //- NOTE:
+                  //- QItem has a hardcoded no-wrap class
+                  //- so we need to wrap it in a div to make it wrap
+                  q-item.q-py-lg.q-py-md-md
+                    q-item-section
+                      .row.justify-center.items-center
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinName') }}
+                        .col-12.col-md-10
+                          Field(name="name" v-slot="{ field, errorMessage }")
+                            q-input.q-pb-none(
+                              outlined square color="tech"
                               :model-value="field.value"
-                              :val="typeOption.value"
-                              @update:model-value="field.onInput($event)"
-                              :label="typeOption.label"
+                              @update:model-value="field.onChange($event)"
+                              @blur="field.onBlur($event)"
+                              :error-message="errorMessage"
+                              :error="!!errorMessage"
                             )
-                            template(v-if="!!errorMessage")
-                              .text-negative {{ errorMessage }}
-                //- Field - Download link
-                q-item.q-py-lg.q-py-md-md
-                  q-item-section
-                    .row.justify-center.items-center
-                      .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.dlLink') }}
-                      .col-12.col-md-10
-                        Field(name="link" v-slot="{ field, errorMessage }")
-                          q-input.q-pb-none(
-                            outlined square color="tech" type="url"
-                            :model-value="field.value"
-                            @update:model-value="field.onChange($event)"
-                            @blur="field.onBlur($event)"
-                            :error-message="errorMessage"
-                            :error="!!errorMessage"
-                          )
-                //- Field - Image link
-                q-item.q-py-lg.q-py-md-md
-                  q-item-section
-                    .row.justify-center.items-center
-                      .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.image') }}
-                      .col-12.col-md-10
-                        Field(name="image" v-slot="{ field, errorMessage }")
-                          q-input.q-pb-none(
-                            outlined square color="tech"
-                            :model-value="field.value"
-                            @update:model-value="field.onChange($event)"
-                            @blur="field.onBlur($event)"
-                            :error-message="errorMessage"
-                            :error="!!errorMessage"
-                          )
-              //- Previews
-              q-list.q-my-lg
-                q-item-label.text-h6.text-tech(header) {{ $t('submitForm.preview')}}
-                q-separator.q-mb-md(inset)
-                q-item
-                  q-item-section
-                    .row.items-start.justify-between.q-col-gutter-y-xl
-                      FieldArray(name="previews" v-slot="{ fields, push, remove }")
-                        template(v-for="(field, idx) in fields" :key="field.key")
-                          .col-12
-                            .row
-                              .col-10.col-md-11
-                                .row.q-col-gutter-x-md.q-col-gutter-y-lg
-                                  //- Name
-                                  .col-12.col-md-3
-                                    Field(:name="`previews[${idx}].name`" v-slot="{ field, errorMessage }")
-                                      q-input.q-pb-none(
-                                        outlined square color="tech"
-                                        :model-value="field.value"
-                                        @update:model-value="field.onChange($event)"
-                                        @blur="field.onBlur($event)"
-                                        :error-message="errorMessage"
-                                        :error="!!errorMessage"
-                                        :placeholder="$t('submitForm.name')"
-                                      )
-                                  //- Link
-                                  .col-12.col-md-9
-                                    Field(:name="`previews[${idx}].link`" v-slot="{ field, errorMessage }")
-                                      q-input.q-pb-none(
-                                        outlined square color="tech" type="url"
-                                        :model-value="field.value"
-                                        @update:model-value="field.onChange($event)"
-                                        @blur="field.onBlur($event)"
-                                        :error-message="errorMessage"
-                                        :error="!!errorMessage"
-                                        :placeholder="$t('submitForm.ytLink')"
-                                      )
-                              //- Action buttons
-                              .col-2.col-md-1.text-center.self-center.q-py-none
-                                q-btn(
-                                  flat round icon="delete" color="tech"
-                                  v-if="idx !== 0"
-                                  @click="remove(idx)"
-                                )
-                                q-btn(
-                                  flat round icon="add" color="tech"
-                                  v-else
-                                  @click="push({ name: '', link: '' })"
-                                )
-              //- Description
-              q-list.q-my-lg
-                q-item-label.text-h6.text-tech(header) {{ $t('submitForm.description') }}
-                q-separator.q-mb-md(inset)
-                q-item
-                  q-item-section
-                    Field(name="description" v-slot="{ field }")
-                      q-editor(
-                        outlined
-                        @update:model-value="field.onChange($event)"
-                        :model-value="field.value"
-                        :toolbar="toolbar"
-                        toolbar-toggle-color="tech"
-                      )
-              //- Field - Danger Zone
-              q-list.q-my-lg(v-if="skin._id.length > 0")
-                //- List header
-                q-item-label.text-h6.text-red(header) {{ $t('submitForm.dangerZone') }}
-                q-separator.q-mb-md(inset)
-                q-item
-                  q-item-section
-                    .row.justify-center.items-center
-                      .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.delete') }}
-                      .col-12.col-md-10
-                        q-btn(outline color="red" @click="openDeleteDialog") {{ $t('submitSkinForm.delete') }}
-              //- Terms of Service
-              .q-mt-xl.q-mx-auto.text-center
-                Field(name="agree" v-slot="{ field, errorMessage }")
-                  q-checkbox(
-                    keep-color color="tech"
-                    :model-value="field.value"
-                    @update:model-value="field.onChange($event)"
-                  )
-                  span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
-                  template(v-if="!!errorMessage")
-                    .text-negative {{ errorMessage }}
-                br
-                //- Submit button
-                q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
-  //- Delete confirmation dialog
-  q-dialog(v-model="deleteDialog" persistent)
-    q-card(rounded)
-      //- Dialog header
-      q-card-section.text-center
-        q-icon(name="warning" color="red" size="100px")
-        .text-h6 {{ $t('submitForm.deleteText') }}
-      q-separator
-      //- Dialog actions
-      q-card-actions(align="around")
-        //- Confirm
-        q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deleteSkin" :loading="deleting")
-        //- Cancel
-        q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+                  //- Field - Skin type
+                  q-item.q-py-lg.q-py-md-md
+                    q-item-section
+                      .row.justify-center.items-center
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinType') }}
+                        .col-12.col-md-10
+                          template(v-for="(typeOption) in typeOptions" :key="typeOption")
+                            //- NOTE:
+                            //- DO NOT USE TYPE RADIO EVEN THOUGH IT'S A RADIO BUTTON
+                            //- type radio only have name and checked attribute, no current value
+                            Field(name="type" v-slot="{ field, errorMessage }" :value="typeOption.value")
+                              q-radio(
+                                name="type"
+                                keep-color color="tech"
+                                :model-value="field.value"
+                                :val="typeOption.value"
+                                @update:model-value="field.onInput($event)"
+                                :label="typeOption.label"
+                              )
+                              template(v-if="!!errorMessage")
+                                .text-negative {{ errorMessage }}
+                  //- Field - Download link
+                  q-item.q-py-lg.q-py-md-md
+                    q-item-section
+                      .row.justify-center.items-center
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.dlLink') }}
+                        .col-12.col-md-10
+                          Field(name="link" v-slot="{ field, errorMessage }")
+                            q-input.q-pb-none(
+                              outlined square color="tech" type="url"
+                              :model-value="field.value"
+                              @update:model-value="field.onChange($event)"
+                              @blur="field.onBlur($event)"
+                              :error-message="errorMessage"
+                              :error="!!errorMessage"
+                            )
+                  //- Field - Image link
+                  q-item.q-py-lg.q-py-md-md
+                    q-item-section
+                      .row.justify-center.items-center
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.image') }}
+                        .col-12.col-md-10
+                          Field(name="image" v-slot="{ field, errorMessage }")
+                            q-input.q-pb-none(
+                              outlined square color="tech"
+                              :model-value="field.value"
+                              @update:model-value="field.onChange($event)"
+                              @blur="field.onBlur($event)"
+                              :error-message="errorMessage"
+                              :error="!!errorMessage"
+                            )
+                //- Previews
+                q-list.q-my-lg
+                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.preview')}}
+                  q-separator.q-mb-md(inset)
+                  q-item
+                    q-item-section
+                      .row.items-start.justify-between.q-col-gutter-y-xl
+                        FieldArray(name="previews" v-slot="{ fields, push, remove }")
+                          template(v-for="(field, idx) in fields" :key="field.key")
+                            .col-12
+                              .row
+                                .col-10.col-md-11
+                                  .row.q-col-gutter-x-md.q-col-gutter-y-lg
+                                    //- Name
+                                    .col-12.col-md-3
+                                      Field(:name="`previews[${idx}].name`" v-slot="{ field, errorMessage }")
+                                        q-input.q-pb-none(
+                                          outlined square color="tech"
+                                          :model-value="field.value"
+                                          @update:model-value="field.onChange($event)"
+                                          @blur="field.onBlur($event)"
+                                          :error-message="errorMessage"
+                                          :error="!!errorMessage"
+                                          :placeholder="$t('submitForm.name')"
+                                        )
+                                    //- Link
+                                    .col-12.col-md-9
+                                      Field(:name="`previews[${idx}].link`" v-slot="{ field, errorMessage }")
+                                        q-input.q-pb-none(
+                                          outlined square color="tech" type="url"
+                                          :model-value="field.value"
+                                          @update:model-value="field.onChange($event)"
+                                          @blur="field.onBlur($event)"
+                                          :error-message="errorMessage"
+                                          :error="!!errorMessage"
+                                          :placeholder="$t('submitForm.ytLink')"
+                                        )
+                                //- Action buttons
+                                .col-2.col-md-1.text-center.self-center.q-py-none
+                                  q-btn(
+                                    flat round icon="delete" color="tech"
+                                    v-if="idx !== 0"
+                                    @click="remove(idx)"
+                                  )
+                                  q-btn(
+                                    flat round icon="add" color="tech"
+                                    v-else
+                                    @click="push({ name: '', link: '' })"
+                                  )
+                //- Description
+                q-list.q-my-lg
+                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.description') }}
+                  q-separator.q-mb-md(inset)
+                  q-item
+                    q-item-section
+                      Field(name="description" v-slot="{ field }")
+                        q-editor(
+                          outlined
+                          @update:model-value="field.onChange($event)"
+                          :model-value="field.value"
+                          :toolbar="toolbar"
+                          toolbar-toggle-color="tech"
+                        )
+                //- Field - Danger Zone
+                q-list.q-my-lg(v-if="skin._id.length > 0")
+                  //- List header
+                  q-item-label.text-h6.text-red(header) {{ $t('submitForm.dangerZone') }}
+                  q-separator.q-mb-md(inset)
+                  q-item
+                    q-item-section
+                      .row.justify-center.items-center
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.delete') }}
+                        .col-12.col-md-10
+                          q-btn(outline color="red" @click="openDeleteDialog") {{ $t('submitSkinForm.delete') }}
+                //- Terms of Service
+                .q-mt-xl.q-mx-auto.text-center
+                  Field(name="agree" v-slot="{ field, errorMessage }")
+                    q-checkbox(
+                      keep-color color="tech"
+                      :model-value="field.value"
+                      @update:model-value="field.onChange($event)"
+                    )
+                    span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
+                    template(v-if="!!errorMessage")
+                      .text-negative {{ errorMessage }}
+                  br
+                  //- Submit button
+                  q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
+    //- Delete confirmation dialog
+    q-dialog(v-model="deleteDialog" persistent)
+      q-card(rounded)
+        //- Dialog header
+        q-card-section.text-center
+          q-icon(name="warning" color="red" size="100px")
+          .text-h6 {{ $t('submitForm.deleteText') }}
+        q-separator
+        //- Dialog actions
+        q-card-actions(align="around")
+          //- Confirm
+          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deleteSkin" :loading="deleting")
+          //- Cancel
+          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
 </template>
 
 <script setup>
