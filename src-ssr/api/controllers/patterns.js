@@ -446,7 +446,7 @@ export const del = async (req, res) => {
       throw new Error('Unauthorized')
     }
 
-    await pattern.findByIdAndDelete(parsedParams.id)
+    await patterns.findByIdAndDelete(parsedParams.id)
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
