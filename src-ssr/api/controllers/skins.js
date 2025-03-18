@@ -1,71 +1,85 @@
 import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
+import validator from 'validator'
+import * as yup from 'yup'
 import skins from '../models/skins'
 import users from '../models/users'
-import comments from '../models/comments'
 import { checkImage } from '../utils/image'
+import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 
-const types = ['Note', 'VFX', 'Combo', 'Game UI']
+const types = ['Note', 'VFX', 'Combo', 'Game UI', 'Theme']
 
 export const create = async (req, res) => {
   try {
-    if (req.body.image && req.body.image.length > 0) {
-      const valid = await checkImage(req.body.image)
-      if (!valid) {
-        res.status(400).send({ success: false, message: 'Validation Failed' })
-        return
-      }
-    } else {
-      req.body.image = ''
-    }
-    const result = await skins.create({
-      submitter: req.user._id,
-      name: req.body.name,
-      type: req.body.type,
-      link: req.body.link,
-      previews: req.body.previews,
-      description: req.body.description,
-      image: req.body.image,
+    // Request body validation schema
+    const bodySchema = yup.object({
+      name: yup.string().required(),
+      link: yup.string().url().required(),
+      image: yup
+        .string()
+        .url()
+        .test('valid', 'Invalid image URL', async (value) => {
+          if (!value) return true
+          return await checkImage(value)
+        }),
+      previews: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
+      type: yup
+        .number()
+        .required()
+        .oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]),
+      description: yup.string(),
     })
+    // Parsed request query
+    const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Create pattern
+    const result = await skins.create({ ...parseedBody, submitter: req.user._id })
+
+    // Setup Discord webhook embed message
     let strPreveiw = ''
-    for (const preview of req.body.previews) {
+    for (const preview of parseedBody.previews) {
       strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
     }
     const ytid =
-      req.body.previews.length > 0 &&
-      req.body.previews[0].ytid &&
-      req.body.previews[0].ytid.length > 0
-        ? req.body.previews[0].ytid
+      parseedBody.previews.length > 0 &&
+      parseedBody.previews[0].ytid &&
+      parseedBody.previews[0].ytid.length > 0
+        ? parseedBody.previews[0].ytid
         : ''
     const embeds = [
       {
         url: new URL(`/skins/${result._id}`, process.env.HOST_URL).toString(),
         image: {
           url:
-            req.body.image.length > 0
-              ? req.body.image
+            parseedBody.image.length > 0
+              ? parseedBody.image
               : ytid.length > 0
                 ? `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
                 : process.env.HOST_URL + '/assets/unknown.jpg',
         },
-        title: req.body.name,
+        title: parseedBody.name,
         color: '15158332',
         fields: [
-          { name: 'Type', value: types[req.body.type], inline: true },
+          { name: 'Type', value: types[parseedBody.type], inline: true },
           { name: 'Previews', value: strPreveiw || 'None', inline: false },
-          { name: 'Download', value: req.body.link, inline: false },
+          { name: 'Download', value: parseedBody.link, inline: false },
         ],
       },
     ]
-    if (req.body.description) {
+    if (parseedBody.description) {
       embeds[0].fields.push({
         name: 'Description',
-        value: req.body.description.replace(/<[^>]+>/g, ' '),
+        value: parseedBody.description.replace(/<[^>]+>/g, ' '),
         inline: false,
       })
     }
-    await axios.post(process.env.DISCORD_WEBHOOK_SKINS, {
+    await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
       username: 'TECHMANIA',
       avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
       content: `New skin submitted by <@${req.user.discord}>`,
@@ -86,14 +100,33 @@ export const create = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
+    // Mongoose query
     const query = [
-      { $match: {} },
+      {
+        $match: {
+          $or: [
+            {
+              $text: {
+                $search: '',
+              },
+            },
+          ],
+        },
+      },
       {
         $lookup: {
           from: 'comments',
           localField: '_id',
           foreignField: 'skin',
           as: 'comments',
+          pipeline: [
+            {
+              $project: {
+                pattern: 0,
+                skin: 0,
+              },
+            },
+          ],
         },
       },
       {
@@ -102,7 +135,7 @@ export const search = async (req, res) => {
             count: {
               $size: '$comments',
             },
-            rating: {
+            avg: {
               $ifNull: [
                 {
                   $avg: '$comments.rating',
@@ -130,98 +163,122 @@ export const search = async (req, res) => {
         },
       },
       {
-        $unset: ['submitter.discord', 'submitter.accessInfo', 'submitter.avatar'],
+        $unset: [
+          'submitter.discord',
+          'submitter.avatar',
+          'submitter.discordRefreshToken',
+          'submitter.discordToken',
+          'submitter.accessInfo',
+          'comments',
+        ],
       },
     ]
-    if (req.query.submitter) {
+
+    // Request query validation schema
+    const querySchema = yup.object().shape({
+      start: yup.number().integer().min(0),
+      limit: yup.number().integer().min(1),
+      keywords: yup.string(),
+      types: yup
+        .string()
+        .matches(
+          /^(0|1|2|3|4)?(,(0|1|2|3|4))*$/,
+          'Controls must be a comma-separated list of numbers between 0 and 2, without duplicates',
+        )
+        .test('unique', 'Controls values must be unique', (value) => {
+          if (!value) return true
+          const values = value.split(',')
+          return new Set(values).size === values.length
+        }),
+      sortBy: yup.string().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
+      sort: yup
+        .number()
+        .integer()
+        .oneOf([1, -1])
+        .when('sortBy', {
+          is: (value) => value !== undefined,
+          then: (schema) => schema.required(),
+        }),
+      submitter: yup.string().test('mongoID', 'Invalid ID', (value) => {
+        if (!value) return true
+        return validator.isMongoId(value)
+      }),
+    })
+    // Parsed request query
+    const parseedQuery = await querySchema.validate(req.query, { stripUnknown: true })
+
+    // Add filters to query - Submitter
+    if (parseedQuery.submitter) {
       query[0].$match.submitter = mongoose.Types.ObjectId(req.query.submitter)
     }
-    if (req.query.start) {
-      const start = parseInt(req.query.start)
-      query[4].$skip = isNaN(start) ? 0 : start
-    }
-    if (req.query.limit) {
-      const limit = parseInt(req.query.limit)
-      if (limit >= 50 || isNaN(limit)) {
-        res.status(400).send({ success: false, message: 'Invalid limit' })
-        return
-      }
-      query[5].$limit = limit
-    }
-    if (req.query.keysounded === 'yes') {
-      query[0].$match.keysounded = true
-    } else if (req.query.keysounded === 'no') {
-      query[0].$match.keysounded = false
-    }
-    if (req.query.control) {
-      const control = parseInt(req.query.control)
-      if (!isNaN(control) && control <= 2 && control >= 0) {
-        query[0].$match['difficulties.control'] = control
-      } else {
-        res.status(400).send({ success: false, message: 'Invalid control' })
-        return
+
+    // Add filters to query - Types
+    if ('types' in req.query) {
+      query[0].$match.type = {
+        $in: parseedQuery.types.split(',').map((type) => parseInt(type)),
       }
     }
-    if (req.query.keywords) {
-      query[0].$match.$or = []
+
+    // Add filters to query - Keywords
+    if (parseedQuery.keywords) {
+      // Pattern keywords
+      query[0].$match.$or[0].$text.$search = parseedQuery.keywords
+      // Submitter keywords
+      const submitters = []
       const keywords = req.query.keywords.match(
         /[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g,
       )
-      const names = []
-      const composers = []
-      const descriptions = []
-      const submitters = []
       for (const i in keywords) {
         let keyword = _.escapeRegExp(keywords[i])
-        if (
-          (keyword[0] === '"' && keyword[keyword.length - 1] === '"') ||
-          (keyword[0] === "'" && keyword[keyword.length - 1] === "'")
-        ) {
-          keyword = keyword.slice(1, -1)
-        }
         const re = new RegExp(keyword, 'i')
-        names.push(re)
-        composers.push(re)
-        descriptions.push(re)
         submitters.push(re)
       }
-      query[0].$match.$or.push({ name: { $in: names } })
-      query[0].$match.$or.push({ composer: { $in: composers } })
-      query[0].$match.$or.push({ description: { $in: descriptions } })
-
-      try {
-        const submittersID = await users.find({ name: { $in: submitters } }, '_id')
-        query[0].$match.$or.push({ submitter: { $in: submittersID } })
-      } catch (error) {
-        console.error(error)
-      }
+      // Search users by regex name, and get their IDs
+      const submittersID = await users.find({ name: { $in: submitters } }, '_id')
+      // Add submitters to query
+      query[0].$match.$or.push({
+        submitter: { $in: submittersID.map((submitterID) => submitterID._id) },
+      })
     }
-    if (req.query.sortBy) {
-      const querySort = parseInt(req.query.sort)
-      if (isNaN(querySort) || (querySort !== 1 && querySort !== -1)) {
-        res.status(400).send({ success: false, message: 'Invalid Sort' })
-        return
+    // Add filters to query - Start
+    if (parseedQuery.start) {
+      query[4].$skip = parseedQuery.start
+    }
+    // Add filters to query - Limit
+    if (parseedQuery.limit) {
+      query[5].$limit = parseedQuery.limit
+    }
+    // Add filters to query - Sort
+    if (parseedQuery.sortBy) {
+      if (parseedQuery.sortBy === 'rating') {
+        parseedQuery.sortBy = 'rating.avg'
       }
-      const sortBy = req.query.sortBy
-      if (
-        sortBy !== 'createdAt' &&
-        sortBy !== 'updatedAt' &&
-        sortBy !== 'name' &&
-        sortBy !== 'rating'
-      ) {
-        res.status(400).send({ success: false, message: 'Invalid SortBy' })
-        return
-      }
-      query[3].$sort[sortBy] = querySort
+      query[3].$sort[parseedQuery.sortBy] = parseedQuery.sort
     } else {
       query[3].$sort.createdAt = -1
     }
+
+    // Remove unused query fields
+    if (query[5].$limit === 0) {
+      query.splice(5, 1)
+    }
+    if (query[0].$match.$or[0].$text.$search === '') {
+      delete query[0].$match.$or.splice(0, 1)
+    }
+    if (query[0].$match.$or.length === 0) {
+      delete query[0].$match.$or
+    }
+
+    // Execute query
     const result = await skins.aggregate(query)
+    // Send response
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     console.error(error)
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
+    } else if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: error.message })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
     }
@@ -230,42 +287,94 @@ export const search = async (req, res) => {
 
 export const searchID = async (req, res) => {
   try {
-    const result = await skins.findById(req.params.id).populate('submitter', 'name').lean()
-    if (result === null) {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const result = await skins.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(parsedParams.id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'skin',
+          as: 'comments',
+          pipeline: [
+            {
+              $project: {
+                pattern: 0,
+                skin: 0,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          rating: {
+            count: {
+              $size: '$comments',
+            },
+            avg: {
+              $ifNull: [
+                {
+                  $avg: '$comments.rating',
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'submitter',
+          foreignField: '_id',
+          as: 'submitter',
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: '$submitter',
+        },
+      },
+      {
+        $unset: ['comments'],
+      },
+    ])
+
+    if (result.length === 0) {
       res.status(404).send({ success: false, message: 'Not found' })
       return
     }
-    const resultRating = await comments.aggregate([
-      {
-        $match: {
-          skin: mongoose.Types.ObjectId(req.params.id),
-        },
-      },
-      {
-        $group: {
-          _id: '$skin',
-          rating: {
-            $avg: '$rating',
-          },
-          count: {
-            $sum: 1,
-          },
-        },
-      },
-    ])
-    result.rating = {
-      rating:
-        resultRating.length > 0 && resultRating[0].rating
-          ? resultRating.length > 0 && resultRating[0].rating
-          : 0,
-      count:
-        resultRating.length > 0 && resultRating[0].count
-          ? resultRating.length > 0 && resultRating[0].count
-          : 0,
-    }
-    res.status(200).send({ success: true, message: '', result })
+
+    // Note:
+    // Aggregation returns an array, but we only need the first element
+    res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -275,13 +384,34 @@ export const searchID = async (req, res) => {
 
 export const del = async (req, res) => {
   try {
-    await skins.findOneAndDelete({
-      _id: mongoose.Types.ObjectId(req.params.id),
-      submitter: req.user._id,
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
     })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const skin = await skins.findById(parsedParams.id).orFail()
+
+    if (skin.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    await skins.findByIdAndDelete(parsedParams.id)
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'CastError') {
+    console.error(error)
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -291,28 +421,67 @@ export const del = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    if (req.body.image && req.body.image.length > 0) {
-      const valid = await checkImage(req.body.image)
-      if (!valid) {
-        res.status(400).send({ success: false, message: 'Validation Failed' })
-        return
-      }
-    }
-    await skins.findByIdAndUpdate(mongoose.Types.ObjectId(req.body._id), {
-      submitter: req.user._id,
-      name: req.body.name,
-      type: req.body.type,
-      link: req.body.link,
-      previews: req.body.previews,
-      description: req.body.description,
-      image: req.body.image,
-      updatedAt: Date.now(),
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
     })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    // Request body validation schema
+    const bodySchema = yup.object({
+      name: yup.string().required(),
+      link: yup.string().url().required(),
+      image: yup
+        .string()
+        .url()
+        .test('valid', 'Invalid image URL', async (value) => {
+          if (!value) return true
+          return await checkImage(value)
+        }),
+      previews: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
+      type: yup
+        .number()
+        .required()
+        .oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]),
+      description: yup.string(),
+    })
+    // Parsed request query
+    const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Update skin
+    const skin = await skins.findById(parsedParams.id).orFail()
+
+    if (skin.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    skin.name = parseedBody.name
+    skin.link = parseedBody.link
+    skin.image = parseedBody.image
+    skin.previews = parseedBody.previews
+    skin.type = parseedBody.type
+    skin.description = parseedBody.description
+
+    await skin.save()
+
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
-    } else if (error.name === 'CastError') {
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
