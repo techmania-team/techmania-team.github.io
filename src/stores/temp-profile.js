@@ -11,15 +11,15 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
   const replyCount = ref(0)
   const _id = ref('')
 
-  const fetchData = async (id) => {
+  const fetchProfile = async (id) => {
     try {
-      const { result } = await api.get(`/users/${id}`)
-      name.value = result.name
-      avatar.value = result.avatar
-      patternCount.value = result.patternCount || 0
-      skinCount.value = result.skinCount || 0
-      replyCount.value = result.replyCount || 0
-      _id.value = result._id
+      const { data } = await api.get(`/users/${id}`)
+      name.value = data.result.name || ''
+      avatar.value = data.result.avatar || ''
+      patternCount.value = data.result.patternCount || 0
+      skinCount.value = data.result.skinCount || 0
+      replyCount.value = data.result.replyCount || 0
+      _id.value = data.result._id || ''
     } catch (error) {
       handleError(error)
     }
@@ -41,7 +41,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
     skinCount,
     replyCount,
     _id,
-    fetchData,
+    fetchProfile,
     clearData,
   }
 })
