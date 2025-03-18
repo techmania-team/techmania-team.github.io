@@ -45,7 +45,7 @@ const routes = [
       },
       {
         path: 'skins/:id',
-        component: () => import('pages/Skin.vue'),
+        component: () => import('pages/SkinPage.vue'),
         meta: { login: false, recaptcha: true },
       },
       {
