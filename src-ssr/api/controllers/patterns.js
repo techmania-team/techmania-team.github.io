@@ -183,6 +183,7 @@ export const search = async (req, res) => {
           'submitter.discordRefreshToken',
           'submitter.discordToken',
           'submitter.accessInfo',
+          'comments',
         ],
       },
     ]
@@ -405,6 +406,9 @@ export const searchID = async (req, res) => {
         $unwind: {
           path: '$submitter',
         },
+      },
+      {
+        $unset: ['comments'],
       },
     ])
 
