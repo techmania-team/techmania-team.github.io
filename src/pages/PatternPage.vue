@@ -53,9 +53,9 @@ q-page#pattern
                 q-icon(name="thumb_up_alt")
               q-item-section
                 q-item-label
-                  q-rating(:model-value="pattern.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
+                  q-rating(:model-value="pattern.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
                 q-item-label(caption)
-                  | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+                  | {{ pattern.rating?.avg?.toFixed(2) || '' }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
         //- Difficulty list
         .col-12.col-md-6
           q-list
@@ -92,7 +92,7 @@ q-page#pattern
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
       //- Comments
-      CommentList(type="pattern" :id="pattern._id")
+      CommentList(type="pattern" :id="pattern._id" v-if="pattern._id.length > 0")
 </template>
 
 <script setup>

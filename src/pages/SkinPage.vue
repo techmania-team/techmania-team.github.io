@@ -45,9 +45,9 @@ q-page#skin
                 q-icon(name="thumb_up_alt")
               q-item-section
                 q-item-label
-                  q-rating(:model-value="skin.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
+                  q-rating(:model-value="skin.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
                 q-item-label(caption)
-                  | {{ skin.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
+                  | {{ skin.rating?.avg?.toFixed(2) || '' }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error
@@ -70,7 +70,7 @@ q-page#skin
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
             p.text-center(v-if='skin.previews.length === 0') {{ $t('pattern.noPreview') }}
       //- Comments
-      CommentList(type="skin" :id="skin._id")
+      CommentList(type="skin" :id="skin._id" v-if="skin._id.length > 0")
 </template>
 
 <script setup>
