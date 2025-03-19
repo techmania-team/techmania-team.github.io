@@ -4,12 +4,12 @@ q-page#index
   q-parallax.header-parallax
     //- Header Video background
     template(#media)
-      video(:src="'/assets/header.mp4'" autoplay loop muted playsinline webkit-playsinline)
+      video(src="/assets/header.mp4" autoplay loop muted playsinline webkit-playsinline)
     //- Header content
     template(#content)
       .absolute.column.items-center.text-center
         //- Logo
-        img#logo(:src="'/assets/Logo.png'")
+        img#logo(src="/assets/Logo.png")
         //- Windows
         div(v-if="platform === 'windows'")
           //- Download
