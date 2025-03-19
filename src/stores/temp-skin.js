@@ -12,10 +12,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const image = ref('')
   const description = ref('')
   const submitter = ref({ name: '', _id: '' })
-  const rating = ref({
-    rating: 0,
-    count: 0,
-  })
+  const rating = ref({ count: 0, avg: 0 })
 
   const setSkin = (data) => {
     _id.value = data._id
@@ -46,8 +43,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     previews.value = []
     description.value = ''
     submitter.value = { name: '', _id: '' }
-    rating.value.rating = 0
-    rating.value.count = 0
+    rating.value = { count: 0, avg: 0 }
     image.value = ''
   }
 
