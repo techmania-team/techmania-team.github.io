@@ -14,6 +14,11 @@ const routes = [
         meta: { login: false },
       },
       {
+        path: 'howtoplay',
+        component: () => import('pages/HowToPlayPage.vue'),
+        meta: { login: false },
+      },
+      {
         path: 'patterns/new',
         component: () => import('pages/PatternFormPage.vue'),
         meta: { login: true, recaptcha: true },
