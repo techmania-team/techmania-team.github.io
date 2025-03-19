@@ -29,13 +29,13 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     image.value = data.image
   }
 
-  const fetchSkin = (id) => {
-    return api.get(`/skins/${id}`).then(
-      ({ data }) => {
-        setSkin(data.result)
-      },
-      () => {},
-    )
+  const fetchSkin = async (id) => {
+    try {
+      const { data } = await api.get(`/skins/${id}`)
+      setSkin(data.result)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const clearData = () => {
