@@ -1,24 +1,30 @@
 <template lang="pug">
 q-page#changelog
-  .container
+  //- Header
+  q-parallax.q-mb-xl.header-parallax(:height="200")
+    //- Header image background
+    template(#media)
+      img(src="/assets/header-changelog.png")
+    //- Header content
+    template(#content)
+      h4.text-center {{ $t('nav.changelog') }}
+  section.container
     .row
       //- Title
-      .col-12.q-mx-auto
-        h4.text-center {{ $t('nav.changelog') }}
-        q-separator.q-my-md
-        div(v-if="releases.length === 0 && !error")
-          q-item(v-for="i in 3" :key="i")
-            q-item-section(avatar)
-              q-skeleton(type='QAvatar')
-            q-item-section
-              q-item-label
-                q-skeleton(type='text')
-              q-item-label(caption)
-                q-skeleton(type='text' width='65%')
-        div(v-if="error")
-          h6.text-center Failed to fetch data from GitHub.
+      .col-12(v-if="releases.length === 0 && !error")
+        q-item(v-for="i in 3" :key="i")
+          q-item-section(avatar)
+            q-skeleton(type='QAvatar')
+          q-item-section
+            q-item-label
+              q-skeleton(type='text')
+            q-item-label(caption)
+              q-skeleton(type='text' width='65%')
+      .col-12(v-if="error")
+        h6.text-center Failed to fetch data from GitHub.
+      .col-12(v-else)
         //- Timeline
-        q-timeline(color="tech" v-else transition-show="fade")
+        q-timeline(color="tech" transition-show="fade")
           q-timeline-entry(
             v-for="release in releases"
             :key="release.node_id"
