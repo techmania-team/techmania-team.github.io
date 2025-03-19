@@ -15,10 +15,8 @@ q-layout(view='hHh lpR fff')
         q-tabs(active-color="tech")
           //- PC navigation item
           template(v-if="$q.screen.gt.sm")
-            //- Docs
-            q-route-tab(href="https://techmania-team.github.io/techmania-docs/" target="_blank" :label="$t('nav.manual')")
             //- Links
-            q-route-tab(v-for="(nav, idx) in navs" :key="idx" :to="nav.link" :label="$t(nav.label)")
+            q-route-tab(v-for="(nav, idx) in navs" :key="idx" v-bind="nav")
             //- Login
             q-route-tab(v-if="!user.isLogin" href="/api/auth/login" :label="$t('nav.login')")
             //- Language options
@@ -65,12 +63,9 @@ q-layout(view='hHh lpR fff')
       .container(v-if="!$q.screen.gt.sm && dropdown")
         //- Nav items
         q-list
-          //- Docs
-          q-item.text-grey7(clickable href="https://techmania-team.github.io/techmania-docs/" active-class="text-white")
-            q-item-section {{ $t('nav.manual') }}
           //- Links
-          q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" :to="nav.link" active-class="text-white")
-            q-item-section {{ $t(nav.label) }}
+          q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" v-bind="nav" active-class="text-white")
+            q-item-section {{ nav.label }}
           //- Login
           q-item.text-grey7(clickable v-if="!user.isLogin" href="/api/auth/login" active-class="text-white")
             q-item-section {{ $t('nav.login') }}
@@ -95,8 +90,7 @@ q-layout(view='hHh lpR fff')
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
   q-page-container
-    router-view.q-mb-xl(:key="$route.path")
-
+    router-view.q-mb-xl(:key="$route.name")
   //- Footer
   q-footer.bg-techgrey.text-white.relative-position(bordered)
     .container
@@ -110,7 +104,7 @@ q-layout(view='hHh lpR fff')
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { localeOptions } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
 import { useSettingsStore } from 'src/stores/settings'
@@ -118,26 +112,35 @@ import { useI18n } from 'vue-i18n'
 
 const user = useUserStore()
 const settings = useSettingsStore()
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 // Dropdown state
 const dropdown = ref(false)
 
 // Nav items
-const navs = [
+const navs = computed(() => [
   {
-    link: '/changelog',
-    label: 'nav.changelog',
+    to: '/howtoplay',
+    label: t('nav.howtoplay'),
   },
   {
-    link: '/patterns',
-    label: 'nav.patterns',
+    href: 'https://techmania-team.github.io/techmania-docs/',
+    label: t('nav.manual'),
+    target: '_blank',
   },
   {
-    link: '/skins',
-    label: 'nav.skins',
+    to: '/changelog',
+    label: t('nav.changelog'),
   },
-]
+  {
+    to: '/patterns',
+    label: t('nav.patterns'),
+  },
+  {
+    to: '/skins',
+    label: t('nav.skins'),
+  },
+])
 
 /**
  * Update the locale of the user
