@@ -211,6 +211,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Form, Field, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
+import validator from 'validator'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { getIDFromYouTubeLink, getYouTubeThumbnail } from 'src/utils/youtube'
 import { useUserStore } from 'src/stores/user'
@@ -451,6 +452,11 @@ defineOptions({
 
     // New skin form, no need to prefetch data
     if (!currentRoute.params.id) return
+
+    // Check if ID is valid, redirect to 404 if not
+    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
 
     // Note:
     // ssrContext is only available on server side

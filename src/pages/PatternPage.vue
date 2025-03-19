@@ -99,6 +99,7 @@ q-page#pattern
 import { computed, onUnmounted } from 'vue'
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
+import validator from 'validator'
 import { useUserStore } from 'src/stores/user'
 import { useTempPatternStore } from 'src/stores/temp-pattern'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
@@ -194,6 +195,10 @@ defineOptions({
     // Prefetch pattern data
     const pattern = useTempPatternStore()
     pattern.clearData()
+
+    if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
 
     await pattern.fetchPattern(currentRoute.params.id)
 

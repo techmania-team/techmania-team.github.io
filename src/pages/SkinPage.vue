@@ -77,6 +77,7 @@ q-page#skin
 import { computed, onUnmounted } from 'vue'
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
+import validator from 'validator'
 import { useUserStore } from 'src/stores/user'
 import { useTempSkinStore } from 'src/stores/temp-skin'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
@@ -171,6 +172,10 @@ defineOptions({
     // Prefetch skin data
     const skin = useTempSkinStore()
     skin.clearData()
+
+    if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
 
     await skin.fetchSkin(currentRoute.params.id)
 
