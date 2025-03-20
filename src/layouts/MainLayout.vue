@@ -69,18 +69,18 @@ q-layout(view='hHh lpR fff')
           //- Login
           q-item.text-grey7(clickable v-if="!user.isLogin" href="/api/auth/login" active-class="text-white")
             q-item-section {{ $t('nav.login') }}
-          //- User Profile
-          q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" v-if="user.isLogin" active-class="text-white")
-            q-item-section {{ $t('nav.myPage') }}
           template(v-if="user.isLogin")
+            //- User Profile
+            q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" active-class="text-white")
+              q-item-section {{ $t('nav.myPage') }}
             //- Create new pattern
-            q-item.text-grey7(clickable v-if="user.isLogin" to="/patterns/new" :active="false")
+            q-item.text-grey7(clickable to="/patterns/new" :active="false")
               q-item-section {{ $t('nav.submitNewPattern') }}
             //- Create new skin
-            q-item.text-grey7(clickable v-if="user.isLogin" to="/skins/new" :active="false")
+            q-item.text-grey7(clickable to="/skins/new" :active="false")
               q-item-section {{ $t('nav.submitNewSkin') }}
             //- Logout
-            q-item.text-grey7(clickable v-if="user.isLogin" href="/api/auth/logout" active-class="text-white")
+            q-item.text-grey7(clickable href="/api/auth/logout" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
           //- Language options
           q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
