@@ -11,6 +11,8 @@ export default {
     submitNewPattern: '上傳新譜面',
     submitNewSkin: '上傳新造型',
     logout: '登出',
+    menu: '選單',
+    language: '語言',
   },
   // pages/IndexPage.vue
   indexPage: {

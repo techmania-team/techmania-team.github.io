@@ -11,6 +11,8 @@ export default {
     submitNewPattern: 'Submit New Pattern',
     submitNewSkin: 'Submit New Skin',
     logout: 'Logout',
+    menu: 'Menu',
+    language: 'Language',
   },
   // pages/IndexPage.vue
   indexPage: {
