@@ -19,44 +19,54 @@ const routes = [
         meta: { login: false },
       },
       {
-        path: 'patterns/new',
-        component: () => import('pages/PatternFormPage.vue'),
-        meta: { login: true, recaptcha: true },
-      },
-      {
-        path: 'patterns/:id/edit',
-        component: () => import('pages/PatternFormPage.vue'),
-        meta: { login: true, recaptcha: true },
-      },
-      {
-        path: 'patterns/:id',
-        component: () => import('pages/PatternPage.vue'),
-        meta: { login: false, recaptcha: true },
-      },
-      {
         path: 'patterns',
-        component: () => import('pages/PatternsPage.vue'),
-        meta: { login: false },
-      },
-      {
-        path: 'skins/new',
-        component: () => import('pages/SkinFormPage.vue'),
-        meta: { login: true, recaptcha: true },
-      },
-      {
-        path: 'skins/:id/edit',
-        component: () => import('pages/SkinFormPage.vue'),
-        meta: { login: true, recaptcha: true },
-      },
-      {
-        path: 'skins/:id',
-        component: () => import('pages/SkinPage.vue'),
-        meta: { login: false, recaptcha: true },
+        children: [
+          {
+            path: '',
+            component: () => import('pages/PatternsPage.vue'),
+            meta: { login: false },
+          },
+          {
+            path: 'new',
+            component: () => import('pages/PatternFormPage.vue'),
+            meta: { login: true, recaptcha: true },
+          },
+          {
+            path: ':id',
+            component: () => import('pages/PatternPage.vue'),
+            meta: { login: false, recaptcha: true },
+          },
+          {
+            path: ':id/edit',
+            component: () => import('pages/PatternFormPage.vue'),
+            meta: { login: true, recaptcha: true },
+          },
+        ],
       },
       {
         path: 'skins',
-        component: () => import('pages/SkinsPage.vue'),
-        meta: { login: false },
+        children: [
+          {
+            path: '',
+            component: () => import('pages/SkinsPage.vue'),
+            meta: { login: false },
+          },
+          {
+            path: 'new',
+            component: () => import('pages/SkinFormPage.vue'),
+            meta: { login: true, recaptcha: true },
+          },
+          {
+            path: ':id',
+            component: () => import('pages/SkinPage.vue'),
+            meta: { login: false, recaptcha: true },
+          },
+          {
+            path: ':id/edit',
+            component: () => import('pages/SkinFormPage.vue'),
+            meta: { login: true, recaptcha: true },
+          },
+        ],
       },
       {
         path: 'users/:id',
