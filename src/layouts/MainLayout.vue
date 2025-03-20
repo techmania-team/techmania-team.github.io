@@ -49,7 +49,8 @@ q-layout(view='hHh lpR fff')
       q-separator(v-if="!$q.screen.gt.sm && dropdown")
     //- Mobile dropdown
     q-slide-transition
-      .container(v-if="!$q.screen.gt.sm && dropdown")
+      //- Set position to absolute to prevent the dropdown from pushing the content down
+      .container.bg-techgrey.absolute(v-if="!$q.screen.gt.sm && dropdown")
         //- Nav items
         q-list
           //- Links
