@@ -189,7 +189,7 @@ q-page#skinForm
                       .text-negative {{ errorMessage }}
                   br
                   //- Submit button
-                  q-btn.q-my-md(:label="pattern._id.length === 0 ? $t('skinFormPage.submit.new') : $t('skinFormPage.submit.edit')" color="tech" text-color="black" type="submit" style="width: 150px")
+                  q-btn.q-my-md(:label="skin._id.length === 0 ? $t('skinFormPage.submit.new') : $t('skinFormPage.submit.edit')" color="tech" text-color="black" type="submit" style="width: 150px")
     //- Delete confirmation dialog
     q-dialog(v-model="deleteDialog" persistent)
       q-card(rounded)
