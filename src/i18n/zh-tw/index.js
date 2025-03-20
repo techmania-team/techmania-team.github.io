@@ -202,7 +202,8 @@ export default {
       },
     },
     tos: {
-      label: '送出譜面代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
+      tos: '使用條款',
+      label: '送出譜面代表您已閱讀並同意{tos}',
       error: {
         required: '您必須同意使用條款',
       },
@@ -363,7 +364,8 @@ export default {
       },
     },
     tos: {
-      label: '送出造型代表您已閱讀並同意<a href="{tosURL}" target="_blank">使用條款</a>',
+      tos: '使用條款',
+      label: '送出譜面代表您已閱讀並同意{tos}',
       error: {
         required: '您必須同意使用條款',
       },

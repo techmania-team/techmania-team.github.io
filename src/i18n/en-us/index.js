@@ -202,8 +202,8 @@ export default {
       },
     },
     tos: {
-      label:
-        'Submitting the pattern signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
+      tos: 'Terms of Service',
+      label: 'Submitting the pattern signifies that you have read and agree to the {tos}',
       error: {
         required: 'You need to accept the terms first.',
       },
@@ -364,8 +364,8 @@ export default {
       },
     },
     tos: {
-      label:
-        'Submitting the skin signifies that you have read and agree to the <a href="{tosURL}" target="_blank">Terms of Service</a>.',
+      tos: 'Terms of Service',
+      label: 'Submitting the pattern signifies that you have read and agree to the {tos}',
       error: {
         required: 'You need to accept the terms first.',
       },

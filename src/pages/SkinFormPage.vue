@@ -182,7 +182,9 @@ q-page#skinForm
                       :model-value="field.value"
                       @update:model-value="field.onChange($event)"
                     )
-                    span(v-html="$t('skinFormPage.tos.label', {tosURL})")
+                    i18n-t(keypath="skinFormPage.tos.label" tag="span")
+                      template(#tos)
+                        a(:href="tosURL" target="_blank") {{ $t('skinFormPage.tos.tos') }}
                     template(v-if="!!errorMessage")
                       .text-negative {{ errorMessage }}
                   br

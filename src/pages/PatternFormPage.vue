@@ -270,7 +270,9 @@ q-page#patternForm
                       :model-value="field.value"
                       @update:model-value="field.onChange($event)"
                     )
-                    span(v-html="$t('patternFormPage.tos.label', {tosURL})")
+                    i18n-t(keypath="patternFormPage.tos.label" tag="span")
+                      template(#tos)
+                        a(:href="tosURL" target="_blank") {{ $t('patternFormPage.tos.tos') }}
                     template(v-if="!!errorMessage")
                       .text-negative {{ errorMessage }}
                   br
