@@ -35,22 +35,11 @@ q-layout(view='hHh lpR fff')
                   img(:src="user.avatar")
               //- User dropdown items
               q-list
-                //- User Profile
-                q-item(clickable v-close-popup :to="'/users/'+user._id" active-class="text-white")
-                  q-item-section
-                    q-item-label {{ $t('nav.myPage') }}
-                //- Create new pattern
-                q-item.text-grey7(clickable v-close-popup to="/patterns/new" :active="false")
-                  q-item-section
-                    q-item-label {{ $t('nav.submitNewPattern') }}
-                //- Create new skin
-                q-item.text-grey7(clickable v-close-popup to="/skins/new" :active="false")
-                  q-item-section
-                    q-item-label {{ $t('nav.submitNewSkin') }}
-                //- Logout
-                q-item(clickable href="/api/auth/logout")
-                  q-item-section
-                    q-item-label {{ $t('nav.logout') }}
+                template(v-for="(nav, idx) in loginNavs" :key="idx")
+                  //- User Profile
+                  q-item(clickable v-close-popup v-bind="nav" active-class="text-white")
+                    q-item-section
+                      q-item-label {{ nav.label }}
           //-   Nav Collapse button for mobile
           template(v-else)
             q-btn(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
@@ -64,28 +53,20 @@ q-layout(view='hHh lpR fff')
         //- Nav items
         q-list
           //- Links
-          q-item.text-grey7(clickable @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" v-bind="nav" active-class="text-white")
+          q-item.text-grey7(clickable v-close-popup @click="dropdown = !dropdown" v-for="(nav, idx) in navs" :key="idx" v-bind="nav" active-class="text-white")
             q-item-section {{ nav.label }}
           //- Login
           q-item.text-grey7(clickable v-if="!user.isLogin" href="/api/auth/login" active-class="text-white")
             q-item-section {{ $t('nav.login') }}
+          //- User dropdown
           template(v-if="user.isLogin")
-            //- User Profile
-            q-item.text-grey7(clickable @click="dropdown = !dropdown" :to="'/users/'+user._id" active-class="text-white")
-              q-item-section {{ $t('nav.myPage') }}
-            //- Create new pattern
-            q-item.text-grey7(clickable to="/patterns/new" :active="false")
-              q-item-section {{ $t('nav.submitNewPattern') }}
-            //- Create new skin
-            q-item.text-grey7(clickable to="/skins/new" :active="false")
-              q-item-section {{ $t('nav.submitNewSkin') }}
-            //- Logout
-            q-item.text-grey7(clickable href="/api/auth/logout" active-class="text-white")
-              q-item-section {{ $t('nav.logout') }}
+            template(v-for="(nav, idx) in loginNavs" :key="idx")
+              q-item.text-grey7(clickable v-bind="nav" @click="dropdown = !dropdown" active-class="text-white")
+                q-item-section {{ nav.label }}
           //- Language options
-          q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.lang')")
+          q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.language')")
             q-list
-              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click=" updateLocale(locale)")
+              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale); dropdown = !dropdown")
                 q-item-section
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
@@ -139,6 +120,25 @@ const navs = computed(() => [
   {
     to: '/skins',
     label: t('nav.skins'),
+  },
+])
+
+const loginNavs = computed(() => [
+  {
+    to: '/users/' + user._id + '/patterns',
+    label: t('nav.myPage'),
+  },
+  {
+    to: '/patterns/new',
+    label: t('nav.submitNewPattern'),
+  },
+  {
+    to: '/skins/new',
+    label: t('nav.submitNewSkin'),
+  },
+  {
+    href: '/api/auth/logout',
+    label: t('nav.logout'),
   },
 ])
 
