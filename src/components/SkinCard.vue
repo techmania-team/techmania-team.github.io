@@ -36,7 +36,7 @@ q-card.full-height.card-skin
               | {{ $t('skinCard.submittedBy') }} &nbsp;
               router-link.no-underline(:to='`/users/${skin.submitter._id}/skins`') {{ skin.submitter.name }}
             br(v-if="!mine")
-            span {{ $t('pattern.submittedAt') }} {{ formattedTime.relative }}
+            span {{ $t('skinCard.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                 | {{ formattedTime.text }}
             br
