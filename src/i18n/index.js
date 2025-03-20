@@ -1,8 +1,8 @@
-import enUS from './en-us'
-import zhTW from './zh-tw'
-import zhCN from './zh-cn'
-import jaJP from './ja-jp'
-import koKR from './ko-kr'
+import enUS from './en-US.json'
+import zhTW from './zh-TW.json'
+import zhCN from './zh-CN.json'
+import jaJP from './ja-JP.json'
+import koKR from './ko-KR.json'
 
 export default {
   'en-US': enUS,
