@@ -16,82 +16,82 @@ q-page#index
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/macmillan333/techmania/releases/' target='_blank')
               q-icon(left name="fab fa-windows" )
-              div {{ $t('index.download') }}
+              div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('index.version') }}: {{ tag.win }}
+            | {{ $t('indexPage.latestVersion') }}: {{ tag.win }}
             br
-            | {{ $t('index.release') }}: {{ published.win }}
+            | {{ $t('indexPage.latestReleaseDate') }}: {{ published.win }}
             br
             //- Platform switch
-            a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+            a(href="#" @click.prevent="platform = 'android'") Android
             | &emsp;
-            a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
+            a(href="#" @click.prevent="platform = 'ios'") iOS
             | &emsp;
-            a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
+            a(href="#" @click.prevent="platform = 'mac'") mac
         //- Android
         div(v-else-if="platform === 'android'")
           //- Download
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/rogeraabbccdd/techmania/releases/' target='_blank')
               q-icon(left name="android" )
-              div {{ $t('index.download') }}
+              div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('index.version') }}: {{ tag.android }}
+            | {{ $t('indexPage.latestVersion') }}: {{ tag.android }}
             br
-            | {{ $t('index.release') }}: {{ published.android }}
+            | {{ $t('indexPage.latestReleaseDate') }}: {{ published.android }}
             br
             //- Platform switch
-            a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
+            a(href="#" @click.prevent="platform = 'windows'") Windows
             | &emsp;
-            a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
+            a(href="#" @click.prevent="platform = 'ios'") iOS
             | &emsp;
-            a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
+            a(href="#" @click.prevent="platform = 'mac'") mac
         //- iOS
         div(v-else-if="platform === 'ios'")
           //- Download
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://apps.apple.com/app/id1581524513' target='_blank')
               q-icon(left name="img:/assets/icons/ios.svg" )
-              div {{ $t('index.download') }}
+              div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('index.version') }}: {{ tag.ios }}
+            | {{ $t('indexPage.latestVersion') }}: {{ tag.ios }}
             br
-            | {{ $t('index.release') }}: {{ published.ios }}
+            | {{ $t('indexPage.latestReleaseDate') }}: {{ published.ios }}
             br
             //- Platform switch
-            a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
+            a(href="#" @click.prevent="platform = 'windows'") Windows
             | &emsp;
-            a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+            a(href="#" @click.prevent="platform = 'android'") Android
             | &emsp;
-            a(href="#" @click.prevent="platform = 'mac'") {{ $t('index.platform', {platform: 'mac'}) }}
+            a(href="#" @click.prevent="platform = 'mac'") mac
         //- Mac
         div(v-else-if="platform === 'mac'")
           //- Download
           .text-h3
             q-btn.q-my-md(color="secondary" size="lg" type='a' href='https://github.com/fhalfkg/techmania/releases/' target='_blank')
               q-icon(left name="fab fa-apple" )
-              div {{ $t('index.download') }}
+              div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('index.version') }}: {{ tag.mac }}
+            | {{ $t('indexPage.latestVersion') }}: {{ tag.mac }}
             br
-            | {{ $t('index.release') }}: {{ published.mac }}
+            | {{ $t('indexPage.latestReleaseDate') }}: {{ published.mac }}
             br
             //- Platform switch
-            a(href="#" @click.prevent="platform = 'windows'") {{ $t('index.platform', {platform: 'Windows'}) }}
+            a(href="#" @click.prevent="platform = 'windows'") Windows
             | &emsp;
-            a(href="#" @click.prevent="platform = 'android'") {{ $t('index.platform', {platform: 'Android'}) }}
+            a(href="#" @click.prevent="platform = 'android'") Android
             | &emsp;
-            a(href="#" @click.prevent="platform = 'ios'") {{ $t('index.platform', {platform: 'iOS'}) }}
+            a(href="#" @click.prevent="platform = 'ios'") iOS
   //- Patterns
   section.q-mx-auto.padding.q-my-md
     .container
       .row
         .col-12.q-mx-auto
-          h4.text-center {{ $t('index.patterns') }}
+          h4.text-center {{ $t('indexPage.newPatterns') }}
           q-separator
           .row
             .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern) in patterns" :key="pattern._id")
@@ -101,7 +101,7 @@ q-page#index
     .container
       .row
         .col-12.q-mx-auto
-          h4.text-center {{ $t('index.skins') }}
+          h4.text-center {{ $t('indexPage.newSkins') }}
           q-separator
           .row
             .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin) in skins" :key="skin._id")
@@ -111,7 +111,7 @@ q-page#index
     .container
       .row
         .col-12.q-mx-auto
-          h4.text-center {{ $t('index.videos') }}
+          h4.text-center {{ $t('indexPage.videos') }}
           q-separator
           .row
             .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in videos" :key="idx")

@@ -42,11 +42,11 @@ q-layout(view='hHh lpR fff')
                 //- Create new pattern
                 q-item.text-grey7(clickable v-close-popup to="/patterns/new" :active="false")
                   q-item-section
-                    q-item-label {{ $t('submitForm.title') }}
+                    q-item-label {{ $t('nav.submitNewPattern') }}
                 //- Create new skin
                 q-item.text-grey7(clickable v-close-popup to="/skins/new" :active="false")
                   q-item-section
-                    q-item-label {{ $t('submitSkinForm.title') }}
+                    q-item-label {{ $t('nav.submitNewSkin') }}
                 //- Logout
                 q-item(clickable href="/api/auth/logout")
                   q-item-section
@@ -75,10 +75,10 @@ q-layout(view='hHh lpR fff')
           template(v-if="user.isLogin")
             //- Create new pattern
             q-item.text-grey7(clickable v-if="user.isLogin" to="/patterns/new" :active="false")
-              q-item-section {{ $t('submitForm.title') }}
+              q-item-section {{ $t('nav.submitNewPattern') }}
             //- Create new skin
             q-item.text-grey7(clickable v-if="user.isLogin" to="/skins/new" :active="false")
-              q-item-section {{ $t('submitSkinForm.title') }}
+              q-item-section {{ $t('nav.submitNewSkin') }}
             //- Logout
             q-item.text-grey7(clickable v-if="user.isLogin" href="/api/auth/logout" active-class="text-white")
               q-item-section {{ $t('nav.logout') }}
@@ -125,7 +125,7 @@ const navs = computed(() => [
   },
   {
     href: 'https://techmania-team.github.io/techmania-docs/',
-    label: t('nav.manual'),
+    label: t('nav.documentations'),
     target: '_blank',
   },
   {

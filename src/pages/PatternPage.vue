@@ -11,8 +11,8 @@ q-page#pattern
         .text-h4.text-center {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-x-md
-        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('pattern.download') }}
-        q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('pattern.edit') }}
+        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('patternPage.download') }}
+        q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('patternPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
     .container
@@ -22,21 +22,21 @@ q-page#pattern
         .col-12.col-md-6
           q-list
             //- List header
-            q-item-label.text-h6.text-tech(header) {{ $t('pattern.patternData') }}
+            q-item-label.text-h6.text-tech(header) {{ $t('patternPage.basic.title') }}
             q-separator.q-mb-md(inset)
             //- List items - Composer
             q-item
               q-item-section(avatar)
                 q-icon(name="person")
               q-item-section
-                q-item-label {{ $t('pattern.composer') }}
+                q-item-label {{ $t('patternPage.basic.composer.label') }}
                 q-item-label(caption) {{ pattern.composer }}
             //- List items - Submitted by
             q-item
               q-item-section(avatar)
                 q-icon(name="upload")
               q-item-section
-                q-item-label {{ $t('pattern.submittedBy') }}
+                q-item-label {{ $t('patternPage.basic.submittedBy.label') }}
                 q-item-label(caption)
                   router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
             //- List items - Keysounded
@@ -44,9 +44,9 @@ q-page#pattern
               q-item-section(avatar)
                 q-icon(name="music_note")
               q-item-section
-                q-item-label {{ $t('pattern.keysounded') }}
+                q-item-label {{ $t('patternPage.basic.keysounded.label') }}
                 q-item-label(caption :class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
-                  | {{ $t(`patterns.${pattern.keysounded ? 'yes' : 'no'}`) }}
+                  | {{ $t(`patternPage.basic.keysounded.${pattern.keysounded ? 'yes' : 'no'}`) }}
             //- List items - Rating
             q-item
               q-item-section(avatar)
@@ -55,11 +55,11 @@ q-page#pattern
                 q-item-label
                   q-rating(:model-value="pattern.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
                 q-item-label(caption)
-                  | {{ pattern.rating?.avg?.toFixed(2) || '' }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+                  | {{ pattern.rating?.avg?.toFixed(2) || '' }} / {{ $t('patternPage.basic.comments.count', {count: pattern.rating.count}) }}
         //- Difficulty list
         .col-12.col-md-6
           q-list
-            q-item-label.text-h6.text-tech(header) {{ $t('submitForm.difficulties')}}
+            q-item-label.text-h6.text-tech(header) {{ $t('patternPage.difficulties.title')}}
             q-separator.q-mb-md(inset)
             q-item
               q-item-section
@@ -76,21 +76,21 @@ q-page#pattern
         .col-12.pre-line
           q-no-ssr
             q-list
-              q-item-label.text-h6.text-tech(header) {{ $t('pattern.description') }}
+              q-item-label.text-h6.text-tech(header) {{ $t('patternPage.description.title') }}
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
                   p(v-html="pattern.description" v-if="pattern.description")
-                  p(v-else) {{ $t('pattern.noDescription') }}
+                  p(v-else) {{ $t('patternPage.description.noDescription') }}
         //- Previews
         .col-12
           q-list
-            q-item-label.text-h6.text-tech(header) {{ $t('pattern.previews') }}
+            q-item-label.text-h6.text-tech(header) {{ $t('patternPage.previews.title') }}
             q-separator.q-mb-md(inset)
           .row.justify-center.q-gutter-y-sm
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
-            p.text-center(v-if='pattern.previews.length === 0') {{ $t('pattern.noPreview') }}
+            p.text-center(v-if='pattern.previews.length === 0') {{ $t('patternPage.previews.noPreview') }}
       //- Comments
       CommentList(type="pattern" :id="pattern._id" v-if="pattern._id.length > 0")
 </template>

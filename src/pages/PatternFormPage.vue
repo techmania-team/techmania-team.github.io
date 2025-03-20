@@ -9,7 +9,7 @@ q-page#patternForm
       //- Header content
       template(#content)
         .column.items-center.q-mb-md
-          .text-h4.text-center {{ pattern._id.length === 0 ? $t('submitForm.title') : $t('submitForm.editTitle') }}
+          .text-h4.text-center {{ pattern._id.length === 0 ? $t('patternFormPage.titleNew') : $t('patternFormPage.titleEdit') }}
     //- Content
     section.q-mx-auto.padding
       .container
@@ -21,15 +21,15 @@ q-page#patternForm
                 //- Rules
                 q-card.text-white.bg-red.q-my-lg(rounded)
                   q-card-section
-                    p {{ $t('submitForm.rulesTitle') }}
+                    p {{ $t('patternFormPage.rules.title') }}
                     ul.q-mb-none
-                      li {{ $t('submitForm.rules1') }}
-                      li {{ $t('submitForm.rules2') }}
-                      li {{ $t('submitForm.rules3') }}
+                      li {{ $t('patternFormPage.rules.rule1') }}
+                      li {{ $t('patternFormPage.rules.rule2') }}
+                      li {{ $t('patternFormPage.rules.rule3') }}
                 //- Basic informations
                 q-list.q-mb-lg
                   //- List header
-                  q-item-label.text-h6.text-tech(header) Basic informations
+                  q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.basic.title') }}
                   q-separator.q-mb-md(inset)
                   //- Field - Song name
                   //- NOTE:
@@ -38,7 +38,7 @@ q-page#patternForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.songName') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.name.label') }}
                         .col-12.col-md-10
                           Field(name="name" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -53,7 +53,7 @@ q-page#patternForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.composer') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.composer.label') }}
                         .col-12.col-md-10
                           Field(name="composer" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -68,7 +68,7 @@ q-page#patternForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.dlLink') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.download.label') }}
                         .col-12.col-md-10
                           Field(name="link" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -83,7 +83,7 @@ q-page#patternForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-2 {{ $t('pattern.keysounded') }}
+                        .col-2 {{ $t('patternFormPage.basic.keysounded.label') }}
                         .col-10
                           Field(name="keysounded" v-slot="{ field, errorMessage }")
                             q-field.q-pb-none(
@@ -101,7 +101,7 @@ q-page#patternForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.image') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.image.label') }}
                         .col-12.col-md-10
                           Field(name="image" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -114,7 +114,7 @@ q-page#patternForm
                             )
                 //- Previews
                 q-list.q-my-lg
-                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.preview')}}
+                  q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.preview.title')}}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
@@ -135,7 +135,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.name')"
+                                          :placeholder="$t('patternFormPage.preview.name.label')"
                                         )
                                     //- Link
                                     .col-12.col-md-9
@@ -147,7 +147,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.ytLink')"
+                                          :placeholder="$t('patternFormPage.preview.link.label')"
                                         )
                                 //- Action buttons
                                 .col-2.col-md-1.text-center.self-center.q-py-none
@@ -163,7 +163,7 @@ q-page#patternForm
                                   )
                 //- Difficulties
                 q-list.q-my-lg
-                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.difficulties') }}
+                  q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.difficulties.title') }}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
@@ -184,7 +184,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :options="controlTypes" :placeholder="$t('submitForm.control')"
+                                          :options="controlTypes" :placeholder="$t('patternFormPage.difficulties.control.label')"
                                           emit-value map-options
                                         )
                                     //- Lanes
@@ -197,7 +197,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :options="lanesOptions" :placeholder="$t('submitForm.lanes')"
+                                          :options="lanesOptions" :placeholder="$t('patternFormPage.difficulties.lanes.label')"
                                           emit-value map-options
                                         )
                                     //- Name
@@ -210,7 +210,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.name')"
+                                          :placeholder="$t('patternFormPage.difficulties.name.label')"
                                         )
                                     //- Level
                                     .col-6.col-md-2
@@ -222,7 +222,7 @@ q-page#patternForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.level')"
+                                          :placeholder="$t('patternFormPage.difficulties.level.label')"
                                           min="1"
                                         )
                                 //- Action buttons
@@ -239,7 +239,7 @@ q-page#patternForm
                                   )
                 //- Description
                 q-list.q-my-lg
-                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.description') }}
+                  q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.description.title') }}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
@@ -254,14 +254,14 @@ q-page#patternForm
                 //- Field - Danger Zone
                 q-list.q-my-lg(v-if="pattern._id.length > 0")
                   //- List header
-                  q-item-label.text-h6.text-red(header) {{ $t('submitForm.dangerZone') }}
+                  q-item-label.text-h6.text-red(header) {{ $t('patternFormPage.dangerZone.title') }}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.delete') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.dangerZone.delete.label') }}
                         .col-12.col-md-10
-                          q-btn(outline color="red" @click="openDeleteDialog") {{ $t('submitForm.delete') }}
+                          q-btn(outline color="red" @click="openDeleteDialog") {{ $t('patternFormPage.dangerZone.delete.button') }}
                 //- Terms of Service
                 .q-mt-xl.q-mx-auto.text-center
                   Field(name="agree" v-slot="{ field, errorMessage }")
@@ -270,26 +270,26 @@ q-page#patternForm
                       :model-value="field.value"
                       @update:model-value="field.onChange($event)"
                     )
-                    span(v-html="$t('submitForm.agreetos', {tosURL})")
+                    span(v-html="$t('patternFormPage.tos.label', {tosURL})")
                     template(v-if="!!errorMessage")
                       .text-negative {{ errorMessage }}
                   br
                   //- Submit button
-                  q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
+                  q-btn.q-my-md(:label="pattern._id.length === 0 ? $t('patternFormPage.submit.new') : $t('patternFormPage.submit.edit')" color="tech" text-color="black" type="submit" style="width: 150px")
     //- Delete confirmation dialog
     q-dialog(v-model="deleteDialog" persistent)
       q-card(rounded)
         //- Dialog header
         q-card-section.text-center
           q-icon(name="warning" color="red" size="100px")
-          .text-h6 {{ $t('submitForm.deleteText') }}
+          .text-h6 {{ $t('patternFormPage.deleteDialog.text') }}
         q-separator
         //- Dialog actions
         q-card-actions(align="around")
           //- Confirm
-          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deletePattern" :loading="deleting")
+          q-btn(color="green" flat :label="$t('patternFormPage.deleteDialog.yes')" @click="deletePattern" :loading="deleting")
           //- Cancel
-          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+          q-btn(color="red" flat :label="$t('patternFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
 <script setup>
@@ -411,9 +411,15 @@ const lanesOptions = [
   { label: '4L', value: 4 },
 ]
 const controlTypes = computed(() => [
-  { label: t('pattern.' + controls[CONTROL_TOUCH]), value: CONTROL_TOUCH },
-  { label: t('pattern.' + controls[CONTROL_KEYS]), value: CONTROL_KEYS },
-  { label: t('pattern.' + controls[CONTROL_KM]), value: CONTROL_KM },
+  {
+    label: t('patternFormPage.difficulties.control.' + controls[CONTROL_TOUCH]),
+    value: CONTROL_TOUCH,
+  },
+  {
+    label: t('patternFormPage.difficulties.control.' + controls[CONTROL_KEYS]),
+    value: CONTROL_KEYS,
+  },
+  { label: t('patternFormPage.difficulties.control.' + controls[CONTROL_KM]), value: CONTROL_KM },
 ])
 
 // Template refs
@@ -421,31 +427,52 @@ const form = useTemplateRef('form')
 
 // Form validation schema
 const schema = yup.object({
-  name: yup.string().required(),
-  composer: yup.string().required(),
-  link: yup.string().url().required(),
-  keysounded: yup.boolean().required(),
-  image: yup.string().url(),
+  name: yup.string().required(() => t('patternFormPage.basic.name.error.required')),
+  composer: yup.string().required(() => t('patternFormPage.basic.composer.error.required')),
+  link: yup
+    .string()
+    .url(() => t('patternFormPage.basic.download.error.invalid'))
+    .required(() => t('patternFormPage.basic.download.error.required')),
+  keysounded: yup.boolean().required(() => t('patternFormPage.basic.keysounded.error.required')),
+  image: yup.string().url(() => t('patternFormPage.basic.image.error.invalid')),
   previews: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(),
+      name: yup.string().required(() => t('patternFormPage.preview.name.error.required')),
       link: yup
         .string()
-        .required()
-        .url()
-        .test('youtube', t('submitForm.invalidLink'), getIDFromYouTubeLink),
+        .required(() => t('patternFormPage.preview.link.error.required'))
+        .url(() => t('patternFormPage.preview.link.error.invalid'))
+        .test('youtube', t('patternFormPage.preview.link.error.youtube'), getIDFromYouTubeLink),
     }),
   ),
   difficulties: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(),
-      level: yup.number().required().min(1),
-      control: yup.number().required().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]),
-      lanes: yup.number().required().min(2).max(4),
+      name: yup.string().required(() => t('patternFormPage.difficulties.name.error.required')),
+      level: yup
+        .number()
+        .typeError(t('patternFormPage.difficulties.level.error.required'))
+        .required(() => t('patternFormPage.difficulties.level.error.required'))
+        .min(1, () => t('patternFormPage.difficulties.level.error.min')),
+      control: yup
+        .number()
+        .typeError(() => t('patternFormPage.difficulties.control.error.required'))
+        .required(() => t('patternFormPage.difficulties.control.error.required'))
+        .oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM], () =>
+          t('patternFormPage.difficulties.control.error.invalid'),
+        ),
+      lanes: yup
+        .number()
+        .typeError(() => t('patternFormPage.difficulties.level.error.required'))
+        .required(() => t('patternFormPage.difficulties.lanes.error.required'))
+        .min(2, () => t('patternFormPage.difficulties.lanes.error.min'))
+        .max(4, () => t('patternFormPage.difficulties.lanes.error.max')),
     }),
   ),
   description: yup.string(),
-  agree: yup.bool().required().oneOf([true]),
+  agree: yup
+    .bool()
+    .required(() => t('patternFormPage.tos.error.required'))
+    .oneOf([true], () => t('patternFormPage.tos.error.required')),
 })
 // Form initial values
 const initialValues = {
@@ -509,7 +536,7 @@ const onSubmit = async (values) => {
     // Notify success
     $q.notify({
       icon: 'check',
-      message: t('submitForm.updated'),
+      message: t('patternFormPage.result.updated'),
       color: 'positive',
       position: 'top',
       timeout: 2000,
@@ -536,7 +563,7 @@ const deletePattern = async () => {
     // Notify success
     $q.notify({
       icon: 'check',
-      message: t('submitForm.deleted'),
+      message: t('patternFormPage.result.deleted'),
       color: 'positive',
       position: 'top',
       timeout: 2000,

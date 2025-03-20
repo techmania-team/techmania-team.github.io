@@ -8,7 +8,7 @@ q-page#skins
         img(src="/assets/header-skin.png")
       //- Header content
       template(#content)
-        h4.text-center {{ $t('nav.skins') }}
+        h4.text-center {{ $t('skinsPage.title') }}
     //- Search form
     section.q-mx-auto.padding.q-my-md
       .container
@@ -27,7 +27,7 @@ q-page#skins
                     @blur="field.onBlur($event)"
                     :error-message="errorMessage"
                     :error="!!errorMessage"
-                    :placeholder="$t('patterns.search')"
+                    :placeholder="$t('skinsPage.searchForm.keywords.placeholder')"
                   )
                     template(#after)
                       //- NOTE:
@@ -40,7 +40,7 @@ q-page#skins
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('submitSkinForm.skinType') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('skinsPage.searchForm.type.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             template(v-for="(typeOption) in typeOptions" :key="typeOption")
@@ -50,20 +50,20 @@ q-page#skins
                                   :name="`types`+typeOption"
                                   :model-value="field.checked"
                                   @update:model-value="field.onInput($event)"
-                                  :label="$t('skin.'+types[typeOption])"
+                                  :label="$t('skinsPage.searchForm.type.'+types[typeOption])"
                                 )
                   //- Sort
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patterns.sort') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('skinsPage.searchForm.sort.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             Field(name="sortBy" v-slot="{ field }")
-                              q-btn(flat :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
-                              q-btn(flat :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
-                              q-btn(flat :label="$t('skins.sortName')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
-                              q-btn(flat :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
         q-separator.q-my-md
     //- Skins
     section.q-mx-auto.padding.q-my-md
@@ -75,7 +75,7 @@ q-page#skins
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
+            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skinsPage.notFound') }}
     //- Back to top button
     q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")

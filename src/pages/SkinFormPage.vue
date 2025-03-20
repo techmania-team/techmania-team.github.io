@@ -9,7 +9,7 @@ q-page#skinForm
       //- Header content
       template(#content)
         .column.items-center.q-mb-md
-          .text-h4.text-center {{ skin._id.length === 0 ? $t('submitSkinForm.title') : $t('submitSkinForm.editTitle') }}
+          .text-h4.text-center {{ skin._id.length === 0 ? $t('skinFormPage.titleNew') : $t('skinFormPage.titleEdit') }}
     //- Content
     section.q-mx-auto.padding
       .container
@@ -21,15 +21,15 @@ q-page#skinForm
                 //- Rules
                 q-card.text-white.bg-red.q-my-lg(rounded)
                   q-card-section
-                    p {{ $t('submitSkinForm.rulesTitle') }}
+                    p {{ $t('skinFormPage.rules.title') }}
                     ul.q-mb-none
-                      li {{ $t('submitSkinForm.rules1') }}
-                      li {{ $t('submitSkinForm.rules2') }}
-                      li {{ $t('submitSkinForm.rules3') }}
+                      li {{ $t('skinFormPage.rules.rule1') }}
+                      li {{ $t('skinFormPage.rules.rule2') }}
+                      li {{ $t('skinFormPage.rules.rule3') }}
                 //- Basic informations
                 q-list.q-mb-lg
                   //- List header
-                  q-item-label.text-h6.text-tech(header) Basic informations
+                  q-item-label.text-h6.text-tech(header) {{ $t('skinFormPage.basic.title') }}
                   q-separator.q-mb-md(inset)
                   //- Field - Name
                   //- NOTE:
@@ -38,7 +38,7 @@ q-page#skinForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinName') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.name.label') }}
                         .col-12.col-md-10
                           Field(name="name" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -53,7 +53,7 @@ q-page#skinForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.skinType') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.type.label') }}
                         .col-12.col-md-10
                           template(v-for="(typeOption) in typeOptions" :key="typeOption")
                             //- NOTE:
@@ -74,7 +74,7 @@ q-page#skinForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.dlLink') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.download.label') }}
                         .col-12.col-md-10
                           Field(name="link" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -89,7 +89,7 @@ q-page#skinForm
                   q-item.q-py-lg.q-py-md-md
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitForm.image') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.image.label') }}
                         .col-12.col-md-10
                           Field(name="image" v-slot="{ field, errorMessage }")
                             q-input.q-pb-none(
@@ -102,7 +102,7 @@ q-page#skinForm
                             )
                 //- Previews
                 q-list.q-my-lg
-                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.preview')}}
+                  q-item-label.text-h6.text-tech(header) {{ $t('skinFormPage.preview.title')}}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
@@ -123,7 +123,7 @@ q-page#skinForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.name')"
+                                          :placeholder="$t('skinFormPage.preview.name.label')"
                                         )
                                     //- Link
                                     .col-12.col-md-9
@@ -135,7 +135,7 @@ q-page#skinForm
                                           @blur="field.onBlur($event)"
                                           :error-message="errorMessage"
                                           :error="!!errorMessage"
-                                          :placeholder="$t('submitForm.ytLink')"
+                                          :placeholder="$t('skinFormPage.preview.link.label')"
                                         )
                                 //- Action buttons
                                 .col-2.col-md-1.text-center.self-center.q-py-none
@@ -151,7 +151,7 @@ q-page#skinForm
                                   )
                 //- Description
                 q-list.q-my-lg
-                  q-item-label.text-h6.text-tech(header) {{ $t('submitForm.description') }}
+                  q-item-label.text-h6.text-tech(header) {{ $t('skinFormPage.description.title') }}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
@@ -166,14 +166,14 @@ q-page#skinForm
                 //- Field - Danger Zone
                 q-list.q-my-lg(v-if="skin._id.length > 0")
                   //- List header
-                  q-item-label.text-h6.text-red(header) {{ $t('submitForm.dangerZone') }}
+                  q-item-label.text-h6.text-red(header) {{ $t('skinFormPage.dangerZone.title') }}
                   q-separator.q-mb-md(inset)
                   q-item
                     q-item-section
                       .row.justify-center.items-center
-                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('submitSkinForm.delete') }}
+                        .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.dangerZone.delete.label') }}
                         .col-12.col-md-10
-                          q-btn(outline color="red" @click="openDeleteDialog") {{ $t('submitSkinForm.delete') }}
+                          q-btn(outline color="red" @click="openDeleteDialog") {{ $t('skinFormPage.dangerZone.delete.button') }}
                 //- Terms of Service
                 .q-mt-xl.q-mx-auto.text-center
                   Field(name="agree" v-slot="{ field, errorMessage }")
@@ -182,26 +182,26 @@ q-page#skinForm
                       :model-value="field.value"
                       @update:model-value="field.onChange($event)"
                     )
-                    span(v-html="$t('submitSkinForm.agreetos', {tosURL})")
+                    span(v-html="$t('skinFormPage.tos.label', {tosURL})")
                     template(v-if="!!errorMessage")
                       .text-negative {{ errorMessage }}
                   br
                   //- Submit button
-                  q-btn.q-my-md(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" style="width: 150px")
+                  q-btn.q-my-md(:label="pattern._id.length === 0 ? $t('skinFormPage.submit.new') : $t('skinFormPage.submit.edit')" color="tech" text-color="black" type="submit" style="width: 150px")
     //- Delete confirmation dialog
     q-dialog(v-model="deleteDialog" persistent)
       q-card(rounded)
         //- Dialog header
         q-card-section.text-center
           q-icon(name="warning" color="red" size="100px")
-          .text-h6 {{ $t('submitForm.deleteText') }}
+          .text-h6 {{ $t('skinFormPage.deleteDialog.text') }}
         q-separator
         //- Dialog actions
         q-card-actions(align="around")
           //- Confirm
-          q-btn(color="green" flat :label="$t('submitForm.deleteYes')" @click="deleteSkin" :loading="deleting")
+          q-btn(color="green" flat :label="$t('skinFormPage.deleteDialog.yes')" @click="deleteSkin" :loading="deleting")
           //- Cancel
-          q-btn(color="red" flat :label="$t('submitForm.deleteNo')" v-close-popup)
+          q-btn(color="red" flat :label="$t('skinFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
 <script setup>
@@ -319,7 +319,7 @@ const toolbar = [
 
 const typeOptions = computed(() => {
   return types.map((type) => {
-    return { label: t('skin.' + type), value: types.indexOf(type) }
+    return { label: t('skinFormPage.basic.type.' + type), value: types.indexOf(type) }
   })
 })
 
@@ -328,22 +328,33 @@ const form = useTemplateRef('form')
 
 // Form validation schema
 const schema = yup.object({
-  name: yup.string().required(),
-  link: yup.string().url().required(),
-  image: yup.string().url(),
+  name: yup.string().required(() => t('skinFormPage.basic.name.error.required')),
+  link: yup
+    .string()
+    .url(() => t('skinFormPage.basic.download.error.invalid'))
+    .required(() => t('skinFormPage.basic.download.error.required')),
+  image: yup.string().url(() => t('skinFormPage.basic.image.error.invalid')),
   previews: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(),
+      name: yup.string().required(() => t('skinFormPage.preview.name.error.required')),
       link: yup
         .string()
-        .required()
-        .url()
-        .test('youtube', t('submitForm.invalidLink'), getIDFromYouTubeLink),
+        .required(() => t('skinFormPage.preview.link.error.required'))
+        .url(() => t('skinFormPage.preview.link.error.invalid'))
+        .test('youtube', t('skinFormPage.preview.link.error.youtube'), getIDFromYouTubeLink),
     }),
   ),
-  type: yup.number().required().oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]),
+  type: yup
+    .number()
+    .required(() => t('skinFormPage.basic.type.error.required'))
+    .oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME], () =>
+      t('skinFormPage.basic.type.error.invalid'),
+    ),
   description: yup.string(),
-  agree: yup.bool().required().oneOf([true]),
+  agree: yup
+    .bool()
+    .required(() => t('skinFormPage.tos.error.required'))
+    .oneOf([true], () => t('skinFormPage.tos.error.required')),
 })
 // Form initial values
 const initialValues = {
@@ -401,7 +412,7 @@ const onSubmit = async (values) => {
     // Notify success
     $q.notify({
       icon: 'check',
-      message: t('submitForm.updated'),
+      message: t('skinFormPage.result.updated'),
       color: 'positive',
       position: 'top',
       timeout: 2000,
@@ -428,7 +439,7 @@ const deleteSkin = async () => {
     // Notify success
     $q.notify({
       icon: 'check',
-      message: t('submitForm.deleted'),
+      message: t('skinFormPage.result.deleted'),
       color: 'positive',
       position: 'top',
       timeout: 2000,

@@ -7,7 +7,7 @@ q-page#changelog
       img(src="/assets/header-changelog.png")
     //- Header content
     template(#content)
-      h4.text-center {{ $t('nav.changelog') }}
+      h4.text-center {{ $t('changelogPage.title') }}
   section.container
     .row
       //- Title
@@ -39,10 +39,10 @@ q-page#changelog
                 //- Download button
                 q-btn.q-mr-xs(flat round icon="download" color="tech" :href="release.html_url" target="_blank")
                 //- Downloads count
-                img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total?label=' + $t('changelog.downloads')")
+                img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total?label=' + $t('changelogPage.downloads')")
             q-separator
             //- Detail collapse button
-            q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? $t('changelog.hideDetail') : $t('changelog.showDetail')" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
+            q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? $t('changelogPage.hideDetail') : $t('changelogPage.showDetail')" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
             //- Release detail
             q-slide-transition
               div(v-if="release.expand")

@@ -8,7 +8,7 @@ q-page#patterns
         img(src="/assets/header-pattern.png")
       //- Header content
       template(#content)
-        h4.text-center {{ $t('nav.patterns') }}
+        h4.text-center {{ $t('patternsPage.title') }}
     //- Search form
     section.q-mx-auto.padding.q-my-md
       .container
@@ -27,7 +27,7 @@ q-page#patterns
                     @blur="field.onBlur($event)"
                     :error-message="errorMessage"
                     :error="!!errorMessage"
-                    :placeholder="$t('patterns.search')"
+                    :placeholder="$t('patternsPage.searchForm.keywords.placeholder')"
                   )
                     template(#after)
                       //- NOTE:
@@ -40,18 +40,18 @@ q-page#patterns
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('pattern.keysounded') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.keysounded.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             Field(name="keysounded" v-slot="{ field }")
-                              q-btn(flat :label="$t('patterns.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
-                              q-btn(flat :label="$t('patterns.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
-                              q-btn(flat :label="$t('patterns.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
                   //- Controls
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('submitForm.control') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.control.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             template(v-for="(controlOption) in controlOptions" :key="controlOption")
@@ -61,13 +61,13 @@ q-page#patterns
                                   :name="`controls`+controlOption"
                                   :model-value="field.checked"
                                   @update:model-value="field.onInput($event)"
-                                  :label="$t('pattern.'+controls[controlOption])"
+                                  :label="$t('patternsPage.searchForm.control.'+controls[controlOption])"
                                 )
                   //- Lanes
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('submitForm.lanes') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.lanes.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
@@ -77,20 +77,20 @@ q-page#patterns
                                   :name="`lanes`+lanesOption"
                                   :model-value="field.checked"
                                   @update:model-value="field.onInput($event)"
-                                  :label="lanesOption + `L`"
+                                  :label="$t('patternsPage.searchForm.lanes.lanes', { lanes: lanesOption })"
                                 )
                   //- Sort
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patterns.sort') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.sort.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             Field(name="sortBy" v-slot="{ field }")
-                              q-btn(flat :label="$t('patterns.sortSubmit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
-                              q-btn(flat :label="$t('patterns.sortUpdate')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
-                              q-btn(flat :label="$t('patterns.sortName')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
-                              q-btn(flat :label="$t('pattern.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
+                              q-btn(flat :label="$t('patternsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
         q-separator.q-my-md
     //- Patterns
     section.q-mx-auto.padding.q-my-md
@@ -102,7 +102,7 @@ q-page#patterns
                 PatternCard(:pattern="pattern" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
+            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patternsPage.notFound') }}
     //- Back to top button
     q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")

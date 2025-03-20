@@ -15,11 +15,11 @@ q-page#profile
       .row
         .col-12
           q-tabs(align="justify" indicator-color="tech")
-            q-route-tab(:to="'/users/' + profile._id + '/patterns'" :label="$t('nav.patterns')" icon="music_note")
+            q-route-tab(:to="'/users/' + profile._id + '/patterns'" :label="$t('profile.tab.patterns')" icon="music_note")
               q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-            q-route-tab(:to="'/users/' + profile._id + '/skins'" :label="$t('nav.skins')" icon="stars")
+            q-route-tab(:to="'/users/' + profile._id + '/skins'" :label="$t('profile.tab.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
-            q-route-tab(:to="'/users/' + profile._id + '/comments'" :label="$t('comment.comments')" icon="comment")
+            q-route-tab(:to="'/users/' + profile._id + '/comments'" :label="$t('profile.tab.comments')" icon="comment")
               q-badge(color="tech" text-color="black" floating) {{ profile.replyCount }}
   section
     router-view

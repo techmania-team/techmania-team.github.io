@@ -3,7 +3,7 @@ q-no-ssr.row.q-gutter-y-lg
   //- Rate form
   .col-12(v-if="myComment._id === '' && user.isLogin")
     q-list
-      q-item-label.text-h6.text-tech(header) {{ $t('pattern.rateThisPattern') }}
+      q-item-label.text-h6.text-tech(header) {{ $t('commentList.commentForm.title.' + type) }}
       q-separator.q-mb-md(inset)
       q-item
         q-item-section
@@ -29,11 +29,11 @@ q-no-ssr.row.q-gutter-y-lg
                   )
                 .text-center.text-negative(v-if="!!errorMessage") {{ errorMessage }}
               .q-mt-md.text-center
-                q-btn(:label="$t('submitForm.submit')" color="tech" text-color="black" type="submit" :loading="isSubmitting" style="width: 150px")
+                q-btn(:label="$t('commentList.commentForm.submit')" color="tech" text-color="black" type="submit" :loading="isSubmitting" style="width: 150px")
   //- Comments
   .col-12
     q-list
-      q-item-label.text-h6.text-tech(header) {{ $t('comment.comments') }}
+      q-item-label.text-h6.text-tech(header) {{ $t('commentList.comments.title') }}
       q-separator.q-mb-md(inset)
       //- Loop all comments
       template(v-for="(comment, cidx) in comments" :key="comment._id")
@@ -96,8 +96,9 @@ q-no-ssr.row.q-gutter-y-lg
                         v-if="reply.user._id === user._id"
                         @click="deleteMyReply(comment._id, reply._id, cidx, ridx)"
                       )
+      p.text-center(v-if="comments.length === 0") {{ $t('commentList.comments.notFound') }}
   //- Edit dialog
-  q-dialog(v-model="editDialog.open")
+  q-dialog(v-model="editDialog.open" persistent)
     q-card(rounded style="width: 700px; max-width: 80vw;")
       Form(
         :validation-schema="editDialog.mode === DIALOG_MODE.EDIT_MY_COMMENT ? rateSchema : replySchema"
@@ -106,10 +107,8 @@ q-no-ssr.row.q-gutter-y-lg
         v-slot="{ handleSubmit, isSubmitting }"
       )
         q-form(@submit.prevent="handleSubmit($event, onCommentSubmit)")
-          q-card-section
-            .text-h6(v-if="editDialog.mode === DIALOG_MODE.EDIT_MY_COMMENT") EDIT MY COMMENT
-            .text-h6(v-else-if="editDialog.mode === DIALOG_MODE.REPLY") REPLY
-            .text-h6(v-else-if="editDialog.mode === DIALOG_MODE.EDIT_MY_REPLY") EDIT MY REPLY
+          q-card-section.text-center.text-h6
+            | {{ $t('commentList.dialog.title.' + editDialog.mode) }}
           q-card-section
             Field(name="comment" v-slot="{ field, errorMessage }")
               q-input(
@@ -135,8 +134,8 @@ q-no-ssr.row.q-gutter-y-lg
               .text-center.text-negative(v-if="!!errorMessage") {{ errorMessage }}
           q-separator
           q-card-actions(align="around")
-            q-btn(flat label="cancel" color="red" :loading="isSubmitting" v-close-popup )
-            q-btn(flat label="submit" color="green" :loading="isSubmitting" @click="handleSubmit($event, onDialogSubmit)")
+            q-btn(flat :label="$t('commentList.dialog.cancel')" color="red" :loading="isSubmitting" v-close-popup )
+            q-btn(flat :label="$t('commentList.dialog.submit.' + editDialog.mode)" color="green" :loading="isSubmitting" @click="handleSubmit($event, onDialogSubmit)")
 </template>
 
 <script setup>
@@ -147,9 +146,11 @@ import { useReCaptcha } from 'vue-recaptcha-v3'
 import * as date from 'src/utils/date'
 import api from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
+import { useI18n } from 'vue-i18n'
 
 const user = useUserStore()
 const recaptcha = useReCaptcha()
+const { t } = useI18n()
 
 // Props
 const props = defineProps({
@@ -189,8 +190,13 @@ const commentFormRef = useTemplateRef('commentFormRef')
 const dialogFormRef = useTemplateRef('dialogFormRef')
 // Rate form validation schema
 const rateSchema = yup.object({
-  comment: yup.string().required(),
-  rating: yup.number().required().min(1).max(5),
+  comment: yup.string().required(() => t('commentList.commentForm.comment.error.required')),
+  rating: yup
+    .number()
+    .typeError(() => t('commentList.commentForm.rating.error.required'))
+    .required(() => t('commentList.commentForm.rating.error.required'))
+    .min(1, () => t('commentList.commentForm.rating.error.min'))
+    .max(5, () => t('commentList.commentForm.rating.error.max')),
 })
 // Rate form initial values
 const rateInitialValues = {
@@ -199,7 +205,7 @@ const rateInitialValues = {
 }
 // Reply form validation schema
 const replySchema = yup.object({
-  comment: yup.string().required(),
+  comment: yup.string().required(() => t('commentList.replyForm.comment.error.required')),
 })
 // Reply form initial values
 const replyInitialValues = {

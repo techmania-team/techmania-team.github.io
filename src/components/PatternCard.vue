@@ -24,20 +24,20 @@ q-card.full-height.card-pattern
       q-item
         q-item-section
           q-rating(:model-value="pattern.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
-          | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: pattern.rating.count}) }}
+          | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('patternCard.comments.count', {count: pattern.rating.count}) }}
       //- Date
       q-item
         q-item-section
           p
             span(v-if="!mine")
-              | {{ $t('pattern.submittedBy') }} &nbsp;
+              | {{ $t('patternCard.submittedBy') }} &nbsp;
               router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
             br(v-if="!mine")
-            span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
+            span {{ $t('patternCard.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                 | {{ formattedTime.text }}
             br
-            span {{ $t('pattern.updated') }} {{ formattedUpdateTime.relative }}
+            span {{ $t('patternCard.updatedAt') }} {{ formattedUpdateTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                 | {{ formattedUpdateTime.text }}
       //- Keysounded
@@ -45,7 +45,7 @@ q-card.full-height.card-pattern
         q-item-section
           div(:class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
             q-icon(size="sm" :name="!pattern.keysounded ? 'close' : 'check'")
-            | &nbsp;{{ $t('pattern.keysounded') }}
+            | &nbsp;{{ $t('patternCard.keysounded') }}
       //- Lanes
       q-item
         q-item-section
@@ -64,7 +64,7 @@ q-card.full-height.card-pattern
               :class="getLevelFilter(difficulty.level)"
             )
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
-                | {{ $t('pattern.'+controls[difficulty.control]) }} / {{ difficulty.lanes }}L / {{ difficulty.name }}
+                | {{ $t('patternCard.control.'+controls[difficulty.control]) }} / {{ difficulty.lanes }}L / {{ difficulty.name }}
                 br
                 span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
 </template>

@@ -22,25 +22,25 @@ q-card.full-height.card-skin
       //- Type
       q-item
         q-item-section
-          span {{ $t('submitSkinForm.skinType') }}: {{ $t('skin.' + types[skin.type]) }}
+          span {{ $t('skinCard.type.label') }}: {{ $t('skinCard.type.' + types[skin.type]) }}
       //- Rating
       q-item
         q-item-section
           q-rating(:model-value="skin.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
-          | {{ skin.rating.avg.toFixed(2) }} / {{ $t('pattern.ratingCount', {count: skin.rating.count}) }}
+          | {{ skin.rating.avg.toFixed(2) }} / {{ $t('skinCard.comments.count', {count: skin.rating.count}) }}
       //- Date
       q-item
         q-item-section
           p
             span(v-if="!mine")
-              | {{ $t('pattern.submittedBy') }} &nbsp;
+              | {{ $t('skinCard.submittedBy') }} &nbsp;
               router-link.no-underline(:to='`/users/${skin.submitter._id}/skins`') {{ skin.submitter.name }}
             br(v-if="!mine")
-            span {{ $t('pattern.submitted') }} {{ formattedTime.relative }}
+            span {{ $t('pattern.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                 | {{ formattedTime.text }}
             br
-            span {{ $t('pattern.updated') }} {{ formattedUpdateTime.relative }}
+            span {{ $t('skinCard.updatedAt') }} {{ formattedUpdateTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                 | {{ formattedUpdateTime.text }}
 </template>
