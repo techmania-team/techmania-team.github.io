@@ -74,14 +74,10 @@ const routes = [
         meta: { login: false },
         children: [
           {
-            path: '',
-            component: () => import('src/pages/profile/PatternsPage.vue'),
-            meta: { login: false },
-          },
-          {
             path: 'patterns',
             component: () => import('src/pages/profile/PatternsPage.vue'),
             meta: { login: false },
+            alias: '',
           },
           {
             path: 'skins',
