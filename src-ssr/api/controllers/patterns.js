@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import _ from 'lodash'
 import * as yup from 'yup'
 import patterns from '../models/patterns'
+import comments from '../models/comments'
 import users from '../models/users'
 import { checkImage } from '../utils/image'
 import validator from 'validator'
@@ -450,7 +451,10 @@ export const del = async (req, res) => {
       throw new Error('Unauthorized')
     }
 
+    // Delete pattern
     await patterns.findByIdAndDelete(parsedParams.id)
+    // Delete related comments
+    await comments.deleteMany({ pattern: parsedParams.id })
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {

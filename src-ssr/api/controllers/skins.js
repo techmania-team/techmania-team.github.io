@@ -7,6 +7,7 @@ import skins from '../models/skins'
 import users from '../models/users'
 import { checkImage } from '../utils/image'
 import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
+import comments from '../models/comments'
 
 const types = ['Note', 'VFX', 'Combo', 'Game UI', 'Theme']
 
@@ -401,7 +402,10 @@ export const del = async (req, res) => {
       throw new Error('Unauthorized')
     }
 
+    // Delete skin
     await skins.findByIdAndDelete(parsedParams.id)
+    // Delete related comments
+    await comments.deleteMany({ skin: parsedParams.id })
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
