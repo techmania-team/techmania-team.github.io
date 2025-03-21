@@ -28,7 +28,7 @@ q-page#changelog
           q-timeline-entry(
             v-for="release in releases"
             :key="release.node_id"
-            :subtitle="new Date(release.published_at).toLocaleString(settings.locale)"
+            :subtitle="toLocaleString(release.published_at)"
           )
             template(#title)
               //- Timeline title
@@ -54,10 +54,9 @@ import { ref, onMounted } from 'vue'
 import { useMeta } from 'quasar'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
-import { useSettingsStore } from 'src/stores/settings'
+import { toLocaleString } from 'src/utils/date'
 
 const route = useRoute()
-const settings = useSettingsStore()
 
 const metaData = {
   title: 'TECHMANIA | Changelog',
