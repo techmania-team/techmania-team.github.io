@@ -103,9 +103,6 @@ q-page#patterns
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
             .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patternsPage.notFound') }}
-    //- Back to top button
-    q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
-      q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
 </template>
 
 <script setup>
