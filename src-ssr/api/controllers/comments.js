@@ -490,12 +490,15 @@ export const updateMyComment = async (req, res) => {
       throw new Error('No permission')
     }
 
-    // Update comment
-    if (parsedBody.comment) comment.replies[0].comment = parsedBody.comment
-    if (parsedBody.rating) comment.rating = parsedBody.rating
-    if (parsedBody.deleted) comment.replies[0].deleted = parsedBody.deleted
-
-    await comment.save()
+    if (parsedBody.deleted) {
+      // Delete comment
+      await comments.findByIdAndDelete(parsedParams.cid).orFail()
+    } else {
+      // Update comment
+      if (parsedBody.comment) comment.replies[0].comment = parsedBody.comment
+      if (parsedBody.rating) comment.rating = parsedBody.rating
+      await comment.save()
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
