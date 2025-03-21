@@ -102,10 +102,10 @@ const dropdown = ref(false)
 
 // Nav items
 const navs = computed(() => [
-  {
-    to: '/howtoplay',
-    label: t('nav.howtoplay'),
-  },
+  // {
+  //   to: '/howtoplay',
+  //   label: t('nav.howtoplay'),
+  // },
   {
     href: 'https://techmania-team.github.io/techmania-docs/',
     label: t('nav.documentations'),

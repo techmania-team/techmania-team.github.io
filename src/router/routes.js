@@ -13,11 +13,11 @@ const routes = [
         component: () => import('pages/ChangelogPage.vue'),
         meta: { login: false },
       },
-      {
-        path: 'howtoplay',
-        component: () => import('pages/HowToPlayPage.vue'),
-        meta: { login: false },
-      },
+      // {
+      //   path: 'howtoplay',
+      //   component: () => import('pages/HowToPlayPage.vue'),
+      //   meta: { login: false },
+      // },
       {
         path: 'patterns',
         children: [
