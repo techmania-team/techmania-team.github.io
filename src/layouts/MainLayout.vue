@@ -24,7 +24,7 @@ q-layout(view='hHh lpR fff')
               template(#label)
                 q-icon(name="translate")
               q-list
-                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale)")
+                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocale(locale)")
                   q-item-section
                     q-item-label {{ locale.toUpperCase() }}
             //- User dropdown
@@ -67,7 +67,7 @@ q-layout(view='hHh lpR fff')
           //- Language options
           q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.language')")
             q-list
-              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="updateLocale(locale); dropdown = !dropdown")
+              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocale(locale); dropdown = !dropdown")
                 q-item-section
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
@@ -87,14 +87,12 @@ q-layout(view='hHh lpR fff')
 
 <script setup>
 import { ref, computed } from 'vue'
-import { localeOptions } from 'src/i18n'
+import { localeOptions, setLocale } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
-import { useSettingsStore } from 'src/stores/settings'
 import { useI18n } from 'vue-i18n'
 
 const user = useUserStore()
-const settings = useSettingsStore()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 // Dropdown state
 const dropdown = ref(false)
@@ -142,13 +140,4 @@ const loginNavs = computed(() => [
     label: t('nav.logout'),
   },
 ])
-
-/**
- * Update the locale of the user
- * @param {string} value - The new locale
- */
-const updateLocale = (value) => {
-  locale.value = value
-  settings.locale = value
-}
 </script>
