@@ -28,7 +28,7 @@ const routes = [
           },
           {
             path: 'new',
-            component: () => import('pages/PatternFormPage.vue'),
+            component: () => import('pages/PatternFormNewPage.vue'),
             meta: { login: true, recaptcha: true },
           },
           {
@@ -38,7 +38,7 @@ const routes = [
           },
           {
             path: ':id/edit',
-            component: () => import('pages/PatternFormPage.vue'),
+            component: () => import('pages/PatternFormEditPage.vue'),
             meta: { login: true, recaptcha: true },
           },
         ],
@@ -53,7 +53,7 @@ const routes = [
           },
           {
             path: 'new',
-            component: () => import('pages/SkinFormPage.vue'),
+            component: () => import('pages/SkinFormNewPage.vue'),
             meta: { login: true, recaptcha: true },
           },
           {
@@ -63,7 +63,7 @@ const routes = [
           },
           {
             path: ':id/edit',
-            component: () => import('pages/SkinFormPage.vue'),
+            component: () => import('pages/SkinFormEditPage.vue'),
             meta: { login: true, recaptcha: true },
           },
         ],
