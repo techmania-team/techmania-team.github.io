@@ -1,7 +1,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import parseISO from 'date-fns/fp/parseISO'
 import { enUS, ja, ko, zhCN, zhTW } from 'date-fns/locale'
-import { useSettingsStore } from 'src/stores/settings'
+import { useI18n } from 'vue-i18n'
 
 const locales = {
   'en-US': enUS,
@@ -12,14 +12,14 @@ const locales = {
 }
 
 export const toRelative = (date) => {
-  const settings = useSettingsStore()
+  const { locale } = useI18n()
   return formatDistanceToNow(parseISO(date), {
-    locale: locales[settings.locale],
+    locale: locales[locale.value],
     addSuffix: true,
   })
 }
 
 export const toLocaleString = (date) => {
-  const settings = useSettingsStore()
-  return new Date(date).toLocaleString(settings.locale)
+  const { locale } = useI18n()
+  return new Date(date).toLocaleString(locale.value)
 }
