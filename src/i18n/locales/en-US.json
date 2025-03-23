@@ -440,6 +440,15 @@
       "patterns": "Patterns",
       "skins": "Skins",
       "comments": "Comments"
+    },
+    "patterns": {
+      "notFound": "No patterns found"
+    },
+    "skins": {
+      "notFound": "No skins found"
+    },
+    "comments": {
+      "notFound": "No comments found"
     }
   }
 }

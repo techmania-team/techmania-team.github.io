@@ -440,6 +440,15 @@
       "patterns": "譜面",
       "skins": "造型",
       "comments": "評價"
+    },
+    "patterns": {
+      "notFound": "沒有譜面"
+    },
+    "skins": {
+      "notFound": "沒有造型"
+    },
+    "comments": {
+      "notFound": "沒有評價"
     }
   }
 }
