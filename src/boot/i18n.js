@@ -1,24 +1,18 @@
 import { defineBoot } from '#q-app/wrappers'
-import { Lang } from 'quasar'
-import { i18n, localeOptions, setLocale } from 'src/i18n'
-import { useSettingsStore } from 'src/stores/settings'
+import { i18n, getDefaultLocale, setLocale } from 'src/i18n'
 
-export default defineBoot(({ app }) => {
-  // Set i18n instance on app
+export default defineBoot(async ({ app, router, ssrContext }) => {
   app.use(i18n)
 
-  if (process.env.CLIENT) {
-    const settings = useSettingsStore()
-
-    if (settings.locale) {
-      if (!localeOptions.includes(settings.locale)) {
-        settings.locale = Lang.getLocale()
-      }
-      setLocale(settings.locale)
+  router.beforeEach(async (to, from, next) => {
+    console.log('to.params.locale', to.params.locale)
+    if (!to.params.locale) {
+      const locale = getDefaultLocale(ssrContext)
+      await setLocale(locale, ssrContext)
+      return next({ params: { ...to.params, locale } })
     } else {
-      const localeDetected = Lang.getLocale()
-      settings.locale = localeDetected
-      setLocale(localeDetected)
+      await setLocale(to.params.locale, ssrContext)
     }
-  }
+    next()
+  })
 })

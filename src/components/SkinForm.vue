@@ -210,6 +210,7 @@ import { useTempSkinStore } from 'src/stores/temp-skin'
 import { types, SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 import api from 'src/utils/api'
 import handleError from 'src/utils/handleError'
+import { getI18nRoute } from 'src/i18n'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -398,7 +399,7 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
-      router.push(`/skins/${data.id}`)
+      router.push(getI18nRoute({ name: 'skin', params: { id: data.id } }))
     }
     // Notify success
     $q.notify({
@@ -436,7 +437,7 @@ const deleteSkin = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    router.push(`/users/${user._id}/skins`)
+    router.push(getI18nRoute({ name: 'profile-skins', params: { id: user._id } }))
   } catch (error) {
     handleError(error)
   }

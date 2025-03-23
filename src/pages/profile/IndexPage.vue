@@ -15,11 +15,11 @@ q-page#profile
       .row
         .col-12
           q-tabs(align="justify" indicator-color="tech")
-            q-route-tab(:to="'/users/' + profile._id + '/patterns'" :label="$t('profile.tab.patterns')" icon="music_note")
+            q-route-tab(:to="getI18nRoute({ name: 'profile-patterns', params: { id: profile._id }})" :label="$t('profile.tab.patterns')" icon="music_note")
               q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-            q-route-tab(:to="'/users/' + profile._id + '/skins'" :label="$t('profile.tab.skins')" icon="stars")
+            q-route-tab(:to="getI18nRoute({ name: 'profile-skins', params: { id: profile._id }})" :label="$t('profile.tab.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
-            q-route-tab(:to="'/users/' + profile._id + '/comments'" :label="$t('profile.tab.comments')" icon="comment")
+            q-route-tab(:to="getI18nRoute({ name: 'profile-comments', params: { id: profile._id }})" :label="$t('profile.tab.comments')" icon="comment")
               q-badge(color="tech" text-color="black" floating) {{ profile.replyCount }}
   section
     router-view
@@ -28,6 +28,7 @@ q-page#profile
 <script setup>
 // import { useMeta } from 'quasar'
 import { useTempProfileStore } from 'src/stores/temp-profile'
+import { getI18nRoute } from 'src/i18n'
 
 const profile = useTempProfileStore()
 

@@ -38,6 +38,7 @@ import { useRoute } from 'vue-router'
 import handleError from 'src/utils/handleError'
 import api from 'src/utils/api'
 import * as date from 'src/utils/date'
+import { getI18nRoute } from 'src/i18n'
 
 const route = useRoute()
 
@@ -70,7 +71,7 @@ const loadScroll = async (index, done) => {
 }
 
 const getCommentLink = (comment) => {
-  if (comment.pattern) return `/patterns/${comment.pattern._id}`
-  else if (comment.skin) return `/skins/${comment.skin._id}`
+  if (comment.pattern) return getI18nRoute({ name: 'pattern', params: { id: comment.pattern._id } })
+  else if (comment.skin) return getI18nRoute({ name: 'skin', params: { id: comment.pattern._id } })
 }
 </script>

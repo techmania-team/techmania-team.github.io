@@ -11,7 +11,7 @@ q-page#skin
         .text-h4.text-center {{ skin.name }}
       .row.q-gutter-x-md
         q-btn(color="secondary" icon="download" :href="skin.link" target="__blank") {{ $t('skinPage.download') }}
-        q-btn(color="secondary" icon="edit" v-if="skin.submitter._id === user._id" :to="`/skins/${skin._id}/edit`") {{ $t('skinPage.edit') }}
+        q-btn(color="secondary" icon="edit" v-if="skin.submitter._id === user._id" :to="getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id }})") {{ $t('skinPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
     .container
@@ -30,7 +30,7 @@ q-page#skin
               q-item-section
                 q-item-label {{ $t('skinPage.basic.submittedBy.label') }}
                 q-item-label(caption)
-                  router-link.no-underline(:to='`/users/${skin.submitter._id}/skins`') {{ skin.submitter.name }}
+                  router-link.no-underline(:to="getI18nRoute({ name: 'profile-skins', params: { id: skin.submitter._id}})") {{ skin.submitter.name }}
             //- List items - Type
             q-item
               q-item-section(avatar)
@@ -83,6 +83,7 @@ import { useTempSkinStore } from 'src/stores/temp-skin'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { types } from 'src/utils/skin'
 import CommentList from 'src/components/CommentList.vue'
+import { getI18nRoute } from 'src/i18n'
 
 const route = useRoute()
 const user = useUserStore()

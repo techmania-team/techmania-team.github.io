@@ -7,7 +7,7 @@ q-layout(view='hHh lpR fff')
       q-toolbar
         //- Site Title
         q-toolbar-title
-          q-btn(to="/" flat)
+          q-btn(:to="getI18nRoute({ name: 'index' })" flat)
             q-avatar
               img(:src="'/assets/notes/basic.png'")
             | &nbsp;TECHMANIA
@@ -24,7 +24,7 @@ q-layout(view='hHh lpR fff')
               template(#label)
                 q-icon(name="translate")
               q-list
-                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocale(locale)")
+                q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocaleOption(locale)")
                   q-item-section
                     q-item-label {{ locale.toUpperCase() }}
             //- User dropdown
@@ -67,7 +67,7 @@ q-layout(view='hHh lpR fff')
           //- Language options
           q-btn-dropdown.full-width(align="between" stretch flat :label="$t('nav.language')")
             q-list
-              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocale(locale); dropdown = !dropdown")
+              q-item(clickable v-close-popup v-for="(locale, lid) in localeOptions" :key="lid" @click="setLocaleOption(locale)")
                 q-item-section
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
@@ -90,12 +90,15 @@ q-layout(view='hHh lpR fff')
 
 <script setup>
 import { ref, computed } from 'vue'
-import { localeOptions, setLocale } from 'src/i18n'
-import { useUserStore } from 'src/stores/user'
 import { useI18n } from 'vue-i18n'
+import { useRouter, useRoute } from 'vue-router'
+import { localeOptions, setLocale, getI18nRoute } from 'src/i18n'
+import { useUserStore } from 'src/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
 // Dropdown state
 const dropdown = ref(false)
@@ -112,30 +115,30 @@ const navs = computed(() => [
     target: '_blank',
   },
   {
-    to: '/changelog',
+    to: getI18nRoute({ name: 'changelog' }),
     label: t('nav.changelog'),
   },
   {
-    to: '/patterns',
+    to: getI18nRoute({ name: 'patterns' }),
     label: t('nav.patterns'),
   },
   {
-    to: '/skins',
+    to: getI18nRoute({ name: 'skins' }),
     label: t('nav.skins'),
   },
 ])
 
 const loginNavs = computed(() => [
   {
-    to: '/users/' + user._id + '/patterns',
+    to: getI18nRoute({ name: 'profile-patterns', params: { id: user._id } }),
     label: t('nav.myPage'),
   },
   {
-    to: '/patterns/new',
+    to: getI18nRoute({ name: 'pattern-form-new' }),
     label: t('nav.submitNewPattern'),
   },
   {
-    to: '/skins/new',
+    to: getI18nRoute({ name: 'skin-form-new' }),
     label: t('nav.submitNewSkin'),
   },
   {
@@ -143,4 +146,10 @@ const loginNavs = computed(() => [
     label: t('nav.logout'),
   },
 ])
+
+const setLocaleOption = async (locale) => {
+  await setLocale(locale)
+  router.replace(getI18nRoute(route))
+  dropdown.value = false
+}
 </script>

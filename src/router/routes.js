@@ -1,16 +1,20 @@
+import { localeOptions } from 'src/i18n'
+
 const routes = [
   {
-    path: '/',
+    path: `/:locale(${localeOptions.join('|')})?`,
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
         component: () => import('pages/IndexPage.vue'),
+        name: 'index',
         meta: { login: false },
       },
       {
         path: 'changelog',
         component: () => import('pages/ChangelogPage.vue'),
+        name: 'changelog',
         meta: { login: false },
       },
       // {
@@ -24,21 +28,25 @@ const routes = [
           {
             path: '',
             component: () => import('pages/PatternsPage.vue'),
+            name: 'patterns',
             meta: { login: false },
           },
           {
             path: 'new',
             component: () => import('pages/PatternFormNewPage.vue'),
+            name: 'pattern-form-new',
             meta: { login: true, recaptcha: true },
           },
           {
             path: ':id',
             component: () => import('pages/PatternPage.vue'),
+            name: 'pattern',
             meta: { login: false, recaptcha: true },
           },
           {
             path: ':id/edit',
             component: () => import('pages/PatternFormEditPage.vue'),
+            name: 'pattern-form-edit',
             meta: { login: true, recaptcha: true },
           },
         ],
@@ -49,21 +57,25 @@ const routes = [
           {
             path: '',
             component: () => import('pages/SkinsPage.vue'),
+            name: 'skins',
             meta: { login: false },
           },
           {
             path: 'new',
             component: () => import('pages/SkinFormNewPage.vue'),
+            name: 'skin-form-new',
             meta: { login: true, recaptcha: true },
           },
           {
             path: ':id',
             component: () => import('pages/SkinPage.vue'),
+            name: 'skin',
             meta: { login: false, recaptcha: true },
           },
           {
             path: ':id/edit',
             component: () => import('pages/SkinFormEditPage.vue'),
+            name: 'skin-form-edit',
             meta: { login: true, recaptcha: true },
           },
         ],
@@ -76,17 +88,20 @@ const routes = [
           {
             path: 'patterns',
             component: () => import('src/pages/profile/PatternsPage.vue'),
+            name: 'profile-patterns',
             meta: { login: false },
             alias: '',
           },
           {
             path: 'skins',
             component: () => import('src/pages/profile/SkinsPage.vue'),
+            name: 'profile-skins',
             meta: { login: false },
           },
           {
             path: 'comments',
             component: () => import('src/pages/profile/CommentsPage.vue'),
+            name: 'profile-comments',
             meta: { login: false },
           },
         ],

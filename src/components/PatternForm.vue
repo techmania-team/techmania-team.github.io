@@ -299,6 +299,7 @@ import { controls } from 'src/utils/control'
 import api from 'src/utils/api'
 import handleError from 'src/utils/handleError'
 import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
+import { getI18nRoute } from 'src/i18n'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -444,7 +445,7 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
-      router.push(`/patterns/${data.id}`)
+      router.push(getI18nRoute({ name: 'pattern', params: { id: data.id } }))
     }
     // Notify success
     $q.notify({
@@ -482,7 +483,7 @@ const deletePattern = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    router.push(`/users/${user._id}/patterns`)
+    getI18nRoute({ name: 'profile-patterns', params: { id: user._id } })
   } catch (error) {
     handleError(error)
   }

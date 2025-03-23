@@ -12,7 +12,7 @@ q-page#pattern
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-x-md
         q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('patternPage.download') }}
-        q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="`/patterns/${pattern._id}/edit`") {{ $t('patternPage.edit') }}
+        q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id }})") {{ $t('patternPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
     .container
@@ -38,7 +38,7 @@ q-page#pattern
               q-item-section
                 q-item-label {{ $t('patternPage.basic.submittedBy.label') }}
                 q-item-label(caption)
-                  router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
+                  router-link.no-underline(:to="getI18nRoute({ name: 'profile-patterns', params: { id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             //- List items - Keysounded
             q-item
               q-item-section(avatar)
@@ -106,6 +106,7 @@ import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { getLevelFilter, getLevelColor } from 'src/utils/level'
 import { getControlIcon } from 'src/utils/control'
 import CommentList from 'src/components/CommentList.vue'
+import { getI18nRoute } from 'src/i18n'
 
 const route = useRoute()
 const user = useUserStore()

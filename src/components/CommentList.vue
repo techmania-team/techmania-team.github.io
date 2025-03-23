@@ -50,7 +50,7 @@ q-no-ssr.row.q-gutter-y-lg
                         q-img(:src="reply.user.avatar" error-src="/assets/Logo_black.png")
                     .col-auto
                       //- User name
-                      router-link.no-underline(:to="'/profile/' + reply.user._id") {{ reply.user.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-comments', params: { id: reply.user._id }})") {{ reply.user.name }}
                       //- Rating
                       template(v-if="ridx === 0")
                         br
@@ -142,11 +142,12 @@ q-no-ssr.row.q-gutter-y-lg
 import { ref, computed, onMounted, useTemplateRef, nextTick } from 'vue'
 import { Form, Field } from 'vee-validate'
 import * as yup from 'yup'
+import { useI18n } from 'vue-i18n'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import * as date from 'src/utils/date'
 import api from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
-import { useI18n } from 'vue-i18n'
+import { getI18nRoute } from 'src/i18n'
 
 const user = useUserStore()
 const recaptcha = useReCaptcha()

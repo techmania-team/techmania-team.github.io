@@ -11,13 +11,13 @@ q-card.full-height.card-pattern
   q-card-section
     //- Download or edit button
     q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="pattern.link" target="__blank")
-    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push('/patterns/edit/' + pattern._id)")
+    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push(getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id}}))")
     //- Informations
     q-list
       //- Link
       q-item
         q-item-section.card-title
-          router-link(:to="'/patterns/' + pattern._id")
+          router-link(:to="getI18nRoute({ name: 'pattern', params: { id: pattern._id } })")
             .text-h6 {{ pattern.name }}
             .text-subtitle {{ pattern.composer }}
       //- Rating
@@ -31,7 +31,7 @@ q-card.full-height.card-pattern
           p
             span(v-if="!mine")
               | {{ $t('patternCard.submittedBy') }} &nbsp;
-              router-link.no-underline(:to='`/users/${pattern.submitter._id}/patterns`') {{ pattern.submitter.name }}
+              router-link.no-underline(:to="getI18nRoute({ name: 'profile-patterns', params: { id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             br(v-if="!mine")
             span {{ $t('patternCard.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
@@ -71,12 +71,13 @@ q-card.full-height.card-pattern
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import * as date from 'src/utils/date'
 import { useRouter } from 'vue-router'
+import * as date from 'src/utils/date'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { getControlIcon } from 'src/utils/control'
 import { getLevelFilter, getLevelColor } from 'src/utils/level'
 import { controls } from 'src/utils/control'
+import { getI18nRoute } from 'src/i18n'
 
 const props = defineProps({
   pattern: Object,
@@ -115,7 +116,7 @@ const hasLanes = computed(() => {
 
 const clickHeader = () => {
   if (hasVideo.value) video.value = true
-  else router.push('/patterns/' + props.pattern._id)
+  else router.push(getI18nRoute({ name: 'pattern', params: { id: props.pattern._id } }))
 }
 
 onMounted(() => {
