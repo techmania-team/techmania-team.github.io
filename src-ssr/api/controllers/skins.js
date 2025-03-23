@@ -86,7 +86,7 @@ export const create = async (req, res) => {
       content: `New skin submitted by <@${req.user.discord}>`,
       embeds,
     })
-    res.status(200).send({ success: true, message: '', id: result._id })
+    res.status(200).send({ success: true, message: '', _id: result._id })
   } catch (error) {
     console.error(error)
     if (error.name === 'ValidationError') {

@@ -445,7 +445,7 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
-      router.push(getI18nRoute({ name: 'pattern', params: { id: data.id } }))
+      router.push(getI18nRoute({ name: 'pattern', params: { id: data._id } }))
     }
     // Notify success
     $q.notify({
