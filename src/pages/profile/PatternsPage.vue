@@ -1,7 +1,7 @@
 <template lang="pug">
 #profile-patterns
   .container
-    .text-center.q-mt-md.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patterns.notFound') }}
+    .text-center.q-mt-md.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('profile.patterns.notFound') }}
     q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
       .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern) in patterns" :key="pattern.id")
         PatternCard(:pattern="pattern")

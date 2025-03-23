@@ -1,7 +1,7 @@
 <template lang="pug">
 #profile-skins
   .container
-    .text-center.q-mt-md.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skins.notFound') }}
+    .text-center.q-mt-md.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('profile.skins.notFound') }}
     q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
       .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin) in skins" :key="skin.id")
         SkinCard(:skin="skin")

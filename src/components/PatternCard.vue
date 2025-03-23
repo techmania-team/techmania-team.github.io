@@ -31,7 +31,7 @@ q-card.full-height.card-pattern
           p
             span(v-if="!mine")
               | {{ $t('patternCard.submittedBy') }} &nbsp;
-              router-link.no-underline(:to="getI18nRoute({ name: 'profile-patterns', params: { id: pattern.submitter._id}})") {{ pattern.submitter.name }}
+              router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             br(v-if="!mine")
             span {{ $t('patternCard.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")

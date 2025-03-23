@@ -30,7 +30,7 @@ q-page#skin
               q-item-section
                 q-item-label {{ $t('skinPage.basic.submittedBy.label') }}
                 q-item-label(caption)
-                  router-link.no-underline(:to="getI18nRoute({ name: 'profile-skins', params: { id: skin.submitter._id}})") {{ skin.submitter.name }}
+                  router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
             //- List items - Type
             q-item
               q-item-section(avatar)

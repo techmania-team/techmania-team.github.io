@@ -38,7 +38,7 @@ q-page#pattern
               q-item-section
                 q-item-label {{ $t('patternPage.basic.submittedBy.label') }}
                 q-item-label(caption)
-                  router-link.no-underline(:to="getI18nRoute({ name: 'profile-patterns', params: { id: pattern.submitter._id}})") {{ pattern.submitter.name }}
+                  router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             //- List items - Keysounded
             q-item
               q-item-section(avatar)

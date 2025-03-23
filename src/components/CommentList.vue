@@ -50,7 +50,7 @@ q-no-ssr.row.q-gutter-y-lg
                         q-img(:src="reply.user.avatar" error-src="/assets/Logo_black.png")
                     .col-auto
                       //- User name
-                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-comments', params: { id: reply.user._id }})") {{ reply.user.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'comments', id: reply.user._id }})") {{ reply.user.name }}
                       //- Rating
                       template(v-if="ridx === 0")
                         br

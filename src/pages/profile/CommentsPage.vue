@@ -1,7 +1,7 @@
 <template lang="pug">
 #profile-comments
   .container
-    .text-center.q-mt-md.text-body1(v-if="comments.length === 0 && scrollDisable") {{ $t('comment.noComment') }}
+    .text-center.q-mt-md.text-body1(v-if="comments.length === 0 && scrollDisable") {{ $t('profile.comments.notFound') }}
     q-infinite-scroll.row.q-my-md(v-else @load="loadScroll" :offset="200" :disable="scrollDisable")
       .col-12
         q-list(separator)

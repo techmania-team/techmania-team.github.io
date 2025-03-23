@@ -130,7 +130,7 @@ const navs = computed(() => [
 
 const loginNavs = computed(() => [
   {
-    to: getI18nRoute({ name: 'profile-patterns', params: { id: user._id } }),
+    to: getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } }),
     label: t('nav.myPage'),
   },
   {

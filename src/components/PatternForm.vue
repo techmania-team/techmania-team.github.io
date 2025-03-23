@@ -483,7 +483,7 @@ const deletePattern = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    getI18nRoute({ name: 'profile-patterns', params: { id: user._id } })
+    getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } })
   } catch (error) {
     handleError(error)
   }

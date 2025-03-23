@@ -34,7 +34,7 @@ q-card.full-height.card-skin
           p
             span(v-if="!mine")
               | {{ $t('skinCard.submittedBy') }} &nbsp;
-              router-link.no-underline(:to="getI18nRoute({ name: 'profile-skins', params: { id: skin.submitter._id}})") {{ skin.submitter.name }}
+              router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
             br(v-if="!mine")
             span {{ $t('skinCard.submittedAt') }} {{ formattedTime.relative }}
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")

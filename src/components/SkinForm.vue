@@ -437,7 +437,7 @@ const deleteSkin = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    router.push(getI18nRoute({ name: 'profile-skins', params: { id: user._id } }))
+    router.push(getI18nRoute({ name: 'profile', params: { tab: 'skins', id: user._id } }))
   } catch (error) {
     handleError(error)
   }

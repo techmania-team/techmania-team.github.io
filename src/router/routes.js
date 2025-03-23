@@ -81,30 +81,10 @@ const routes = [
         ],
       },
       {
-        path: 'users/:id',
+        path: 'users/:id/:tab?',
         component: () => import('src/pages/profile/IndexPage.vue'),
         meta: { login: false },
-        children: [
-          {
-            path: 'patterns',
-            component: () => import('src/pages/profile/PatternsPage.vue'),
-            name: 'profile-patterns',
-            meta: { login: false },
-            alias: '',
-          },
-          {
-            path: 'skins',
-            component: () => import('src/pages/profile/SkinsPage.vue'),
-            name: 'profile-skins',
-            meta: { login: false },
-          },
-          {
-            path: 'comments',
-            component: () => import('src/pages/profile/CommentsPage.vue'),
-            name: 'profile-comments',
-            meta: { login: false },
-          },
-        ],
+        name: 'profile',
       },
     ],
   },
