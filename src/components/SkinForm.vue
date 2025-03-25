@@ -197,7 +197,7 @@ q-dialog(v-model="deleteDialog" persistent)
 
 <script setup>
 import { ref, computed, onMounted, useTemplateRef, nextTick } from 'vue'
-import { useMeta, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Form, Field, FieldArray } from 'vee-validate'
@@ -221,84 +221,6 @@ const { t } = useI18n()
 const recaptcha = useReCaptcha()
 
 const backgroundImage = ref('')
-
-const metaData = () => {
-  const title = user.isLogin
-    ? 'TECHMANIA | ' + (skin._id.length > 0 ? 'Edit Skin' : 'New Skin')
-    : 'Log in or sign up to view'
-  return {
-    title,
-    meta: {
-      color: {
-        name: 'theme-color',
-        content: '#E74C3C',
-      },
-      title: {
-        name: 'title',
-        content: title,
-        'data-dynamic': true,
-      },
-      description: {
-        name: 'description',
-        content: title,
-        'data-dynamic': true,
-      },
-      ogType: {
-        property: 'og:type',
-        content: 'website',
-        'data-dynamic': true,
-      },
-      ogUrl: {
-        property: 'og:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      ogTitle: {
-        property: 'og:title',
-        content: skin.title,
-        'data-dynamic': true,
-      },
-      ogDescription: {
-        property: 'og:description',
-        content: title,
-        'data-dynamic': true,
-      },
-      ogImage: {
-        property: 'og:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-        'data-dynamic': true,
-      },
-      twCard: {
-        name: 'twitter:card',
-        content: 'summary_large_image',
-        'data-dynamic': true,
-      },
-      twUrl: {
-        name: 'twitter:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      twTitle: {
-        name: 'twitter:title',
-        content: title,
-        'data-dynamic': true,
-      },
-      twDescription: {
-        name: 'twitter:description',
-        content: title,
-        'data-dynamic': true,
-      },
-      twImage: {
-        name: 'twitter:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-        'data-dynamic': true,
-      },
-    },
-  }
-}
-useMeta(metaData)
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
