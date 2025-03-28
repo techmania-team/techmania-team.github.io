@@ -46,7 +46,8 @@ export const getDefaultLocale = (ssrContext) => {
   // Lang.getLocale() returns undefined in SSR mode
   // so we need to get it from the request header
   const userLang = ssrContext
-    ? ssrContext.req.headers['accept-language'].split(',').map((x) => x.split(';')[0])[0]
+    ? ssrContext.req.headers['accept-language']?.split(',')?.map((x) => x.split(';')?.[0])?.[0] ||
+      'en-US'
     : Lang.getLocale()
 
   // Check if userLang is in the list of supported locales
