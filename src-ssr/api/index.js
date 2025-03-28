@@ -9,6 +9,7 @@ import MongoStore from 'connect-mongo'
 import routerUsers from './routes/users'
 import routerPatterns from './routes/patterns'
 import routerSkins from './routes/skins'
+import routerSetlists from './routes/setlists'
 import routerComments from './routes/comments'
 import routerAuth from './routes/auth'
 
@@ -71,6 +72,7 @@ export const initializeApi = async (app) => {
     app.use('/api/users', routerUsers)
     app.use('/api/patterns', routerPatterns)
     app.use('/api/skins', routerSkins)
+    app.use('/api/setlists', routerSetlists)
     app.use('/api/comments', routerComments)
     app.use('/api/auth', routerAuth)
     app.use('/api/*', (req, res) => {
