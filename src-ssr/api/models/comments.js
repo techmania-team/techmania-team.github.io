@@ -38,17 +38,15 @@ const schema = new mongoose.Schema(
     // Pattern ID
     pattern: {
       type: mongoose.Schema.Types.ObjectId,
-      required() {
-        return !this.skin || this.skin.length === 0
-      },
       ref: 'patterns',
     },
     skin: {
       type: mongoose.Schema.Types.ObjectId,
-      required() {
-        return !this.pattern || this.pattern.length === 0
-      },
       ref: 'skins',
+    },
+    setlist: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'setlists',
     },
     // Rating
     rating: {
@@ -65,6 +63,20 @@ const schema = new mongoose.Schema(
   },
   { versionKey: false },
 )
+
+schema.pre('validate', function (next) {
+  const hasPattern = !!this.pattern
+  const hasSkin = !!this.skin
+  const hasSetlist = !!this.setlist
+
+  const filledCount = [hasPattern, hasSkin, hasSetlist].filter(Boolean).length
+
+  if (filledCount !== 1) {
+    this.invalidate('pattern', 'Only one of pattern, skin, or setlist should be filled')
+  }
+
+  next()
+})
 
 schema.index({ pattern: 1 })
 schema.index({ skin: 1 })
