@@ -18,15 +18,25 @@ export const create = async (req, res) => {
           if (!value) return true
           return validator.isMongoId(value)
         }),
+        setlist: yup.string().test('mongoID', 'Invalid setlist ID', (value) => {
+          // Allow empty value for mutual exclusion
+          if (!value) return true
+          return validator.isMongoId(value)
+        }),
         rating: yup.number().required().min(1).max(5),
         comment: yup.string().required(),
       })
       .test(
-        'pattern-skin-mutual-exclusion',
-        'Must provide either pattern or skin, but not both',
+        'pattern-skin-setlist-mutual-exclusion',
+        'Must provide either pattern, skin or setlist, but not both or all',
         function (value) {
-          const { pattern, skin } = value
-          if ((pattern && skin) || (!pattern && !skin)) {
+          const { pattern, skin, setlist } = value
+          if (
+            (pattern && skin && setlist) ||
+            (pattern && skin) ||
+            (pattern && setlist) ||
+            (skin && setlist)
+          ) {
             return this.createError({
               message: 'Must provide either pattern or skin, but not both',
               path: 'pattern', // Which field should the error be attached to?
@@ -47,12 +57,12 @@ export const create = async (req, res) => {
       checkQuery.pattern = parsedBody.pattern
     } else if (parsedBody.skin) {
       checkQuery.skin = parsedBody.skin
+    } else if (parsedBody.setlist) {
+      checkQuery.setlist = parsedBody.setlist
     }
     let result = await comments.findOne(checkQuery)
-    if (result) {
-      res.status(409).send({ success: false, message: 'Already commented' })
-      return
-    }
+
+    if (result) throw new Error('Already commented')
 
     // Create new comment
     const query = {
@@ -68,6 +78,8 @@ export const create = async (req, res) => {
       query.pattern = parsedBody.pattern
     } else if (parsedBody.skin) {
       query.skin = parsedBody.skin
+    } else if (parsedBody.setlist) {
+      query.skin = parsedBody.setlist
     }
     result = await comments.create(query)
 
@@ -81,8 +93,10 @@ export const create = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.error(error)
-    if (error.name === 'ValidationError') {
+    console.log(error)
+    if (error.message === 'Already commented') {
+      res.status(409).send({ success: false, message: 'Already commented' })
+    } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
@@ -1169,6 +1183,371 @@ export const getByUser = async (req, res) => {
   } catch (error) {
     console.error(error)
     if (error.name === 'CastError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
+  }
+}
+
+export const getBySetlist = async (req, res) => {
+  try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      setid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const query = [
+      // Find matching setlist id
+      {
+        $match: {
+          setlist: new mongoose.Types.ObjectId(parsedParams.setid),
+          'replies.0.deleted': false,
+        },
+      },
+      // Sort by comment date
+      {
+        $sort: {
+          'replies.createdAt': -1,
+        },
+      },
+      // Unwind replies for lookup
+      {
+        $unwind: {
+          path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
+        },
+      },
+      // Lookup user
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'replies.user',
+          foreignField: '_id',
+          as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
+        },
+      },
+      // Unwind lookup result, always an array with 1 element
+      {
+        $unwind: {
+          path: '$replies.user',
+        },
+      },
+      // Calculate sum of votes and user's vote
+      {
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: req.user
+                ? {
+                    $getField: {
+                      field: { $toString: new mongoose.Types.ObjectId(req.user._id) },
+                      input: '$replies.votes',
+                    },
+                  }
+                : 0,
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          setlist: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
+      },
+      // Group setlist result back
+      {
+        $group: {
+          _id: '$_id',
+          setlist: {
+            $first: '$setlist',
+          },
+          rating: {
+            $first: '$rating',
+          },
+          replies: {
+            $push: '$replies',
+          },
+        },
+      },
+    ]
+
+    // User is logged in, exclude own replies
+    // Own comments must be displayed first on the page, so we handle them separately
+    if (req.user?._id) {
+      query[0].$match['replies.0.user'] = {
+        $not: {
+          $eq: new mongoose.Types.ObjectId(req.user._id),
+        },
+      }
+    }
+
+    const result = await comments.aggregate(query)
+
+    res.status(200).send({ success: true, message: '', result })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
+  }
+}
+
+export const getMyCommmentBySetlist = async (req, res) => {
+  try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      setid: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const query = [
+      // Find matching pattern id
+      {
+        $match: {
+          pattern: new mongoose.Types.ObjectId(parsedParams.setid),
+          'replies.0.user': new mongoose.Types.ObjectId(req.user._id),
+          'replies.0.deleted': false,
+        },
+      },
+      // Sort by comment date
+      {
+        $sort: {
+          'replies.createdAt': -1,
+        },
+      },
+      // Unwind replies for lookup
+      {
+        $unwind: {
+          path: '$replies',
+        },
+      },
+      // Match only non-deleted replies
+      {
+        $match: {
+          'replies.deleted': false,
+        },
+      },
+      // Lookup user
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'replies.user',
+          foreignField: '_id',
+          as: 'replies.user',
+          pipeline: [
+            // Construct avatar URL
+            {
+              $addFields: {
+                avatar: {
+                  $concat: [
+                    'https://cdn.discordapp.com/avatars/',
+                    {
+                      $toString: '$discord',
+                    },
+                    '/',
+                    {
+                      $toString: '$avatar',
+                    },
+                    '.png',
+                  ],
+                },
+              },
+            },
+            // Remove unnecessary user fields
+            {
+              $project: {
+                discord: 0,
+                accessInfo: 0,
+                discordToken: 0,
+                discordRefreshToken: 0,
+              },
+            },
+          ],
+        },
+      },
+      // Unwind lookup result, always an array with 1 element
+      {
+        $unwind: {
+          path: '$replies.user',
+        },
+      },
+      // Calculate sum of votes and user's vote
+      {
+        $addFields: {
+          // Sum of all votes
+          'replies.votes.sum': {
+            $sum: {
+              $map: {
+                input: {
+                  $objectToArray: '$replies.votes',
+                },
+                as: 'voteEntry',
+                in: '$$voteEntry.v',
+              },
+            },
+          },
+          // Get current user vote
+          // 1: upvote, -1: downvote, 0: no vote
+          'replies.votes.voted': {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $objectToArray: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: {
+                $ifNull: [
+                  {
+                    $getField: {
+                      field: {
+                        $toString: new mongoose.Types.ObjectId(req.user._id),
+                      },
+                      input: '$replies.votes',
+                    },
+                  },
+                  0,
+                ],
+              },
+              else: 0,
+            },
+          },
+        },
+      },
+      // Remove unnecessary fields in replies.votes
+      {
+        $project: {
+          _id: 1,
+          pattern: 1,
+          setlist: 1,
+          rating: 1,
+          'replies._id': 1,
+          'replies.user': 1,
+          'replies.comment': 1,
+          'replies.createdAt': 1,
+          'replies.updatedAt': 1,
+          'replies.votes.sum': 1,
+          'replies.votes.voted': 1,
+        },
+      },
+      // Group setlist result back
+      {
+        $group: {
+          _id: '$_id',
+          setlist: {
+            $first: '$setlist',
+          },
+          rating: {
+            $first: '$rating',
+          },
+          replies: {
+            $push: '$replies',
+          },
+        },
+      },
+    ]
+
+    const result = await comments.aggregate(query)
+
+    if (result.length === 0) {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(200).send({ success: true, message: '', result: result[0] })
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
