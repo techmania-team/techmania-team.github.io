@@ -81,6 +81,35 @@ const routes = [
         ],
       },
       {
+        path: 'setlists',
+        children: [
+          // {
+          //   path: '',
+          //   component: () => import('pages/SetlistsPage.vue'),
+          //   name: 'setlists',
+          //   meta: { login: false },
+          // },
+          {
+            path: 'new',
+            component: () => import('pages/SetlistFormNewPage.vue'),
+            name: 'setlist-form-new',
+            meta: { login: true, recaptcha: true },
+          },
+          // {
+          //   path: ':id',
+          //   component: () => import('pages/SetlistPage.vue'),
+          //   name: 'setlist',
+          //   meta: { login: false, recaptcha: true },
+          // },
+          {
+            path: ':id/edit',
+            component: () => import('pages/SetlistFormEditPage.vue'),
+            name: 'setlist-form-edit',
+            meta: { login: true, recaptcha: true },
+          },
+        ],
+      },
+      {
         path: 'users/:id/:tab?',
         component: () => import('src/pages/profile/IndexPage.vue'),
         meta: { login: false },

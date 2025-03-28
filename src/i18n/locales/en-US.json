@@ -9,6 +9,7 @@
     "myPage": "My Page",
     "submitNewPattern": "Submit New Pattern",
     "submitNewSkin": "Submit New Skin",
+    "submitNewSetlist": "Submit New Setlist",
     "logout": "Logout",
     "menu": "Menu",
     "language": "Language"
@@ -388,6 +389,163 @@
       "combo": "Combo",
       "gameUI": "Game UI",
       "theme": "Theme"
+    }
+  },
+  "setlistFormPage": {
+    "titleNew": "Submit New Setlist",
+    "titleEdit": "Edit Setlist",
+    "rules": {
+      "title": "Please read the rules before you submit your skin.",
+      "rule1": "Setlists using assets from DJMAX and DJMAX Respect are strictly prohibited.",
+      "rule2": "All assets must contain SFW content.",
+      "rule3": "Uploading other users setlists are not allowed."
+    },
+    "basic": {
+      "title": "Basic Information",
+      "name": {
+        "label": "Setlist Name",
+        "error": {
+          "required": "Setlist Name is required"
+        }
+      },
+      "download": {
+        "label": "Download Link",
+        "error": {
+          "required": "Download Link is required",
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "image": {
+        "label": "Image Preview",
+        "error": {
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM",
+        "error": {
+          "required": "Control is required",
+          "invalid": "Control is invalid"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "Selectable Patterns",
+      "name": {
+        "label": "Name",
+        "searchNotFound": "No patterns found",
+        "error": {
+          "required": "Pattern is required",
+          "invalid": "Invalid pattern",
+          "notFound": "Pattern not found"
+        }
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "searchNotFound": "No difficulties found",
+        "error": {
+          "required": "Difficulty is required",
+          "invalid": "Invalid difficulty"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "Hidden Patterns",
+      "name": {
+        "label": "Name",
+        "searchNotFound": "No patterns found",
+        "error": {
+          "required": "Pattern is required",
+          "invalid": "Invalid pattern",
+          "notFound": "Pattern not found"
+        }
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "searchNotFound": "No difficulties found",
+        "error": {
+          "required": "Difficulty is required",
+          "invalid": "Invalid difficulty"
+        }
+      },
+      "criteriaType": {
+        "label": "Criteria Type",
+        "index": "Index",
+        "level": "Level",
+        "hp": "HP%",
+        "score": "Score",
+        "combo": "Combo",
+        "maxCombo": "Max Combo",
+        "d100": "D100",
+        "none": "None",
+        "error": {
+          "required": "Criteria is required",
+          "lastType": "Criteria none is only for the last hidden pattern"
+        }
+      },
+      "criteriaDirection": {
+        "label": "Criteria Direction",
+        "error": {
+          "required": "Criteria Direction is required"
+        }
+      },
+      "criteriaValue": {
+        "label": "Criteria Value",
+        "error": {
+          "required": "Criteria Value is required",
+          "min": "Criteria Value must be greater than 0"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube Preview",
+      "name": {
+        "label": "Name",
+        "error": {
+          "required": "Name is required"
+        }
+      },
+      "link": {
+        "label": "YouTube Link",
+        "error": {
+          "required": "YouTube Link is required",
+          "invalid": "Please enter a valid URL.",
+          "youtube": "Please enter a valid YouTube URL."
+        }
+      }
+    },
+    "description": {
+      "title": "Description"
+    },
+    "dangerZone": {
+      "title": "DANGER ZONE",
+      "delete": {
+        "label": "DELETE THIS SETLIST",
+        "button": "DELETE THIS SETLIST"
+      }
+    },
+    "tos": {
+      "tos": "Terms of Service",
+      "label": "Submitting the setlist signifies that you have read and agree to the {tos}",
+      "error": {
+        "required": "You need to accept the terms first."
+      }
+    },
+    "submit": {
+      "new": "Submit",
+      "edit": "Update"
+    },
+    "deleteDialog": {
+      "text": "DO YOU REALLY WANT TO DELETE THIS SETLIST?",
+      "no": "NO, CANCEL",
+      "yes": "YES, DELETE IT"
+    },
+    "result": {
+      "deleted": "Successfully deleted.",
+      "updated": "Successfully updated."
     }
   },
   "commentList": {

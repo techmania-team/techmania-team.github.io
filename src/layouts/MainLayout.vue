@@ -142,6 +142,10 @@ const loginNavs = computed(() => [
     label: t('nav.submitNewSkin'),
   },
   {
+    to: getI18nRoute({ name: 'setlist-form-new' }),
+    label: t('nav.submitNewSetlist'),
+  },
+  {
     href: '/api/auth/logout',
     label: t('nav.logout'),
   },
