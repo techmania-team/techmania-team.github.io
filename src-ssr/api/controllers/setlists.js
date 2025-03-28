@@ -5,6 +5,7 @@ import { checkImage } from '../utils/image'
 import validator from 'validator'
 import setlists from '../models/setlists'
 import patterns from '../models/patterns'
+import comments from '../models/comments'
 import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 import {
   CRITERIA_INDEX,
@@ -353,6 +354,45 @@ export const searchID = async (req, res) => {
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
     if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
+  }
+}
+
+export const del = async (req, res) => {
+  try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    const pattern = await setlists.findById(parsedParams.id).orFail()
+
+    if (pattern.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    // Delete pattern
+    await setlists.findByIdAndDelete(parsedParams.id)
+    // Delete related comments
+    await comments.deleteMany({ pattern: parsedParams.id })
+
+    res.status(200).send({ success: true, message: '' })
+  } catch (error) {
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
