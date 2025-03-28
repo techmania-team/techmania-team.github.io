@@ -391,6 +391,62 @@
       "theme": "Theme"
     }
   },
+  "setlistPage": {
+    "download": "Download",
+    "edit": "Edit",
+    "basic": {
+      "title": "Basic Information",
+      "submittedBy": {
+        "label": "Submitted By"
+      },
+      "comments": {
+        "count": "{count} Comments"
+      },
+      "submittedAt": {
+        "label": "Submitted At"
+      },
+      "updatedAt": {
+        "label": "Updated At"
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM"
+      },
+      "patterns": {
+        "label": "Patterns"
+      }
+    },
+    "description": {
+      "title": "Description",
+      "noDescription": "No description"
+    },
+    "previews": {
+      "title": "Previews",
+      "noPreview": "No preview"
+    },
+    "selectablePatterns": {
+      "title": "Selectable Patterns"
+    },
+    "hiddenPatterns": {
+      "title": "Hidden Patterns",
+      "criteriaType": {
+        "index": "Index",
+        "level": "Level",
+        "hp": "HP%",
+        "score": "Score",
+        "combo": "Combo",
+        "maxCombo": "Max Combo",
+        "d100": "D100",
+        "none": "None"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
   "setlistFormPage": {
     "titleNew": "Submit New Setlist",
     "titleEdit": "Edit Setlist",

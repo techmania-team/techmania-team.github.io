@@ -95,12 +95,12 @@ const routes = [
             name: 'setlist-form-new',
             meta: { login: true, recaptcha: true },
           },
-          // {
-          //   path: ':id',
-          //   component: () => import('pages/SetlistPage.vue'),
-          //   name: 'setlist',
-          //   meta: { login: false, recaptcha: true },
-          // },
+          {
+            path: ':id',
+            component: () => import('pages/SetlistPage.vue'),
+            name: 'setlist',
+            meta: { login: false, recaptcha: true },
+          },
           {
             path: ':id/edit',
             component: () => import('pages/SetlistFormEditPage.vue'),
