@@ -119,5 +119,7 @@ const schema = new mongoose.Schema(
 // Create indexes for searching
 schema.index({ name: 'text', description: 'text' })
 schema.index({ submitter: 1 })
+schema.index({ 'selectablePatterns.pattern': 1 })
+schema.index({ 'hiddenPatterns.pattern': 1 })
 
 export default mongoose.models.setlists || mongoose.model('setlists', schema)

@@ -66,4 +66,8 @@ const schema = new mongoose.Schema(
   { versionKey: false },
 )
 
+schema.index({ pattern: 1 })
+schema.index({ skin: 1 })
+schema.index({ setlist: 1 })
+
 export default mongoose.models.comments || mongoose.model('comments', schema)
