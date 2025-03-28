@@ -361,3 +361,152 @@ export const searchID = async (req, res) => {
     }
   }
 }
+
+export const update = async (req, res) => {
+  try {
+    // Request params validation schema
+    const paramsSchema = yup.object({
+      id: yup
+        .string()
+        .required()
+        .test('mongoID', 'Invalid ID', (value) => {
+          return validator.isMongoId(value)
+        }),
+    })
+    // Parsed request params
+    const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+    // Request body validation schema
+    const bodySchema = yup.object({
+      name: yup.string().required(),
+      link: yup.string().url().required(),
+      image: yup
+        .string()
+        .url()
+        .test('valid', 'Invalid image URL', async (value) => {
+          if (!value) return true
+          return await checkImage(value)
+        }),
+      control: yup.number().typeError().required().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]),
+      selectablePatterns: yup
+        .array()
+        .of(
+          yup.object().shape({
+            pattern: yup
+              .string()
+              .required()
+              .test('mongoID', 'Invalid ID', (value) => {
+                return validator.isMongoId(value)
+              }),
+            difficulty: yup
+              .string()
+              .required()
+              .test('mongoID', 'Invalid ID', (value) => {
+                return validator.isMongoId(value)
+              }),
+          }),
+        )
+        .test('exists', 'Pattern not found', async (values) => {
+          // Check pattern is exists in patterns collection
+          // Check difficulty is exists in pattern
+          try {
+            for (const value of values) {
+              const pattern = await patterns.findById(value.pattern).orFail()
+              const difficulty = pattern.difficulties.id(value.difficulty)
+              return difficulty ? true : false
+            }
+            return true
+          } catch {
+            return false
+          }
+        }),
+      hiddenPatterns: yup
+        .array()
+        .of(
+          yup.object().shape({
+            pattern: yup
+              .string()
+              .required()
+              .test('mongoID', 'Invalid ID', (value) => {
+                return validator.isMongoId(value)
+              }),
+            difficulty: yup
+              .string()
+              .required()
+              .test('mongoID', 'Invalid ID', (value) => {
+                return validator.isMongoId(value)
+              }),
+            criteriaType: yup
+              .number()
+              .typeError()
+              .required()
+              .oneOf([
+                CRITERIA_INDEX,
+                CRITERIA_LEVEL,
+                CRITERIA_HP,
+                CRITERIA_SCORE,
+                CRITERIA_COMBO,
+                CRITERIA_MAX_COMBO,
+                CRITERIA_D100,
+                CRITERIA_NONE,
+              ]),
+            criteriaDirection: yup
+              .number()
+              .required()
+              .oneOf([CRITERIA_DIRECTION_LOWER, CRITERIA_DIRECTION_GREATER]),
+            criteriaValue: yup.number().typeError().required().min(0),
+          }),
+        )
+        .test('criteriaType', 'criteriaType Invalid', (value) => {
+          // CRITERIA_NONE is only for the last hidden pattern
+          return value.every((pattern, idx) => {
+            return pattern.criteriaType !== CRITERIA_NONE || idx === value.length - 1
+          })
+        })
+        .test('exists', 'Pattern not found', async (values) => {
+          // Check pattern is exists in patterns collection
+          // Check difficulty is exists in pattern
+          try {
+            for (const value of values) {
+              const pattern = await patterns.findById(value.pattern).orFail()
+              const difficulty = pattern.difficulties.id(value.difficulty)
+              return difficulty ? true : false
+            }
+            return true
+          } catch {
+            return false
+          }
+        }),
+      previews: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
+      description: yup.string(),
+    })
+    // Parsed request query
+    const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
+
+    // Update pattern
+    const setlist = await setlists.findById(parsedParams.id).orFail()
+
+    if (setlist.submitter.toString() !== req.user._id.toString()) {
+      throw new Error('Unauthorized')
+    }
+
+    await setlists.findByIdAndUpdate(parsedParams.id, parseedBody).orFail()
+
+    res.status(200).send({ success: true, message: '' })
+  } catch (error) {
+    if (error.message === 'Unauthorized') {
+      res.status(403).send({ success: false, message: 'Unauthorized' })
+    } else if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: 'Validation Failed' })
+    } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
+  }
+}
