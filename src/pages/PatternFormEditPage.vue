@@ -16,6 +16,9 @@ q-page#patternForm
 <script setup>
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
+import validator from 'validator'
+import { useUserStore } from 'src/stores/user'
+import { useTempPatternStore } from 'src/stores/temp-pattern'
 import PatternForm from 'src/components/PatternForm.vue'
 
 const route = useRoute()
@@ -94,4 +97,37 @@ const metaData = () => {
   }
 }
 useMeta(metaData)
+
+defineOptions({
+  async preFetch({ currentRoute, redirect, ssrContext }) {
+    const pattern = useTempPatternStore()
+    const user = useUserStore()
+
+    // Clear store
+    pattern.clearData()
+
+    // New pattern form, no need to prefetch data
+    if (!currentRoute.params.id) return
+
+    // Check if ID is valid, redirect to 404 if not
+    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
+
+    // Note:
+    // ssrContext is only available on server side
+    // We need to check if it's available before using it
+    // router change --> client side --> ssrContext is undefined
+    // direct access or refresh page --> server side --> ssrContext is available
+    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+
+    // Prefetch pattern data
+    await pattern.fetchPattern(currentRoute.params.id)
+
+    // Check if pattern exists and user is the submitter
+    if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
+      redirect('/404')
+    }
+  },
+})
 </script>

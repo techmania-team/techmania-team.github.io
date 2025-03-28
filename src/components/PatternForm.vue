@@ -290,7 +290,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Form, Field, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
-import validator from 'validator'
 import { useReCaptcha } from 'vue-recaptcha-v3'
 import { getIDFromYouTubeLink, getYouTubeThumbnail } from 'src/utils/youtube'
 import { useUserStore } from 'src/stores/user'
@@ -490,39 +489,6 @@ const deletePattern = async () => {
   deleting.value = false
   deleteDialog.value = false
 }
-
-defineOptions({
-  async preFetch({ currentRoute, redirect, ssrContext }) {
-    const pattern = useTempPatternStore()
-    const user = useUserStore()
-
-    // Clear store
-    pattern.clearData()
-
-    // New pattern form, no need to prefetch data
-    if (!currentRoute.params.id) return
-
-    // Check if ID is valid, redirect to 404 if not
-    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
-      redirect('/404')
-    }
-
-    // Note:
-    // ssrContext is only available on server side
-    // We need to check if it's available before using it
-    // router change --> client side --> ssrContext is undefined
-    // direct access or refresh page --> server side --> ssrContext is available
-    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
-
-    // Prefetch pattern data
-    await pattern.fetchPattern(currentRoute.params.id)
-
-    // Check if pattern exists and user is the submitter
-    if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
-      redirect('/404')
-    }
-  },
-})
 
 onMounted(async () => {
   // Get pattern data if editing
