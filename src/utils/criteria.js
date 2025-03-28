@@ -1,4 +1,5 @@
 export const criterias = ['none', 'index', 'level', 'hp', 'score', 'combo', 'maxCombo', 'd100']
+export const criteriasDirections = ['lower', 'greater']
 
 export const CRITERIA_NONE = 0
 export const CRITERIA_INDEX = 1
