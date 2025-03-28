@@ -552,7 +552,8 @@
     "commentForm": {
       "title": {
         "pattern": "Rate This Pattern",
-        "skin": "Rate This Skin"
+        "skin": "Rate This Skin",
+        "setlist": "Rate This Setlist"
       },
       "submit": "Submit",
       "comment": {

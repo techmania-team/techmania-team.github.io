@@ -160,7 +160,7 @@ const props = defineProps({
     type: String,
     required: true,
     validator(value) {
-      return ['pattern', 'skin'].includes(value)
+      return ['pattern', 'skin', 'setlist'].includes(value)
     },
   },
   // id of the pattern or skin
