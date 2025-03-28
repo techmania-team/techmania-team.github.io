@@ -16,6 +16,9 @@ q-page#skinForm
 <script setup>
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
+import validator from 'validator'
+import { useUserStore } from 'src/stores/user'
+import { useTempSkinStore } from 'src/stores/temp-skin'
 import SkinForm from 'src/components/SkinForm.vue'
 
 const route = useRoute()
@@ -94,4 +97,37 @@ const metaData = () => {
   }
 }
 useMeta(metaData)
+
+defineOptions({
+  async preFetch({ currentRoute, redirect, ssrContext }) {
+    const skin = useTempSkinStore()
+    const user = useUserStore()
+
+    // Clear store
+    skin.clearData()
+
+    // New skin form, no need to prefetch data
+    if (!currentRoute.params.id) return
+
+    // Check if ID is valid, redirect to 404 if not
+    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
+
+    // Note:
+    // ssrContext is only available on server side
+    // We need to check if it's available before using it
+    // router change --> client side --> ssrContext is undefined
+    // direct access or refresh page --> server side --> ssrContext is available
+    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+
+    // Prefetch skin data
+    await skin.fetchSkin(currentRoute.params.id)
+
+    // Check if skin exists and user is the submitter
+    if (skin._id.length === 0 || skin.submitter._id !== userId) {
+      redirect('/404')
+    }
+  },
+})
 </script>
