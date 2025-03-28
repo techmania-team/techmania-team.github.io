@@ -8,7 +8,7 @@ q-page#patternForm
         img(src="/assets/header-pattern.png")
       //- Header content
       template(#content)
-        .column.items-center.q-mb-md
+        .column.items-center
           .text-h4.text-center {{ $t('patternFormPage.titleNew') }}
     PatternForm
 </template>
