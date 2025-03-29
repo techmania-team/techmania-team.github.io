@@ -5,10 +5,12 @@
     "changelog": "更新紀錄",
     "patterns": "譜面",
     "skins": "造型",
+    "setlists": "組曲",
     "login": "登入",
     "myPage": "個人檔案",
     "submitNewPattern": "上傳新譜面",
     "submitNewSkin": "上傳新造型",
+    "submitNewSetlist": "上傳新組曲",
     "logout": "登出",
     "menu": "選單",
     "language": "語言"
@@ -19,6 +21,7 @@
     "latestReleaseDate": "發布於",
     "newPatterns": "最新譜面",
     "newSkins": "最新造型",
+    "newSetlists": "最新組曲",
     "videos": "遊戲影片"
   },
   "changelogPage": {
@@ -77,6 +80,12 @@
       },
       "comments": {
         "count": "{count} 則評價"
+      },
+      "submittedAt": {
+        "label": "上傳日期"
+      },
+      "updatedAt": {
+        "label": "更新日期"
       }
     },
     "difficulties": {
@@ -272,6 +281,12 @@
       },
       "comments": {
         "count": "{count} 則評價"
+      },
+      "submittedAt": {
+        "label": "上傳日期"
+      },
+      "updatedAt": {
+        "label": "更新日期"
       }
     },
     "description": {
@@ -390,11 +405,263 @@
       "theme": "主題"
     }
   },
+  "setlistsPage": {
+    "title": "組曲",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "請輸入關鍵字..."
+      },
+      "control": {
+        "label": "控制方式",
+        "touch": "觸控",
+        "keys": "鍵盤",
+        "km": "鍵鼠"
+      },
+      "sort": {
+        "label": "排序",
+        "submit": "上傳日期",
+        "update": "更新日期",
+        "name": "曲名",
+        "rating": "評分"
+      }
+    },
+    "notFound": "找不到組曲"
+  },
+  "setlistPage": {
+    "download": "下載",
+    "edit": "編輯",
+    "basic": {
+      "title": "組曲資訊",
+      "submittedBy": {
+        "label": "上傳者"
+      },
+      "comments": {
+        "count": "{count} 則評價"
+      },
+      "submittedAt": {
+        "label": "上傳日期"
+      },
+      "updatedAt": {
+        "label": "更新日期"
+      },
+      "control": {
+        "label": "控制方式",
+        "touch": "觸控",
+        "keys": "鍵盤",
+        "km": "鍵鼠"
+      },
+      "patterns": {
+        "label": "譜面"
+      }
+    },
+    "description": {
+      "title": "說明",
+      "noDescription": "沒有說明"
+    },
+    "previews": {
+      "title": "預覽",
+      "noPreview": "沒有預覽"
+    },
+    "selectablePatterns": {
+      "title": "可選譜面"
+    },
+    "hiddenPatterns": {
+      "title": "隱藏譜面",
+      "criteriaType": {
+        "index": "序號",
+        "level": "難度",
+        "hp": "HP%",
+        "score": "分數",
+        "combo": "COMBO",
+        "maxCombo": "MAX COMBO",
+        "d100": "D100",
+        "none": "無"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{Count} 則評價"
+    },
+    "submittedBy": "上傳者: {Name}",
+    "submittedAt": "上傳於: {Date}",
+    "updatedAt": "最後更新於 {Date}",
+    "selectablePatterns": "可選譜面",
+    "hiddenPatterns": "隱藏譜面",
+    "control": {
+      "label": "控制方式",
+      "touch": "觸控",
+      "keys": "鍵盤",
+      "km": "鍵鼠"
+    }
+  },
+  "setlistFormPage": {
+    "titleNew": "上傳新組曲",
+    "titleEdit": "編輯組曲",
+    "rules": {
+      "title": "在送出您的組曲前請先閱讀下列規則：",
+      "rule1": "嚴禁上傳使用 DJMAX 和 DJMAX RESPECT 原創歌曲製作的組曲。",
+      "rule2": "請勿上傳包含成人內容的組曲。",
+      "rule3": "請勿上傳包含成人內容的組曲。"
+    },
+    "basic": {
+      "title": "組曲資訊",
+      "name": {
+        "label": "組曲名稱",
+        "error": {
+          "required": "必填欄位"
+        }
+      },
+      "download": {
+        "label": "下載連結",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效網址"
+        }
+      },
+      "image": {
+        "label": "圖片預覽",
+        "error": {
+          "invalid": "無效網址"
+        }
+      },
+      "control": {
+        "label": "控制方式",
+        "touch": "觸控",
+        "keys": "鍵盤",
+        "km": "鍵鼠",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效選項"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "可選譜面",
+      "name": {
+        "label": "曲名",
+        "searchNotFound": "找不到符合的曲名",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效選項",
+          "notFound": "找不到曲名"
+        }
+      },
+      "difficulty": {
+        "label": "難度",
+        "searchNotFound": "找不到難度",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效選項"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "隱藏譜面",
+      "name": {
+        "label": "曲名",
+        "searchNotFound": "找不到符合的曲名",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效選項",
+          "notFound": "找不到曲名"
+        }
+      },
+      "difficulty": {
+        "label": "難度",
+        "searchNotFound": "找不到難度",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效選項"
+        }
+      },
+      "criteriaType": {
+        "label": "條件類型",
+        "index": "序號",
+        "level": "難度",
+        "hp": "HP%",
+        "score": "分數",
+        "combo": "COMBO",
+        "maxCombo": "MAX COMBO",
+        "d100": "D100",
+        "none": "無",
+        "error": {
+          "required": "必填欄位",
+          "lastType": "類型\"無\"僅限最後一個項目使用"
+        }
+      },
+      "criteriaDirection": {
+        "label": "條件方向",
+        "error": {
+          "required": "必填欄位"
+        }
+      },
+      "criteriaValue": {
+        "label": "條件值",
+        "error": {
+          "required": "必填欄位",
+          "min": "必須大於 0"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 預覽",
+      "name": {
+        "label": "名稱",
+        "error": {
+          "required": "必填欄位"
+        }
+      },
+      "link": {
+        "label": "YouTube 連結",
+        "error": {
+          "required": "必填欄位",
+          "invalid": "無效網址",
+          "youtube": "無效 YouTube 網址"
+        }
+      }
+    },
+    "description": {
+      "title": "說明"
+    },
+    "dangerZone": {
+      "title": "危險區域",
+      "delete": {
+        "label": "刪除組曲",
+        "button": "刪除組曲"
+      }
+    },
+    "tos": {
+      "tos": "使用條款",
+      "label": "送出譜面代表您已閱讀並同意{tos}",
+      "error": {
+        "required": "您必須同意使用條款"
+      }
+    },
+    "submit": {
+      "new": "上傳",
+      "edit": "編輯"
+    },
+    "deleteDialog": {
+      "text": "您真的要刪除這個組曲嗎？",
+      "no": "否，取消",
+      "yes": "是, 刪除"
+    },
+    "result": {
+      "deleted": "刪除成功",
+      "updated": "編輯成功"
+    }
+  },
   "commentList": {
     "commentForm": {
       "title": {
-        "pattern": "評價這個譜面",
-        "skin": "評價這個造型"
+        "pattern": "評價譜面",
+        "skin": "評價造型",
+        "setlist": "評價組曲"
       },
       "submit": "送出",
       "comment": {
@@ -439,7 +706,8 @@
     "tab": {
       "patterns": "譜面",
       "skins": "造型",
-      "comments": "評價"
+      "comments": "評價",
+      "setlists": "組曲"
     },
     "patterns": {
       "notFound": "沒有譜面"
@@ -449,6 +717,9 @@
     },
     "comments": {
       "notFound": "沒有評價"
+    },
+    "setlists": {
+      "notFound": "沒有組曲"
     }
   }
 }
