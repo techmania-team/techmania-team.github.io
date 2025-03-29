@@ -10,18 +10,18 @@ export const create = async (req, res) => {
       pattern: yup.string().test('mongoID', 'Invalid pattern ID', (value) => {
         // Allow empty value for mutual exclusion
         if (!value) return true
-          return validator.isMongoId(value)
-        }),
-        skin: yup.string().test('mongoID', 'Invalid skin ID', (value) => {
-          // Allow empty value for mutual exclusion
-          if (!value) return true
-          return validator.isMongoId(value)
-        }),
-        setlist: yup.string().test('mongoID', 'Invalid setlist ID', (value) => {
-          // Allow empty value for mutual exclusion
-          if (!value) return true
-          return validator.isMongoId(value)
-        }),
+        return validator.isMongoId(value)
+      }),
+      skin: yup.string().test('mongoID', 'Invalid skin ID', (value) => {
+        // Allow empty value for mutual exclusion
+        if (!value) return true
+        return validator.isMongoId(value)
+      }),
+      setlist: yup.string().test('mongoID', 'Invalid setlist ID', (value) => {
+        // Allow empty value for mutual exclusion
+        if (!value) return true
+        return validator.isMongoId(value)
+      }),
       rating: yup.number().required().min(1).max(5),
       comment: yup.string().required(),
     })
@@ -59,8 +59,9 @@ export const create = async (req, res) => {
     } else if (parsedBody.skin) {
       query.skin = parsedBody.skin
     } else if (parsedBody.setlist) {
-      query.skin = parsedBody.setlist
+      query.setlist = parsedBody.setlist
     }
+
     result = await comments.create(query)
 
     // Add user info to the result
