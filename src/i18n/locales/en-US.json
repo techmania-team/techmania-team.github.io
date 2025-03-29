@@ -693,7 +693,8 @@
     "tab": {
       "patterns": "Patterns",
       "skins": "Skins",
-      "comments": "Comments"
+      "comments": "Comments",
+      "setlists": "Setlists"
     },
     "patterns": {
       "notFound": "No patterns found"
@@ -703,6 +704,9 @@
     },
     "comments": {
       "notFound": "No comments found"
+    },
+    "setlists": {
+      "notFound": "No setlists found"
     }
   }
 }
