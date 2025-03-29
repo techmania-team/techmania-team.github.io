@@ -1119,6 +1119,7 @@ export const getByUser = async (req, res) => {
           },
           pattern: '$pattern',
           skin: '$skin',
+          setlist: '$setlist',
         },
       },
       {
@@ -1161,6 +1162,27 @@ export const getByUser = async (req, res) => {
       {
         $unwind: {
           path: '$skin',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'setlists',
+          localField: 'setlist',
+          foreignField: '_id',
+          as: 'setlist',
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: '$setlist',
           preserveNullAndEmptyArrays: true,
         },
       },
