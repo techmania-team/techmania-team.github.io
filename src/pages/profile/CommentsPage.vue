@@ -74,6 +74,8 @@ const loadScroll = async (index, done) => {
 
 const getCommentLink = (comment) => {
   if (comment.pattern) return getI18nRoute({ name: 'pattern', params: { id: comment.pattern._id } })
-  else if (comment.skin) return getI18nRoute({ name: 'skin', params: { id: comment.pattern._id } })
+  else if (comment.skin) return getI18nRoute({ name: 'skin', params: { id: comment.skin._id } })
+  else if (comment.setlist)
+    return getI18nRoute({ name: 'setlist', params: { id: comment.setlist._id } })
 }
 </script>
