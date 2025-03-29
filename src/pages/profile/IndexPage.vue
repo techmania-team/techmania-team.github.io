@@ -19,11 +19,14 @@ q-page#profile
               q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
             q-tab(name="skins" :label="$t('profile.tab.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
+            q-tab(name="setlists" :label="$t('profile.tab.setlists')" icon="list_alt")
+              q-badge(color="tech" text-color="black" floating) {{ profile.setlistCount }}
             q-tab(name="comments" :label="$t('profile.tab.comments')" icon="comment")
               q-badge(color="tech" text-color="black" floating) {{ profile.commentCount }}
   section
     PatternsPage(v-if="tab === 'patterns'")
     SkinsPage(v-else-if="tab === 'skins'")
+    SetlistsPage(v-else-if="tab === 'setlists'")
     CommentsPage(v-else-if="tab === 'comments'")
 </template>
 
@@ -34,6 +37,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useTempProfileStore } from 'src/stores/temp-profile'
 import PatternsPage from './PatternsPage.vue'
 import SkinsPage from './SkinsPage.vue'
+import SetlistsPage from './SetlistsPage.vue'
 import CommentsPage from './CommentsPage.vue'
 import { getI18nRoute } from 'src/i18n'
 
