@@ -90,7 +90,7 @@ export const getById = async (req, res) => {
           setlistCount: {
             $size: '$setlists',
           },
-          replyCount: {
+          commentCount: {
             $size: '$comments',
           },
         },

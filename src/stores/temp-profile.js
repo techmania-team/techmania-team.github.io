@@ -8,7 +8,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
   const avatar = ref('')
   const patternCount = ref(0)
   const skinCount = ref(0)
-  const replyCount = ref(0)
+  const commentCount = ref(0)
   const _id = ref('')
 
   const fetchProfile = async (id) => {
@@ -18,7 +18,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
       avatar.value = data.result.avatar || ''
       patternCount.value = data.result.patternCount || 0
       skinCount.value = data.result.skinCount || 0
-      replyCount.value = data.result.replyCount || 0
+      commentCount.value = data.result.commentCount || 0
       _id.value = data.result._id || ''
     } catch (error) {
       handleError(error)
@@ -30,7 +30,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
     avatar.value = ''
     patternCount.value = 0
     skinCount.value = 0
-    replyCount.value = 0
+    commentCount.value = 0
     _id.value = ''
   }
 
@@ -39,7 +39,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
     avatar,
     patternCount,
     skinCount,
-    replyCount,
+    commentCount,
     _id,
     fetchProfile,
     clearData,

@@ -20,7 +20,7 @@ q-page#profile
             q-tab(name="skins" :label="$t('profile.tab.skins')" icon="stars")
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
             q-tab(name="comments" :label="$t('profile.tab.comments')" icon="comment")
-              q-badge(color="tech" text-color="black" floating) {{ profile.replyCount }}
+              q-badge(color="tech" text-color="black" floating) {{ profile.commentCount }}
   section
     PatternsPage(v-if="tab === 'patterns'")
     SkinsPage(v-else-if="tab === 'skins'")
