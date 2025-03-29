@@ -110,7 +110,7 @@ const routes = [
         ],
       },
       {
-        path: 'users/:id/:tab?',
+        path: 'users/:id/:tab(patterns|skins|setlists|comments)?',
         component: () => import('src/pages/profile/IndexPage.vue'),
         meta: { login: false },
         name: 'profile',
