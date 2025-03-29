@@ -40,7 +40,7 @@ q-page#setlists
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.control.label') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('setlistsPage.searchForm.control.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             template(v-for="(controlOption) in controlOptions" :key="controlOption")
@@ -50,7 +50,7 @@ q-page#setlists
                                   :name="`controls`+controlOption"
                                   :model-value="field.checked"
                                   @update:model-value="field.onInput($event)"
-                                  :label="$t('patternsPage.searchForm.control.'+controls[controlOption])"
+                                  :label="$t('setlistsPage.searchForm.control.'+controls[controlOption])"
                                 )
                   //- Sort
                   q-item
