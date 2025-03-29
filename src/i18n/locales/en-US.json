@@ -5,6 +5,7 @@
     "changelog": "Changelog",
     "patterns": "Patterns",
     "skins": "Skins",
+    "setlists": "Setlists",
     "login": "Login",
     "myPage": "My Page",
     "submitNewPattern": "Submit New Pattern",
@@ -391,6 +392,28 @@
       "theme": "Theme"
     }
   },
+  "setlistsPage": {
+    "title": "Setlists",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "Please enter Keywords..."
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM"
+      },
+      "sort": {
+        "label": "Sort",
+        "submit": "Submit Date",
+        "update": "Update Date",
+        "name": "Skin Name",
+        "rating": "Rating"
+      }
+    },
+    "notFound": "No setlists found"
+  },
   "setlistPage": {
     "download": "Download",
     "edit": "Edit",
@@ -445,6 +468,22 @@
         "lower": "<",
         "greater": ">"
       }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{Count} Comments"
+    },
+    "submittedBy": "Submitted by {Name}",
+    "submittedAt": "Submitted at {Date}",
+    "updatedAt": "Updated at {Date}",
+    "selectablePatterns": "Selectable Patterns",
+    "hiddenPatterns": "Hidden Patterns",
+    "control": {
+      "label": "Control",
+      "touch": "Touch",
+      "keys": "Keys",
+      "km": "KM"
     }
   },
   "setlistFormPage": {

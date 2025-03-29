@@ -83,12 +83,12 @@ const routes = [
       {
         path: 'setlists',
         children: [
-          // {
-          //   path: '',
-          //   component: () => import('pages/SetlistsPage.vue'),
-          //   name: 'setlists',
-          //   meta: { login: false },
-          // },
+          {
+            path: '',
+            component: () => import('pages/SetlistsPage.vue'),
+            name: 'setlists',
+            meta: { login: false },
+          },
           {
             path: 'new',
             component: () => import('pages/SetlistFormNewPage.vue'),

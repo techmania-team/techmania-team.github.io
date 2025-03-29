@@ -126,6 +126,10 @@ const navs = computed(() => [
     to: getI18nRoute({ name: 'skins' }),
     label: t('nav.skins'),
   },
+  {
+    to: getI18nRoute({ name: 'setlists' }),
+    label: t('nav.setlists'),
+  },
 ])
 
 const loginNavs = computed(() => [
