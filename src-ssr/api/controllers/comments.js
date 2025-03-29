@@ -6,11 +6,10 @@ import comments from '../models/comments'
 export const create = async (req, res) => {
   try {
     // Request body validation schema
-    const schema = yup
-      .object({
-        pattern: yup.string().test('mongoID', 'Invalid pattern ID', (value) => {
-          // Allow empty value for mutual exclusion
-          if (!value) return true
+    const schema = yup.object({
+      pattern: yup.string().test('mongoID', 'Invalid pattern ID', (value) => {
+        // Allow empty value for mutual exclusion
+        if (!value) return true
           return validator.isMongoId(value)
         }),
         skin: yup.string().test('mongoID', 'Invalid skin ID', (value) => {
@@ -23,28 +22,9 @@ export const create = async (req, res) => {
           if (!value) return true
           return validator.isMongoId(value)
         }),
-        rating: yup.number().required().min(1).max(5),
-        comment: yup.string().required(),
-      })
-      .test(
-        'pattern-skin-setlist-mutual-exclusion',
-        'Must provide either pattern, skin or setlist, but not both or all',
-        function (value) {
-          const { pattern, skin, setlist } = value
-          if (
-            (pattern && skin && setlist) ||
-            (pattern && skin) ||
-            (pattern && setlist) ||
-            (skin && setlist)
-          ) {
-            return this.createError({
-              message: 'Must provide either pattern or skin, but not both',
-              path: 'pattern', // Which field should the error be attached to?
-            })
-          }
-          return true
-        },
-      )
+      rating: yup.number().required().min(1).max(5),
+      comment: yup.string().required(),
+    })
     // Parsed request body
     const parsedBody = await schema.validate(req.body, { stripUnknown: true })
 
