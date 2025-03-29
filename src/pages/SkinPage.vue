@@ -16,38 +16,64 @@ q-page#skin
   section.q-mx-auto.padding.q-mt-lg
     .container
       //- Information
-      .row.q-gutter-y-lg
+      .row.q-col-gutter-y-lg
         //- Skin info list
         .col-12
           q-list
             //- List header
             q-item-label.text-h6.text-tech(header) {{ $t('skinPage.basic.title') }}
             q-separator.q-mb-md(inset)
+          .row.q-col-gutter-md
             //- List items - Submitted by
-            q-item
-              q-item-section(avatar)
-                q-icon(name="upload")
-              q-item-section
-                q-item-label {{ $t('skinPage.basic.submittedBy.label') }}
-                q-item-label(caption)
-                  router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
-            //- List items - Type
-            q-item
-              q-item-section(avatar)
-                q-icon(name="color_lens")
-              q-item-section
-                q-item-label {{ $t('skinPage.basic.type.label') }}
-                q-item-label(caption)
-                  | {{ $t('skinPage.basic.type.' + types[skin.type]) }}
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="upload")
+                q-item-section
+                  q-item-label {{ $t('skinPage.basic.submittedBy.label') }}
+                  q-item-label(caption)
+                    router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
             //- List items - Rating
-            q-item
-              q-item-section(avatar)
-                q-icon(name="thumb_up_alt")
-              q-item-section
-                q-item-label
-                  q-rating(:model-value="skin.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
-                q-item-label(caption)
-                  | {{ skin.rating?.avg?.toFixed(2) || '' }} / {{ $t('skinPage.basic.comments.count', {count: skin.rating.count}) }}
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="thumb_up_alt")
+                q-item-section
+                  q-item-label
+                    q-rating(:model-value="skin.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
+                  q-item-label(caption)
+                    | {{ skin.rating?.avg?.toFixed(2) || '' }} / {{ $t('skinPage.basic.comments.count', {count: skin.rating.count}) }}
+            //- List items - Submitted at
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="calendar_month")
+                q-item-section
+                  q-item-label {{ $t('skinPage.basic.submittedAt.label') }}
+                  q-item-label(caption)
+                    | {{ date.toLocaleString(skin.createdAt) }}
+                    | &nbsp;
+                    | ({{ date.toRelative(skin.createdAt) }})
+            //- List items - Updated at
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="update")
+                q-item-section
+                  q-item-label {{ $t('skinPage.basic.updatedAt.label') }}
+                  q-item-label(caption)
+                    | {{ date.toLocaleString(skin.updatedAt) }}
+                    | &nbsp;
+                    | ({{ date.toRelative(skin.updatedAt) }})
+            //- List items - Type
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="color_lens")
+                q-item-section
+                  q-item-label {{ $t('skinPage.basic.type.label') }}
+                  q-item-label(caption)
+                    | {{ $t('skinPage.basic.type.' + types[skin.type]) }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error
@@ -65,7 +91,7 @@ q-page#skin
           q-list
             q-item-label.text-h6.text-tech(header) {{ $t('skinPage.previews.title') }}
             q-separator.q-mb-md(inset)
-          .row.justify-center.q-gutter-y-sm
+          .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
             p.text-center(v-if='skin.previews.length === 0') {{ $t('skinPage.previews.noPreview') }}
@@ -84,6 +110,7 @@ import { getYouTubeThumbnail } from 'src/utils/youtube'
 import { types } from 'src/utils/skin'
 import CommentList from 'src/components/CommentList.vue'
 import { getI18nRoute } from 'src/i18n'
+import * as date from 'src/utils/date'
 
 const route = useRoute()
 const user = useUserStore()

@@ -11,6 +11,8 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const previews = ref([])
   const image = ref('')
   const description = ref('')
+  const createdAt = ref('')
+  const updatedAt = ref('')
   const submitter = ref({ name: '', _id: '' })
   const rating = ref({ count: 0, avg: 0 })
 
@@ -24,6 +26,8 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     submitter.value = data.submitter
     rating.value = data.rating
     image.value = data.image
+    createdAt.value = data.createdAt
+    updatedAt.value = data.updatedAt
   }
 
   const fetchSkin = async (id) => {
@@ -45,6 +49,8 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     submitter.value = { name: '', _id: '' }
     rating.value = { count: 0, avg: 0 }
     image.value = ''
+    createdAt.value = ''
+    updatedAt.value = ''
   }
 
   return {
@@ -57,6 +63,8 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     submitter,
     rating,
     image,
+    createdAt,
+    updatedAt,
     setSkin,
     fetchSkin,
     clearData,
