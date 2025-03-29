@@ -20,15 +20,18 @@ export const useTempIndexStore = defineStore('temp-index', () => {
 
   const patterns = ref([])
   const skins = ref([])
+  const setlists = ref([])
 
   const fetchData = async () => {
     try {
-      const [pt, skin] = await Promise.all([
-        api.get(new URL('/api/patterns?start=0&limit=8', process.env.HOST_URL).toString()),
-        api.get(new URL('/api/skins?start=0&limit=8', process.env.HOST_URL).toString()),
+      const [pt, skin, setlist] = await Promise.all([
+        api.get('/patterns?start=0&limit=8'),
+        api.get('/skins?start=0&limit=8'),
+        api.get('/setlists?start=0&limit=8'),
       ])
       patterns.value = pt.data.result
       skins.value = skin.data.result
+      setlists.value = setlist.data.result
     } catch (error) {
       handleError(error)
     }
@@ -79,6 +82,7 @@ export const useTempIndexStore = defineStore('temp-index', () => {
     publishDate,
     patterns,
     skins,
+    setlists,
     fetchData,
     fetchGitHub,
     clearData,

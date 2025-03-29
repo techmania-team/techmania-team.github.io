@@ -106,6 +106,16 @@ q-page#index
           .row
             .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin) in skins" :key="skin._id")
               SkinCard(:skin="skin" :mine="false")
+  //- Setlists
+  section.q-mx-auto.padding.q-my-md
+    .container
+      .row
+        .col-12.q-mx-auto
+          h4.text-center {{ $t('indexPage.newSetlists') }}
+          q-separator
+          .row
+            .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(setlist) in setlists" :key="setlist._id")
+              SetlistCard(:setlist="setlist" :mine="false")
   //- Videos
   section.q-mx-auto.padding.q-my-md
     .container
@@ -127,11 +137,12 @@ import { useTempIndexStore } from 'src/stores/temp-index'
 import { toLocaleString } from 'src/utils/date'
 import PatternCard from 'src/components/PatternCard.vue'
 import SkinCard from 'src/components/SkinCard.vue'
+import SetlistCard from 'src/components/SetlistCard.vue'
 
 const $q = useQuasar()
 const route = useRoute()
 const tempIndex = useTempIndexStore()
-const { tag, patterns, skins, publishDate } = storeToRefs(tempIndex)
+const { tag, patterns, skins, setlists, publishDate } = storeToRefs(tempIndex)
 
 const metaData = {
   title: 'TECHMANIA',
