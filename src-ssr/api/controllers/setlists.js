@@ -1,11 +1,13 @@
 import axios from 'axios'
 import mongoose from 'mongoose'
+import _ from 'lodash'
 import * as yup from 'yup'
 import { checkImage } from '../utils/image'
 import validator from 'validator'
 import setlists from '../models/setlists'
 import patterns from '../models/patterns'
 import comments from '../models/comments'
+import users from '../models/users'
 import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 import {
   CRITERIA_INDEX,
@@ -187,6 +189,202 @@ export const create = async (req, res) => {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
+    } else {
+      res.status(500).send({ success: false, message: 'Server Error' })
+    }
+  }
+}
+
+export const search = async (req, res) => {
+  try {
+    // Mongoose query
+    const query = [
+      {
+        $match: {
+          $or: [
+            {
+              $text: {
+                $search: '',
+              },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'setlists',
+          as: 'comments',
+          pipeline: [
+            {
+              $project: {
+                pattern: 0,
+                skin: 0,
+                setlist: 0,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          rating: {
+            count: {
+              $size: '$comments',
+            },
+            avg: {
+              $ifNull: [
+                {
+                  $avg: '$comments.rating',
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      { $sort: {} },
+      { $skip: 0 },
+      { $limit: 0 },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'submitter',
+          foreignField: '_id',
+          as: 'submitter',
+        },
+      },
+      {
+        $unwind: {
+          path: '$submitter',
+        },
+      },
+      {
+        $unset: [
+          'submitter.discord',
+          'submitter.avatar',
+          'submitter.discordRefreshToken',
+          'submitter.discordToken',
+          'submitter.accessInfo',
+          'comments',
+        ],
+      },
+    ]
+
+    // Request query validation schema
+    const querySchema = yup.object().shape({
+      start: yup.number().integer().min(0),
+      limit: yup.number().integer().min(1),
+      keysounded: yup
+        .string()
+        .trim()
+        .oneOf(['0', '1', 'true', 'false', 'yes', 'no', undefined, '']),
+      keywords: yup.string(),
+      controls: yup
+        .string()
+        .matches(
+          /^(0|1|2)?(,(0|1|2))*$/,
+          'Controls must be a comma-separated list of numbers between 0 and 2, without duplicates',
+        )
+        .test('unique', 'Controls values must be unique', (value) => {
+          if (!value) return true
+          const values = value.split(',')
+          return new Set(values).size === values.length
+        }),
+      sortBy: yup.string().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
+      sort: yup
+        .number()
+        .integer()
+        .oneOf([1, -1])
+        .when('sortBy', {
+          is: (value) => value !== undefined,
+          then: (schema) => schema.required(),
+        }),
+      submitter: yup.string().test('mongoID', 'Invalid ID', (value) => {
+        if (!value) return true
+        return validator.isMongoId(value)
+      }),
+    })
+    // Parsed request query
+    const parseedQuery = await querySchema.validate(req.query, { stripUnknown: true })
+
+    // Add filters to query - Submitter
+    if (parseedQuery.submitter) {
+      query[0].$match.submitter = new mongoose.Types.ObjectId(req.query.submitter)
+    }
+    // Add filters to query - Keysounded
+    if (['true', 'yes', '1'].includes(parseedQuery.keysounded)) {
+      query[0].$match.keysounded = true
+    } else if (['false', 'no', '0'].includes(parseedQuery.keysounded)) {
+      query[0].$match.keysounded = false
+    }
+    // Add filters to query - Controls
+    if ('controls' in req.query) {
+      query[0].$match.control = {
+        $in: parseedQuery.controls.split(',').map((control) => parseInt(control)),
+      }
+    }
+    // Add filters to query - Keywords
+    if (parseedQuery.keywords) {
+      // setlist keywords
+      query[0].$match.$or[0].$text.$search = parseedQuery.keywords
+      // Submitter keywords
+      const submitters = []
+      const keywords = req.query.keywords.match(
+        /[^\s"']+|(?:"|'){2,}|"(?!")([^"]*)"|'(?!')([^']*)'|"|'/g,
+      )
+      for (const i in keywords) {
+        let keyword = _.escapeRegExp(keywords[i])
+        const re = new RegExp(keyword, 'i')
+        submitters.push(re)
+      }
+      // Search users by regex name, and get their IDs
+      const submittersID = await users.find({ name: { $in: submitters } }, '_id')
+      // Add submitters to query
+      query[0].$match.$or.push({
+        submitter: { $in: submittersID.map((submitterID) => submitterID._id) },
+      })
+    }
+    // Add filters to query - Start
+    if (parseedQuery.start) {
+      query[4].$skip = parseedQuery.start
+    }
+    // Add filters to query - Limit
+    if (parseedQuery.limit) {
+      query[5].$limit = parseedQuery.limit
+    }
+    // Add filters to query - Sort
+    if (parseedQuery.sortBy) {
+      if (parseedQuery.sortBy === 'rating') {
+        parseedQuery.sortBy = 'rating.avg'
+      }
+      query[3].$sort[parseedQuery.sortBy] = parseedQuery.sort
+    } else {
+      query[3].$sort.createdAt = -1
+    }
+
+    // Remove unused query fields
+    if (query[5].$limit === 0) {
+      query.splice(5, 1)
+    }
+    if (query[0].$match.$or[0].$text.$search === '') {
+      delete query[0].$match.$or.splice(0, 1)
+    }
+    if (query[0].$match.$or.length === 0) {
+      delete query[0].$match.$or
+    }
+
+    // Execute query
+    const result = await setlists.aggregate(query)
+    // Send response
+    res.status(200).send({ success: true, message: '', result })
+  } catch (error) {
+    console.error(error)
+    if (error.name === 'CastError') {
+      res.status(404).send({ success: false, message: 'Not found' })
+    } else if (error.name === 'ValidationError') {
+      res.status(400).send({ success: false, message: error.message })
     } else {
       res.status(500).send({ success: false, message: 'Server Error' })
     }
