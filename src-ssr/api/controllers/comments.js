@@ -1390,10 +1390,10 @@ export const getMyCommmentBySetlist = async (req, res) => {
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
     const query = [
-      // Find matching pattern id
+      // Find matching setlist id
       {
         $match: {
-          pattern: new mongoose.Types.ObjectId(parsedParams.setid),
+          setlist: new mongoose.Types.ObjectId(parsedParams.setid),
           'replies.0.user': new mongoose.Types.ObjectId(req.user._id),
           'replies.0.deleted': false,
         },

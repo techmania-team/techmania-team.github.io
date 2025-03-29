@@ -10,6 +10,8 @@ import {
   updateMyReply,
   updateReplyVote,
   getByUser,
+  getMyCommmentBySetlist,
+  getBySetlist,
 } from '../controllers/comments.js'
 import { isAuthenticated } from '../middleware/auth'
 import recaptcha from '../middleware/recaptcha'
@@ -28,8 +30,8 @@ router.get('/pattern/:pid/my', isAuthenticated, getMyCommmentByPattern)
 router.get('/pattern/:pid', getByPattern)
 router.get('/skin/:sid/my', isAuthenticated, getMyCommmentBySkin)
 router.get('/skin/:sid', getBySkin)
-router.get('/setlist/:setid/my', isAuthenticated, getMyCommmentByPattern)
-router.get('/setlist/:setid', getByPattern)
+router.get('/setlist/:setid/my', isAuthenticated, getMyCommmentBySetlist)
+router.get('/setlist/:setid', getBySetlist)
 router.get('/user/:uid', getByUser)
 router.patch('/:cid', recaptcha, isAuthenticated, updateMyComment)
 router.post('/:cid/replies', recaptcha, isAuthenticated, createReply)
