@@ -65,6 +65,14 @@ export const getById = async (req, res) => {
       },
       {
         $lookup: {
+          from: 'setlists',
+          localField: '_id',
+          foreignField: 'submitter',
+          as: 'setlists',
+        },
+      },
+      {
+        $lookup: {
           from: 'comments',
           localField: '_id',
           foreignField: 'replies.user',
@@ -79,6 +87,9 @@ export const getById = async (req, res) => {
           skinCount: {
             $size: '$skins',
           },
+          setlistCount: {
+            $size: '$setlists',
+          },
           replyCount: {
             $size: '$comments',
           },
@@ -88,6 +99,7 @@ export const getById = async (req, res) => {
         $project: {
           patterns: 0,
           skins: 0,
+          setlists: 0,
           discord: 0,
           comments: 0,
         },
