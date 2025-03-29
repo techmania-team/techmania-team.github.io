@@ -1,5 +1,5 @@
 <template lang="pug">
-q-page#skin
+q-page#setlist
   //- Header
   q-parallax.header-parallax.header-blur(:height="200")
     //- Header image background
