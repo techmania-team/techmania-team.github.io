@@ -15,11 +15,13 @@
                       //- Icon
                       q-icon(v-if="comment.pattern" name="music_note" size="48px")
                       q-icon(v-else-if="comment.skin" name="stars" size="48px")
+                      q-icon(v-else-if="comment.setlist" name="list_alt" size="48px")
                     .col-auto
                       //- Pattern or Skin name
                       .text-h6.text-tech
                         span(v-if="comment.pattern") {{ comment.pattern.composer }} - {{ comment.pattern.name }}
                         span(v-else-if="comment.skin") {{ comment.skin.name }}
+                        span(v-else-if="comment.setlist") {{ comment.setlist.name }}
                       q-rating(v-model="comment.rating" readonly)
                 .col-12
                   //- Comment
