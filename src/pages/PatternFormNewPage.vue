@@ -16,13 +16,21 @@ q-page#patternForm
 <script setup>
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
+import { useUserStore } from 'src/stores/user'
+import { useI18n } from 'vue-i18n'
 import PatternForm from 'src/components/PatternForm.vue'
 
+const user = useUserStore()
+const { t } = useI18n()
 const route = useRoute()
+
+const title = user.isLogin
+  ? 'TECHMANIA | ' + t('patternFormPage.titleNew')
+  : 'TECHMANIA | Log in or sign up to view'
 
 const metaData = () => {
   return {
-    title: 'Log in or sign up to view',
+    title,
     meta: {
       color: {
         name: 'theme-color',
@@ -30,12 +38,12 @@ const metaData = () => {
       },
       title: {
         name: 'title',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       description: {
         name: 'description',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       ogType: {
@@ -50,12 +58,12 @@ const metaData = () => {
       },
       ogTitle: {
         property: 'og:title',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       ogDescription: {
         property: 'og:description',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       ogImage: {
@@ -76,12 +84,12 @@ const metaData = () => {
       },
       twTitle: {
         name: 'twitter:title',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       twDescription: {
         name: 'twitter:description',
-        content: 'Log in or sign up to view',
+        content: title,
         'data-dynamic': true,
       },
       twImage: {
