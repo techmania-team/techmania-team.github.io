@@ -12,6 +12,8 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
   const previews = ref([])
   const image = ref('')
   const description = ref('')
+  const createdAt = ref('')
+  const updatedAt = ref('')
   const submitter = ref({ name: '', _id: '' })
   const rating = ref({ count: 0, avg: 0 })
 
@@ -27,6 +29,8 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     submitter.value.name = data.submitter.name
     submitter.value._id = data.submitter._id
     image.value = data.image
+    createdAt.value = data.createdAt
+    updatedAt.value = data.updatedAt
     rating.value.count = data.rating.count
     rating.value.avg = data.rating.avg
   }
@@ -50,6 +54,8 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     previews.value = []
     image.value = ''
     description.value = ''
+    createdAt.value = ''
+    updatedAt.value = ''
     submitter.value = { name: '', _id: '' }
     rating.value = { count: 0, avg: 0 }
   }
@@ -66,6 +72,8 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     description,
     submitter,
     rating,
+    createdAt,
+    updatedAt,
     setPattern,
     fetchPattern,
     clearData,

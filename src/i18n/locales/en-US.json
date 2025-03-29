@@ -80,6 +80,12 @@
       },
       "comments": {
         "count": "{count} Comments"
+      },
+      "submittedAt": {
+        "label": "Submitted At"
+      },
+      "updatedAt": {
+        "label": "Updated At"
       }
     },
     "difficulties": {
