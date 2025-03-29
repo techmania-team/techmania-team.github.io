@@ -74,7 +74,6 @@ export const create = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.log(error)
     if (error.message === 'Already commented') {
       res.status(409).send({ success: false, message: 'Already commented' })
     } else if (error.name === 'ValidationError') {
@@ -601,9 +600,15 @@ export const updateMyReply = async (req, res) => {
     if (comment.replies.id(parsedParams.rid).user.toString() !== req.user._id.toString()) {
       throw new Error('No permission')
     }
-    // Update comment
-    comment.replies.id(parsedParams.rid).set($set)
-    await comment.save()
+
+    if (parsedBody.deleted && comment.replies[0]._id.toString() === parsedParams.rid) {
+      // Delete comment
+      await comments.findByIdAndDelete(parsedParams.cid).orFail()
+    } else {
+      // Update comment
+      comment.replies.id(parsedParams.rid).set($set)
+      await comment.save()
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
