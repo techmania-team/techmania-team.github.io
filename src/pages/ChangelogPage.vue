@@ -21,7 +21,7 @@ q-page#changelog
             q-item-label(caption)
               q-skeleton(type='text' width='65%')
       .col-12(v-if="error")
-        h6.text-center Failed to fetch data from GitHub.
+        h6.text-center {{ $t('changelogPage.error') }} }}
       .col-12(v-else)
         //- Timeline
         q-timeline(color="tech" transition-show="fade")

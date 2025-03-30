@@ -28,7 +28,8 @@
     "title": "Changelog",
     "downloads": "Downloads",
     "showDetail": "Show Detail",
-    "hideDetail": "Hide Detail"
+    "hideDetail": "Hide Detail",
+    "error": "Failed to load data from GitHub."
   },
   "patternsPage": {
     "title": "Patterns",
