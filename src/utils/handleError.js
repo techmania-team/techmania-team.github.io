@@ -1,16 +1,14 @@
 import { Notify } from 'quasar'
-import { useI18n } from 'vue-i18n'
+import { i18n } from 'src/i18n'
 
 export default (error) => {
   if (process.env.DEBUGGING) {
     console.error(error)
   }
 
-  const { t } = useI18n()
-
   Notify.create({
     icon: 'warning',
     color: 'negative',
-    message: t('error.unknown'),
+    message: i18n.global.t('error.unknown'),
   })
 }
