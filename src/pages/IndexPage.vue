@@ -243,7 +243,7 @@ defineOptions({
 
 onMounted(() => {
   // Fetch Release data from GitHub
-  // if (process.env.CLIENT) tempIndex.fetchGitHub()
+  if (process.env.CLIENT) tempIndex.fetchGitHub()
 })
 
 onUnmounted(() => {
