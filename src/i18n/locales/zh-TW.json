@@ -28,7 +28,8 @@
     "title": "更新紀錄",
     "downloads": "下載數",
     "showDetail": "顯示內容",
-    "hideDetail": "隱藏內容"
+    "hideDetail": "隱藏內容",
+    "error": "無法從 GitHub 載入更新紀錄"
   },
   "patternsPage": {
     "title": "譜面",
@@ -221,8 +222,16 @@
       "yes": "是, 刪除"
     },
     "result": {
+      "submitted": "上傳成功",
       "deleted": "刪除成功",
-      "updated": "編輯成功"
+      "updated": "編輯成功",
+      "deleteNotInGuild": "您必須要加入 Discord 伺服器才能刪除譜面",
+      "deletePermission": "您沒有刪除這個譜面的權限",
+      "deleteUnauthorized": "您必須登入才能刪除譜面",
+      "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯譜面",
+      "updatePermission": "您沒有編輯這個譜面的權限",
+      "updateUnauthorized": "您必須登入才能編輯譜面",
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳譜面"
     }
   },
   "patternCard": {
@@ -370,7 +379,7 @@
     },
     "tos": {
       "tos": "使用條款",
-      "label": "送出譜面代表您已閱讀並同意{tos}",
+      "label": "送出造型代表您已閱讀並同意{tos}",
       "error": {
         "required": "您必須同意使用條款"
       }
@@ -385,8 +394,16 @@
       "yes": "是, 刪除"
     },
     "result": {
+      "submitted": "上傳成功",
       "deleted": "刪除成功",
-      "updated": "編輯成功"
+      "updated": "編輯成功",
+      "deleteNotInGuild": "您必須要加入 Discord 伺服器才能刪除造型",
+      "deletePermission": "您沒有刪除這個造型的權限",
+      "deleteUnauthorized": "您必須登入才能刪除造型",
+      "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯造型",
+      "updatePermission": "您沒有編輯這個造型的權限",
+      "updateUnauthorized": "您必須登入才能編輯造型",
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳造型"
     }
   },
   "skinCard": {
@@ -637,7 +654,7 @@
     },
     "tos": {
       "tos": "使用條款",
-      "label": "送出譜面代表您已閱讀並同意{tos}",
+      "label": "送出組曲代表您已閱讀並同意{tos}",
       "error": {
         "required": "您必須同意使用條款"
       }
@@ -652,8 +669,16 @@
       "yes": "是, 刪除"
     },
     "result": {
+      "submitted": "上傳成功",
       "deleted": "刪除成功",
-      "updated": "編輯成功"
+      "updated": "編輯成功",
+      "deleteNotInGuild": "您必須要加入 Discord 伺服器才能刪除組曲",
+      "deletePermission": "您沒有刪除這個組曲的權限",
+      "deleteUnauthorized": "您必須登入才能刪除組曲",
+      "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯組曲",
+      "updatePermission": "您沒有編輯這個組曲的權限",
+      "updateUnauthorized": "您必須登入才能編輯組曲",
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳組曲"
     }
   },
   "commentList": {
@@ -721,5 +746,8 @@
     "setlists": {
       "notFound": "沒有組曲"
     }
+  },
+  "error": {
+    "unknown": "伺服器錯誤，請稍後再試，或在 Discord 伺服器聯絡開發者。"
   }
 }
