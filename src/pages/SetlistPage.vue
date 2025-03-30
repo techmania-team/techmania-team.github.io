@@ -1,7 +1,7 @@
 <template lang="pug">
 q-page#setlist
   //- Header
-  q-parallax.header-parallax.header-blur(:height="200")
+  q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
       img(:src="backgroundImage")
