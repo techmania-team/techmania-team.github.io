@@ -55,6 +55,7 @@ import { useMeta } from 'quasar'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { toLocaleString } from 'src/utils/date'
+import handleError from 'src/utils/handleError'
 
 const route = useRoute()
 
@@ -135,6 +136,7 @@ onMounted(async () => {
       })
     } catch (error) {
       error.value = true
+      handleError(error)
     }
   }
 })

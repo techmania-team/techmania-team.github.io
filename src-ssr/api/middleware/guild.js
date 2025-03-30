@@ -1,4 +1,5 @@
 import axios from 'axios'
+import handleServerError from '../utils/handleServerError'
 
 export default async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ export default async (req, res, next) => {
       next()
     }
   } catch (error) {
-    console.error(error)
+    handleServerError(error)
     res.status(403).send({ success: false, message: 'Not in guild' })
   }
 }

@@ -8,6 +8,7 @@ import users from '../models/users'
 import { checkImage } from '../utils/image'
 import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 import comments from '../models/comments'
+import handleServerError from '../utils/handleServerError'
 
 const types = ['Note', 'VFX', 'Combo', 'Game UI', 'Theme']
 
@@ -88,7 +89,7 @@ export const create = async (req, res) => {
     })
     res.status(200).send({ success: true, message: '', _id: result._id })
   } catch (error) {
-    console.error(error)
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -275,7 +276,7 @@ export const search = async (req, res) => {
     // Send response
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.error(error)
+    handleServerError(error)
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
@@ -372,6 +373,7 @@ export const searchID = async (req, res) => {
     // Aggregation returns an array, but we only need the first element
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
@@ -399,7 +401,7 @@ export const del = async (req, res) => {
     const skin = await skins.findById(parsedParams.id).orFail()
 
     if (skin.submitter.toString() !== req.user._id.toString()) {
-      throw new Error('Unauthorized')
+      throw new Error('Permission')
     }
 
     // Delete skin
@@ -409,9 +411,9 @@ export const del = async (req, res) => {
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    console.error(error)
-    if (error.message === 'Unauthorized') {
-      res.status(403).send({ success: false, message: 'Unauthorized' })
+    handleServerError(error)
+    if (error.message === 'Permission') {
+      res.status(403).send({ success: false, message: 'Permission' })
     } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
@@ -466,7 +468,7 @@ export const update = async (req, res) => {
     const skin = await skins.findById(parsedParams.id).orFail()
 
     if (skin.submitter.toString() !== req.user._id.toString()) {
-      throw new Error('Unauthorized')
+      throw new Error('Permission')
     }
 
     skin.name = parseedBody.name
@@ -480,8 +482,9 @@ export const update = async (req, res) => {
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
-    if (error.message === 'Unauthorized') {
-      res.status(403).send({ success: false, message: 'Unauthorized' })
+    handleServerError(error)
+    if (error.message === 'Permission') {
+      res.status(403).send({ success: false, message: 'Permission' })
     } else if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {

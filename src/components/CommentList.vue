@@ -148,6 +148,7 @@ import * as date from 'src/utils/date'
 import api from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
 import { getI18nRoute } from 'src/i18n'
+import handleError from 'src/utils/handleError'
 
 const user = useUserStore()
 const recaptcha = useReCaptcha()
@@ -314,7 +315,7 @@ const onDialogSubmit = async (values) => {
     }
     editDialog.value.open = false
   } catch (error) {
-    console.error(error)
+    handleError(error)
   }
 }
 
@@ -333,7 +334,7 @@ const onCommentSubmit = async (values) => {
     myComment.value.rating = data.result.rating
     myComment.value.replies = data.result.replies
   } catch (error) {
-    console.error(error)
+    handleError(error)
   }
 }
 
@@ -366,7 +367,7 @@ const voteReply = async (cid, rid, voted, value) => {
       comment.replies[idx].votes.sum += newValue - voted
     }
   } catch (error) {
-    console.error(error)
+    handleError(error)
   }
 }
 
@@ -397,7 +398,7 @@ const deleteMyReply = async (cid, rid, cidx, ridx) => {
       otherComments.value[realCidx].replies.splice(ridx, 1)
     }
   } catch (error) {
-    console.error(error)
+    handleError(error)
   }
 }
 
@@ -416,7 +417,7 @@ onMounted(async () => {
       myComment.value.replies = data.result.replies
     }
   } catch (error) {
-    console.error(error)
+    handleError(error)
   }
 })
 </script>

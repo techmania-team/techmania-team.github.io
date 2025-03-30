@@ -743,6 +743,13 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
+      $q.notify({
+        icon: 'check',
+        message: t('setlistFormPage.result.submitted'),
+        color: 'positive',
+        position: 'top',
+        timeout: 2000,
+      })
     } else {
       // No setlist ID, create new setlist
       console.log(values)
@@ -761,18 +768,27 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
+      $q.notify({
+        icon: 'check',
+        message: t('setlistFormPage.result.updated'),
+        color: 'positive',
+        position: 'top',
+        timeout: 2000,
+      })
       router.push(getI18nRoute({ name: 'setlist', params: { id: data._id } }))
     }
-    // Notify success
-    $q.notify({
-      icon: 'check',
-      message: t('setlistFormPage.result.updated'),
-      color: 'positive',
-      position: 'top',
-      timeout: 2000,
-    })
   } catch (error) {
-    handleError(error)
+    if ([403, 401].includes(error.response.status)) {
+      if (route.params.id) {
+        // Editing skin
+        handleFormSubmitError(error, 'update')
+      } else {
+        // Creating new skin
+        handleFormSubmitError(error, 'create')
+      }
+    } else {
+      handleError(error)
+    }
   }
   $q.loading.hide()
 }
@@ -801,10 +817,51 @@ const deleteSetlist = async () => {
     // Redirect to home
     router.push(getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: user._id } }))
   } catch (error) {
-    handleError(error)
+    if ([403, 401].includes(error.response.status)) {
+      handleFormSubmitError(error, 'delete')
+    } else {
+      handleError(error)
+    }
   }
   deleting.value = false
   deleteDialog.value = false
+}
+
+const handleFormSubmitError = (error, action) => {
+  switch (error.response.message) {
+    case 'Not in guild':
+      $q.notify({
+        icon: 'warning',
+        message: t('setlistFormPage.result.' + action + 'NotInGuild'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      break
+    case 'Permission':
+      $q.notify({
+        icon: 'warning',
+        message: t('setlistFormPage.result.' + action + 'Permission'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      break
+    case 'Unauthorized':
+      $q.notify({
+        icon: 'warning',
+        message: t('setlistFormPage.result.' + action + 'Unauthorized'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      user.clearData()
+      router.push(getI18nRoute({ name: 'patterns' }))
+      break
+    default:
+      handleError(error)
+      break
+  }
 }
 
 // Note:

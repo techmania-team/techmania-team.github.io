@@ -222,8 +222,16 @@
       "yes": "YES, DELETE IT"
     },
     "result": {
+      "submitted": "Successfully submitted.",
       "deleted": "Successfully deleted.",
-      "updated": "Successfully updated."
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this pattern",
+      "deletePermission": "You don't have permission to delete this pattern",
+      "deleteUnauthorized": "You must login to delete this pattern",
+      "updateNotInGuild": "You must join our discord to update this pattern",
+      "updatePermission": "You don't have permission to update this pattern",
+      "updateUnauthorized": "You must login to update this pattern",
+      "createNotInGuild": "You must join our discord to submit pattern"
     }
   },
   "patternCard": {
@@ -386,8 +394,16 @@
       "yes": "YES, DELETE IT"
     },
     "result": {
+      "submitted": "Successfully submitted.",
       "deleted": "Successfully deleted.",
-      "updated": "Successfully updated."
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this skin",
+      "deletePermission": "You don't have permission to delete this skin",
+      "deleteUnauthorized": "You must login to delete this skin",
+      "updateNotInGuild": "You must join our discord to update this skin",
+      "updatePermission": "You don't have permission to update this skin",
+      "updateUnauthorized": "You must login to update this skin",
+      "createNotInGuild": "You must join our discord to submit skin"
     }
   },
   "skinCard": {
@@ -653,8 +669,16 @@
       "yes": "YES, DELETE IT"
     },
     "result": {
+      "submitted": "Successfully submitted.",
       "deleted": "Successfully deleted.",
-      "updated": "Successfully updated."
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this setlist",
+      "deletePermission": "You don't have permission to delete this setlist",
+      "deleteUnauthorized": "You must login to delete this setlist",
+      "updateNotInGuild": "You must join our discord to update this setlist",
+      "updatePermission": "You don't have permission to update this setlist",
+      "updateUnauthorized": "You must login to update this setlist",
+      "createNotInGuild": "You must join our discord to submit setlist"
     }
   },
   "commentList": {
@@ -722,5 +746,8 @@
     "setlists": {
       "notFound": "No setlists found"
     }
+  },
+  "error": {
+    "unknown": "Server Error, please try again or contact developer in Discord server."
   }
 }

@@ -1,5 +1,6 @@
 import { Strategy, Scope } from 'passport-discord-auth'
 import User from '../models/users'
+import handleServerError from '../utils/handleServerError'
 
 export default new Strategy(
   {
@@ -39,6 +40,7 @@ export default new Strategy(
         refreshToken,
       })
     } catch (error) {
+      handleServerError(error)
       // Return error
       done(error, null)
     }

@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import * as yup from 'yup'
 import validator from 'validator'
 import users from '../models/users'
+import handleServerError from '../utils/handleServerError'
 
 export const getById = async (req, res) => {
   try {
@@ -110,6 +111,7 @@ export const getById = async (req, res) => {
     // Because we only find 1 user by ID
     res.status(200).send({ success: true, message: '', result: result[0] })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {

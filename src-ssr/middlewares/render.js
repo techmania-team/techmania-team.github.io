@@ -11,11 +11,11 @@ export default defineSsrMiddleware(({ app, resolve, render, serve }) => {
     res.setHeader('Content-Type', 'text/html')
 
     render(/* the ssrContext: */ { req, res })
-      .then(html => {
+      .then((html) => {
         // now let's send the rendered html to the client
         res.send(html)
       })
-      .catch(err => {
+      .catch((err) => {
         // oops, we had an error while rendering the page
 
         // we were told to redirect to another URL

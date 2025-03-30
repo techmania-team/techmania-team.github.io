@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import * as yup from 'yup'
 import comments from '../models/comments'
+import handleServerError from '../utils/handleServerError'
 
 export const create = async (req, res) => {
   try {
@@ -74,6 +75,7 @@ export const create = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
+    handleServerError(error)
     if (error.message === 'Already commented') {
       res.status(409).send({ success: false, message: 'Already commented' })
     } else if (error.name === 'ValidationError') {
@@ -256,6 +258,7 @@ export const getByPattern = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -439,6 +442,7 @@ export const getMyCommmentByPattern = async (req, res) => {
       res.status(200).send({ success: true, message: '', result: result[0] })
     }
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -496,6 +500,7 @@ export const updateMyComment = async (req, res) => {
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
+    handleServerError(error)
     if (error.message === 'No permission') {
       res.status(403).send({ success: false, message: 'No permission' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
@@ -546,6 +551,7 @@ export const createReply = async (req, res) => {
       .status(200)
       .send({ success: true, message: '', result: { ...comment.toObject().replies.pop() } })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
@@ -612,6 +618,7 @@ export const updateMyReply = async (req, res) => {
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
+    handleServerError(error)
     if (error.message === 'No permission') {
       res.status(403).send({ success: false, message: 'No permission' })
     } else if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
@@ -687,6 +694,7 @@ export const updateReplyVote = async (req, res) => {
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'CastError' || error.name === 'DocumentNotFoundError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else if (error.name === 'ValidationError') {
@@ -869,6 +877,7 @@ export const getBySkin = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -1052,6 +1061,7 @@ export const getMyCommmentBySkin = async (req, res) => {
       res.status(200).send({ success: true, message: '', result: result[0] })
     }
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -1189,7 +1199,7 @@ export const getByUser = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    console.error(error)
+    handleServerError(error)
     if (error.name === 'CastError') {
       res.status(404).send({ success: false, message: 'Not found' })
     } else {
@@ -1370,6 +1380,7 @@ export const getBySetlist = async (req, res) => {
 
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {
@@ -1553,6 +1564,7 @@ export const getMyCommmentBySetlist = async (req, res) => {
       res.status(200).send({ success: true, message: '', result: result[0] })
     }
   } catch (error) {
+    handleServerError(error)
     if (error.name === 'ValidationError') {
       res.status(400).send({ success: false, message: 'Validation Failed' })
     } else if (error.name === 'CastError') {

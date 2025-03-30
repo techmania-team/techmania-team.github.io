@@ -1,5 +1,5 @@
 import axios from 'axios'
-import handleError from './handleError'
+import handleServerError from './handleServerError'
 
 export const checkImage = async (link) => {
   let valid = false
@@ -9,7 +9,7 @@ export const checkImage = async (link) => {
       valid = true
     }
   } catch (error) {
-    handleError(error)
+    handleServerError(error)
   }
   return valid
 }

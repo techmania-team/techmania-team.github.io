@@ -2,6 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
 import { CONTROL_TOUCH } from 'src/utils/control'
+import handleError from 'src/utils/handleError'
 
 export const useTempSetlistStore = defineStore('temp-setlist', () => {
   const _id = ref('')
@@ -39,7 +40,7 @@ export const useTempSetlistStore = defineStore('temp-setlist', () => {
       const { data } = await api.get(`/setlists/${id}`)
       setSetlist(data.result)
     } catch (error) {
-      console.error(error)
+      handleError(error)
     }
   }
 

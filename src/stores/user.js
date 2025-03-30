@@ -19,9 +19,8 @@ export const useUserStore = defineStore('user', () => {
       _id.value = data.result._id
       name.value = data.result.name
       avatar.value = data.result.avatar
-    } catch (error) {
+    } catch {
       clearData()
-      console.error(error)
     }
   }
 

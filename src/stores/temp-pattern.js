@@ -1,6 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
+import handleError from 'src/utils/handleError'
 
 export const useTempPatternStore = defineStore('temp-pattern', () => {
   const _id = ref('')
@@ -40,7 +41,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
       const { data } = await api.get(`/patterns/${id}`)
       setPattern(data.result)
     } catch (error) {
-      console.error(error)
+      handleError(error)
     }
   }
 

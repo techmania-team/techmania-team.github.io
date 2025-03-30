@@ -427,6 +427,13 @@ const onSubmit = async (values) => {
           : values.previews.length > 0
             ? getYouTubeThumbnail(getIDFromYouTubeLink(values.previews[0].link))
             : '/assets/header-pattern.png'
+      $q.notify({
+        icon: 'check',
+        message: t('patternFormPage.result.submitted'),
+        color: 'positive',
+        position: 'top',
+        timeout: 2000,
+      })
     } else {
       // No pattern ID, create new pattern
       const token = await recaptcha.executeRecaptcha('newPattern')
@@ -444,18 +451,27 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
+      $q.notify({
+        icon: 'check',
+        message: t('patternFormPage.result.updated'),
+        color: 'positive',
+        position: 'top',
+        timeout: 2000,
+      })
       router.push(getI18nRoute({ name: 'pattern', params: { id: data._id } }))
     }
-    // Notify success
-    $q.notify({
-      icon: 'check',
-      message: t('patternFormPage.result.updated'),
-      color: 'positive',
-      position: 'top',
-      timeout: 2000,
-    })
   } catch (error) {
-    handleError(error)
+    if ([403, 401].includes(error.response.status)) {
+      if (route.params.id) {
+        // Editing pattern
+        handleFormSubmitError(error, 'update')
+      } else {
+        // Creating new pattern
+        handleFormSubmitError(error, 'create')
+      }
+    } else {
+      handleError(error)
+    }
   }
   $q.loading.hide()
 }
@@ -484,10 +500,51 @@ const deletePattern = async () => {
     // Redirect to home
     getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } })
   } catch (error) {
-    handleError(error)
+    if ([403, 401].includes(error.response.status)) {
+      handleFormSubmitError(error, 'delete')
+    } else {
+      handleError(error)
+    }
   }
   deleting.value = false
   deleteDialog.value = false
+}
+
+const handleFormSubmitError = (error, action) => {
+  switch (error.response.message) {
+    case 'Not in guild':
+      $q.notify({
+        icon: 'warning',
+        message: t('patternFormPage.result.' + action + 'NotInGuild'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      break
+    case 'Permission':
+      $q.notify({
+        icon: 'warning',
+        message: t('patternFormPage.result.' + action + 'Permission'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      break
+    case 'Unauthorized':
+      $q.notify({
+        icon: 'warning',
+        message: t('patternFormPage.result.' + action + 'Unauthorized'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      user.clearData()
+      router.push(getI18nRoute({ name: 'patterns' }))
+      break
+    default:
+      handleError(error)
+      break
+  }
 }
 
 onMounted(async () => {

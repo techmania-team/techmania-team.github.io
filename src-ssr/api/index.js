@@ -13,7 +13,7 @@ import routerSetlists from './routes/setlists'
 import routerComments from './routes/comments'
 import routerAuth from './routes/auth'
 
-import handleError from './utils/handleError'
+import handleServerError from './utils/handleServerError'
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -60,7 +60,6 @@ export const initializeApi = async (app) => {
     app.use(mongoSanitize())
     // Hnadle body parser errors
     app.use((error, req, res, next) => {
-      console.log(error)
       if (error) return res.status(400).send({ success: false, message: 'Validation Failed' })
       else next()
     })
@@ -79,7 +78,7 @@ export const initializeApi = async (app) => {
       res.status(404).send({ success: false, message: 'Not Found.' })
     })
   } catch (error) {
-    handleError(error)
+    handleServerError(error)
     process.exit(1)
   }
 }
