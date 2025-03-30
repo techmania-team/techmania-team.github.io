@@ -49,24 +49,6 @@ q-page#setlist
                     q-rating(:model-value="setlist.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
                   q-item-label(caption)
                     | {{ setlist.rating?.avg?.toFixed(2) || '' }} / {{ $t('setlistPage.basic.comments.count', {count: setlist.rating.count}) }}
-            //- List items - Control
-            .col-12.col-md-6
-              q-item
-                q-item-section(avatar)
-                  q-icon(:name="getControlIcon(setlist.control)")
-                q-item-section
-                  q-item-label {{ $t('setlistPage.basic.control.label') }}
-                  q-item-label(caption)
-                    | {{ $t('setlistPage.basic.control.' + controls[setlist.control]) }}
-            //- List items - Patterns
-            .col-12.col-md-6
-              q-item
-                q-item-section(avatar)
-                  q-icon(name="music_note")
-                q-item-section
-                  q-item-label {{ $t('setlistPage.basic.patterns.label') }}
-                  q-item-label(caption)
-                    | {{ setlist.selectablePatterns.length }} + {{ setlist.hiddenPatterns.length }}
             //- List items - Submitted at
             .col-12.col-md-6
               q-item
@@ -89,6 +71,24 @@ q-page#setlist
                     | {{ date.toLocaleString(setlist.updatedAt) }}
                     | &nbsp;
                     | ({{ date.toRelative(setlist.updatedAt) }})
+            //- List items - Control
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(:name="getControlIcon(setlist.control)")
+                q-item-section
+                  q-item-label {{ $t('setlistPage.basic.control.label') }}
+                  q-item-label(caption)
+                    | {{ $t('setlistPage.basic.control.' + controls[setlist.control]) }}
+            //- List items - Patterns
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="music_note")
+                q-item-section
+                  q-item-label {{ $t('setlistPage.basic.patterns.label') }}
+                  q-item-label(caption)
+                    | {{ setlist.selectablePatterns.length }} + {{ setlist.hiddenPatterns.length }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error
