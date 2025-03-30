@@ -50,23 +50,6 @@ q-page#pattern
                     q-rating(:model-value="pattern.rating?.avg || 0" readonly icon="star" icon-half="star_half" size='xs')
                   q-item-label(caption)
                     | {{ pattern.rating?.avg?.toFixed(2) || '' }} / {{ $t('patternPage.basic.comments.count', {count: pattern.rating.count}) }}
-            //- List items - Composer
-            .col-12.col-md-6
-              q-item
-                q-item-section(avatar)
-                  q-icon(name="person")
-                q-item-section
-                  q-item-label {{ $t('patternPage.basic.composer.label') }}
-                  q-item-label(caption) {{ pattern.composer }}
-            //- List items - Keysounded
-            .col-12.col-md-6
-              q-item
-                q-item-section(avatar)
-                  q-icon(name="music_note")
-                q-item-section
-                  q-item-label {{ $t('patternPage.basic.keysounded.label') }}
-                  q-item-label(caption :class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
-                    | {{ $t(`patternPage.basic.keysounded.${pattern.keysounded ? 'yes' : 'no'}`) }}
             //- List items - Submitted at
             .col-12.col-md-6
               q-item
@@ -89,6 +72,23 @@ q-page#pattern
                     | {{ date.toLocaleString(pattern.updatedAt) }}
                     | &nbsp;
                     | ({{ date.toRelative(pattern.updatedAt) }})
+            //- List items - Composer
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="person")
+                q-item-section
+                  q-item-label {{ $t('patternPage.basic.composer.label') }}
+                  q-item-label(caption) {{ pattern.composer }}
+            //- List items - Keysounded
+            .col-12.col-md-6
+              q-item
+                q-item-section(avatar)
+                  q-icon(name="music_note")
+                q-item-section
+                  q-item-label {{ $t('patternPage.basic.keysounded.label') }}
+                  q-item-label(caption :class="[{'text-red': !pattern.keysounded, 'text-positive': pattern.keysounded}]")
+                    | {{ $t(`patternPage.basic.keysounded.${pattern.keysounded ? 'yes' : 'no'}`) }}
         //- Difficulty list
         .col-12
           q-list
