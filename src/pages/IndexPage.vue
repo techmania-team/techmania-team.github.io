@@ -248,6 +248,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   // Clear temp index data
-  tempIndex.clearData()
+  // Note:
+  // Do not clear data here
+  // It will cause GitHub API rate limit exceeded if user navigates to this page frequently
+  // tempIndex.clearData()
 })
 </script>
