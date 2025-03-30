@@ -7,8 +7,7 @@ q-page#profile
       img(src="/assets/header-profile.png")
     //- Header content
     template(#content)
-      q-avatar(rounded size="100px")
-        q-img(:src="profile.avatar" error-src="/assets/Logo_black.png")
+      DiscordAvatar(:avatar="profile.avatar" :avatar-options="{ rounded: true, size: '100px' }")
       .text-h4.text-center.q-mt-md {{ profile.name }}
   section.q-mx-auto.padding.q-mt-lg
     .container
@@ -39,6 +38,7 @@ import PatternsPage from './PatternsPage.vue'
 import SkinsPage from './SkinsPage.vue'
 import SetlistsPage from './SetlistsPage.vue'
 import CommentsPage from './CommentsPage.vue'
+import DiscordAvatar from 'src/components/DiscordAvatar.vue'
 import { getI18nRoute } from 'src/i18n'
 
 const profile = useTempProfileStore()

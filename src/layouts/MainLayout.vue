@@ -31,8 +31,7 @@ q-layout(view='hHh lpR fff')
             q-btn-dropdown(stretch flat v-if="user.isLogin")
               //- User avatar
               template(#label)
-                q-avatar
-                  img(:src="user.avatar")
+                DiscordAvatar(:avatar="user.avatar")
               //- User dropdown items
               q-list
                 template(v-for="(nav, idx) in loginNavs" :key="idx")
@@ -43,8 +42,7 @@ q-layout(view='hHh lpR fff')
           //-   Nav Collapse button for mobile
           template(v-else)
             q-btn(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
-              q-avatar(v-if="user.isLogin")
-                img(:src="user.avatar")
+              DiscordAvatar(v-if="user.isLogin" :avatar="user.avatar")
       //- Separator for mobile dropdown
       q-separator(v-if="!$q.screen.gt.sm && dropdown")
     //- Mobile dropdown
@@ -94,6 +92,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
 import { localeOptions, setLocale, getI18nRoute } from 'src/i18n'
 import { useUserStore } from 'src/stores/user'
+import DiscordAvatar from 'src/components/DiscordAvatar.vue'
 
 const user = useUserStore()
 const { t } = useI18n()

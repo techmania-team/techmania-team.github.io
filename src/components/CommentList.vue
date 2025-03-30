@@ -46,8 +46,7 @@ q-no-ssr.row.q-gutter-y-lg
                   .row.q-col-gutter-x-md.items-center
                     .col-auto
                       //- Avatar
-                      q-avatar
-                        q-img(:src="reply.user.avatar" error-src="/assets/Logo_black.png")
+                      DiscordAvatar(:avatar="reply.user.avatar")
                     .col-auto
                       //- User name
                       router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'comments', id: reply.user._id }})") {{ reply.user.name }}
@@ -149,6 +148,7 @@ import api from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
 import { getI18nRoute } from 'src/i18n'
 import handleError from 'src/utils/handleError'
+import DiscordAvatar from 'src/components/DiscordAvatar.vue'
 
 const user = useUserStore()
 const recaptcha = useReCaptcha()
