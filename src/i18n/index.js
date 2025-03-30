@@ -26,7 +26,11 @@ export const setLocale = async (locale, ssrContext = undefined) => {
   let localeToSet = localeOptions.includes(locale) ? locale : 'en-US'
 
   // If locale not loaded, load it
-  if (!i18n.global.availableLocales.includes(localeToSet)) {
+  // en-US is default locale, no need to load it
+  // it is statically imported, dynamic import will not move it into another chunk
+  // if we load it dynamically, this error will be thrown and cause 500 internal server error:
+  // Cannot create property 'value' on string 'en-US'
+  if (localeToSet !== 'en-US' && !i18n.global.availableLocales.includes(localeToSet)) {
     const message = await loadLocaleMessages(localeToSet)
     i18n.global.setLocaleMessage(locale, message)
   }
