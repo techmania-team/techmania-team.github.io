@@ -203,7 +203,7 @@ import { useI18n } from 'vue-i18n'
 import { Form, Field, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
 import { useReCaptcha } from 'vue-recaptcha-v3'
-import { getIDFromYouTubeLink, getYouTubeThumbnail } from 'src/utils/youtube'
+import { getIDFromYouTubeLink } from 'src/utils/youtube'
 import { useUserStore } from 'src/stores/user'
 import { useTempSkinStore } from 'src/stores/temp-skin'
 import { types, SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
@@ -218,8 +218,6 @@ const user = useUserStore()
 const skin = useTempSkinStore()
 const { t } = useI18n()
 const recaptcha = useReCaptcha()
-
-const backgroundImage = ref('')
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
@@ -298,13 +296,6 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
-      // Set background image
-      backgroundImage.value =
-        values.image?.length > 0
-          ? values.image
-          : values.previews.length > 0
-            ? getYouTubeThumbnail(getIDFromYouTubeLink(values.previews[0].link))
-            : '/assets/header-skin.png'
       $q.notify({
         icon: 'check',
         message: t('skinFormPage.result.submitted'),
@@ -459,13 +450,5 @@ onMounted(async () => {
     //   description: skin.description,
     // })
   }
-
-  // Set background image
-  backgroundImage.value =
-    skin.image?.length > 0
-      ? skin.image
-      : skin.previews.length > 0
-        ? getYouTubeThumbnail(skin.previews[0].ytid)
-        : '/assets/header-skin.png'
 })
 </script>

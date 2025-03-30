@@ -291,7 +291,7 @@ import { useI18n } from 'vue-i18n'
 import { Form, Field, FieldArray } from 'vee-validate'
 import * as yup from 'yup'
 import { useReCaptcha } from 'vue-recaptcha-v3'
-import { getIDFromYouTubeLink, getYouTubeThumbnail } from 'src/utils/youtube'
+import { getIDFromYouTubeLink } from 'src/utils/youtube'
 import { useUserStore } from 'src/stores/user'
 import { useTempPatternStore } from 'src/stores/temp-pattern'
 import { controls } from 'src/utils/control'
@@ -307,8 +307,6 @@ const user = useUserStore()
 const pattern = useTempPatternStore()
 const { t } = useI18n()
 const recaptcha = useReCaptcha()
-
-const backgroundImage = ref('')
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
@@ -420,13 +418,6 @@ const onSubmit = async (values) => {
         description: values.description,
         'g-recaptcha-response': token,
       })
-      // Set background image
-      backgroundImage.value =
-        values.image?.length > 0
-          ? values.image
-          : values.previews.length > 0
-            ? getYouTubeThumbnail(getIDFromYouTubeLink(values.previews[0].link))
-            : '/assets/header-pattern.png'
       $q.notify({
         icon: 'check',
         message: t('patternFormPage.result.submitted'),
@@ -587,13 +578,5 @@ onMounted(async () => {
     //   description: pattern.description,
     // })
   }
-
-  // Set background image
-  backgroundImage.value =
-    pattern.image?.length > 0
-      ? pattern.image
-      : pattern.previews.length > 0
-        ? getYouTubeThumbnail(pattern.previews[0].ytid)
-        : '/assets/header-pattern.png'
 })
 </script>
