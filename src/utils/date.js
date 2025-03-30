@@ -12,6 +12,7 @@ const locales = {
 }
 
 export const toRelative = (date) => {
+  if (!date) return ''
   const { locale } = useI18n()
   return formatDistanceToNow(parseISO(date), {
     locale: locales[locale.value],
@@ -20,6 +21,7 @@ export const toRelative = (date) => {
 }
 
 export const toLocaleString = (date) => {
+  if (!date) return ''
   const { locale } = useI18n()
   return new Date(date).toLocaleString(locale.value)
 }

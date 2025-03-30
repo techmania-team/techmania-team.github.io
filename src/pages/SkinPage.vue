@@ -32,7 +32,13 @@ q-page#skin
                 q-item-section
                   q-item-label {{ $t('skinPage.basic.submittedBy.label') }}
                   q-item-label(caption)
-                    router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
+                    //- NOTE:
+                    //- v-if is a workaround here to prevent error
+                    //- When go to edit page, prefetch function clears skin data
+                    //- This will make skin._id empty, and cause router error: Missing required param "id"
+                    //- Edit (Prefetch, clear data) --> Skin(onUnmounted, error)
+                    template(v-if="skin.submitter._id.length > 0")
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
             //- List items - Rating
             .col-12.col-md-6
               q-item

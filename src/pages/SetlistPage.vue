@@ -32,7 +32,13 @@ q-page#setlist
                 q-item-section
                   q-item-label {{ $t('setlistPage.basic.submittedBy.label') }}
                   q-item-label(caption)
-                    router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
+                    //- NOTE:
+                    //- v-if is a workaround here to prevent error
+                    //- When go to edit page, prefetch function clears setlist data
+                    //- This will make setlist._id empty, and cause router error: Missing required param "id"
+                    //- Edit (Prefetch, clear data) --> Setlist(onUnmounted, error)
+                    template(v-if="setlist.submitter._id.length > 0")
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
             //- List items - Rating
             .col-12.col-md-6
               q-item
