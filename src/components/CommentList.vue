@@ -417,7 +417,11 @@ onMounted(async () => {
       myComment.value.replies = data.result.replies
     }
   } catch (error) {
-    handleError(error)
+    // Don't need to show error if the comment is not found
+    // Maybe this pattern, skin or setlist doesn't have any comments
+    if (error.response.status !== 404) {
+      handleError(error)
+    }
   }
 })
 </script>
