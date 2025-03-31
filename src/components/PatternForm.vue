@@ -296,9 +296,10 @@ import { useUserStore } from 'src/stores/user'
 import { useTempPatternStore } from 'src/stores/temp-pattern'
 import { controls } from 'src/utils/control'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError, handleFormSubmitError } from 'src/utils/handleError'
 import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 import { getI18nRoute } from 'src/i18n'
+import { AxiosError } from 'axios'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -452,13 +453,13 @@ const onSubmit = async (values) => {
       router.push(getI18nRoute({ name: 'pattern', params: { id: data._id } }))
     }
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
       if (route.params.id) {
         // Editing pattern
-        handleFormSubmitError(error, 'update')
+        handleFormSubmitError(error, 'patternFormPage', 'update', 'patterns')
       } else {
         // Creating new pattern
-        handleFormSubmitError(error, 'create')
+        handleFormSubmitError(error, 'patternFormPage', 'create', 'patterns')
       }
     } else {
       handleError(error)
@@ -491,51 +492,14 @@ const deletePattern = async () => {
     // Redirect to home
     getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } })
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
-      handleFormSubmitError(error, 'delete')
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
+      handleFormSubmitError(error, 'patternFormPage', 'delete', 'patterns')
     } else {
       handleError(error)
     }
   }
   deleting.value = false
   deleteDialog.value = false
-}
-
-const handleFormSubmitError = (error, action) => {
-  switch (error.response.message) {
-    case 'Not in guild':
-      $q.notify({
-        icon: 'warning',
-        message: t('patternFormPage.result.' + action + 'NotInGuild'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Permission':
-      $q.notify({
-        icon: 'warning',
-        message: t('patternFormPage.result.' + action + 'Permission'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Unauthorized':
-      $q.notify({
-        icon: 'warning',
-        message: t('patternFormPage.result.' + action + 'Unauthorized'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      user.clearData()
-      router.push(getI18nRoute({ name: 'patterns' }))
-      break
-    default:
-      handleError(error)
-      break
-  }
 }
 
 onMounted(async () => {

@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import api from 'src/utils/api'
 import { SKIN_NOTE } from 'src/utils/skin'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 
 export const useTempSkinStore = defineStore('temp-skin', () => {
   const _id = ref('')

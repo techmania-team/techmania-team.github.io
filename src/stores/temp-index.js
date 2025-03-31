@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 
 export const useTempIndexStore = defineStore('temp-index', () => {
   const tag = ref({

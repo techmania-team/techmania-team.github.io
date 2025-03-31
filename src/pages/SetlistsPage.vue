@@ -87,7 +87,7 @@ import { Form, Field } from 'vee-validate'
 import { useI18n } from 'vue-i18n'
 import SetlistCard from 'src/components/SetlistCard.vue'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 
 const route = useRoute()

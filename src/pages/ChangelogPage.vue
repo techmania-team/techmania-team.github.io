@@ -55,7 +55,7 @@ import { useMeta } from 'quasar'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { toLocaleString } from 'src/utils/date'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 import { useI18n } from 'vue-i18n'
 
 const route = useRoute()

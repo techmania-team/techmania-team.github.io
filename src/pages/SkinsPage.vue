@@ -87,7 +87,7 @@ import { Form, Field } from 'vee-validate'
 import { useI18n } from 'vue-i18n'
 import SkinCard from 'src/components/SkinCard.vue'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 import { types, SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 
 const route = useRoute()

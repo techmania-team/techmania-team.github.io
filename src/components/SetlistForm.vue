@@ -396,7 +396,7 @@ import { getIDFromYouTubeLink } from 'src/utils/youtube'
 import { useUserStore } from 'src/stores/user'
 import { useTempSetlistStore } from 'src/stores/temp-setlist'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError, handleFormSubmitError } from 'src/utils/handleError'
 import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 import {
   criterias,
@@ -412,6 +412,7 @@ import {
   CRITERIA_DIRECTION_GREATER,
 } from 'src/utils/criteria'
 import { getI18nRoute } from 'src/i18n'
+import { AxiosError } from 'axios'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -778,13 +779,13 @@ const onSubmit = async (values) => {
       router.push(getI18nRoute({ name: 'setlist', params: { id: data._id } }))
     }
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
       if (route.params.id) {
         // Editing skin
-        handleFormSubmitError(error, 'update')
+        handleFormSubmitError(error, 'setlistFormPage', 'update', 'setlists')
       } else {
         // Creating new skin
-        handleFormSubmitError(error, 'create')
+        handleFormSubmitError(error, 'setlistFormPage', 'create', 'setlists')
       }
     } else {
       handleError(error)
@@ -817,51 +818,14 @@ const deleteSetlist = async () => {
     // Redirect to home
     router.push(getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: user._id } }))
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
-      handleFormSubmitError(error, 'delete')
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
+      handleFormSubmitError(error, 'setlistFormPage', 'delete', 'setlists')
     } else {
       handleError(error)
     }
   }
   deleting.value = false
   deleteDialog.value = false
-}
-
-const handleFormSubmitError = (error, action) => {
-  switch (error.response.message) {
-    case 'Not in guild':
-      $q.notify({
-        icon: 'warning',
-        message: t('setlistFormPage.result.' + action + 'NotInGuild'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Permission':
-      $q.notify({
-        icon: 'warning',
-        message: t('setlistFormPage.result.' + action + 'Permission'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Unauthorized':
-      $q.notify({
-        icon: 'warning',
-        message: t('setlistFormPage.result.' + action + 'Unauthorized'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      user.clearData()
-      router.push(getI18nRoute({ name: 'patterns' }))
-      break
-    default:
-      handleError(error)
-      break
-  }
 }
 
 // Note:

@@ -208,8 +208,9 @@ import { useUserStore } from 'src/stores/user'
 import { useTempSkinStore } from 'src/stores/temp-skin'
 import { types, SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
 import api from 'src/utils/api'
-import handleError from 'src/utils/handleError'
+import { handleError, handleFormSubmitError } from 'src/utils/handleError'
 import { getI18nRoute } from 'src/i18n'
+import { AxiosError } from 'axios'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -328,13 +329,13 @@ const onSubmit = async (values) => {
       router.push(getI18nRoute({ name: 'skin', params: { id: data._id } }))
     }
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
       if (route.params.id) {
         // Editing skin
-        handleFormSubmitError(error, 'update')
+        handleFormSubmitError(error, 'skinFormPage', 'update', 'skins')
       } else {
         // Creating new skin
-        handleFormSubmitError(error, 'create')
+        handleFormSubmitError(error, 'skinFormPage', 'create', 'skins')
       }
     } else {
       handleError(error)
@@ -367,8 +368,8 @@ const deleteSkin = async () => {
     // Redirect to home
     router.push(getI18nRoute({ name: 'profile', params: { tab: 'skins', id: user._id } }))
   } catch (error) {
-    if ([403, 401].includes(error.response.status)) {
-      handleFormSubmitError(error, 'delete')
+    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
+      handleFormSubmitError(error, 'skinFormPage', 'delete', 'skins')
     } else {
       handleError(error)
     }
@@ -377,42 +378,6 @@ const deleteSkin = async () => {
   deleteDialog.value = false
 }
 
-const handleFormSubmitError = (error, action) => {
-  switch (error.response.message) {
-    case 'Not in guild':
-      $q.notify({
-        icon: 'warning',
-        message: t('skinFormPage.result.' + action + 'NotInGuild'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Permission':
-      $q.notify({
-        icon: 'warning',
-        message: t('skinFormPage.result.' + action + 'Permission'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      break
-    case 'Unauthorized':
-      $q.notify({
-        icon: 'warning',
-        message: t('skinFormPage.result.' + action + 'Unauthorized'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      user.clearData()
-      router.push(getI18nRoute({ name: 'skins' }))
-      break
-    default:
-      handleError(error)
-      break
-  }
-}
 onMounted(async () => {
   // Get skin data if editing
   if (route.params.id) {

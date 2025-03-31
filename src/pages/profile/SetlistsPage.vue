@@ -12,7 +12,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 import api from 'src/utils/api'
 import SetlistCard from 'src/components/SetlistCard.vue'
 

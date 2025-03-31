@@ -147,7 +147,7 @@ import * as date from 'src/utils/date'
 import api from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
 import { getI18nRoute } from 'src/i18n'
-import handleError from 'src/utils/handleError'
+import { handleError } from 'src/utils/handleError'
 import DiscordAvatar from 'src/components/DiscordAvatar.vue'
 
 const user = useUserStore()
