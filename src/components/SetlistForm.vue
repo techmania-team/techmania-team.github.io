@@ -108,7 +108,7 @@
                                     q-select.q-pb-none(
                                       outlined square color="tech"
                                       :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
+                                      @update:model-value="field.onChange($event); clearDifficulty('selectablePatterns', idx)"
                                       @blur="field.onBlur($event)"
                                       :error-message="errorMessage"
                                       :error="!!errorMessage"
@@ -121,7 +121,7 @@
                                       use-input
                                       clearable
                                       @filter="filterPatterns"
-                                      @clear="form.setFieldValue(`selectablePatterns[${idx}].difficulty`, '')"
+                                      @clear="clearDifficulty('selectablePatterns', idx)"
                                     )
                                       template(#no-option)
                                         q-item
@@ -182,7 +182,7 @@
                                     q-select.q-pb-none(
                                       outlined square color="tech"
                                       :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
+                                      @update:model-value="field.onChange($event); clearDifficulty('hiddenPatterns', idx)"
                                       @blur="field.onBlur($event)"
                                       :error-message="errorMessage"
                                       :error="!!errorMessage"
@@ -195,7 +195,7 @@
                                       use-input
                                       clearable
                                       @filter="filterPatterns"
-                                      @clear="form.setFieldValue(`hiddenPatterns[${idx}].difficulty`, '')"
+                                      @clear="clearDifficulty('hiddenPatterns', idx)"
                                     )
                                       template(#no-option)
                                         q-item
@@ -526,6 +526,12 @@ const filterDifficulties = async (key, idx, val, update) => {
     return update(() => {
       difficultyOptions.value = []
     })
+  }
+}
+
+const clearDifficulty = (type, idx) => {
+  if (form.value.values[type][idx].difficulty !== '') {
+    form.value.setFieldValue(`${type}[${idx}].difficulty`, '')
   }
 }
 
