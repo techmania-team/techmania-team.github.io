@@ -48,7 +48,7 @@ section.q-mx-auto.padding
                         //- NOTE:
                         //- DO NOT USE TYPE RADIO EVEN THOUGH IT'S A RADIO BUTTON
                         //- type radio only have name and checked attribute, no current value
-                        Field(name="type" v-slot="{ field, errorMessage }" :value="typeOption.value")
+                        Field(name="type" v-slot="{ field, errorMessage }")
                           q-radio(
                             name="type"
                             keep-color color="tech"

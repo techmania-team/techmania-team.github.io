@@ -48,7 +48,7 @@
                         //- NOTE:
                         //- DO NOT USE TYPE RADIO EVEN THOUGH IT'S A RADIO BUTTON
                         //- type radio only have name and checked attribute, no current value
-                        Field(name="control" v-slot="{ field, errorMessage }" :value="controlOption.value")
+                        Field(name="control" v-slot="{ field, errorMessage }")
                           q-radio(
                             name="control"
                             keep-color color="tech"
