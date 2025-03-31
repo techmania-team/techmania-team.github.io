@@ -897,7 +897,9 @@ onMounted(async () => {
       patternOptions.value.push(pattern)
       difficultyOptions.value.push({
         _id: pattern.difficulty._id,
-        name: `${pattern.difficulty.lanes}L ${pattern.difficulty.name} - Lv.${pattern.difficulty.level}`,
+        name: pattern.difficulty.name,
+        lanes: pattern.difficulty.lanes,
+        level: pattern.difficulty.level,
       })
       values.push({
         pattern: pattern._id,
@@ -916,7 +918,9 @@ onMounted(async () => {
       patternOptions.value.push(pattern)
       difficultyOptions.value.push({
         _id: pattern.difficulty._id,
-        name: `${pattern.difficulty.lanes}L ${pattern.difficulty.name} - Lv.${pattern.difficulty.level}`,
+        name: pattern.difficulty.name,
+        lanes: pattern.difficulty.lanes,
+        level: pattern.difficulty.level,
       })
       values.push({
         pattern: pattern._id,
