@@ -62,7 +62,9 @@ export const create = async (req, res) => {
             for (const value of values) {
               const pattern = await patterns.findById(value.pattern).orFail()
               const difficulty = pattern.difficulties.id(value.difficulty)
-              return difficulty ? true : false
+              if (!difficulty) {
+                return false
+              }
             }
             return true
           } catch {
@@ -119,7 +121,9 @@ export const create = async (req, res) => {
             for (const value of values) {
               const pattern = await patterns.findById(value.pattern).orFail()
               const difficulty = pattern.difficulties.id(value.difficulty)
-              return difficulty ? true : false
+              if (!difficulty) {
+                return false
+              }
             }
             return true
           } catch {
