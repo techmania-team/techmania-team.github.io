@@ -115,7 +115,7 @@
                                       :options="patternOptions"
                                       :placeholder="field.value ? '': $t('setlistFormPage.selectablePatterns.name.label')"
                                       option-value="_id"
-                                      option-label="name"
+                                      :option-label="item => item ? `${item.composer} - ${item.name}` : ''"
                                       emit-value
                                       map-options
                                       use-input
@@ -139,7 +139,7 @@
                                       :options="difficultyOptions"
                                       :placeholder="field.value ? '' : $t('setlistFormPage.hiddenPatterns.difficulty.label')"
                                       option-value="_id"
-                                      option-label="name"
+                                      :option-label="item => item ? `${item.lanes}L ${item.name} - Lv.${item.level}` : ''"
                                       emit-value
                                       map-options
                                       use-input
@@ -189,7 +189,7 @@
                                       :options="patternOptions"
                                       :placeholder="field.value ? '': $t('setlistFormPage.hiddenPatterns.name.label')"
                                       option-value="_id"
-                                      option-label="name"
+                                      :option-label="item => item ? `${item.composer} - ${item.name}` : ''"
                                       emit-value
                                       map-options
                                       use-input
@@ -213,7 +213,7 @@
                                       :options="difficultyOptions"
                                       :placeholder="field.value ? '' : $t('setlistFormPage.hiddenPatterns.difficulty.label')"
                                       option-value="_id"
-                                      option-label="name"
+                                      :option-label="item => item ? `${item.lanes}L ${item.name} - Lv.${item.level}` : ''"
                                       emit-value
                                       map-options
                                       use-input
@@ -518,12 +518,9 @@ const filterDifficulties = async (key, idx, val, update) => {
   try {
     const { data } = await api.get(`/patterns/${form.value.values[key][idx].pattern}`)
     return update(() => {
-      difficultyOptions.value = data.result.difficulties
-        .filter((difficulty) => difficulty.control === form.value.values.control)
-        .map((difficulty) => ({
-          _id: difficulty._id,
-          name: `${difficulty.lanes}L ${difficulty.name} - Lv.${difficulty.level}`,
-        }))
+      difficultyOptions.value = data.result.difficulties.filter(
+        (difficulty) => difficulty.control === form.value.values.control,
+      )
     })
   } catch {
     return update(() => {
