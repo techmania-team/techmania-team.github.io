@@ -111,6 +111,7 @@ import { useMeta } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { Form, Field } from 'vee-validate'
+import { useI18n } from 'vue-i18n'
 import PatternCard from 'src/components/PatternCard.vue'
 import api from 'src/utils/api'
 import handleError from 'src/utils/handleError'
@@ -118,9 +119,10 @@ import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/con
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
-const metaData = {
-  title: 'TECHMANIA | Patterns',
+const metaData = () => ({
+  title: `TECHMANIA | ${t('patternsPage.title')}`,
   meta: {
     color: {
       name: 'theme-color',
@@ -128,7 +130,7 @@ const metaData = {
     },
     title: {
       name: 'title',
-      content: 'TECHMANIA | Patterns',
+      content: `TECHMANIA | ${t('patternsPage.title')}`,
     },
     description: {
       name: 'description',
@@ -144,7 +146,7 @@ const metaData = {
     },
     ogTitle: {
       property: 'og:title',
-      content: 'TECHMANIA | Patterns',
+      content: `TECHMANIA | ${t('patternsPage.title')}`,
     },
     ogDescription: {
       property: 'og:description',
@@ -165,7 +167,7 @@ const metaData = {
     },
     twTitle: {
       name: 'twitter:title',
-      content: 'TECHMANIA | Patterns',
+      content: `TECHMANIA | ${t('patternsPage.title')}`,
     },
     twDescription: {
       name: 'twitter:description',
@@ -177,7 +179,7 @@ const metaData = {
         'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
     },
   },
-}
+})
 useMeta(metaData)
 
 const patterns = ref([])

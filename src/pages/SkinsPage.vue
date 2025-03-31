@@ -84,6 +84,7 @@ import { useMeta } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { Form, Field } from 'vee-validate'
+import { useI18n } from 'vue-i18n'
 import SkinCard from 'src/components/SkinCard.vue'
 import api from 'src/utils/api'
 import handleError from 'src/utils/handleError'
@@ -91,9 +92,10 @@ import { types, SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
-const metaData = {
-  title: 'TECHMANIA | Skins',
+const metaData = () => ({
+  title: `TECHMANIA | ${t('skinsPage.title')}`,
   meta: {
     color: {
       name: 'theme-color',
@@ -101,7 +103,7 @@ const metaData = {
     },
     title: {
       name: 'title',
-      content: 'TECHMANIA | Skins',
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     description: {
       name: 'description',
@@ -117,7 +119,7 @@ const metaData = {
     },
     ogTitle: {
       property: 'og:title',
-      content: 'TECHMANIA | Skins',
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     ogDescription: {
       property: 'og:description',
@@ -138,7 +140,7 @@ const metaData = {
     },
     twTitle: {
       name: 'twitter:title',
-      content: 'TECHMANIA | Skins',
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     twDescription: {
       name: 'twitter:description',
@@ -150,7 +152,7 @@ const metaData = {
         'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
     },
   },
-}
+})
 useMeta(metaData)
 
 const skins = ref([])

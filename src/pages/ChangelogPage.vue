@@ -56,11 +56,13 @@ import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { toLocaleString } from 'src/utils/date'
 import handleError from 'src/utils/handleError'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
+const { t } = useI18n()
 
-const metaData = {
-  title: 'TECHMANIA | Changelog',
+const metaData = () => ({
+  title: `TECHMANIA | ${t('changelogPage.title')}`,
   meta: {
     color: {
       name: 'theme-color',
@@ -68,7 +70,7 @@ const metaData = {
     },
     title: {
       name: 'title',
-      content: 'TECHMANIA | Changelog',
+      content: `TECHMANIA | ${t('changelogPage.title')}`,
     },
     description: {
       name: 'description',
@@ -84,7 +86,7 @@ const metaData = {
     },
     ogTitle: {
       property: 'og:title',
-      content: 'TECHMANIA | Changelog',
+      content: `TECHMANIA | ${t('changelogPage.title')}`,
     },
     ogDescription: {
       property: 'og:description',
@@ -105,7 +107,7 @@ const metaData = {
     },
     twTitle: {
       name: 'twitter:title',
-      content: 'TECHMANIA | Changelog',
+      content: `TECHMANIA | ${t('changelogPage.title')}`,
     },
     twDescription: {
       name: 'twitter:description',
@@ -117,7 +119,7 @@ const metaData = {
         'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
     },
   },
-}
+})
 useMeta(metaData)
 
 const releases = ref([])
