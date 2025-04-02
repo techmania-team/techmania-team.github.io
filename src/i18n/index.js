@@ -11,7 +11,7 @@ export const i18n = createI18n({
   silentFallbackWarn: true,
 })
 
-export const localeOptions = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP', 'ko-KR']
+export const localeOptions = ['en-US', 'zh-TW', 'zh-CN']
 
 export const loadLocaleMessages = async (locale) => {
   const json = await import(`./locales/${locale}.json`)
