@@ -1,21 +1,79 @@
-import enUS from './en-us'
-import zhTW from './zh-tw'
-import zhCN from './zh-cn'
-import jaJP from './ja-jp'
-import koKR from './ko-kr'
+import { createI18n } from 'vue-i18n'
+import { Lang } from 'quasar'
+import enUS from './locales/en-US.json'
 
-export default {
-  'en-us': enUS,
-  'zh-tw': zhTW,
-  'zh-cn': zhCN,
-  'ja-jp': jaJP,
-  'ko-kr': koKR
+export const i18n = createI18n({
+  locale: 'en-US',
+  fallbackLocale: 'en-US',
+  messages: {
+    'en-US': enUS,
+  },
+  silentFallbackWarn: true,
+})
+
+export const localeOptions = ['en-US', 'zh-TW', 'zh-CN']
+
+export const loadLocaleMessages = async (locale) => {
+  const json = await import(`./locales/${locale}.json`)
+  return json.default
 }
 
-export const localeOptions = [
-  'en-us',
-  'zh-tw',
-  'zh-cn',
-  'ja-jp',
-  'ko-kr'
-]
+export const setLocale = async (locale, ssrContext = undefined) => {
+  // Same locale, do nothing
+  if (i18n.global.locale.value === locale) return
+
+  // If locale not in the list, fallback to en-US
+  let localeToSet = localeOptions.includes(locale) ? locale : 'en-US'
+
+  // If locale not loaded, load it
+  // en-US is default locale, no need to load it
+  // it is statically imported, dynamic import will not move it into another chunk
+  // if we load it dynamically, this error will be thrown and cause 500 internal server error:
+  // Cannot create property 'value' on string 'en-US'
+  if (localeToSet !== 'en-US' && !i18n.global.availableLocales.includes(localeToSet)) {
+    const message = await loadLocaleMessages(localeToSet)
+    i18n.global.setLocaleMessage(locale, message)
+  }
+
+  // Set locale
+  i18n.global.locale.value = localeToSet
+  Lang.set({ isoName: localeToSet }, ssrContext)
+}
+
+/**
+ * Get locale from Accept-Language header
+ * @param {*} acceptLanguage
+ * @returns Supported locale string
+ */
+export const getDefaultLocale = (ssrContext) => {
+  // Note:
+  // Lang.getLocale() returns undefined in SSR mode
+  // so we need to get it from the request header
+  const userLang = ssrContext
+    ? ssrContext.req.headers['accept-language']?.split(',')?.map((x) => x.split(';')?.[0])?.[0] ||
+      'en-US'
+    : Lang.getLocale()
+
+  // Check if userLang is in the list of supported locales
+  return userLang.includes('en')
+    ? 'en-US'
+    : userLang.includes('ja')
+      ? 'ja-JP'
+      : userLang.includes('ko')
+        ? 'ko-KR'
+        : localeOptions.includes(userLang)
+          ? userLang
+          : 'en-US'
+}
+
+/**
+ * Get i18n route
+ * @param {*} to Route object
+ * @returns Route object with lang param
+ */
+export const getI18nRoute = (to) => {
+  return {
+    ...to,
+    params: { ...to.params, locale: i18n.global.locale.value },
+  }
+}

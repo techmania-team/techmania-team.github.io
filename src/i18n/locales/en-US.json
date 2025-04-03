@@ -1,0 +1,753 @@
+{
+  "nav": {
+    "howtoplay": "How to Play",
+    "documentations": "Documentations",
+    "changelog": "Changelog",
+    "patterns": "Patterns",
+    "skins": "Skins",
+    "setlists": "Setlists",
+    "login": "Login",
+    "myPage": "My Page",
+    "submitNewPattern": "Submit New Pattern",
+    "submitNewSkin": "Submit New Skin",
+    "submitNewSetlist": "Submit New Setlist",
+    "logout": "Logout",
+    "menu": "Menu",
+    "language": "Language"
+  },
+  "indexPage": {
+    "download": "Download",
+    "latestVersion": "Latest Version",
+    "latestReleaseDate": "Released at ",
+    "newPatterns": "New Patterns",
+    "newSkins": "New Skins",
+    "newSetlists": "New Setlists",
+    "videos": "Videos"
+  },
+  "changelogPage": {
+    "title": "Changelog",
+    "downloads": "Downloads",
+    "showDetail": "Show Detail",
+    "hideDetail": "Hide Detail",
+    "error": "Failed to load data from GitHub."
+  },
+  "patternsPage": {
+    "title": "Patterns",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "Please enter Keywords..."
+      },
+      "keysounded": {
+        "label": "Keysounded",
+        "all": "All",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM"
+      },
+      "lanes": {
+        "label": "Lanes",
+        "lanes": "{lanes}L"
+      },
+      "sort": {
+        "label": "Sort",
+        "submit": "Submit Date",
+        "update": "Update Date",
+        "name": "Song Name",
+        "rating": "Rating"
+      }
+    },
+    "notFound": "No patterns found"
+  },
+  "patternPage": {
+    "download": "Download",
+    "edit": "Edit",
+    "basic": {
+      "title": "Basic Information",
+      "composer": {
+        "label": "Composer"
+      },
+      "submittedBy": {
+        "label": "Submitted By"
+      },
+      "keysounded": {
+        "label": "Keysounded",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "comments": {
+        "count": "{count} Comments"
+      },
+      "submittedAt": {
+        "label": "Submitted At"
+      },
+      "updatedAt": {
+        "label": "Updated At"
+      }
+    },
+    "difficulties": {
+      "title": "Difficulties"
+    },
+    "description": {
+      "title": "Description",
+      "noDescription": "No description"
+    },
+    "previews": {
+      "title": "Previews",
+      "noPreview": "No preview"
+    }
+  },
+  "patternFormPage": {
+    "titleNew": "Submit New Pattern",
+    "titleEdit": "Edit Pattern",
+    "rules": {
+      "title": "Please read the rules before you submit your pattern.",
+      "rule1": "Patterns using original music from DJMAX and DJMAX Respect are strictly prohibited.",
+      "rule2": "All Artwork and BGAs must contain SFW content.",
+      "rule3": "Uploading other users patterns are not allowed."
+    },
+    "basic": {
+      "title": "Basic Information",
+      "name": {
+        "label": "Song Name",
+        "error": {
+          "required": "Song Name is required"
+        }
+      },
+      "composer": {
+        "label": "Composer",
+        "error": {
+          "required": "Composer is required"
+        }
+      },
+      "download": {
+        "label": "Download Link",
+        "error": {
+          "required": "Download Link is required",
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "keysounded": {
+        "label": "Keysounded",
+        "error": {
+          "required": "Keysounded is required"
+        }
+      },
+      "image": {
+        "label": "Image Preview",
+        "error": {
+          "invalid": "Please enter a valid URL."
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube Preview",
+      "name": {
+        "label": "Name",
+        "error": {
+          "required": "Name is required"
+        }
+      },
+      "link": {
+        "label": "YouTube Link",
+        "error": {
+          "required": "YouTube Link is required",
+          "invalid": "Please enter a valid URL.",
+          "youtube": "Please enter a valid YouTube URL."
+        }
+      }
+    },
+    "difficulties": {
+      "title": "Difficulties",
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM",
+        "error": {
+          "required": "Control is required",
+          "invalid": "Control is invalid"
+        }
+      },
+      "lanes": {
+        "label": "Lanes",
+        "error": {
+          "required": "Lanes is required",
+          "min": "Lanes is invalid",
+          "max": "Lanes is invalid"
+        }
+      },
+      "name": {
+        "label": "Name",
+        "error": {
+          "required": "Name is required"
+        }
+      },
+      "level": {
+        "label": "Level",
+        "error": {
+          "required": "Level is required",
+          "min": "Level must be greater than 0"
+        }
+      }
+    },
+    "description": {
+      "title": "Description"
+    },
+    "dangerZone": {
+      "title": "DANGER ZONE",
+      "delete": {
+        "label": "DELETE THIS PATTERN",
+        "button": "DELETE THIS PATTERN"
+      }
+    },
+    "tos": {
+      "tos": "Terms of Service",
+      "label": "Submitting the pattern signifies that you have read and agree to the {tos}",
+      "error": {
+        "required": "You need to accept the terms first."
+      }
+    },
+    "submit": {
+      "new": "Submit",
+      "edit": "Update"
+    },
+    "deleteDialog": {
+      "text": "DO YOU REALLY WANT TO DELETE THIS PATTERN?",
+      "no": "NO, CANCEL",
+      "yes": "YES, DELETE IT"
+    },
+    "result": {
+      "submitted": "Successfully submitted.",
+      "deleted": "Successfully deleted.",
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this pattern",
+      "deletePermission": "You don't have permission to delete this pattern",
+      "deleteUnauthorized": "You must login to delete this pattern",
+      "updateNotInGuild": "You must join our discord to update this pattern",
+      "updatePermission": "You don't have permission to update this pattern",
+      "updateUnauthorized": "You must login to update this pattern",
+      "createNotInGuild": "You must join our discord to submit pattern"
+    }
+  },
+  "patternCard": {
+    "comments": {
+      "count": "{Count} Comments"
+    },
+    "submittedBy": "Submitted by {Name}",
+    "submittedAt": "Submitted at {Date}",
+    "updatedAt": "Updated at {Date}",
+    "keysounded": "Keysounded",
+    "control": {
+      "touch": "Touch",
+      "keys": "Keys",
+      "km": "KM"
+    }
+  },
+  "skinsPage": {
+    "title": "Skins",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "Please enter Keywords..."
+      },
+      "type": {
+        "label": "Skin Type",
+        "note": "Note",
+        "vfx": "VFX",
+        "combo": "Combo",
+        "gameUI": "Game UI",
+        "theme": "Theme"
+      },
+      "sort": {
+        "label": "Sort",
+        "submit": "Submit Date",
+        "update": "Update Date",
+        "name": "Skin Name",
+        "rating": "Rating"
+      }
+    },
+    "notFound": "No skins found"
+  },
+  "skinPage": {
+    "download": "Download",
+    "edit": "Edit",
+    "basic": {
+      "title": "Basic Information",
+      "submittedBy": {
+        "label": "Submitted By"
+      },
+      "type": {
+        "label": "Skin Type",
+        "note": "Note",
+        "vfx": "VFX",
+        "combo": "Combo",
+        "gameUI": "Game UI",
+        "theme": "Theme"
+      },
+      "comments": {
+        "count": "{count} Comments"
+      },
+      "submittedAt": {
+        "label": "Submitted At"
+      },
+      "updatedAt": {
+        "label": "Updated At"
+      }
+    },
+    "description": {
+      "title": "Description",
+      "noDescription": "No description"
+    },
+    "previews": {
+      "title": "Previews",
+      "noPreview": "No preview"
+    }
+  },
+  "skinFormPage": {
+    "titleNew": "Submit New Skin",
+    "titleEdit": "Edit Skin",
+    "rules": {
+      "title": "Please read the rules before you submit your skin.",
+      "rule1": "Skins using assets from DJMAX and DJMAX Respect are strictly prohibited.",
+      "rule2": "All assets must contain SFW content.",
+      "rule3": "Uploading other users skins are not allowed."
+    },
+    "basic": {
+      "title": "Basic Information",
+      "name": {
+        "label": "Skin Name",
+        "error": {
+          "required": "Skin Name is required"
+        }
+      },
+      "type": {
+        "label": "Skin Type",
+        "note": "Note",
+        "vfx": "VFX",
+        "combo": "Combo",
+        "gameUI": "Game UI",
+        "theme": "Theme",
+        "error": {
+          "required": "Skin Type is required",
+          "invalid": "Skin Type is invalid"
+        }
+      },
+      "download": {
+        "label": "Download Link",
+        "error": {
+          "required": "Download Link is required",
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "image": {
+        "label": "Image Preview",
+        "error": {
+          "invalid": "Please enter a valid URL."
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube Preview",
+      "name": {
+        "label": "Name",
+        "error": {
+          "required": "Name is required"
+        }
+      },
+      "link": {
+        "label": "YouTube Link",
+        "error": {
+          "required": "YouTube Link is required",
+          "invalid": "Please enter a valid URL.",
+          "youtube": "Please enter a valid YouTube URL."
+        }
+      }
+    },
+    "description": {
+      "title": "Description"
+    },
+    "dangerZone": {
+      "title": "DANGER ZONE",
+      "delete": {
+        "label": "DELETE THIS SKIN",
+        "button": "DELETE THIS SKIN"
+      }
+    },
+    "tos": {
+      "tos": "Terms of Service",
+      "label": "Submitting the pattern signifies that you have read and agree to the {tos}",
+      "error": {
+        "required": "You need to accept the terms first."
+      }
+    },
+    "submit": {
+      "new": "Submit",
+      "edit": "Update"
+    },
+    "deleteDialog": {
+      "text": "DO YOU REALLY WANT TO DELETE THIS SKIN?",
+      "no": "NO, CANCEL",
+      "yes": "YES, DELETE IT"
+    },
+    "result": {
+      "submitted": "Successfully submitted.",
+      "deleted": "Successfully deleted.",
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this skin",
+      "deletePermission": "You don't have permission to delete this skin",
+      "deleteUnauthorized": "You must login to delete this skin",
+      "updateNotInGuild": "You must join our discord to update this skin",
+      "updatePermission": "You don't have permission to update this skin",
+      "updateUnauthorized": "You must login to update this skin",
+      "createNotInGuild": "You must join our discord to submit skin"
+    }
+  },
+  "skinCard": {
+    "comments": {
+      "count": "{Count} Comments"
+    },
+    "submittedBy": "Submitted by {Name}",
+    "submittedAt": "Submitted at {Date}",
+    "updatedAt": "Updated at {Date}",
+    "type": {
+      "label": "Skin Type",
+      "note": "Note",
+      "vfx": "VFX",
+      "combo": "Combo",
+      "gameUI": "Game UI",
+      "theme": "Theme"
+    }
+  },
+  "setlistsPage": {
+    "title": "Setlists",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "Please enter Keywords..."
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM"
+      },
+      "sort": {
+        "label": "Sort",
+        "submit": "Submit Date",
+        "update": "Update Date",
+        "name": "Skin Name",
+        "rating": "Rating"
+      }
+    },
+    "notFound": "No setlists found"
+  },
+  "setlistPage": {
+    "download": "Download",
+    "edit": "Edit",
+    "basic": {
+      "title": "Basic Information",
+      "submittedBy": {
+        "label": "Submitted By"
+      },
+      "comments": {
+        "count": "{count} Comments"
+      },
+      "submittedAt": {
+        "label": "Submitted At"
+      },
+      "updatedAt": {
+        "label": "Updated At"
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM"
+      },
+      "patterns": {
+        "label": "Patterns"
+      }
+    },
+    "description": {
+      "title": "Description",
+      "noDescription": "No description"
+    },
+    "previews": {
+      "title": "Previews",
+      "noPreview": "No preview"
+    },
+    "selectablePatterns": {
+      "title": "Selectable Patterns"
+    },
+    "hiddenPatterns": {
+      "title": "Hidden Patterns",
+      "criteriaType": {
+        "index": "Index",
+        "level": "Level",
+        "hp": "HP%",
+        "score": "Score",
+        "combo": "Combo",
+        "maxCombo": "Max Combo",
+        "d100": "D100",
+        "none": "None"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{Count} Comments"
+    },
+    "submittedBy": "Submitted by {Name}",
+    "submittedAt": "Submitted at {Date}",
+    "updatedAt": "Updated at {Date}",
+    "selectablePatterns": "Selectable Patterns",
+    "hiddenPatterns": "Hidden Patterns",
+    "control": {
+      "label": "Control",
+      "touch": "Touch",
+      "keys": "Keys",
+      "km": "KM"
+    }
+  },
+  "setlistFormPage": {
+    "titleNew": "Submit New Setlist",
+    "titleEdit": "Edit Setlist",
+    "rules": {
+      "title": "Please read the rules before you submit your setlist.",
+      "rule1": "Setlists using assets from DJMAX and DJMAX Respect are strictly prohibited.",
+      "rule2": "All assets must contain SFW content.",
+      "rule3": "Uploading other users setlists are not allowed."
+    },
+    "basic": {
+      "title": "Basic Information",
+      "name": {
+        "label": "Setlist Name",
+        "error": {
+          "required": "Setlist Name is required"
+        }
+      },
+      "download": {
+        "label": "Download Link",
+        "error": {
+          "required": "Download Link is required",
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "image": {
+        "label": "Image Preview",
+        "error": {
+          "invalid": "Please enter a valid URL."
+        }
+      },
+      "control": {
+        "label": "Control",
+        "touch": "Touch",
+        "keys": "Keys",
+        "km": "KM",
+        "error": {
+          "required": "Control is required",
+          "invalid": "Control is invalid"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "Selectable Patterns",
+      "name": {
+        "label": "Name",
+        "searchNotFound": "No patterns found",
+        "error": {
+          "required": "Pattern is required",
+          "invalid": "Invalid pattern",
+          "notFound": "Pattern not found"
+        }
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "searchNotFound": "No difficulties found",
+        "error": {
+          "required": "Difficulty is required",
+          "invalid": "Invalid difficulty"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "Hidden Patterns",
+      "name": {
+        "label": "Name",
+        "searchNotFound": "No patterns found",
+        "error": {
+          "required": "Pattern is required",
+          "invalid": "Invalid pattern",
+          "notFound": "Pattern not found"
+        }
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "searchNotFound": "No difficulties found",
+        "error": {
+          "required": "Difficulty is required",
+          "invalid": "Invalid difficulty"
+        }
+      },
+      "criteriaType": {
+        "label": "Criteria Type",
+        "index": "Index",
+        "level": "Level",
+        "hp": "HP%",
+        "score": "Score",
+        "combo": "Combo",
+        "maxCombo": "Max Combo",
+        "d100": "D100",
+        "none": "None",
+        "error": {
+          "required": "Criteria is required",
+          "lastType": "Criteria none is only for the last hidden pattern"
+        }
+      },
+      "criteriaDirection": {
+        "label": "Criteria Direction",
+        "error": {
+          "required": "Criteria Direction is required"
+        }
+      },
+      "criteriaValue": {
+        "label": "Criteria Value",
+        "error": {
+          "required": "Criteria Value is required",
+          "min": "Criteria Value must be greater than 0"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube Preview",
+      "name": {
+        "label": "Name",
+        "error": {
+          "required": "Name is required"
+        }
+      },
+      "link": {
+        "label": "YouTube Link",
+        "error": {
+          "required": "YouTube Link is required",
+          "invalid": "Please enter a valid URL.",
+          "youtube": "Please enter a valid YouTube URL."
+        }
+      }
+    },
+    "description": {
+      "title": "Description"
+    },
+    "dangerZone": {
+      "title": "DANGER ZONE",
+      "delete": {
+        "label": "DELETE THIS SETLIST",
+        "button": "DELETE THIS SETLIST"
+      }
+    },
+    "tos": {
+      "tos": "Terms of Service",
+      "label": "Submitting the setlist signifies that you have read and agree to the {tos}",
+      "error": {
+        "required": "You need to accept the terms first."
+      }
+    },
+    "submit": {
+      "new": "Submit",
+      "edit": "Update"
+    },
+    "deleteDialog": {
+      "text": "DO YOU REALLY WANT TO DELETE THIS SETLIST?",
+      "no": "NO, CANCEL",
+      "yes": "YES, DELETE IT"
+    },
+    "result": {
+      "submitted": "Successfully submitted.",
+      "deleted": "Successfully deleted.",
+      "updated": "Successfully updated.",
+      "deleteNotInGuild": "You must join our discord to delete this setlist",
+      "deletePermission": "You don't have permission to delete this setlist",
+      "deleteUnauthorized": "You must login to delete this setlist",
+      "updateNotInGuild": "You must join our discord to update this setlist",
+      "updatePermission": "You don't have permission to update this setlist",
+      "updateUnauthorized": "You must login to update this setlist",
+      "createNotInGuild": "You must join our discord to submit setlist"
+    }
+  },
+  "commentList": {
+    "commentForm": {
+      "title": {
+        "pattern": "Rate This Pattern",
+        "skin": "Rate This Skin",
+        "setlist": "Rate This Setlist"
+      },
+      "submit": "Submit",
+      "comment": {
+        "error": {
+          "required": "Comment is required"
+        }
+      },
+      "rating": {
+        "error": {
+          "required": "Rating is required",
+          "min": "Rating is invalid",
+          "max": "Rating is invalid"
+        }
+      }
+    },
+    "replyForm": {
+      "comment": {
+        "error": {
+          "required": "Comment is required"
+        }
+      }
+    },
+    "comments": {
+      "title": "Comments",
+      "notFound": "No comments found"
+    },
+    "dialog": {
+      "title": {
+        "comment": "Edit My Comment",
+        "reply": "Reply",
+        "edit": "Edit My Reply"
+      },
+      "submit": {
+        "comment": "Update",
+        "reply": "Submit",
+        "edit": "Update"
+      },
+      "cancel": "Cancel"
+    }
+  },
+  "profile": {
+    "tab": {
+      "patterns": "Patterns",
+      "skins": "Skins",
+      "comments": "Comments",
+      "setlists": "Setlists"
+    },
+    "patterns": {
+      "notFound": "No patterns found"
+    },
+    "skins": {
+      "notFound": "No skins found"
+    },
+    "comments": {
+      "notFound": "No comments found"
+    },
+    "setlists": {
+      "notFound": "No setlists found"
+    }
+  },
+  "error": {
+    "unknown": "Server Error, please try again or contact developer in Discord server."
+  }
+}

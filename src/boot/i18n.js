@@ -1,19 +1,17 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import messages from 'src/i18n'
+import { defineBoot } from '#q-app/wrappers'
+import { i18n, getDefaultLocale, setLocale } from 'src/i18n'
 
-Vue.use(VueI18n)
+export default defineBoot(async ({ app, router, ssrContext }) => {
+  app.use(i18n)
 
-const i18n = new VueI18n({
-  locale: 'en-us',
-  fallbackLocale: 'en-us',
-  messages,
-  silentFallbackWarn: true
+  router.beforeEach(async (to, from, next) => {
+    if (!to.params.locale) {
+      const locale = getDefaultLocale(ssrContext)
+      await setLocale(locale, ssrContext)
+      return next({ params: { ...to.params, locale } })
+    } else {
+      await setLocale(to.params.locale, ssrContext)
+    }
+    next()
+  })
 })
-
-export default ({ app, store }) => {
-  // Set i18n instance on app
-  app.i18n = i18n
-}
-
-export { i18n }

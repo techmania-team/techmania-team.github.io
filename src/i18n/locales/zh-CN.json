@@ -1,0 +1,753 @@
+{
+  "nav": {
+    "howtoplay": "游戏说明",
+    "documentations": "文档",
+    "changelog": "更新历史",
+    "patterns": "谱面",
+    "skins": "皮肤",
+    "setlists": "组曲",
+    "login": "登录",
+    "myPage": "个人主页",
+    "submitNewPattern": "上传新谱面",
+    "submitNewSkin": "上传新皮肤",
+    "submitNewSetlist": "上传新组曲",
+    "logout": "登出",
+    "menu": "菜单",
+    "language": "语言"
+  },
+  "indexPage": {
+    "download": "下载",
+    "latestVersion": "最新版本",
+    "latestReleaseDate": "发布于",
+    "newPatterns": "最新谱面",
+    "newSkins": "最新皮肤",
+    "newSetlists": "最新组曲",
+    "videos": "视频"
+  },
+  "changelogPage": {
+    "title": "更新历史",
+    "downloads": "下载次数",
+    "showDetail": "展开",
+    "hideDetail": "收起",
+    "error": "无法从 GitHub 加载更新历史"
+  },
+  "patternsPage": {
+    "title": "谱面",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "请输入关键字..."
+      },
+      "keysounded": {
+        "label": "按键音",
+        "all": "不限",
+        "yes": "有",
+        "no": "无"
+      },
+      "control": {
+        "label": "操作方式",
+        "touch": "触屏",
+        "keys": "键盘",
+        "km": "键鼠"
+      },
+      "lanes": {
+        "label": "轨道数",
+        "lanes": "{lanes}轨"
+      },
+      "sort": {
+        "label": "排序",
+        "submit": "上传时间",
+        "update": "最后更新时间",
+        "name": "曲名",
+        "rating": "评分"
+      }
+    },
+    "notFound": "找不到谱面"
+  },
+  "patternPage": {
+    "download": "下载",
+    "edit": "编辑",
+    "basic": {
+      "title": "谱面详情",
+      "composer": {
+        "label": "作曲家"
+      },
+      "submittedBy": {
+        "label": "提交者"
+      },
+      "keysounded": {
+        "label": "按键音",
+        "yes": "有",
+        "no": "无"
+      },
+      "comments": {
+        "count": "{count} 个评论"
+      },
+      "submittedAt": {
+        "label": "上传时间"
+      },
+      "updatedAt": {
+        "label": "最后更新时间"
+      }
+    },
+    "difficulties": {
+      "title": "难度"
+    },
+    "description": {
+      "title": "谱面描述",
+      "noDescription": "没有描述"
+    },
+    "previews": {
+      "title": "预览",
+      "noPreview": "没有预览"
+    }
+  },
+  "patternFormPage": {
+    "titleNew": "上传新谱面",
+    "titleEdit": "编辑谱面",
+    "rules": {
+      "title": "上传谱面前请阅读以下规则：",
+      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的谱面。",
+      "rule2": "请勿上传包含成人内容的谱面。",
+      "rule3": "请勿上传其他人的作品。"
+    },
+    "basic": {
+      "title": "谱面详情",
+      "name": {
+        "label": "曲名",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "composer": {
+        "label": "作曲家",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "download": {
+        "label": "下载链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址"
+        }
+      },
+      "keysounded": {
+        "label": "按键音",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "image": {
+        "label": "预览图",
+        "error": {
+          "invalid": "请输入有效的网址"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 预览",
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "link": {
+        "label": "YouTube 链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址",
+          "youtube": "请输入有效的 YouTube 预览"
+        }
+      }
+    },
+    "difficulties": {
+      "title": "难度",
+      "control": {
+        "label": "操作方式",
+        "touch": "触屏",
+        "keys": "键盘",
+        "km": "键鼠",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效选项"
+        }
+      },
+      "lanes": {
+        "label": "轨道",
+        "error": {
+          "required": "必填项",
+          "min": "无效选项",
+          "max": "无效选项"
+        }
+      },
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "level": {
+        "label": "等级",
+        "error": {
+          "required": "必填项",
+          "min": "无效等级"
+        }
+      }
+    },
+    "description": {
+      "title": "描述"
+    },
+    "dangerZone": {
+      "title": "危险区域",
+      "delete": {
+        "label": "删除谱面",
+        "button": "删除谱面"
+      }
+    },
+    "tos": {
+      "tos": "使用条款",
+      "label": "送出谱面代表您已阅读并同意{tos}",
+      "error": {
+        "required": "您必须同意使用条款"
+      }
+    },
+    "submit": {
+      "new": "上传",
+      "edit": "编辑"
+    },
+    "deleteDialog": {
+      "text": "您确定要删除这个谱面吗？",
+      "no": "取消",
+      "yes": "删除"
+    },
+    "result": {
+      "submitted": "上传成功",
+      "deleted": "删除成功",
+      "updated": "编辑成功",
+      "deleteNotInGuild": "您需要加入 Discord 服务器才能删除谱面",
+      "deletePermission": "您没有权限删除此谱面",
+      "deleteUnauthorized": "您需要登录才能删除谱面",
+      "updateNotInGuild": "您需要加入 Discord 服务器才能编辑谱面",
+      "updatePermission": "您没有权限编辑此谱面",
+      "updateUnauthorized": "您需要登录才能编辑谱面",
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传谱面"
+    }
+  },
+  "patternCard": {
+    "comments": {
+      "count": "{Count} 个评论"
+    },
+    "submittedBy": "提交者：{Name}",
+    "submittedAt": "上传时间：{Date}",
+    "updatedAt": "最后更新时间：{Date}",
+    "keysounded": "按键音",
+    "control": {
+      "touch": "触屏",
+      "keys": "键盘",
+      "km": "键鼠"
+    }
+  },
+  "skinsPage": {
+    "title": "皮肤",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "请输入关键字..."
+      },
+      "type": {
+        "label": "类型",
+        "note": "音符",
+        "vfx": "特效",
+        "combo": "连击",
+        "gameUI": "游戏内界面",
+        "theme": "主题"
+      },
+      "sort": {
+        "label": "排序",
+        "submit": "上传时间",
+        "update": "最后更新时间",
+        "name": "皮肤名",
+        "rating": "评分"
+      }
+    },
+    "notFound": "找不到皮肤"
+  },
+  "skinPage": {
+    "download": "下载",
+    "edit": "编辑",
+    "basic": {
+      "title": "皮肤详情",
+      "submittedBy": {
+        "label": "提交者"
+      },
+      "type": {
+        "label": "类型",
+        "note": "音符",
+        "vfx": "特效",
+        "combo": "连击",
+        "gameUI": "游戏内界面",
+        "theme": "主题"
+      },
+      "comments": {
+        "count": "{count} 个评论"
+      },
+      "submittedAt": {
+        "label": "上传时间"
+      },
+      "updatedAt": {
+        "label": "最后更新时间"
+      }
+    },
+    "description": {
+      "title": "皮肤描述",
+      "noDescription": "没有描述"
+    },
+    "previews": {
+      "title": "没有预览",
+      "noPreview": "没有预览"
+    }
+  },
+  "skinFormPage": {
+    "titleNew": "上传新皮肤",
+    "titleEdit": "编辑皮肤",
+    "rules": {
+      "title": "上传皮肤前请阅读以下规则：",
+      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的皮肤。",
+      "rule2": "请勿上传包含成人内容的皮肤。",
+      "rule3": "请勿上传其他人的作品。"
+    },
+    "basic": {
+      "title": "皮肤详情",
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "type": {
+        "label": "类型",
+        "note": "音符",
+        "vfx": "特效",
+        "combo": "连击",
+        "gameUI": "游戏内界面",
+        "theme": "主题",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效选项"
+        }
+      },
+      "download": {
+        "label": "下载链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址"
+        }
+      },
+      "image": {
+        "label": "预览图",
+        "error": {
+          "invalid": "请输入有效的网址"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 预览",
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "link": {
+        "label": "YouTube 链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址",
+          "youtube": "请输入有效的 YouTube 预览"
+        }
+      }
+    },
+    "description": {
+      "title": "描述"
+    },
+    "dangerZone": {
+      "title": "危险区域",
+      "delete": {
+        "label": "删除皮肤",
+        "button": "删除皮肤"
+      }
+    },
+    "tos": {
+      "tos": "使用条款",
+      "label": "送出皮肤代表您已阅读并同意{tos}",
+      "error": {
+        "required": "您必须同意使用条款"
+      }
+    },
+    "submit": {
+      "new": "上传",
+      "edit": "编辑"
+    },
+    "deleteDialog": {
+      "text": "您确定要删除这个皮肤吗？",
+      "no": "取消",
+      "yes": "删除"
+    },
+    "result": {
+      "submitted": "上传成功",
+      "deleted": "删除成功",
+      "updated": "编辑成功",
+      "deleteNotInGuild": "您需要加入 Discord 服务器才能删除皮肤",
+      "deletePermission": "您没有权限删除此皮肤",
+      "deleteUnauthorized": "您需要登录才能删除皮肤",
+      "updateNotInGuild": "您需要加入 Discord 服务器才能编辑皮肤",
+      "updatePermission": "您没有权限编辑此皮肤",
+      "updateUnauthorized": "您需要登录才能编辑皮肤",
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传皮肤"
+    }
+  },
+  "skinCard": {
+    "comments": {
+      "count": "{Count} 个评论"
+    },
+    "submittedBy": "提交者：{Name}",
+    "submittedAt": "上传时间：{Date}",
+    "updatedAt": "最后更新时间：{Date}",
+    "type": {
+      "label": "类型",
+      "note": "音符",
+      "vfx": "特效",
+      "combo": "连击",
+      "gameUI": "游戏内界面",
+      "theme": "主题"
+    }
+  },
+  "setlistsPage": {
+    "title": "组曲",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "请输入关键字..."
+      },
+      "control": {
+        "label": "操作方式",
+        "touch": "触屏",
+        "keys": "键盘",
+        "km": "键鼠"
+      },
+      "sort": {
+        "label": "排序",
+        "submit": "上传时间",
+        "update": "最后更新时间",
+        "name": "Skin Name",
+        "rating": "评分"
+      }
+    },
+    "notFound": "找不到组曲"
+  },
+  "setlistPage": {
+    "download": "下载",
+    "edit": "编辑",
+    "basic": {
+      "title": "组曲详情",
+      "submittedBy": {
+        "label": "提交者"
+      },
+      "comments": {
+        "count": "{count} 个评论"
+      },
+      "submittedAt": {
+        "label": "上传时间"
+      },
+      "updatedAt": {
+        "label": "最后更新时间"
+      },
+      "control": {
+        "label": "操作方式",
+        "touch": "触屏",
+        "keys": "键盘",
+        "km": "键鼠"
+      },
+      "patterns": {
+        "label": "谱面"
+      }
+    },
+    "description": {
+      "title": "组曲描述",
+      "noDescription": "没有描述"
+    },
+    "previews": {
+      "title": "没有预览",
+      "noPreview": "没有预览"
+    },
+    "selectablePatterns": {
+      "title": "可选谱面"
+    },
+    "hiddenPatterns": {
+      "title": "隐藏谱面",
+      "criteriaType": {
+        "index": "序号",
+        "level": "难度",
+        "hp": "HP%",
+        "score": "分数",
+        "combo": "当前连击",
+        "maxCombo": "最大连击",
+        "d100": "D100",
+        "none": "无"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{Count} 个评论"
+    },
+    "submittedBy": "提交者：{Name}",
+    "submittedAt": "上传时间：{Date}",
+    "updatedAt": "最后更新时间：{Date}",
+    "selectablePatterns": "可选谱面",
+    "hiddenPatterns": "隐藏谱面",
+    "control": {
+      "label": "操作方式",
+      "touch": "触屏",
+      "keys": "键盘",
+      "km": "键鼠"
+    }
+  },
+  "setlistFormPage": {
+    "titleNew": "上传新组曲",
+    "titleEdit": "编辑组曲",
+    "rules": {
+      "title": "上传组曲前请阅读以下规则：",
+      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的组曲。",
+      "rule2": "请勿上传包含成人内容的组曲。",
+      "rule3": "请勿上传其他人的作品。"
+    },
+    "basic": {
+      "title": "组曲详情",
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "download": {
+        "label": "下载链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址"
+        }
+      },
+      "image": {
+        "label": "预览图",
+        "error": {
+          "invalid": "请输入有效的网址"
+        }
+      },
+      "control": {
+        "label": "操作方式",
+        "touch": "触屏",
+        "keys": "键盘",
+        "km": "键鼠",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效选项"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "可选谱面",
+      "name": {
+        "label": "名称",
+        "searchNotFound": "找不到谱面",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效谱面",
+          "notFound": "找不到谱面"
+        }
+      },
+      "difficulty": {
+        "label": "难度",
+        "searchNotFound": "找不到难度",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效难度"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "隐藏谱面",
+      "name": {
+        "label": "名称",
+        "searchNotFound": "找不到谱面",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效谱面",
+          "notFound": "找不到谱面"
+        }
+      },
+      "difficulty": {
+        "label": "难度",
+        "searchNotFound": "找不到难度",
+        "error": {
+          "required": "必填项",
+          "invalid": "无效难度"
+        }
+      },
+      "criteriaType": {
+        "label": "條件",
+        "index": "序号",
+        "level": "难度",
+        "hp": "HP%",
+        "score": "分数",
+        "combo": "当前连击",
+        "maxCombo": "最大连击",
+        "d100": "D100",
+        "none": "无",
+        "error": {
+          "required": "必填项",
+          "lastType": "条件\"无\"仅限最后一个项目使用"
+        }
+      },
+      "criteriaDirection": {
+        "label": "條件方向",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "criteriaValue": {
+        "label": "條件值",
+        "error": {
+          "required": "必填项",
+          "min": "条件值必须大于 0"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 预览",
+      "name": {
+        "label": "名称",
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "link": {
+        "label": "YouTube 链接",
+        "error": {
+          "required": "必填项",
+          "invalid": "请输入有效的网址",
+          "youtube": "请输入有效的 YouTube 预览"
+        }
+      }
+    },
+    "description": {
+      "title": "Description"
+    },
+    "dangerZone": {
+      "title": "危险区域",
+      "delete": {
+        "label": "删除组曲",
+        "button": "删除组曲"
+      }
+    },
+    "tos": {
+      "tos": "使用条款",
+      "label": "Submitting the setlist signifies that you have read and agree to the {tos}",
+      "error": {
+        "required": "您必须同意使用条款"
+      }
+    },
+    "submit": {
+      "new": "上传",
+      "edit": "编辑"
+    },
+    "deleteDialog": {
+      "text": "您确定要删除这个组曲吗？",
+      "no": "取消",
+      "yes": "删除"
+    },
+    "result": {
+      "submitted": "上传成功",
+      "deleted": "删除成功",
+      "updated": "编辑成功",
+      "deleteNotInGuild": "您需要加入 Discord 服务器才能删除组曲",
+      "deletePermission": "您没有权限删除此组曲",
+      "deleteUnauthorized": "您需要登录才能删除组曲",
+      "updateNotInGuild": "您需要加入 Discord 服务器才能编辑组曲",
+      "updatePermission": "您没有权限编辑此组曲",
+      "updateUnauthorized": "您需要登录才能编辑组曲",
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传组曲"
+    }
+  },
+  "commentList": {
+    "commentForm": {
+      "title": {
+        "pattern": "评论谱面",
+        "skin": "评论皮肤",
+        "setlist": "评论组曲"
+      },
+      "submit": "送出评论",
+      "comment": {
+        "error": {
+          "required": "必填项"
+        }
+      },
+      "rating": {
+        "error": {
+          "required": "必填项",
+          "min": "无效选项",
+          "max": "无效选项"
+        }
+      }
+    },
+    "replyForm": {
+      "comment": {
+        "error": {
+          "required": "必填项"
+        }
+      }
+    },
+    "comments": {
+      "title": "评论",
+      "notFound": "没有评论"
+    },
+    "dialog": {
+      "title": {
+        "comment": "编辑评论",
+        "reply": "回复",
+        "edit": "编辑回复"
+      },
+      "submit": {
+        "comment": "编辑",
+        "reply": "回复",
+        "edit": "编辑"
+      },
+      "cancel": "取消"
+    }
+  },
+  "profile": {
+    "tab": {
+      "patterns": "谱面",
+      "skins": "皮肤",
+      "comments": "评论",
+      "setlists": "组曲"
+    },
+    "patterns": {
+      "notFound": "找不到谱面"
+    },
+    "skins": {
+      "notFound": "找不到皮肤"
+    },
+    "comments": {
+      "notFound": "找不到评论"
+    },
+    "setlists": {
+      "notFound": "找不到组曲"
+    }
+  },
+  "error": {
+    "unknown": "服务器错误，请稍后再试，或在 Discord 服务器联系开发者。"
+  }
+}
