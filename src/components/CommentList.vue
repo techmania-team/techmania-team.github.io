@@ -1,7 +1,7 @@
 <template lang="pug">
 q-no-ssr.row.q-gutter-y-lg
   //- Rate form
-  .col-12(v-if="myComment._id === '' && user.isLogin")
+  .col-12(v-if="myComment._id === '' && user.isLogin && loaded")
     q-list
       q-item-label.text-h6.text-tech(header) {{ $t('commentList.commentForm.title.' + type) }}
       q-separator.q-mb-md(inset)
@@ -35,6 +35,9 @@ q-no-ssr.row.q-gutter-y-lg
     q-list
       q-item-label.text-h6.text-tech(header) {{ $t('commentList.comments.title') }}
       q-separator.q-mb-md(inset)
+      template(v-if="!loaded")
+        .text-center
+          q-spinner(color="white" size="3em")
       //- Loop all comments
       template(v-for="(comment, cidx) in comments" :key="comment._id")
         //- Loop all replies
@@ -95,7 +98,7 @@ q-no-ssr.row.q-gutter-y-lg
                         v-if="reply.user._id === user._id"
                         @click="deleteMyReply(comment._id, reply._id, cidx, ridx)"
                       )
-      p.text-center(v-if="comments.length === 0") {{ $t('commentList.comments.notFound') }}
+      p.text-center(v-if="comments.length === 0 && loaded") {{ $t('commentList.comments.notFound') }}
   //- Edit dialog
   q-dialog(v-model="editDialog.open" persistent)
     q-card(rounded style="width: 700px; max-width: 80vw;")
@@ -153,6 +156,8 @@ import DiscordAvatar from 'src/components/DiscordAvatar.vue'
 const user = useUserStore()
 const recaptcha = useReCaptcha()
 const { t } = useI18n()
+
+const loaded = ref(false)
 
 // Props
 const props = defineProps({
@@ -423,5 +428,7 @@ onMounted(async () => {
       handleError(error)
     }
   }
+
+  loaded.value = true
 })
 </script>
