@@ -48,7 +48,12 @@ export default defineConfig((ctx) => {
       // publicPath: '/',
       // analyze: true,
 
-      env: {},
+      env: ctx.dev
+        ? {}
+        : {
+            HOST_URL: process.env.HOST_URL,
+            RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
+          },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
