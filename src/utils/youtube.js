@@ -5,5 +5,5 @@ export const getIDFromYouTubeLink = (url) => {
 }
 
 export const getYouTubeThumbnail = (ytid) => {
-  return `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
+  return `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
 }

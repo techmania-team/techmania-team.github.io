@@ -62,7 +62,7 @@ export const create = async (req, res) => {
             parseedBody.image.length > 0
               ? parseedBody.image
               : ytid.length > 0
-                ? `http://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
+                ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
                 : process.env.HOST_URL + '/assets/unknown.jpg',
         },
         title: parseedBody.name,
