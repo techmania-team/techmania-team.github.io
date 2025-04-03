@@ -1,39 +1,35 @@
 import { createI18n } from 'vue-i18n'
+import { nextTick } from 'vue'
 import { Lang } from 'quasar'
-import enUS from './locales/en-US.json'
 
-export const i18n = createI18n({
-  locale: 'en-US',
-  fallbackLocale: 'en-US',
-  messages: {
-    'en-US': enUS,
-  },
-  silentFallbackWarn: true,
-})
+export let i18n = undefined
+
+export const setupI18n = (ssrContext) => {
+  i18n = createI18n({
+    locale: 'en-US',
+    fallbackLocale: 'en-US',
+    legacy: false,
+  })
+  setLocale('en-US', ssrContext)
+  return i18n
+}
 
 export const localeOptions = ['en-US', 'zh-TW', 'zh-CN']
 
 export const loadLocaleMessages = async (locale) => {
   const json = await import(`./locales/${locale}.json`)
-  return json.default
+  i18n.global.setLocaleMessage(locale, json.default)
+  return nextTick()
 }
 
 export const setLocale = async (locale, ssrContext = undefined) => {
-  // Same locale, do nothing
-  if (i18n.global.locale.value === locale) return
+  if (!i18n) return
 
   // If locale not in the list, fallback to en-US
   let localeToSet = localeOptions.includes(locale) ? locale : 'en-US'
 
   // If locale not loaded, load it
-  // en-US is default locale, no need to load it
-  // it is statically imported, dynamic import will not move it into another chunk
-  // if we load it dynamically, this error will be thrown and cause 500 internal server error:
-  // Cannot create property 'value' on string 'en-US'
-  if (localeToSet !== 'en-US' && !i18n.global.availableLocales.includes(localeToSet)) {
-    const message = await loadLocaleMessages(localeToSet)
-    i18n.global.setLocaleMessage(locale, message)
-  }
+  await loadLocaleMessages(localeToSet)
 
   // Set locale
   i18n.global.locale.value = localeToSet
@@ -74,6 +70,6 @@ export const getDefaultLocale = (ssrContext) => {
 export const getI18nRoute = (to) => {
   return {
     ...to,
-    params: { ...to.params, locale: i18n.global.locale.value },
+    params: { ...to.params, locale: i18n ? i18n.global.locale.value : 'en-US' },
   }
 }
