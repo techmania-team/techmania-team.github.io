@@ -643,7 +643,7 @@
       }
     },
     "description": {
-      "title": "Description"
+      "title": "描述"
     },
     "dangerZone": {
       "title": "危险区域",
@@ -654,7 +654,7 @@
     },
     "tos": {
       "tos": "使用条款",
-      "label": "Submitting the setlist signifies that you have read and agree to the {tos}",
+      "label": "送出组曲代表您已阅读并同意{tos}",
       "error": {
         "required": "您必须同意使用条款"
       }
