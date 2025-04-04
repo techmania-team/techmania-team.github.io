@@ -201,7 +201,7 @@
     "dangerZone": {
       "title": "DANGER ZONE",
       "delete": {
-        "label": "DELETE THIS PATTERN",
+        "label": "DELETE",
         "button": "DELETE THIS PATTERN"
       }
     },
@@ -373,7 +373,7 @@
     "dangerZone": {
       "title": "DANGER ZONE",
       "delete": {
-        "label": "DELETE THIS SKIN",
+        "label": "DELETE",
         "button": "DELETE THIS SKIN"
       }
     },
@@ -648,7 +648,7 @@
     "dangerZone": {
       "title": "DANGER ZONE",
       "delete": {
-        "label": "DELETE THIS SETLIST",
+        "label": "DELETE",
         "button": "DELETE THIS SETLIST"
       }
     },

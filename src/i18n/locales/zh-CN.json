@@ -201,7 +201,7 @@
     "dangerZone": {
       "title": "危险区域",
       "delete": {
-        "label": "删除谱面",
+        "label": "删除",
         "button": "删除谱面"
       }
     },
@@ -373,7 +373,7 @@
     "dangerZone": {
       "title": "危险区域",
       "delete": {
-        "label": "删除皮肤",
+        "label": "删除",
         "button": "删除皮肤"
       }
     },
@@ -648,7 +648,7 @@
     "dangerZone": {
       "title": "危险区域",
       "delete": {
-        "label": "删除组曲",
+        "label": "删除",
         "button": "删除组曲"
       }
     },
