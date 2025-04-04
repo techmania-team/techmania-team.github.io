@@ -236,11 +236,11 @@
   },
   "patternCard": {
     "comments": {
-      "count": "{Count} 个评论"
+      "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{Name}",
-    "submittedAt": "上传时间：{Date}",
-    "updatedAt": "最后更新时间：{Date}",
+    "submittedBy": "提交者：{name}",
+    "submittedAt": "上传时间：{date}",
+    "updatedAt": "最后更新时间：{date}",
     "keysounded": "按键音",
     "control": {
       "touch": "触屏",
@@ -408,11 +408,11 @@
   },
   "skinCard": {
     "comments": {
-      "count": "{Count} 个评论"
+      "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{Name}",
-    "submittedAt": "上传时间：{Date}",
-    "updatedAt": "最后更新时间：{Date}",
+    "submittedBy": "提交者：{name}",
+    "submittedAt": "上传时间：{date}",
+    "updatedAt": "最后更新时间：{date}",
     "type": {
       "label": "类型",
       "note": "音符",
@@ -502,11 +502,11 @@
   },
   "setlistCard": {
     "comments": {
-      "count": "{Count} 个评论"
+      "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{Name}",
-    "submittedAt": "上传时间：{Date}",
-    "updatedAt": "最后更新时间：{Date}",
+    "submittedBy": "提交者：{name}",
+    "submittedAt": "上传时间：{date}",
+    "updatedAt": "最后更新时间：{date}",
     "selectablePatterns": "可选谱面",
     "hiddenPatterns": "隐藏谱面",
     "control": {

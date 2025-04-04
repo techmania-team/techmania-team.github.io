@@ -38,17 +38,21 @@ q-card.full-height.card-setlist
       q-item
         q-item-section
           p
-            span(v-if="!mine")
-              | {{ $t('setlistCard.submittedBy') }} &nbsp;
-              router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
+            i18n-t(keypath="setlistCard.submittedBy" tag="span" v-if="!mine")
+              template(#name)
+                router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
             br(v-if="!mine")
-            span {{ $t('setlistCard.submittedAt') }} {{ formattedTime.relative }}
-              q-tooltip.bg-black(anchor="top middle" self="bottom middle")
-                | {{ formattedTime.text }}
+            i18n-t(keypath="setlistCard.submittedAt" tag="span")
+              template(#date)
+                | {{ formattedTime.relative }}
+                q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+                  | {{ formattedTime.text }}
             br
-            span {{ $t('setlistCard.updatedAt') }} {{ formattedUpdateTime.relative }}
-              q-tooltip.bg-black(anchor="top middle" self="bottom middle")
-                | {{ formattedUpdateTime.text }}
+            i18n-t(keypath="setlistCard.updatedAt" tag="span")
+              template(#date)
+                | {{ formattedUpdateTime.relative }}
+                q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+                  | {{ formattedUpdateTime.text }}
 </template>
 
 <script setup>

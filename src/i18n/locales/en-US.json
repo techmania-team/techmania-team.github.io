@@ -236,11 +236,11 @@
   },
   "patternCard": {
     "comments": {
-      "count": "{Count} Comments"
+      "count": "{count} Comments"
     },
-    "submittedBy": "Submitted by {Name}",
-    "submittedAt": "Submitted at {Date}",
-    "updatedAt": "Updated at {Date}",
+    "submittedBy": "Submitted by {name}",
+    "submittedAt": "Submitted at {date}",
+    "updatedAt": "Updated at {date}",
     "keysounded": "Keysounded",
     "control": {
       "touch": "Touch",
@@ -408,11 +408,11 @@
   },
   "skinCard": {
     "comments": {
-      "count": "{Count} Comments"
+      "count": "{count} Comments"
     },
-    "submittedBy": "Submitted by {Name}",
-    "submittedAt": "Submitted at {Date}",
-    "updatedAt": "Updated at {Date}",
+    "submittedBy": "Submitted by {name}",
+    "submittedAt": "Submitted at {date}",
+    "updatedAt": "Updated at {date}",
     "type": {
       "label": "Skin Type",
       "note": "Note",
@@ -502,11 +502,11 @@
   },
   "setlistCard": {
     "comments": {
-      "count": "{Count} Comments"
+      "count": "{count} Comments"
     },
-    "submittedBy": "Submitted by {Name}",
-    "submittedAt": "Submitted at {Date}",
-    "updatedAt": "Updated at {Date}",
+    "submittedBy": "Submitted by {name}",
+    "submittedAt": "Submitted at {date}",
+    "updatedAt": "Updated at {date}",
     "selectablePatterns": "Selectable Patterns",
     "hiddenPatterns": "Hidden Patterns",
     "control": {

@@ -236,11 +236,11 @@
   },
   "patternCard": {
     "comments": {
-      "count": "{Count} 則評價"
+      "count": "{count} 則評價"
     },
-    "submittedBy": "上傳者: {Name}",
-    "submittedAt": "上傳於: {Date}",
-    "updatedAt": "最後更新於 {Date}",
+    "submittedBy": "上傳者: {name}",
+    "submittedAt": "上傳於: {date}",
+    "updatedAt": "最後更新於 {date}",
     "keysounded": "按鍵音",
     "control": {
       "touch": "觸控",
@@ -408,11 +408,11 @@
   },
   "skinCard": {
     "comments": {
-      "count": "{Count} 則評價"
+      "count": "{count} 則評價"
     },
-    "submittedBy": "上傳者: {Name}",
-    "submittedAt": "上傳於: {Date}",
-    "updatedAt": "最後更新於 {Date}",
+    "submittedBy": "上傳者: {name}",
+    "submittedAt": "上傳於: {date}",
+    "updatedAt": "最後更新於 {date}",
     "type": {
       "label": "類型",
       "note": "音符",
@@ -502,11 +502,11 @@
   },
   "setlistCard": {
     "comments": {
-      "count": "{Count} 則評價"
+      "count": "{count} 則評價"
     },
-    "submittedBy": "上傳者: {Name}",
-    "submittedAt": "上傳於: {Date}",
-    "updatedAt": "最後更新於 {Date}",
+    "submittedBy": "上傳者: {name}",
+    "submittedAt": "上傳於: {date}",
+    "updatedAt": "最後更新於 {date}",
     "selectablePatterns": "可選譜面",
     "hiddenPatterns": "隱藏譜面",
     "control": {

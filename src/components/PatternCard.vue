@@ -24,22 +24,26 @@ q-card.full-height.card-pattern
       q-item
         q-item-section
           q-rating(:model-value="pattern.rating.avg" readonly icon="star" icon-half="star_half" size='xs')
-          | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('patternCard.comments.count', {count: pattern.rating.count}) }}
+          | {{ pattern.rating.avg.toFixed(2) }} / {{ $t('patternCard.comments.count', { count: pattern.rating.count}) }}
       //- Date
       q-item
         q-item-section
           p
-            span(v-if="!mine")
-              | {{ $t('patternCard.submittedBy') }} &nbsp;
-              router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: pattern.submitter._id}})") {{ pattern.submitter.name }}
+            i18n-t(keypath="patternCard.submittedBy" tag="span" v-if="!mine")
+              template(#name)
+                router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             br(v-if="!mine")
-            span {{ $t('patternCard.submittedAt') }} {{ formattedTime.relative }}
-              q-tooltip.bg-black(anchor="top middle" self="bottom middle")
-                | {{ formattedTime.text }}
+            i18n-t(keypath="patternCard.submittedAt" tag="span")
+              template(#date)
+                | {{ formattedTime.relative }}
+                q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+                  | {{ formattedTime.text }}
             br
-            span {{ $t('patternCard.updatedAt') }} {{ formattedUpdateTime.relative }}
-              q-tooltip.bg-black(anchor="top middle" self="bottom middle")
-                | {{ formattedUpdateTime.text }}
+            i18n-t(keypath="patternCard.updatedAt" tag="span")
+              template(#date)
+                | {{ formattedUpdateTime.relative }}
+                q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+                  | {{ formattedUpdateTime.text }}
       //- Keysounded
       q-item
         q-item-section
