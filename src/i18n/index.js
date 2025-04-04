@@ -14,7 +14,7 @@ export const setupI18n = (ssrContext) => {
   return i18n
 }
 
-export const localeOptions = ['en-US', 'zh-TW', 'zh-CN']
+export const localeOptions = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP']
 
 export const loadLocaleMessages = async (locale) => {
   const json = await import(`./locales/${locale}.json`)

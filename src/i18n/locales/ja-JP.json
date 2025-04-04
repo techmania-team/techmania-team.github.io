@@ -1,133 +1,753 @@
 {
   "nav": {
-    "manual": "マニュアル",
+    "howtoplay": "遊び方",
+    "documentations": "ドキュメント",
     "changelog": "チェンジログ",
     "patterns": "パターン",
+    "skins": "スキン",
+    "setlists": "セットリスト",
     "login": "ログイン",
     "myPage": "マイページ",
+    "submitNewPattern": "新しいパターンを投稿",
+    "submitNewSkin": "新しいスキンを投稿",
+    "submitNewSetlist": "新しいパターンを投稿",
     "logout": "ログアウト",
     "menu": "メニュー",
-    "myPatterns": "マイパターン",
-    "lang": "言語",
-    "skins": "スキン"
+    "language": "言語"
   },
-  "index": {
+  "indexPage": {
     "download": "ダウンロード",
-    "version": "最新バージョン",
-    "release": "リリーズ日: ",
-    "videos": "ビデオ",
-    "patterns": "最新パターン",
-    "skins": "最新スキン",
-    "platform": "{platform}ユーザー"
+    "latestVersion": "最新バージョン",
+    "latestReleaseDate": "リリーズ日: ",
+    "newPatterns": "最新パターン",
+    "newSkins": "最新スキン",
+    "newSetlists": "最新セットリスト",
+    "videos": "ビデオ"
   },
-  "changelog": {
+  "changelogPage": {
+    "title": "チェンジログ",
     "downloads": "ダウンロード",
     "showDetail": "詳細を表示",
-    "hideDetail": "詳細を非表示"
+    "hideDetail": "詳細を非表示",
+    "error": "GitHubからデータの読み込みに失敗しました。"
   },
-  "patterns": {
-    "all": "すべて",
-    "yes": "あり",
-    "no": "なし",
-    "search": "検索",
-    "sort": "ソート",
-    "sortSubmit": "投稿日",
-    "sortUpdate": "更新日",
-    "sortName": "曲名",
+  "patternsPage": {
+    "title": "パターン",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "検索"
+      },
+      "keysounded": {
+        "label": "ノート音",
+        "all": "すべて",
+        "yes": "あり",
+        "no": "なし"
+      },
+      "control": {
+        "label": "プレイタイプ",
+        "touch": "タッチ",
+        "keys": "キーボード",
+        "km": "キーボード・マウス"
+      },
+      "lanes": {
+        "label": "レーン",
+        "lanes": "{lanes}L"
+      },
+      "sort": {
+        "label": "ソート",
+        "submit": "投稿日",
+        "update": "更新日",
+        "name": "曲名",
+        "rating": "評価"
+      }
+    },
     "notFound": "パターンがありません"
   },
-  "pattern": {
-    "keysounded": "ノート音",
-    "author": "製作者: ",
-    "submitted": "投稿日: ",
-    "submittedBy": "投稿者: ",
-    "updated": "更新: ",
-    "keys": "キーボード",
-    "touch": "タッチ",
-    "km": "キーボード・マウス",
-    "composer": "作曲家: ",
-    "patternData": "パターンデータ",
-    "description": "パターン詳細",
-    "previews": "プレビュー",
-    "noPreview": "プレビューなし",
-    "noDescription": "詳細がありません。",
-    "rateThisPattern": "パターンを評価する",
-    "commentPlaceholder": "コメントを作成してください",
-    "edit": "編集",
+  "patternPage": {
     "download": "ダウンロード",
-    "reply": "返信",
-    "rating": "評価",
-    "ratingCount": "{count}件の評価"
+    "edit": "編集",
+    "basic": {
+      "title": "パターンデータ",
+      "composer": {
+        "label": "作曲家"
+      },
+      "submittedBy": {
+        "label": "投稿者"
+      },
+      "keysounded": {
+        "label": "ノート音",
+        "yes": "あり",
+        "no": "なし"
+      },
+      "comments": {
+        "count": "{count}件の評価"
+      },
+      "submittedAt": {
+        "label": "投稿日"
+      },
+      "updatedAt": {
+        "label": "更新日"
+      }
+    },
+    "difficulties": {
+      "title": "難易度"
+    },
+    "description": {
+      "title": "パターン詳細",
+      "noDescription": "詳細がありません"
+    },
+    "previews": {
+      "title": "プレビュー",
+      "noPreview": "プレビューなし"
+    }
   },
-  "skins": {
-    "sortName": "スキン名",
+  "patternFormPage": {
+    "titleNew": "新しいパターンを投稿",
+    "titleEdit": "パターン編集",
+    "rules": {
+      "title": "パターンを投稿する前にルールをお読みください。",
+      "rule1": "DJMAXやDJMAX RESPECTの音楽を使用したパターンは厳禁します。",
+      "rule2": "すべての画像やBGAは成人向けコンテンツを含めてはなりません。",
+      "rule3": "他人のパターンを投稿することは許されません。"
+    },
+    "basic": {
+      "title": "パターンデータ",
+      "name": {
+        "label": "曲名",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "composer": {
+        "label": "作曲家",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "download": {
+        "label": "ダウンロードリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください"
+        }
+      },
+      "keysounded": {
+        "label": "ノート音",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "image": {
+        "label": "サムネイル",
+        "error": {
+          "invalid": "有効なURLを入力してください"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTubeプレビュー",
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "link": {
+        "label": "YouTubeリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください",
+          "youtube": "有効なYouTube URLを入力してください"
+        }
+      }
+    },
+    "difficulties": {
+      "title": "難易度",
+      "control": {
+        "label": "プレイタイプ",
+        "touch": "タッチ",
+        "keys": "キーボード",
+        "km": "キーボード・マウス",
+        "error": {
+          "required": "必須",
+          "invalid": "無効"
+        }
+      },
+      "lanes": {
+        "label": "レーン",
+        "error": {
+          "required": "必須",
+          "min": "無効",
+          "max": "無効"
+        }
+      },
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "level": {
+        "label": "レベル",
+        "error": {
+          "required": "必須",
+          "min": "無効"
+        }
+      }
+    },
+    "description": {
+      "title": "パターン詳細"
+    },
+    "dangerZone": {
+      "title": "危険ゾーン",
+      "delete": {
+        "label": "削除",
+        "button": "このパターンを削除する"
+      }
+    },
+    "tos": {
+      "tos": "サービス利用規約",
+      "label": "パターンを投稿した場合、{tos}に同意したものとみなします",
+      "error": {
+        "required": "規約に同意する必要があります"
+      }
+    },
+    "submit": {
+      "new": "投稿",
+      "edit": "編集"
+    },
+    "deleteDialog": {
+      "text": "このパターンを本当に削除しますか？",
+      "no": "いいえ、キャンセル",
+      "yes": "はい、削除します"
+    },
+    "result": {
+      "submitted": "投稿に成功しました",
+      "deleted": "削除しました",
+      "updated": "編集に成功しました",
+      "deleteNotInGuild": "パターンを削除するにはDiscordサーバーに参加する必要があります",
+      "deletePermission": "このパターンを削除する権限がありません",
+      "deleteUnauthorized": "このパターンを削除するにはログインする必要があります",
+      "updateNotInGuild": "パターンを編集するにはDiscordサーバーに参加する必要があります",
+      "updatePermission": "このパターンを編集する権限がありません",
+      "updateUnauthorized": "このパターンを編集するにはログインする必要があります",
+      "createNotInGuild": "パターンを投稿するにはDiscordサーバーに参加する必要があります"
+    }
+  },
+  "patternCard": {
+    "comments": {
+      "count": "{count}件の評価"
+    },
+    "submittedBy": "投稿者: {name}",
+    "submittedAt": "投稿日: {date}",
+    "updatedAt": "更新日: {date}",
+    "keysounded": "ノート音",
+    "control": {
+      "touch": "タッチ",
+      "keys": "キーボード",
+      "km": "キーボード・マウス"
+    }
+  },
+  "skinsPage": {
+    "title": "スキン",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "検索"
+      },
+      "type": {
+        "label": "種類",
+        "note": "ノート",
+        "vfx": "VFX",
+        "combo": "コンボ",
+        "gameUI": "ゲーム UI",
+        "theme": "テーマ"
+      },
+      "sort": {
+        "label": "ソート",
+        "submit": "投稿日",
+        "update": "更新日",
+        "name": "名前",
+        "rating": "評価"
+      }
+    },
     "notFound": "スキンがありません"
   },
-  "skin": {
-    "note": "ノート",
-    "vfx": "VFX",
-    "combo": "コンボ",
-    "gameUI": "ゲーム UI",
-    "skinData": "スキンデータ",
-    "description": "スキン詳細",
-    "rateThisSkin": "スキンを評価する"
+  "skinPage": {
+    "download": "ダウンロード",
+    "edit": "編集",
+    "basic": {
+      "title": "スキンデータ",
+      "submittedBy": {
+        "label": "投稿者"
+      },
+      "type": {
+        "label": "種類",
+        "note": "ノート",
+        "vfx": "VFX",
+        "combo": "コンボ",
+        "gameUI": "ゲーム UI",
+        "theme": "テーマ"
+      },
+      "comments": {
+        "count": "{count}件の評価"
+      },
+      "submittedAt": {
+        "label": "投稿日"
+      },
+      "updatedAt": {
+        "label": "更新日"
+      }
+    },
+    "description": {
+      "title": "スキン詳細",
+      "noDescription": "詳細がありません"
+    },
+    "previews": {
+      "title": "プレビュー",
+      "noPreview": "プレビューなし"
+    }
   },
-  "submitForm": {
-    "composer": "作曲家",
-    "control": "プレイタイプ",
-    "dangerZone": "危険ゾーン",
-    "delete": "このパターンを削除する",
-    "deleteNo": "キャンセル",
-    "deleteText": "このパターンを本当に削除しますか？",
-    "deleteYes": "はい、削除します",
-    "description": "詳細",
-    "difficulties": "難易度",
-    "dlLink": "ダウンロードリンク",
-    "editTitle": "パターン編集",
-    "errorGuild": "新しいパターンを投稿するにはDiscordサーバーに参加する必要があります。",
-    "errorServer": "サーバーエラー",
-    "errorUnauthorized": "非許可",
-    "lanes": "レーン",
-    "level": "レベル",
-    "name": "名前",
-    "preview": "YouTubeプレビュー",
-    "rules1": "DJMAXやDJMAX RESPECTの音楽を使用したパターンは厳禁します。",
-    "rules2": "すべての画像やBGAは成人向けコンテンツを含めてはなりません。",
-    "rules3": "他人のパターンを投稿することは許されません。",
-    "rulesTitle": "パターンを投稿する前にルールをお読みください。",
-    "songName": "曲名",
-    "submit": "投稿",
-    "title": "新しいパターンを投稿",
-    "ytLink": "YouTubeリンク",
-    "required": "必須",
-    "invalidLink": "有効なURLを入力してください。",
-    "submitted": "投稿に成功しました。",
-    "updated": "更新に成功しました。",
-    "deleted": "削除しました。",
-    "agreetos": "パターンを投稿した場合、<a href=\"{tosURL}\" target=\"_blank\">サービス利用規約</a>に同意したものとみなします。",
-    "agreetos2": "まず規約に同意する必要があります。",
-    "invalidPreviews": "正しいYouTubeプレビューリンクまたは名前です。"
+  "skinFormPage": {
+    "titleNew": "新しいスキンを投稿",
+    "titleEdit": "スキン編集",
+    "rules": {
+      "title": "スキンを投稿する前にルールをお読みください。",
+      "rule1": "DJMAXやDJMAX RESPECTの音楽を使用したスキンは厳禁します。",
+      "rule2": "すべての画像やBGAは成人向けコンテンツを含めてはなりません。",
+      "rule3": "他人のスキンを投稿することは許されません。"
+    },
+    "basic": {
+      "title": "スキンデータ",
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "type": {
+        "label": "種類",
+        "note": "ノート",
+        "vfx": "VFX",
+        "combo": "コンボ",
+        "gameUI": "ゲーム UI",
+        "theme": "テーマ",
+        "error": {
+          "required": "必須",
+          "invalid": "無効"
+        }
+      },
+      "download": {
+        "label": "ダウンロードリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください"
+        }
+      },
+      "image": {
+        "label": "サムネイル",
+        "error": {
+          "invalid": "有効なURLを入力してください"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTubeプレビュー",
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "link": {
+        "label": "YouTubeリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください",
+          "youtube": "有効なYouTube URLを入力してください"
+        }
+      }
+    },
+    "description": {
+      "title": "スキン詳細"
+    },
+    "dangerZone": {
+      "title": "危険ゾーン",
+      "delete": {
+        "label": "削除",
+        "button": "このスキンを削除する"
+      }
+    },
+    "tos": {
+      "tos": "サービス利用規約",
+      "label": "スキンを投稿した場合、{tos}に同意したものとみなします",
+      "error": {
+        "required": "規約に同意する必要があります"
+      }
+    },
+    "submit": {
+      "new": "投稿",
+      "edit": "編集"
+    },
+    "deleteDialog": {
+      "text": "このスキンを本当に削除しますか？",
+      "no": "いいえ、キャンセル",
+      "yes": "はい、削除します"
+    },
+    "result": {
+      "submitted": "投稿に成功しました",
+      "deleted": "削除しました",
+      "updated": "編集に成功しました",
+      "deleteNotInGuild": "スキンを削除するにはDiscordサーバーに参加する必要があります",
+      "deletePermission": "このスキンを削除する権限がありません",
+      "deleteUnauthorized": "このスキンを削除するにはログインする必要があります",
+      "updateNotInGuild": "スキンを編集するにはDiscordサーバーに参加する必要があります",
+      "updatePermission": "このスキンを編集する権限がありません",
+      "updateUnauthorized": "このスキンを編集するにはログインする必要があります",
+      "createNotInGuild": "スキンを投稿するにはDiscordサーバーに参加する必要があります"
+    }
   },
-  "submitSkinForm": {
-    "title": "新しいスキンを投稿",
-    "editTitle": "スキン編集",
-    "rules1": "DJMAXやDJMAX RESPECTのスキンは厳禁します。",
-    "rules2": "すべてのアセットは成人向けコンテンツを含めてはなりません。",
-    "rules3": "他人のスキンを投稿することは許されません。",
-    "rulesTitle": "スキンを投稿する前にルールをお読みください。",
-    "skinName": "スキン名",
-    "skinType": "スキンの種類",
-    "agreetos": "スキンを投稿した場合、<a href=\"{tosURL}\" target=\"_blank\">サービス利用規約</a>に同意したものとみなします。",
-    "delete": "このスキンを削除する"
+  "skinCard": {
+    "comments": {
+      "count": "{count}件の評価"
+    },
+    "submittedBy": "投稿者: {name}",
+    "submittedAt": "投稿日: {date}",
+    "updatedAt": "更新日: {date}",
+    "type": {
+      "label": "種類",
+      "note": "ノート",
+      "vfx": "VFX",
+      "combo": "コンボ",
+      "gameUI": "ゲーム UI",
+      "theme": "テーマ"
+    }
   },
-  "comment": {
-    "comments": "コメント",
-    "deleted": "削除済み",
-    "editComment": "コメントを編集",
-    "editReply": "返信を編集",
-    "reply": "返信",
-    "deleteCommentConfirm": "コメントを削除しますか？",
-    "deleteReplyConfirm": "返信を削除しますか？",
-    "noComment": "コメントがありません。"
+  "setlistsPage": {
+    "title": "セットリスト",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "検索"
+      },
+      "control": {
+        "label": "プレイタイプ",
+        "touch": "タッチ",
+        "keys": "キーボード",
+        "km": "キーボード・マウス"
+      },
+      "sort": {
+        "label": "ソート",
+        "submit": "投稿日",
+        "update": "更新日",
+        "name": "名前",
+        "rating": "評価"
+      }
+    },
+    "notFound": "セットリストがありません"
+  },
+  "setlistPage": {
+    "download": "ダウンロード",
+    "edit": "編集",
+    "basic": {
+      "title": "セットリストデータ",
+      "submittedBy": {
+        "label": "投稿者"
+      },
+      "comments": {
+        "count": "{count}件の評価"
+      },
+      "submittedAt": {
+        "label": "投稿日"
+      },
+      "updatedAt": {
+        "label": "更新日"
+      },
+      "control": {
+        "label": "プレイタイプ",
+        "touch": "タッチ",
+        "keys": "キーボード",
+        "km": "キーボード・マウス"
+      },
+      "patterns": {
+        "label": "パターン"
+      }
+    },
+    "description": {
+      "title": "セットリスト詳細",
+      "noDescription": "詳細がありません"
+    },
+    "previews": {
+      "title": "プレビュー",
+      "noPreview": "プレビューなし"
+    },
+    "selectablePatterns": {
+      "title": "選択可能なパターン"
+    },
+    "hiddenPatterns": {
+      "title": "隠しパターン",
+      "criteriaType": {
+        "index": "番号",
+        "level": "レベル",
+        "hp": "HP%",
+        "score": "スコア",
+        "combo": "コンボ",
+        "maxCombo": "最大コンボ",
+        "d100": "D100",
+        "none": "なし"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{count}件の評価"
+    },
+    "submittedBy": "投稿者: {name}",
+    "submittedAt": "投稿日: {date}",
+    "updatedAt": "更新日: {date}",
+    "selectablePatterns": "選択可能なパターン",
+    "hiddenPatterns": "隠しパターン",
+    "control": {
+      "label": "プレイタイプ",
+      "touch": "タッチ",
+      "keys": "キーボード",
+      "km": "キーボード・マウス"
+    }
+  },
+  "setlistFormPage": {
+    "titleNew": "新しいセットリストを投稿",
+    "titleEdit": "セットリスト編集",
+    "rules": {
+      "title": "セットリストを投稿する前にルールをお読みください。",
+      "rule1": "DJMAXやDJMAX RESPECTの音楽を使用したセットリストは厳禁します。",
+      "rule2": "すべての画像やBGAは成人向けコンテンツを含めてはなりません。",
+      "rule3": "他人のセットリストを投稿することは許されません。"
+    },
+    "basic": {
+      "title": "セットリストデータ",
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "download": {
+        "label": "ダウンロードリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください"
+        }
+      },
+      "image": {
+        "label": "サムネイル",
+        "error": {
+          "invalid": "有効なURLを入力してください"
+        }
+      },
+      "control": {
+        "label": "プレイタイプ",
+        "touch": "タッチ",
+        "keys": "キーボード",
+        "km": "キーボード・マウス",
+        "error": {
+          "required": "必須",
+          "invalid": "無効"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "選択可能なパターン",
+      "name": {
+        "label": "曲名",
+        "searchNotFound": "パターンがありません",
+        "error": {
+          "required": "必須",
+          "invalid": "無効",
+          "notFound": "パターンが見つかりません"
+        }
+      },
+      "difficulty": {
+        "label": "難易度",
+        "searchNotFound": "難易度がありません",
+        "error": {
+          "required": "必須",
+          "invalid": "無効"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "隠しパターン",
+      "name": {
+        "label": "曲名",
+        "searchNotFound": "パターンがありません",
+        "error": {
+          "required": "必須",
+          "invalid": "無効",
+          "notFound": "パターンが見つかりません"
+        }
+      },
+      "difficulty": {
+        "label": "難易度",
+        "searchNotFound": "難易度がありません",
+        "error": {
+          "required": "必須",
+          "invalid": "無効"
+        }
+      },
+      "criteriaType": {
+        "label": "条件",
+        "index": "番号",
+        "level": "レベル",
+        "hp": "HP%",
+        "score": "スコア",
+        "combo": "コンボ",
+        "maxCombo": "最大コンボ",
+        "d100": "D100",
+        "none": "なし",
+        "error": {
+          "required": "必須",
+          "lastType": "条件なしは最後の隠しパターンにのみ適用されます"
+        }
+      },
+      "criteriaDirection": {
+        "label": "方向",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "criteriaValue": {
+        "label": "値",
+        "error": {
+          "required": "必須",
+          "min": "無効"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTubeプレビュー",
+      "name": {
+        "label": "名前",
+        "error": {
+          "required": "必須"
+        }
+      },
+      "link": {
+        "label": "YouTubeリンク",
+        "error": {
+          "required": "必須",
+          "invalid": "有効なURLを入力してください",
+          "youtube": "有効なYouTube URLを入力してください"
+        }
+      }
+    },
+    "description": {
+      "title": "セットリスト詳細"
+    },
+    "dangerZone": {
+      "title": "危険ゾーン",
+      "delete": {
+        "label": "削除",
+        "button": "このセットリストを削除する"
+      }
+    },
+    "tos": {
+      "tos": "サービス利用規約",
+      "label": "セットリストを投稿した場合、{tos}に同意したものとみなします",
+      "error": {
+        "required": "規約に同意する必要があります"
+      }
+    },
+    "submit": {
+      "new": "投稿",
+      "edit": "編集"
+    },
+    "deleteDialog": {
+      "text": "このセットリストを本当に削除しますか？",
+      "no": "いいえ、キャンセル",
+      "yes": "はい、削除します"
+    },
+    "result": {
+      "submitted": "投稿に成功しました",
+      "deleted": "削除しました",
+      "updated": "編集に成功しました",
+      "deleteNotInGuild": "セットリストを削除するにはDiscordサーバーに参加する必要があります",
+      "deletePermission": "このセットリストを削除する権限がありません",
+      "deleteUnauthorized": "このセットリストを削除するにはログインする必要があります",
+      "updateNotInGuild": "セットリストを編集するにはDiscordサーバーに参加する必要があります",
+      "updatePermission": "このセットリストを編集する権限がありません",
+      "updateUnauthorized": "このセットリストを編集するにはログインする必要があります",
+      "createNotInGuild": "セットリストを投稿するにはDiscordサーバーに参加する必要があります"
+    }
+  },
+  "commentList": {
+    "commentForm": {
+      "title": {
+        "pattern": "このパターンを評価",
+        "skin": "このスキンを評価",
+        "setlist": "このセットリストを評価"
+      },
+      "submit": "投稿",
+      "comment": {
+        "error": {
+          "required": "必須"
+        }
+      },
+      "rating": {
+        "error": {
+          "required": "必須",
+          "min": "無効",
+          "max": "無効"
+        }
+      }
+    },
+    "replyForm": {
+      "comment": {
+        "error": {
+          "required": "必須"
+        }
+      }
+    },
+    "comments": {
+      "title": "評価",
+      "notFound": "評価がありません"
+    },
+    "dialog": {
+      "title": {
+        "comment": "コメントを編集",
+        "reply": "返信",
+        "edit": "返信を編集"
+      },
+      "submit": {
+        "comment": "編集",
+        "reply": "返信",
+        "edit": "編集"
+      },
+      "cancel": "キャンセル"
+    }
+  },
+  "profile": {
+    "tab": {
+      "patterns": "パターン",
+      "skins": "スキン",
+      "comments": "評価",
+      "setlists": "セットリスト"
+    },
+    "patterns": {
+      "notFound": "パターンがありません"
+    },
+    "skins": {
+      "notFound": "スキンがありません"
+    },
+    "comments": {
+      "notFound": "評価がありません"
+    },
+    "setlists": {
+      "notFound": "セットリストがありません"
+    }
+  },
+  "error": {
+    "unknown": "サーバーエラーが発生しました。もう一度お試しください。または、Discordサーバーで開発者に連絡してください。"
   }
 }
