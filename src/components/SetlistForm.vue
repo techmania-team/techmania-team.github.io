@@ -749,14 +749,13 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('setlistFormPage.result.submitted'),
+        message: t('setlistFormPage.result.updated'),
         color: 'positive',
         position: 'top',
         timeout: 2000,
       })
     } else {
       // No setlist ID, create new setlist
-      console.log(values)
       const token = await recaptcha.executeRecaptcha('newSetlist')
       const { data } = await api.post(`/setlists`, {
         name: values.name,
@@ -774,7 +773,7 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('setlistFormPage.result.updated'),
+        message: t('setlistFormPage.result.submitted'),
         color: 'positive',
         position: 'top',
         timeout: 2000,

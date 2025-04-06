@@ -421,7 +421,7 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('patternFormPage.result.submitted'),
+        message: t('patternFormPage.result.updated'),
         color: 'positive',
         position: 'top',
         timeout: 2000,
@@ -445,7 +445,7 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('patternFormPage.result.updated'),
+        message: t('patternFormPage.result.submitted'),
         color: 'positive',
         position: 'top',
         timeout: 2000,

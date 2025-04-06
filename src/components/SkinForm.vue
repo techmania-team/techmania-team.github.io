@@ -299,7 +299,7 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('skinFormPage.result.submitted'),
+        message: t('skinFormPage.result.updated'),
         color: 'positive',
         position: 'top',
         timeout: 2000,
@@ -321,7 +321,7 @@ const onSubmit = async (values) => {
       })
       $q.notify({
         icon: 'check',
-        message: t('skinFormPage.result.updated'),
+        message: t('skinFormPage.result.submitted'),
         color: 'positive',
         position: 'top',
         timeout: 2000,
