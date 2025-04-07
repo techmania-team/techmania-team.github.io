@@ -4,6 +4,18 @@ q-card
   q-card-section
     router-link.no-underline(:to="getI18nRoute({ name: 'pattern', params: { id: pattern._id } })")
       .text-h6.text-tech {{ pattern.name }}
+    .q-mt-md
+      i18n-t(keypath="setlistPatternCard.submittedAt" tag="span")
+        template(#date)
+          | {{ formattedTime.relative }}
+          q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+            | {{ formattedTime.text }}
+      br
+      i18n-t(keypath="setlistPatternCard.updatedAt" tag="span")
+        template(#date)
+          | {{ formattedUpdateTime.relative }}
+          q-tooltip.bg-black(anchor="top middle" self="bottom middle")
+            | {{ formattedUpdateTime.text }}
     .q-mt-md(:class="getLevelColor(pattern.difficulty.level)")
       q-icon.text-black.q-mr-md(
         size="sm"
@@ -26,13 +38,15 @@ q-card
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { getLevelColor, getLevelFilter } from 'src/utils/level'
 import { getControlIcon } from 'src/utils/control'
 import { criterias, criteriasDirections } from 'src/utils/criteria'
 import { getYouTubeThumbnail } from 'src/utils/youtube'
+import * as date from 'src/utils/date'
 import { getI18nRoute } from 'src/i18n'
 
-defineProps({
+const props = defineProps({
   pattern: Object,
   last: Boolean,
   type: {
@@ -51,4 +65,18 @@ const getPatternPreview = (pattern) => {
       ? getYouTubeThumbnail(pattern.previews[0].ytid)
       : '/assets/header-pattern.png'
 }
+
+const formattedTime = computed(() => {
+  return {
+    relative: date.toRelative(props.pattern.createdAt),
+    text: date.toLocaleString(props.pattern.createdAt),
+  }
+})
+
+const formattedUpdateTime = computed(() => {
+  return {
+    relative: date.toRelative(props.pattern.updatedAt),
+    text: date.toLocaleString(props.pattern.updatedAt),
+  }
+})
 </script>

@@ -516,6 +516,10 @@
       "km": "键鼠"
     }
   },
+  "setlistPatternCard": {
+    "submittedAt": "上传时间：{date}",
+    "updatedAt": "最后更新时间：{date}"
+  },
   "setlistFormPage": {
     "titleNew": "上传新组曲",
     "titleEdit": "编辑组曲",

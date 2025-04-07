@@ -516,6 +516,10 @@
       "km": "KM"
     }
   },
+  "setlistPatternCard": {
+    "submittedAt": "Submitted at {date}",
+    "updatedAt": "Updated at {date}"
+  },
   "setlistFormPage": {
     "titleNew": "Submit New Setlist",
     "titleEdit": "Edit Setlist",

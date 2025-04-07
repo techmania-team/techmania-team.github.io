@@ -516,6 +516,10 @@
       "km": "鍵鼠"
     }
   },
+  "setlistPatternCard": {
+    "submittedAt": "上傳於: {date}",
+    "updatedAt": "最後更新於 {date}"
+  },
   "setlistFormPage": {
     "titleNew": "上傳新組曲",
     "titleEdit": "編輯組曲",

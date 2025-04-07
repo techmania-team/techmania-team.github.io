@@ -516,6 +516,10 @@
       "km": "キーボード・マウス"
     }
   },
+  "setlistPatternCard": {
+    "submittedAt": "投稿日: {date}",
+    "updatedAt": "更新日: {date}"
+  },
   "setlistFormPage": {
     "titleNew": "新しいセットリストを投稿",
     "titleEdit": "セットリスト編集",
