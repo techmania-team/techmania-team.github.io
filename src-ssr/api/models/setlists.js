@@ -112,6 +112,10 @@ const schema = new mongoose.Schema(
       ],
       default: [],
     },
+    webhook: {
+      type: String,
+      default: '',
+    },
   },
   { versionKey: false, timestamps: true },
 )

@@ -43,6 +43,10 @@ const schema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    webhook: {
+      type: String,
+      default: '',
+    },
   },
   { versionKey: false, timestamps: true },
 )
