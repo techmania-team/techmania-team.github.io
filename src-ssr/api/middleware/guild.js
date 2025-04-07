@@ -1,13 +1,12 @@
-import axios from 'axios'
+import { REST, Routes } from 'discord.js'
 import handleServerError from '../utils/handleServerError'
 
 export default async (req, res, next) => {
   try {
     // check in discord guild or not
-    const response = await axios.get('https://discord.com/api/users/@me/guilds', {
-      headers: { Authorization: `Bearer ${req.user.accessToken}` },
-    })
-    const inGuild = response.data.find(
+    const rest = new REST({ version: '10' }).setToken(req.user.accessToken)
+    const guilds = await rest.get(Routes.userGuilds(), { authPrefix: 'Bearer' })
+    const inGuild = guilds.some(
       (guild) => guild.id.toString() === process.env.DISCORD_GUILD.toString(),
     )
     if (!inGuild) {
