@@ -100,6 +100,7 @@ q-page#skin
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='skin.previews.length === 0') {{ $t('skinPage.previews.noPreview') }}
       //- Comments
       CommentList(type="skin" :id="skin._id" v-if="skin._id.length > 0")

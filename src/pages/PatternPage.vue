@@ -123,6 +123,7 @@ q-page#pattern
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('patternPage.previews.noPreview') }}
       //- Comments
       CommentList(type="pattern" :id="pattern._id" v-if="pattern._id.length > 0")

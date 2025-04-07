@@ -124,6 +124,7 @@ q-page#setlist
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in setlist.previews" :key="idx")
               q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='setlist.previews.length === 0') {{ $t('setlistPage.previews.noPreview') }}
       //- Comments
       CommentList(type="setlist" :id="setlist._id" v-if="setlist._id.length > 0")
