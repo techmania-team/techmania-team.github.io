@@ -1,4 +1,5 @@
 export const controls = ['touch', 'keys', 'km']
+export const controls_capitalize = ['Touch', 'Keys', 'KM']
 
 export const CONTROL_TOUCH = 0
 export const CONTROL_KEYS = 1

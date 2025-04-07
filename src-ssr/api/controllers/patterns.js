@@ -1,4 +1,3 @@
-import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
 import * as yup from 'yup'
@@ -7,8 +6,69 @@ import comments from '../models/comments'
 import users from '../models/users'
 import { checkImage } from '../utils/image'
 import validator from 'validator'
-import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
+import { controls_capitalize, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
 import handleServerError from '../utils/handleServerError'
+import { EmbedBuilder } from 'discord.js'
+import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
+
+const buildPatternEmbed = (pattern) => {
+  let strPreveiw = ''
+  for (const preview of pattern.previews) {
+    strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+  }
+
+  let strDifficulty = ''
+  for (const difficulty of pattern.difficulties) {
+    strDifficulty += `${controls_capitalize[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
+  }
+  const ytid =
+    pattern.previews.length > 0 && pattern.previews[0].ytid && pattern.previews[0].ytid.length > 0
+      ? pattern.previews[0].ytid
+      : ''
+
+  const image =
+    pattern.image.length > 0
+      ? pattern.image
+      : ytid.length > 0
+        ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
+        : process.env.HOST_URL + '/assets/unknown.jpg'
+
+  const url = new URL(`/patterns/${pattern._id}`, process.env.HOST_URL).toString()
+
+  const embed = new EmbedBuilder()
+    .setURL(url)
+    .setImage(image)
+    .setTitle(pattern.name)
+    .setColor(WEBHOOK_COLOR)
+    .addFields(
+      { name: 'Composer', value: pattern.composer, inline: false },
+      {
+        name: 'Keysounded',
+        value: pattern.keysounded === true ? 'Yes' : 'No',
+        inline: false,
+      },
+      { name: 'Previews', value: strPreveiw || 'None', inline: false },
+      { name: 'Difficulties', value: strDifficulty, inline: false },
+      { name: 'Download', value: pattern.link, inline: false },
+    )
+
+  if (pattern.description) {
+    const description = pattern.description.replace(/<[^>]+>/g, ' ').trim()
+    embed.addFields({
+      name: 'Description',
+      value: description.length > 1000 ? description.substring(0, 1000) + '...' : description,
+      inline: false,
+    })
+  }
+
+  embed.addFields({
+    name: 'More Info',
+    value: url,
+  })
+  embed.setTimestamp()
+
+  return embed
+}
 
 export const create = async (req, res) => {
   try {
@@ -48,59 +108,19 @@ export const create = async (req, res) => {
     const result = await patterns.create({ ...parseedBody, submitter: req.user._id })
 
     // Setup Discord webhook embed message
-    let strPreveiw = ''
-    for (const preview of parseedBody.previews) {
-      strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+    const embed = buildPatternEmbed(result)
+
+    // Send Discord webhook message
+    const id = await postWebhook(
+      process.env.DISCORD_WEBHOOK_PATTERNS,
+      `New pattern submitted by <@${req.user.discord}>`,
+      [embed],
+    )
+    // Save Discord webhook message ID if successful
+    if (id) {
+      result.webhook = id
+      await result.save()
     }
-    let strDifficulty = ''
-    for (const difficulty of parseedBody.difficulties) {
-      strDifficulty += `${controls[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
-    }
-    const ytid =
-      parseedBody.previews.length > 0 &&
-      parseedBody.previews[0].ytid &&
-      parseedBody.previews[0].ytid.length > 0
-        ? parseedBody.previews[0].ytid
-        : ''
-    const embeds = [
-      {
-        url: new URL(`/patterns/${result._id}`, process.env.HOST_URL).toString(),
-        image: {
-          url:
-            parseedBody.image.length > 0
-              ? parseedBody.image
-              : ytid.length > 0
-                ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-                : process.env.HOST_URL + '/assets/unknown.jpg',
-        },
-        title: parseedBody.name,
-        color: '15158332',
-        fields: [
-          { name: 'Composer', value: parseedBody.composer, inline: true },
-          {
-            name: 'Keysounded',
-            value: parseedBody.keysounded === true ? 'Yes' : 'No',
-            inline: true,
-          },
-          { name: 'Previews', value: strPreveiw || 'None', inline: false },
-          { name: 'Difficulties', value: strDifficulty, inline: false },
-          { name: 'Download', value: parseedBody.link, inline: false },
-        ],
-      },
-    ]
-    if (parseedBody.description) {
-      embeds[0].fields.push({
-        name: 'Description',
-        value: parseedBody.description.replace(/<[^>]+>/g, ' '),
-        inline: false,
-      })
-    }
-    await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
-      username: 'TECHMANIA',
-      avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
-      content: `New pattern submitted by <@${req.user.discord}>`,
-      embeds,
-    })
     res.status(200).send({ success: true, message: '', _id: result._id })
   } catch (error) {
     handleServerError(error)
@@ -457,6 +477,10 @@ export const del = async (req, res) => {
     await patterns.findByIdAndDelete(parsedParams.id)
     // Delete related comments
     await comments.deleteMany({ pattern: parsedParams.id })
+    // Delete webhook message
+    if (pattern.webhook) {
+      await deleteWebhook(process.env.DISCORD_WEBHOOK_PATTERNS, pattern.webhook)
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
@@ -536,6 +560,16 @@ export const update = async (req, res) => {
     pattern.description = parseedBody.description
 
     await pattern.save()
+
+    if (pattern.webhook) {
+      const embed = buildPatternEmbed(pattern)
+      await editWebhook(
+        process.env.DISCORD_WEBHOOK_PATTERNS,
+        pattern.webhook,
+        `New pattern submitted by <@${req.user.discord}>`,
+        [embed],
+      )
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
