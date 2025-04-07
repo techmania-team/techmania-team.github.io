@@ -490,7 +490,7 @@ const deletePattern = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } })
+    router.push(getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } }))
   } catch (error) {
     if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
       handleFormSubmitError(error, 'patternFormPage', 'delete', 'patterns')
