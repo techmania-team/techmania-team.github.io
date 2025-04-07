@@ -20,6 +20,7 @@
     "axios": "^1.8.4",
     "connect-mongo": "^5.1.0",
     "date-fns": "^4.1.0",
+    "discord.js": "^14.18.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
     "express-recaptcha": "^5.1.0",
