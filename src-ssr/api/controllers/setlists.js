@@ -307,6 +307,7 @@ export const search = async (req, res) => {
           'submitter.discordToken',
           'submitter.accessInfo',
           'comments',
+          'webhook',
         ],
       },
     ]
@@ -579,7 +580,7 @@ export const searchID = async (req, res) => {
         },
       },
       { $unwind: '$submitter' },
-      { $unset: ['comments'] },
+      { $unset: ['comments', 'webhook'] },
     ])
 
     // Note:
