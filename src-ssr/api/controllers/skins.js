@@ -1,4 +1,3 @@
-import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
 import validator from 'validator'
@@ -6,11 +5,66 @@ import * as yup from 'yup'
 import skins from '../models/skins'
 import users from '../models/users'
 import { checkImage } from '../utils/image'
-import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
+import {
+  types_capitalize,
+  SKIN_NOTE,
+  SKIN_VFX,
+  SKIN_COMBO,
+  SKIN_GAMEUI,
+  SKIN_THEME,
+} from 'src/utils/skin'
 import comments from '../models/comments'
 import handleServerError from '../utils/handleServerError'
+import { EmbedBuilder } from 'discord.js'
+import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
 
-const types = ['Note', 'VFX', 'Combo', 'Game UI', 'Theme']
+const buildSkinEmbed = (skin) => {
+  let strPreveiw = ''
+  for (const preview of skin.previews) {
+    strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+  }
+  const ytid =
+    skin.previews.length > 0 && skin.previews[0].ytid && skin.previews[0].ytid.length > 0
+      ? skin.previews[0].ytid
+      : ''
+
+  const image =
+    skin.image.length > 0
+      ? skin.image
+      : ytid.length > 0
+        ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
+        : process.env.HOST_URL + '/assets/unknown.jpg'
+
+  const url = new URL(`/skins/${skin._id}`, process.env.HOST_URL).toString()
+
+  const embed = new EmbedBuilder()
+    .setURL(url)
+    .setImage(image)
+    .setTitle(skin.name)
+    .setColor(WEBHOOK_COLOR)
+    .addFields(
+      { name: 'Type', value: types_capitalize[skin.type], inline: false },
+      { name: 'Previews', value: strPreveiw || 'None', inline: false },
+      { name: 'Download', value: skin.link, inline: false },
+    )
+
+  if (skin.description) {
+    const description = skin.description.replace(/<[^>]+>/g, ' ').trim()
+    embed.addFields({
+      name: 'Description',
+      value: description.length > 1000 ? description.substring(0, 1000) + '...' : description,
+      inline: false,
+    })
+  }
+
+  embed.addFields({
+    name: 'More Info',
+    value: url,
+  })
+  embed.setTimestamp()
+
+  return embed
+}
 
 export const create = async (req, res) => {
   try {
@@ -44,49 +98,18 @@ export const create = async (req, res) => {
     const result = await skins.create({ ...parseedBody, submitter: req.user._id })
 
     // Setup Discord webhook embed message
-    let strPreveiw = ''
-    for (const preview of parseedBody.previews) {
-      strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+    const embed = buildSkinEmbed(result)
+    // Send Discord webhook message
+    const id = await postWebhook(
+      process.env.DISCORD_WEBHOOK_SKINS,
+      `New skin submitted by <@${req.user.discord}>`,
+      [embed],
+    )
+    // Save Discord webhook message ID if successful
+    if (id) {
+      result.webhook = id
+      await result.save()
     }
-    const ytid =
-      parseedBody.previews.length > 0 &&
-      parseedBody.previews[0].ytid &&
-      parseedBody.previews[0].ytid.length > 0
-        ? parseedBody.previews[0].ytid
-        : ''
-    const embeds = [
-      {
-        url: new URL(`/skins/${result._id}`, process.env.HOST_URL).toString(),
-        image: {
-          url:
-            parseedBody.image.length > 0
-              ? parseedBody.image
-              : ytid.length > 0
-                ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-                : process.env.HOST_URL + '/assets/unknown.jpg',
-        },
-        title: parseedBody.name,
-        color: '15158332',
-        fields: [
-          { name: 'Type', value: types[parseedBody.type], inline: true },
-          { name: 'Previews', value: strPreveiw || 'None', inline: false },
-          { name: 'Download', value: parseedBody.link, inline: false },
-        ],
-      },
-    ]
-    if (parseedBody.description) {
-      embeds[0].fields.push({
-        name: 'Description',
-        value: parseedBody.description.replace(/<[^>]+>/g, ' '),
-        inline: false,
-      })
-    }
-    await axios.post(process.env.DISCORD_WEBHOOK_PATTERNS, {
-      username: 'TECHMANIA',
-      avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
-      content: `New skin submitted by <@${req.user.discord}>`,
-      embeds,
-    })
     res.status(200).send({ success: true, message: '', _id: result._id })
   } catch (error) {
     handleServerError(error)
@@ -408,6 +431,10 @@ export const del = async (req, res) => {
     await skins.findByIdAndDelete(parsedParams.id)
     // Delete related comments
     await comments.deleteMany({ skin: parsedParams.id })
+    // Delete webhook message
+    if (skin.webhook) {
+      await deleteWebhook(process.env.DISCORD_WEBHOOK_SKINS, skin.webhook)
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
@@ -479,6 +506,16 @@ export const update = async (req, res) => {
     skin.description = parseedBody.description
 
     await skin.save()
+
+    if (skin.webhook) {
+      const embed = buildSkinEmbed(skin)
+      await editWebhook(
+        process.env.DISCORD_WEBHOOK_SKINS,
+        skin.webhook,
+        `New skin submitted by <@${req.user.discord}>`,
+        [embed],
+      )
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {

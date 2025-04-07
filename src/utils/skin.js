@@ -1,4 +1,5 @@
 export const types = ['note', 'vfx', 'combo', 'gameUI', 'theme']
+export const types_capitalize = ['Note', 'VFX', 'Combo', 'Game UI', 'Theme']
 
 export const SKIN_NOTE = 0
 export const SKIN_VFX = 1
