@@ -1,4 +1,3 @@
-import axios from 'axios'
 import mongoose from 'mongoose'
 import _ from 'lodash'
 import * as yup from 'yup'
@@ -22,6 +21,69 @@ import {
   CRITERIA_DIRECTION_GREATER,
 } from 'src/utils/criteria'
 import handleServerError from '../utils/handleServerError'
+import { EmbedBuilder } from 'discord.js'
+import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
+
+const buildSetlistEmbed = (setlist) => {
+  let strPreveiw = ''
+  for (const preview of setlist.previews) {
+    strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+  }
+
+  const ytid =
+    setlist.previews.length > 0 && setlist.previews[0].ytid && setlist.previews[0].ytid.length > 0
+      ? setlist.previews[0].ytid
+      : ''
+
+  const image =
+    setlist.image.length > 0
+      ? setlist.image
+      : ytid.length > 0
+        ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
+        : process.env.HOST_URL + '/assets/unknown.jpg'
+
+  const url = new URL(`/setlists/${setlist._id}`, process.env.HOST_URL).toString()
+
+  const embed = new EmbedBuilder()
+    .setURL(url)
+    .setImage(image)
+    .setTitle(setlist.name)
+    .setColor(WEBHOOK_COLOR)
+    .addFields([
+      {
+        name: 'Previews',
+        value: strPreveiw || 'None',
+        inline: false,
+      },
+      {
+        name: 'Download',
+        value: setlist.link,
+        inline: false,
+      },
+      {
+        name: 'Patterns',
+        value: `Selectable: ${setlist.selectablePatterns.length}\nHidden:${setlist.hiddenPatterns.length}`,
+        inline: false,
+      },
+    ])
+
+  if (setlist.description) {
+    const description = setlist.description.replace(/<[^>]+>/g, ' ').trim()
+    embed.addFields({
+      name: 'Description',
+      value: description.length > 1000 ? description.substring(0, 1000) + '...' : description,
+      inline: false,
+    })
+  }
+
+  embed.addFields({
+    name: 'More Info',
+    value: url,
+  })
+  embed.setTimestamp()
+
+  return embed
+}
 
 export const create = async (req, res) => {
   try {
@@ -141,52 +203,23 @@ export const create = async (req, res) => {
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
 
-    // Create pattern
+    // Create setlist
     const result = await setlists.create({ ...parseedBody, submitter: req.user._id })
 
     // Setup Discord webhook embed message
-    let strPreveiw = ''
-    for (const preview of parseedBody.previews) {
-      strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
+    const embed = buildSetlistEmbed(result)
+
+    // Send Discord webhook message
+    const id = await postWebhook(
+      process.env.DISCORD_WEBHOOK_SETLISTS,
+      `New setlist submitted by <@${req.user.discord}>`,
+      [embed],
+    )
+
+    if (id) {
+      result.webhook = id
+      await result.save()
     }
-    const ytid =
-      parseedBody.previews.length > 0 &&
-      parseedBody.previews[0].ytid &&
-      parseedBody.previews[0].ytid.length > 0
-        ? parseedBody.previews[0].ytid
-        : ''
-    const embeds = [
-      {
-        url: new URL(`/setlists/${result._id}`, process.env.HOST_URL).toString(),
-        image: {
-          url:
-            parseedBody.image.length > 0
-              ? parseedBody.image
-              : ytid.length > 0
-                ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-                : process.env.HOST_URL + '/assets/unknown.jpg',
-        },
-        title: parseedBody.name,
-        color: '15158332',
-        fields: [
-          { name: 'Previews', value: strPreveiw || 'None', inline: false },
-          { name: 'Download', value: parseedBody.link, inline: false },
-        ],
-      },
-    ]
-    if (parseedBody.description) {
-      embeds[0].fields.push({
-        name: 'Description',
-        value: parseedBody.description.replace(/<[^>]+>/g, ' '),
-        inline: false,
-      })
-    }
-    await axios.post(process.env.DISCORD_WEBHOOK_SETLISTS, {
-      username: 'TECHMANIA',
-      avatar_url: 'https://avatars.githubusercontent.com/u/77661148?s=200&v=4',
-      content: `New setlist submitted by <@${req.user.discord}>`,
-      embeds,
-    })
 
     res.status(200).send({ success: true, message: '', _id: result._id })
   } catch (error) {
@@ -582,16 +615,20 @@ export const del = async (req, res) => {
     // Parsed request params
     const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
-    const pattern = await setlists.findById(parsedParams.id).orFail()
+    const setlist = await setlists.findById(parsedParams.id).orFail()
 
-    if (pattern.submitter.toString() !== req.user._id.toString()) {
+    if (setlist.submitter.toString() !== req.user._id.toString()) {
       throw new Error('Permission')
     }
 
     // Delete pattern
     await setlists.findByIdAndDelete(parsedParams.id)
     // Delete related comments
-    await comments.deleteMany({ pattern: parsedParams.id })
+    await comments.deleteMany({ setlist: parsedParams.id })
+
+    if (setlist.webhook) {
+      await deleteWebhook(process.env.DISCORD_WEBHOOK_SETLISTS, setlist.webhook)
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
@@ -742,6 +779,16 @@ export const update = async (req, res) => {
     }
 
     await setlists.findByIdAndUpdate(parsedParams.id, parseedBody).orFail()
+
+    if (setlist.webhook) {
+      const embed = buildSetlistEmbed(setlist)
+      await editWebhook(
+        process.env.DISCORD_WEBHOOK_SETLISTS,
+        setlist.webhook,
+        `New setlist submitted by <@${req.user.discord}>`,
+        [embed],
+      )
+    }
 
     res.status(200).send({ success: true, message: '' })
   } catch (error) {
