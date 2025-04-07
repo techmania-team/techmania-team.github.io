@@ -1,5 +1,5 @@
 import { defineBoot } from '#q-app/wrappers'
-import { setupI18n, getDefaultLocale, setLocale } from 'src/i18n'
+import { setupI18n, getDefaultLocale, setLocale, getI18nRoute } from 'src/i18n'
 
 export default defineBoot(async ({ app, router, ssrContext }) => {
   const i18n = setupI18n(ssrContext)
@@ -9,7 +9,7 @@ export default defineBoot(async ({ app, router, ssrContext }) => {
     if (!to.params.locale) {
       const locale = getDefaultLocale(ssrContext)
       await setLocale(locale, ssrContext)
-      return next({ params: { ...to.params, locale } })
+      return next(getI18nRoute(to))
     } else {
       await setLocale(to.params.locale, ssrContext)
     }
