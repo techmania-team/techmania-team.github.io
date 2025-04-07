@@ -341,7 +341,7 @@
                       toolbar-toggle-color="tech"
                     )
             //- Field - Danger Zone
-            q-list.q-my-lg(v-if="setlist._id.length > 0")
+            q-list.q-my-lg(v-if="$route.params.id")
               //- List header
               q-item-label.text-h6.text-red(header) {{ $t('setlistFormPage.dangerZone.title') }}
               q-separator.q-mb-md(inset)
