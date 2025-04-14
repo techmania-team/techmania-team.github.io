@@ -231,7 +231,9 @@ defineOptions({
   async preFetch({ currentRoute, redirect }) {
     // Prefetch setlist data
     const setlist = useTempSetlistStore()
-    setlist.clearData()
+    if (setlist._id !== currentRoute.params.id) {
+      setlist.clearData()
+    }
 
     if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
       redirect('/404')

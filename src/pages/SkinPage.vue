@@ -206,7 +206,9 @@ defineOptions({
   async preFetch({ currentRoute, redirect }) {
     // Prefetch skin data
     const skin = useTempSkinStore()
-    skin.clearData()
+    if (skin._id !== currentRoute.params.id) {
+      skin.clearData()
+    }
 
     if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
       redirect('/404')

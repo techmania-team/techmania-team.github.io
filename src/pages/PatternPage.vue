@@ -230,7 +230,9 @@ defineOptions({
   async preFetch({ currentRoute, redirect }) {
     // Prefetch pattern data
     const pattern = useTempPatternStore()
-    pattern.clearData()
+    if (pattern._id !== currentRoute.params.id) {
+      pattern.clearData()
+    }
 
     if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
       redirect('/404')
