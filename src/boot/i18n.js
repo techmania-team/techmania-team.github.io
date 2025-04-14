@@ -6,6 +6,10 @@ export default defineBoot(async ({ app, router, ssrContext }) => {
   app.use(i18n)
 
   router.beforeEach(async (to, from, next) => {
+    if (to.name === 'error-404') {
+      return next()
+    }
+
     if (!to.params.locale) {
       const locale = getDefaultLocale(ssrContext)
       await setLocale(locale, ssrContext)

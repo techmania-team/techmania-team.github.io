@@ -122,6 +122,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
+    name: 'error-404',
     component: () => import('pages/ErrorNotFound.vue'),
     meta: { login: false },
   },
