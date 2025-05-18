@@ -1,5 +1,4 @@
 import axios from 'axios'
-import User from '../models/users'
 
 export const refreshAccessToken = async (req) => {
   const params = new URLSearchParams()
@@ -13,10 +12,6 @@ export const refreshAccessToken = async (req) => {
     })
     req.user.accessToken = data.access_token
     req.user.refreshToken = data.refresh_token
-    await User.findByIdAndUpdate(req.user._id, {
-      discordToken: data.access_token,
-      discordRefreshToken: data.refresh_token,
-    })
   } catch {
     throw new Error('Failed to refresh access token')
   }

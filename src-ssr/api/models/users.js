@@ -8,16 +8,6 @@ const schema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    discordToken: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    discordRefreshToken: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     // Discord username
     name: {
       type: String,

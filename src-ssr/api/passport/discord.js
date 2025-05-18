@@ -23,8 +23,6 @@ export default new Strategy(
         { discord: profile.id },
         {
           discord: profile.id,
-          discordToken: accessToken,
-          discordRefreshToken: refreshToken,
           name: profile.global_name,
           avatar: profile.avatar,
         },
