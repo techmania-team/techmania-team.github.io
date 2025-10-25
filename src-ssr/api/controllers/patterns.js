@@ -10,6 +10,7 @@ import { controls_capitalize, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'sr
 import handleServerError from '../utils/handleServerError'
 import { EmbedBuilder } from 'discord.js'
 import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
+import sanitizeHtml from 'sanitize-html'
 
 const buildPatternEmbed = (pattern) => {
   let strPreveiw = ''
@@ -99,7 +100,7 @@ export const create = async (req, res) => {
           lanes: yup.number().required().min(2).max(4),
         }),
       ),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
@@ -539,7 +540,7 @@ export const update = async (req, res) => {
           lanes: yup.number().required().min(2).max(4),
         }),
       ),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })

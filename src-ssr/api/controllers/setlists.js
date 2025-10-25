@@ -23,6 +23,7 @@ import {
 import handleServerError from '../utils/handleServerError'
 import { EmbedBuilder } from 'discord.js'
 import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
+import sanitizeHtml from 'sanitize-html'
 
 const buildSetlistEmbed = (setlist) => {
   let strPreveiw = ''
@@ -198,7 +199,7 @@ export const create = async (req, res) => {
           ytid: yup.string().required(),
         }),
       ),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
@@ -767,7 +768,7 @@ export const update = async (req, res) => {
           ytid: yup.string().required(),
         }),
       ),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })

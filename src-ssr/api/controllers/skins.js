@@ -17,6 +17,7 @@ import comments from '../models/comments'
 import handleServerError from '../utils/handleServerError'
 import { EmbedBuilder } from 'discord.js'
 import { WEBHOOK_COLOR, postWebhook, editWebhook, deleteWebhook } from '../utils/webhook'
+import sanitizeHtml from 'sanitize-html'
 
 const buildSkinEmbed = (skin) => {
   let strPreveiw = ''
@@ -89,7 +90,7 @@ export const create = async (req, res) => {
         .number()
         .required()
         .oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
@@ -487,7 +488,7 @@ export const update = async (req, res) => {
         .number()
         .required()
         .oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]),
-      description: yup.string(),
+      description: yup.string().transform((value) => sanitizeHtml(value)),
     })
     // Parsed request query
     const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
