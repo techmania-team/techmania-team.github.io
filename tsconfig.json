@@ -1,0 +1,9 @@
+{
+  "extends": "./.quasar/tsconfig.json",
+  "vueCompilerOptions": {
+    "plugins": ["@vue/language-plugin-pug"]
+  },
+  "compilerOptions": {
+    "types": ["vite-plugin-vue-layouts-next/client"]
+  }
+}
