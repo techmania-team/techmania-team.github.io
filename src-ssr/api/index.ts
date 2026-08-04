@@ -1,19 +1,19 @@
+import type { Express, NextFunction, Request, Response } from 'express'
+import MongoStore from 'connect-mongo'
 import express from 'express'
-import mongoose from 'mongoose'
 import mongoSanitize from 'express-mongo-sanitize'
 import rateLimit from 'express-rate-limit'
-import { initialize as passportInitialize } from './passport'
 import session from 'express-session'
-import MongoStore from 'connect-mongo'
-
-import routerUsers from './routes/users'
-import routerPatterns from './routes/patterns'
-import routerSkins from './routes/skins'
-import routerSetlists from './routes/setlists'
-import routerComments from './routes/comments'
+import { StatusCodes } from 'http-status-codes'
+import mongoose from 'mongoose'
+import middlewareError from './middlewares/error'
+import { initialize as passportInitialize } from './passport'
 import routerAuth from './routes/auth'
-
-import handleServerError from './utils/handleServerError'
+import routerComments from './routes/comments'
+import routerPatterns from './routes/patterns'
+import routerSetlists from './routes/setlists'
+import routerSkins from './routes/skins'
+import routerUsers from './routes/users'
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -27,9 +27,9 @@ const limiter = rateLimit({
   },
 })
 
-export const initializeApi = async (app) => {
+export const initializeApi = async (app: Express) => {
   try {
-    await mongoose.connect(process.env.DB_URL)
+    await mongoose.connect(import.meta.env.DB_URL!)
 
     // Set up Express
     app.set('trust proxy', 1)
@@ -41,27 +41,32 @@ export const initializeApi = async (app) => {
     // Set up session
     app.use(
       session({
-        secret: process.env.SESSION_SECRET,
+        secret: import.meta.env.SESSION_SECRET!,
         saveUninitialized: false,
         resave: true,
-        store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
+        store: MongoStore.create({ mongoUrl: import.meta.env.DB_URL! }),
         cookie: {
-          secure: process.env.PROD,
+          secure: Boolean(import.meta.env.PROD || false),
           // 14 days, same as connect mongo default ttl
           // https://www.npmjs.com/package/connect-mongo#session-expiration
           maxAge: 14 * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          sameSite: 'lax',
         },
       }),
     )
 
     // Set up body parser
-    app.use(express.json())
-    app.use(express.urlencoded({ extended: true }))
-    app.use(mongoSanitize())
-    // Hnadle body parser errors
-    app.use((error, req, res, next) => {
-      if (error) return res.status(400).send({ success: false, message: 'Validation Failed' })
-      else next()
+    app.use('/api', express.json())
+    app.use('/api', express.urlencoded({ extended: true }))
+    app.use('/api', mongoSanitize())
+
+    // Handle body parser errors
+    app.use('/api', (error: unknown, req: Request, res: Response, _next: NextFunction) => {
+      console.error(error)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({ success: false, message: 'Validation Failed' })
     })
 
     // Initialize Passport
@@ -74,11 +79,12 @@ export const initializeApi = async (app) => {
     app.use('/api/setlists', routerSetlists)
     app.use('/api/comments', routerComments)
     app.use('/api/auth', routerAuth)
-    app.use('/api/*', (req, res) => {
-      res.status(404).send({ success: false, message: 'Not Found.' })
+    app.use('/api', (req, res) => {
+      res.status(StatusCodes.NOT_FOUND).send({ success: false, message: 'Not Found.' })
     })
+    app.use('/api', middlewareError)
   } catch (error) {
-    handleServerError(error)
+    console.error(error)
     process.exit(1)
   }
 }
