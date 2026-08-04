@@ -1,12 +1,12 @@
 import type { Express, NextFunction, Request, Response } from 'express'
 import MongoStore from 'connect-mongo'
 import express from 'express'
-import mongoSanitize from 'express-mongo-sanitize'
 import rateLimit from 'express-rate-limit'
 import session from 'express-session'
 import { StatusCodes } from 'http-status-codes'
 import mongoose from 'mongoose'
 import middlewareError from './middlewares/error'
+import middlewareMongoSanitize from './middlewares/mongo-sanitize'
 import { initialize as passportInitialize } from './passport'
 import routerAuth from './routes/auth'
 import routerComments from './routes/comments'
@@ -59,7 +59,7 @@ export const initializeApi = async (app: Express) => {
     // Set up body parser
     app.use('/api', express.json())
     app.use('/api', express.urlencoded({ extended: true }))
-    app.use('/api', mongoSanitize())
+    app.use('/api', middlewareMongoSanitize)
 
     // Handle body parser errors
     app.use('/api', (error: unknown, req: Request, res: Response, _next: NextFunction) => {
