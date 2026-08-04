@@ -1,18 +1,22 @@
+import type { ApiResponse } from '@/types/api'
+import type { AxiosError } from 'axios'
 import { Notify } from 'quasar'
-import { i18n } from 'src/i18n'
-import { useUserStore } from 'src/stores/user'
-import { getI18nRoute } from 'src/i18n'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { getI18nRoute } from '@/i18n'
+import { useUserStore } from '@/stores/user'
 
-export const handleError = (error) => {
-  if (process.env.DEBUGGING) {
+export const handleError = (error: unknown) => {
+  if (import.meta.env.QUASAR_DEBUG) {
     console.error(error)
   }
+
+  const i18n = useI18n()
 
   Notify.create({
     icon: 'warning',
     color: 'negative',
-    message: i18n.global.t('error.unknown'),
+    message: i18n.t('error.unknown'),
   })
 }
 
@@ -23,11 +27,16 @@ export const handleError = (error) => {
  * @param {*} action Action name
  * @param {*} noLoginRedirectRoute Route to redirect to if user is not logged in
  */
-export const handleFormSubmitError = (error, page, action, noLoginRedirectRoute) => {
+export const handleFormSubmitError = async (
+  error: AxiosError<ApiResponse<undefined>>,
+  page: string,
+  action: string,
+) => {
   const user = useUserStore()
   const router = useRouter()
-  const { t } = i18n.global
-  switch (error.response.data.message) {
+  const i18n = useI18n()
+  const { t } = i18n
+  switch (error.response?.data?.message) {
     case 'Not in guild':
       Notify.create({
         icon: 'warning',
@@ -49,7 +58,7 @@ export const handleFormSubmitError = (error, page, action, noLoginRedirectRoute)
         color: 'negative',
       })
       user.clearData()
-      router.push(getI18nRoute({ name: noLoginRedirectRoute }))
+      await router.push(getI18nRoute({ name: 'index' }))
       break
     default:
       handleError(error)

@@ -1,4 +1,4 @@
-export const getLevelColor = (level) => {
+export const getLevelColor = (level: number) => {
   const cls = []
   if (level <= 5) {
     cls.push({ 'text-yellow-8': true })
@@ -10,7 +10,7 @@ export const getLevelColor = (level) => {
   return cls
 }
 
-export const getLevelFilter = (level) => {
+export const getLevelFilter = (level: number) => {
   const cls = []
   if (level <= 5) {
     cls.push({ 'filter-nm': true })
