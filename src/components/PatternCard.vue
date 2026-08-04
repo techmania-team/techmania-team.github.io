@@ -11,7 +11,7 @@ q-card.full-height.card-pattern
   q-card-section
     //- Download or edit button
     q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="pattern.link" target="__blank")
-    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push(getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id}}))")
+    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id}})")
     //- Informations
     q-list
       //- Link
@@ -64,7 +64,7 @@ q-card.full-height.card-pattern
               v-for="(difficulty, index) in pattern.difficulties"
               :key="'D'+index"
               size="sm"
-              :name="getControlIcon(difficulty.control, difficulty.level)"
+              :name="getControlIcon(difficulty.control)"
               :class="getLevelFilter(difficulty.level)"
             )
               q-tooltip.bg-black(anchor="top middle" self="bottom middle")
@@ -73,20 +73,21 @@ q-card.full-height.card-pattern
                 span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import type { IPattern } from '@/types/pattern'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import * as date from 'src/utils/date'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { getControlIcon } from 'src/utils/control'
-import { getLevelFilter, getLevelColor } from 'src/utils/level'
-import { controls } from 'src/utils/control'
-import { getI18nRoute } from 'src/i18n'
+import { getI18nRoute } from '@/i18n'
+import { getControlIcon } from '@/utils/control'
+import { controls } from '@/utils/control'
+import * as date from '@/utils/date'
+import { getLevelColor, getLevelFilter } from '@/utils/level'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
-const props = defineProps({
-  pattern: Object,
-  mine: Boolean,
-})
+const props = defineProps<{
+  mine: boolean
+  pattern: IPattern
+}>()
 
 const video = ref(false)
 const videoLink = ref('')
@@ -118,9 +119,15 @@ const hasLanes = computed(() => {
   return lanes
 })
 
-const clickHeader = () => {
+const clickHeader = async () => {
   if (hasVideo.value) video.value = true
-  else router.push(getI18nRoute({ name: 'pattern', params: { id: props.pattern._id } }))
+  else
+    await router.push(
+      getI18nRoute({
+        name: 'pattern',
+        params: { id: props.pattern._id },
+      }),
+    )
 }
 
 onMounted(() => {
@@ -131,7 +138,7 @@ onMounted(() => {
     props.pattern.image?.length > 0
       ? props.pattern.image
       : props.pattern.previews.length > 0
-        ? getYouTubeThumbnail(props.pattern.previews[0].ytid)
+        ? getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
         : '/assets/unknown.jpg'
 })
 </script>

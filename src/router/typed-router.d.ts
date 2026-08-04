@@ -38,8 +38,8 @@ declare module 'vue-router/auto-routes' {
       { catchAll: ParamValue<false> },
       | never
     >,
-    '/[[locale]]/': RouteRecordInfo<
-      '/[[locale]]/',
+    'index': RouteRecordInfo<
+      'index',
       '/:locale?',
       { locale?: ParamValueZeroOrOne<true> },
       { locale?: ParamValueZeroOrOne<false> },
@@ -173,7 +173,7 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/[[locale]]/index.vue': {
       routes:
-        | '/[[locale]]/'
+        | 'index'
       views:
         | never
       pathParamNames:

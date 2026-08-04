@@ -19,7 +19,7 @@ q-page#index
               div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('indexPage.latestVersion') }}: {{ tag.win }}
+            | {{ $t('indexPage.latestVersion') }}: {{ releases.win.tag }}
             br
             | {{ $t('indexPage.latestReleaseDate') }}: {{ published.win }}
             br
@@ -38,7 +38,7 @@ q-page#index
               div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('indexPage.latestVersion') }}: {{ tag.android }}
+            | {{ $t('indexPage.latestVersion') }}: {{ releases.android.tag }}
             br
             | {{ $t('indexPage.latestReleaseDate') }}: {{ published.android }}
             br
@@ -57,7 +57,7 @@ q-page#index
               div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('indexPage.latestVersion') }}: {{ tag.ios }}
+            | {{ $t('indexPage.latestVersion') }}: {{ releases.ios.tag }}
             br
             | {{ $t('indexPage.latestReleaseDate') }}: {{ published.ios }}
             br
@@ -76,7 +76,7 @@ q-page#index
               div {{ $t('indexPage.download') }}
           //- Version and release date
           p
-            | {{ $t('indexPage.latestVersion') }}: {{ tag.mac }}
+            | {{ $t('indexPage.latestVersion') }}: {{ releases.mac.tag }}
             br
             | {{ $t('indexPage.latestReleaseDate') }}: {{ published.mac }}
             br
@@ -128,21 +128,21 @@ q-page#index
               q-video(:ratio="16/9" :src="video")
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useMeta, useQuasar } from 'quasar'
-import PatternCard from 'src/components/PatternCard.vue'
-import SetlistCard from 'src/components/SetlistCard.vue'
-import SkinCard from 'src/components/SkinCard.vue'
-import { useTempIndexStore } from 'src/stores/temp-index'
-import { toLocaleString } from 'src/utils/date'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import PatternCard from '@/components/PatternCard.vue'
+import SetlistCard from '@/components/SetlistCard.vue'
+import SkinCard from '@/components/SkinCard.vue'
+import { useTempIndexStore } from '@/stores/temp-index'
+import { toLocaleString } from '@/utils/date'
 
 const $q = useQuasar()
 const route = useRoute()
 const tempIndex = useTempIndexStore()
-const { tag, patterns, skins, setlists, publishDate } = storeToRefs(tempIndex)
+const { releases, patterns, skins, setlists } = storeToRefs(tempIndex)
 
 const metaData = {
   title: 'TECHMANIA',
@@ -165,7 +165,7 @@ const metaData = {
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     ogTitle: {
       property: 'og:title',
@@ -186,7 +186,7 @@ const metaData = {
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     twTitle: {
       name: 'twitter:title',
@@ -214,10 +214,11 @@ else if ($q.platform.is.mac) platform.value = 'mac'
 // Published dates
 const published = computed(() => {
   return {
-    win: publishDate.value.win.length > 0 ? toLocaleString(publishDate.value.win) : '-',
-    android: publishDate.value.android.length > 0 ? toLocaleString(publishDate.value.android) : '-',
-    ios: publishDate.value.ios.length > 0 ? toLocaleString(publishDate.value.ios) : '-',
-    mac: publishDate.value.mac.length > 0 ? toLocaleString(publishDate.value.mac) : '-',
+    win: releases.value.win.date.length > 0 ? toLocaleString(releases.value.win.date) : '-',
+    android:
+      releases.value.android.date.length > 0 ? toLocaleString(releases.value.android.date) : '-',
+    ios: releases.value.ios.date.length > 0 ? toLocaleString(releases.value.ios.date) : '-',
+    mac: releases.value.mac.date.length > 0 ? toLocaleString(releases.value.mac.date) : '-',
   }
 })
 
@@ -241,11 +242,6 @@ defineOptions({
   },
 })
 
-onMounted(() => {
-  // Fetch Release data from GitHub
-  if (process.env.CLIENT) tempIndex.fetchGitHub()
-})
-
 onUnmounted(() => {
   // Clear temp index data
   // Note:
@@ -254,3 +250,9 @@ onUnmounted(() => {
   // tempIndex.clearData()
 })
 </script>
+
+<route lang="yaml">
+name: index
+meta:
+  login: false
+</route>

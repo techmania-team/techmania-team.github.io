@@ -55,18 +55,19 @@ q-card.full-height.card-setlist
                   | {{ formattedUpdateTime.text }}
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import type { ISetlist } from '@/types/setlist'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import * as date from 'src/utils/date'
-import { controls } from 'src/utils/control'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { getI18nRoute } from 'src/i18n'
+import { getI18nRoute } from '@/i18n'
+import { controls } from '@/utils/control'
+import * as date from '@/utils/date'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
-const props = defineProps({
-  setlist: Object,
-  mine: Boolean,
-})
+const props = defineProps<{
+  setlist: ISetlist
+  mine: boolean
+}>()
 
 const video = ref(false)
 const videoLink = ref('')
@@ -90,9 +91,9 @@ const formattedUpdateTime = computed(() => {
   }
 })
 
-const clickHeader = () => {
+const clickHeader = async () => {
   if (hasVideo.value) video.value = true
-  else router.push(getI18nRoute({ name: 'setlist', params: { id: props.setlist._id } }))
+  else await router.push(getI18nRoute({ name: 'setlist', params: { id: props.setlist._id } }))
 }
 
 onMounted(() => {
@@ -103,7 +104,7 @@ onMounted(() => {
     props.setlist.image?.length > 0
       ? props.setlist.image
       : props.setlist.previews.length > 0
-        ? getYouTubeThumbnail(props.setlist.previews[0].ytid)
+        ? getYouTubeThumbnail(props.setlist.previews[0]!.ytid)
         : '/assets/unknown.jpg'
 })
 </script>
