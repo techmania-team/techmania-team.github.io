@@ -3,7 +3,7 @@ import { RecaptchaV3 } from 'express-recaptcha'
 import { StatusCodes } from 'http-status-codes'
 
 const recaptcha = new RecaptchaV3(
-  import.meta.env.RECAPTCHA_SITE_KEY,
+  import.meta.env.QCLI_RECAPTCHA_SITE_KEY,
   import.meta.env.RECAPTCHA_SECRET_KEY!,
 )
 

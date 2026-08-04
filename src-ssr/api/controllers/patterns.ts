@@ -36,9 +36,12 @@ const buildPatternEmbed = (pattern: IPattern) => {
       ? pattern.image
       : ytid.length > 0
         ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-        : import.meta.env.HOST_URL + '/assets/unknown.jpg'
+        : import.meta.env.QCLI_HOST_URL + '/assets/unknown.jpg'
 
-  const url = new URL(`/patterns/${pattern._id.toString()}`, import.meta.env.HOST_URL).toString()
+  const url = new URL(
+    `/patterns/${pattern._id.toString()}`,
+    import.meta.env.QCLI_HOST_URL,
+  ).toString()
 
   const embed = new EmbedBuilder()
     .setURL(url)
