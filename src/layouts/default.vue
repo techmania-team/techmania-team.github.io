@@ -86,16 +86,17 @@ q-layout(view='hHh lpR fff')
         q-btn(flat round icon="fab fa-reddit-alien" color="tech" href="https://www.reddit.com/r/TechMania/" target="_blank")
 </template>
 
-<script setup>
-import DiscordAvatar from 'src/components/DiscordAvatar.vue'
-import { getI18nRoute, localeOptions, setLocale } from 'src/i18n'
-import { useUserStore } from 'src/stores/user'
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import { getI18nRoute, localeOptions, setLocale } from '@/i18n'
+import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
-const { t } = useI18n()
+const i18n = useI18n()
+const t = i18n.t
 const router = useRouter()
 const route = useRoute()
 
@@ -103,60 +104,71 @@ const route = useRoute()
 const dropdown = ref(false)
 
 // Nav items
-const navs = computed(() => [
-  // {
-  //   to: '/howtoplay',
-  //   label: t('nav.howtoplay'),
-  // },
-  {
-    href: 'https://techmania-team.github.io/techmania-docs/',
-    label: t('nav.documentations'),
-    target: '_blank',
-  },
-  {
-    to: getI18nRoute({ name: 'changelog' }),
-    label: t('nav.changelog'),
-  },
-  {
-    to: getI18nRoute({ name: 'patterns' }),
-    label: t('nav.patterns'),
-  },
-  {
-    to: getI18nRoute({ name: 'skins' }),
-    label: t('nav.skins'),
-  },
-  {
-    to: getI18nRoute({ name: 'setlists' }),
-    label: t('nav.setlists'),
-  },
-])
+const navs = computed(() => {
+  // Explicitly read locale so Vue tracks it and re-evaluates routes on language change
+  void i18n.locale.value
+  return [
+    // {
+    //   to: '/howtoplay',
+    //   label: t('nav.howtoplay'),
+    // },
+    {
+      href: 'https://techmania-team.github.io/techmania-docs/',
+      label: t('nav.documentations'),
+      target: '_blank',
+    },
+    {
+      to: getI18nRoute({ name: 'changelog' }),
+      label: t('nav.changelog'),
+    },
+    {
+      to: getI18nRoute({ name: 'patterns' }),
+      label: t('nav.patterns'),
+    },
+    {
+      to: getI18nRoute({ name: 'skins' }),
+      label: t('nav.skins'),
+    },
+    {
+      to: getI18nRoute({ name: 'setlists' }),
+      label: t('nav.setlists'),
+    },
+  ]
+})
 
-const loginNavs = computed(() => [
-  {
-    to: getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } }),
-    label: t('nav.myPage'),
-  },
-  {
-    to: getI18nRoute({ name: 'pattern-form-new' }),
-    label: t('nav.submitNewPattern'),
-  },
-  {
-    to: getI18nRoute({ name: 'skin-form-new' }),
-    label: t('nav.submitNewSkin'),
-  },
-  {
-    to: getI18nRoute({ name: 'setlist-form-new' }),
-    label: t('nav.submitNewSetlist'),
-  },
-  {
-    href: '/api/auth/logout',
-    label: t('nav.logout'),
-  },
-])
+const loginNavs = computed(() => {
+  // Explicitly read locale so Vue tracks it and re-evaluates routes on language change
+  void i18n.locale.value
+  return [
+    {
+      to: getI18nRoute({
+        name: 'profile',
+        params: { tab: 'patterns', id: user._id },
+      }),
+      label: t('nav.myPage'),
+    },
+    {
+      to: getI18nRoute({ name: 'pattern-form-new' }),
+      label: t('nav.submitNewPattern'),
+    },
+    {
+      to: getI18nRoute({ name: 'skin-form-new' }),
+      label: t('nav.submitNewSkin'),
+    },
+    {
+      to: getI18nRoute({ name: 'setlist-form-new' }),
+      label: t('nav.submitNewSetlist'),
+    },
+    {
+      href: '/api/auth/logout',
+      label: t('nav.logout'),
+    },
+  ]
+})
 
-const setLocaleOption = async (locale) => {
-  await setLocale(locale)
-  router.replace(getI18nRoute(route))
+const setLocaleOption = async (locale: string) => {
+  await setLocale(locale, null)
+  await router.replace(getI18nRoute(route))
   dropdown.value = false
 }
 </script>
