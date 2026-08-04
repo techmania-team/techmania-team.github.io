@@ -1,5 +1,5 @@
-import type { HydratedDocument, Types } from 'mongoose'
-import { model, Schema } from 'mongoose'
+import type { HydratedDocument, Model, Types } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 import { SKINTYPE } from '@/utils/skin'
 
 export interface ISkinPreview {
@@ -77,4 +77,6 @@ const schema = new Schema<ISkin>(
 schema.index({ name: 'text', description: 'text' })
 schema.index({ submitter: 1 })
 
-export default model('skins', schema)
+const Skin: Model<ISkin> = mongoose.models.skins || model<ISkin>('skins', schema)
+
+export default Skin

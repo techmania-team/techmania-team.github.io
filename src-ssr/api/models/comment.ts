@@ -1,5 +1,5 @@
-import type { HydratedDocument, Types } from 'mongoose'
-import { model, Schema } from 'mongoose'
+import type { HydratedDocument, Model, Types } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 
 export type VoteValue = 1 | -1
 
@@ -101,4 +101,6 @@ schema.index({ pattern: 1 })
 schema.index({ skin: 1 })
 schema.index({ setlist: 1 })
 
-export default model('comments', schema)
+const Comment: Model<IComment> = mongoose.models.comments || model<IComment>('comments', schema)
+
+export default Comment

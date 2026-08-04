@@ -1,5 +1,5 @@
-import type { HydratedDocument, Types } from 'mongoose'
-import { model, Schema } from 'mongoose'
+import type { HydratedDocument, Model, Types } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 import { CONTROLTYPE } from '@/utils/control'
 import { CRITERIA, CRITERIA_DIRECTION } from '@/utils/criteria'
 
@@ -154,4 +154,6 @@ schema.index({ submitter: 1 })
 schema.index({ 'selectablePatterns.pattern': 1 })
 schema.index({ 'hiddenPatterns.pattern': 1 })
 
-export default model('setlists', schema)
+const Setlist: Model<ISetlist> = mongoose.models.setlists || model<ISetlist>('setlists', schema)
+
+export default Setlist

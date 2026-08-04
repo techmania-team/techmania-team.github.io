@@ -1,5 +1,5 @@
-import type { HydratedDocument, Types } from 'mongoose'
-import { model, Schema } from 'mongoose'
+import type { HydratedDocument, Model, Types } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 import { CONTROLTYPE } from '@/utils/control'
 
 export interface IPatternDifficulty {
@@ -118,4 +118,6 @@ schema.index({ submitter: 1 })
 // Create index for setlist searching
 schema.index({ 'difficulties._id': 1 })
 
-export default model('patterns', schema)
+const Pattern: Model<IPattern> = mongoose.models.patterns || model<IPattern>('patterns', schema)
+
+export default Pattern

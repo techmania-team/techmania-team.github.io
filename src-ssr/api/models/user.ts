@@ -1,5 +1,5 @@
-import type { HydratedDocument, Types } from 'mongoose'
-import { model, Schema } from 'mongoose'
+import type { HydratedDocument, Model, Types } from 'mongoose'
+import mongoose, { model, Schema } from 'mongoose'
 
 export interface IUser {
   _id: Types.ObjectId
@@ -28,4 +28,6 @@ const schema = new Schema<IUser>({
   },
 })
 
-export default model('users', schema)
+const User: Model<IUser> = mongoose.models.users || model<IUser>('users', schema)
+
+export default User
