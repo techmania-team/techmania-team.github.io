@@ -1,5 +1,5 @@
-import { defineStore } from '#q-app/wrappers'
 import { createPinia } from 'pinia'
+import { defineStore } from '#q-app'
 
 /*
  * If not building with SSR mode, you can
