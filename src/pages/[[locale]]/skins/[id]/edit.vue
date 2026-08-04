@@ -1,33 +1,33 @@
 <template lang="pug">
-q-page#setlistForm
+q-page#skinForm
   q-no-ssr
     //- Header
     q-parallax.header-parallax(:height="200")
       //- Header image background
       template(#media)
-        img(src="/assets/header-setlist.png")
+        img(src="/assets/header-skin.png")
       //- Header content
       template(#content)
-        .column.items-center.q-mb-md
-          .text-h4.text-center {{ $t('setlistFormPage.titleEdit') }}
-    SetlistForm
+        .column.items-center
+          .text-h4.text-center {{ $t('skinFormPage.titleEdit') }}
+    SkinForm
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
 import validator from 'validator'
-import { useTempSetlistStore } from 'src/stores/temp-setlist'
-import { useUserStore } from 'src/stores/user'
-import SetlistForm from 'src/components/SetlistForm.vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import SkinForm from '@/components/SkinForm.vue'
+import { useTempSkinStore } from '@/stores/temp-skin'
+import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute()
 
 const title = user.isLogin
-  ? 'TECHMANIA | ' + t('setlistFormPage.titleEdit')
+  ? 'TECHMANIA | ' + t('skinFormPage.titleEdit')
   : 'TECHMANIA | Log in or sign up to view'
 
 const metaData = () => {
@@ -55,7 +55,7 @@ const metaData = () => {
       },
       ogUrl: {
         property: 'og:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       ogTitle: {
@@ -81,7 +81,7 @@ const metaData = () => {
       },
       twUrl: {
         name: 'twitter:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       twTitle: {
@@ -107,13 +107,13 @@ useMeta(metaData)
 
 defineOptions({
   async preFetch({ currentRoute, redirect, ssrContext }) {
-    const setlist = useTempSetlistStore()
+    const skin = useTempSkinStore()
     const user = useUserStore()
 
     // Clear store
-    setlist.clearData()
+    skin.clearData()
 
-    // New setlist form, no need to prefetch data
+    // New skin form, no need to prefetch data
     if (!currentRoute.params.id) return
 
     // Check if ID is valid, redirect to 404 if not
@@ -128,13 +128,20 @@ defineOptions({
     // direct access or refresh page --> server side --> ssrContext is available
     const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
 
-    // Prefetch setlist data
-    await setlist.fetchSetlist(currentRoute.params.id)
+    // Prefetch skin data
+    await skin.fetchSkin(currentRoute.params.id)
 
-    // Check if setlist exists and user is the submitter
-    if (setlist._id.length === 0 || setlist.submitter._id !== userId) {
+    // Check if skin exists and user is the submitter
+    if (skin._id.length === 0 || skin.submitter._id !== userId) {
       redirect('/404')
     }
   },
 })
 </script>
+
+<route lang="yaml">
+name: skin-form-edit
+meta:
+  login: true
+  recaptcha: true
+</route>

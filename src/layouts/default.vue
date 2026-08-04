@@ -87,12 +87,12 @@ q-layout(view='hHh lpR fff')
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRouter, useRoute } from 'vue-router'
-import { localeOptions, setLocale, getI18nRoute } from 'src/i18n'
-import { useUserStore } from 'src/stores/user'
 import DiscordAvatar from 'src/components/DiscordAvatar.vue'
+import { getI18nRoute, localeOptions, setLocale } from 'src/i18n'
+import { useUserStore } from 'src/stores/user'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 
 const user = useUserStore()
 const { t } = useI18n()

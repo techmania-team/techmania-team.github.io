@@ -106,18 +106,18 @@ q-page#skin
       CommentList(type="skin" :id="skin._id" v-if="skin._id.length > 0")
 </template>
 
-<script setup>
-import { computed, onUnmounted } from 'vue'
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
 import validator from 'validator'
-import { useUserStore } from 'src/stores/user'
-import { useTempSkinStore } from 'src/stores/temp-skin'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { types } from 'src/utils/skin'
-import CommentList from 'src/components/CommentList.vue'
-import { getI18nRoute } from 'src/i18n'
-import * as date from 'src/utils/date'
+import { computed, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import CommentList from '@/components/CommentList.vue'
+import { getI18nRoute } from '@/i18n'
+import { useTempSkinStore } from '@/stores/temp-skin'
+import { useUserStore } from '@/stores/user'
+import * as date from '@/utils/date'
+import { types } from '@/utils/skin'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const route = useRoute()
 const user = useUserStore()
@@ -155,7 +155,7 @@ const metaData = () => ({
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     ogTitle: {
@@ -180,7 +180,7 @@ const metaData = () => ({
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     twTitle: {
@@ -231,3 +231,10 @@ onUnmounted(() => {
   // skin.clearData()
 })
 </script>
+
+<route lang="yaml">
+name: skin
+meta:
+  login: false
+  recaptcha: true
+</route>

@@ -1,14 +1,14 @@
 <template lang="pug">
-q-page#patterns
+q-page#skins
   q-no-ssr.q-mx-auto.padding
     //- Header
     q-parallax.q-mb-xl.header-parallax(:height="200")
       //- Header image background
       template(#media)
-        img(src="/assets/header-pattern.png")
+        img(src="/assets/header-skin.png")
       //- Header content
       template(#content)
-        h4.text-center {{ $t('patternsPage.title') }}
+        h4.text-center {{ $t('skinsPage.title') }}
     //- Search form
     section.q-mx-auto.padding.q-my-md
       .container
@@ -27,7 +27,7 @@ q-page#patterns
                     @blur="field.onBlur($event)"
                     :error-message="errorMessage"
                     :error="!!errorMessage"
-                    :placeholder="$t('patternsPage.searchForm.keywords.placeholder')"
+                    :placeholder="$t('skinsPage.searchForm.keywords.placeholder')"
                   )
                     template(#after)
                       //- NOTE:
@@ -36,93 +36,66 @@ q-page#patterns
                       q-btn(icon="search" round desnse flat @click="handleSubmit($event, onSearchSubmit)" :loading="isSubmitting")
                 //- Filters
                 q-list
-                  //- Keysounded
+                  //- Types
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.keysounded.label') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('skinsPage.searchForm.type.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
-                            Field(name="keysounded" v-slot="{ field }")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
-                  //- Controls
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.control.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            template(v-for="(controlOption) in controlOptions" :key="controlOption")
-                              Field(name="controls" v-slot="{ field }" type="checkbox" :value="controlOption")
+                            template(v-for="(typeOption) in typeOptions" :key="typeOption")
+                              Field(name="types" v-slot="{ field }" type="checkbox" :value="typeOption")
                                 q-checkbox(
                                   keep-color color="tech"
-                                  :name="`controls`+controlOption"
+                                  :name="`types`+typeOption"
                                   :model-value="field.checked"
                                   @update:model-value="field.onInput($event)"
-                                  :label="$t('patternsPage.searchForm.control.'+controls[controlOption])"
-                                )
-                  //- Lanes
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.lanes.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
-                              Field(name="lanes" v-slot="{ field }" type="checkbox" :value="lanesOption")
-                                q-checkbox(
-                                  keep-color color="tech"
-                                  :name="`lanes`+lanesOption"
-                                  :model-value="field.checked"
-                                  @update:model-value="field.onInput($event)"
-                                  :label="$t('patternsPage.searchForm.lanes.lanes', { lanes: lanesOption })"
+                                  :label="$t('skinsPage.searchForm.type.'+types[typeOption])"
                                 )
                   //- Sort
                   q-item
                     q-item-section.no-wrap
                       .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.sort.label') }}
+                        .col-12.col-sm-6.col-lg-6 {{ $t('skinsPage.searchForm.sort.label') }}
                         .col-12.col-sm-6.col-lg-6
                           .q-gutter-md-xs
                             Field(name="sortBy" v-slot="{ field }")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
+                              q-btn(flat :label="$t('skinsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
         q-separator.q-my-md
-    //- Patterns
+    //- Skins
     section.q-mx-auto.padding.q-my-md
       .container
         .row
           .col-12
             q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable" ref="infiniteScrollRef")
-              .col-12.col-sm-6.col-md-4.col-lg-3(v-for="pattern in patterns" :key="pattern.id")
-                PatternCard(:pattern="pattern" :mine="false")
+              .col-12.col-sm-6.col-md-4.col-lg-3(v-for="skin in skins" :key="skin._id")
+                SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable") {{ $t('patternsPage.notFound') }}
+            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('skinsPage.notFound') }}
 </template>
 
-<script setup>
-import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
+<script setup lang="ts">
 import { useMeta } from 'quasar'
+import { Field, Form } from 'vee-validate'
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
-import { Form, Field } from 'vee-validate'
-import { useI18n } from 'vue-i18n'
-import PatternCard from 'src/components/PatternCard.vue'
-import api from 'src/utils/api'
-import { handleError } from 'src/utils/handleError'
-import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
+import SkinCard from '@/components/SkinCard.vue'
+import api from '@/utils/api'
+import { handleError } from '@/utils/handleError'
+import { SKIN_COMBO, SKIN_GAMEUI, SKIN_NOTE, SKIN_THEME, SKIN_VFX, types } from '@/utils/skin'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 
 const metaData = () => ({
-  title: `TECHMANIA | ${t('patternsPage.title')}`,
+  title: `TECHMANIA | ${t('skinsPage.title')}`,
   meta: {
     color: {
       name: 'theme-color',
@@ -130,11 +103,11 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     description: {
       name: 'description',
-      content: 'Patterns for TECHMANIA.',
+      content: 'Skins for TECHMANIA.',
     },
     ogType: {
       property: 'og:type',
@@ -142,15 +115,15 @@ const metaData = () => ({
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     ogDescription: {
       property: 'og:description',
-      content: 'Patterns for TECHMANIA.',
+      content: 'Skins for TECHMANIA.',
     },
     ogImage: {
       property: 'og:image',
@@ -163,15 +136,15 @@ const metaData = () => ({
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: `TECHMANIA | ${t('skinsPage.title')}`,
     },
     twDescription: {
       name: 'twitter:description',
-      content: 'Patterns for TECHMANIA.',
+      content: 'Skins for TECHMANIA.',
     },
     twImage: {
       name: 'twitter:image',
@@ -182,29 +155,25 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const patterns = ref([])
+const skins = ref([])
 
-// Search form schema lanes select options
-const lanesOptions = [2, 3, 4]
-const controlOptions = [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]
+const typeOptions = [SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME]
 // Search form template ref
 const formRef = useTemplateRef('formRef')
 // Search form initial values
 const initialValues = {
   keywords: '',
-  keysounded: '',
-  controls: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
-  lanes: [2, 3, 4],
   sort: -1,
+  types: [SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME],
   sortBy: 'createdAt',
 }
 // Search form validation schema
 const schema = yup
   .object({
     keywords: yup.string(),
-    keysounded: yup.string().oneOf(['', 'true', 'false']),
-    controls: yup.array().of(yup.number().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM])),
-    lanes: yup.array().of(yup.number().min(2).max(4)),
+    types: yup
+      .array()
+      .of(yup.number().oneOf([SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME])),
     sort: yup.number().required().min(-1).max(1),
     sortBy: yup.string().required().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
   })
@@ -212,10 +181,8 @@ const schema = yup
 // Current search filters for API request
 const search = ref({
   keywords: '',
-  keysounded: '',
-  controls: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
-  lanes: [2, 3, 4],
   sort: -1,
+  types: [SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME],
   sortBy: 'createdAt',
 })
 
@@ -225,29 +192,27 @@ const scrollDisable = ref(true)
 // Is the component mounted?
 // Infinite scroll fires load event on mounted
 // This will cause a fetch request before we parsed the query parameters
-// And patterns will be duplicated
+// And skins will be duplicated
 let mounted = false
 
 /**
- * Fetch patterns from API
- * @param start - The start index of the patterns
+ * Fetch skins from API
+ * @param start - The start index of the skins
  */
-const fetchPatterns = async (start = 0) => {
+const fetchSkins = async (start = 0) => {
   try {
-    const { data } = await api.get('/patterns', {
+    const { data } = await api.get('/skins', {
       params: {
         start,
-        keysounded: search.value.keysounded,
-        controls: search.value.controls.join(),
+        types: search.value.types.join(),
         keywords: search.value.keywords,
-        lanes: search.value.lanes.join(),
         sort: search.value.sort,
         sortBy: search.value.sortBy,
         limit: 12,
       },
     })
     if (data.result.length > 0) {
-      patterns.value = patterns.value.concat(data.result)
+      skins.value = skins.value.concat(data.result)
       scrollDisable.value = false
     } else {
       scrollDisable.value = true
@@ -259,13 +224,13 @@ const fetchPatterns = async (start = 0) => {
 }
 
 /**
- * Load more patterns
- * @param index - The index of the patterns
+ * Load more skins
+ * @param index - The index of the skins
  * @param done - The callback function
  */
 const loadScroll = async (index, done) => {
   if (!mounted) return done()
-  await fetchPatterns((index - 1) * 12)
+  await fetchSkins((index - 1) * 12)
   done()
 }
 
@@ -273,25 +238,21 @@ const loadScroll = async (index, done) => {
  * On search form submit, apply search filters
  */
 const onSearchSubmit = async (values) => {
-  // Reset patterns
-  patterns.value = []
+  // Reset skins
+  skins.value = []
   // Apply search filters
   search.value.keywords = values.keywords
-  search.value.keysounded = values.keysounded
-  search.value.controls = values.controls
-  search.value.lanes = values.lanes
+  search.value.types = values.types
   search.value.sort = values.sort
   search.value.sortBy = values.sortBy
   // Reset infinite scroll disable flag
   scrollDisable.value = true
-  // Fetch patterns
-  await fetchPatterns()
+  // Fetch skins
+  await fetchSkins()
   router.replace({
     query: {
       keywords: values.keywords,
-      keysounded: values.keysounded,
-      controls: values.controls.join(),
-      lanes: values.lanes.join(),
+      types: values.types.join(),
       sort: values.sort,
       sortBy: values.sortBy,
     },
@@ -332,9 +293,7 @@ onMounted(async () => {
     // Parse query parameters
     const values = {
       keywords: route.query.keywords || initialValues.keywords,
-      keysounded: route.query.keysounded || initialValues.keysounded,
-      controls: route.query.controls ? route.query.controls.split(',') : initialValues.controls,
-      lanes: route.query.lanes ? route.query.lanes.split(',') : initialValues.lanes,
+      types: route.query.types ? route.query.types.split(',') : initialValues.types,
       sort: route.query.sort || initialValues.sort,
       sortBy: route.query.sortBy || initialValues.sortBy,
     }
@@ -347,9 +306,7 @@ onMounted(async () => {
     router.replace({
       query: {
         keywords: formRef.value.values.keywords,
-        keysounded: formRef.value.values.keysounded,
-        controls: formRef.value.values.controls.join(),
-        lanes: formRef.value.values.lanes.join(),
+        types: formRef.value.values.types.join(),
         sort: formRef.value.values.sort,
         sortBy: formRef.value.values.sortBy,
       },
@@ -357,9 +314,15 @@ onMounted(async () => {
     // Apply search filters
     await onSearchSubmit(parsed)
   } else {
-    // Fetch patterns
-    await fetchPatterns()
+    // Fetch skins
+    await fetchSkins()
   }
   mounted = true
 })
 </script>
+
+<route lang="yaml">
+name: skins
+meta:
+  login: false
+</route>

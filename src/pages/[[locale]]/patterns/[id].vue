@@ -129,19 +129,19 @@ q-page#pattern
       CommentList(type="pattern" :id="pattern._id" v-if="pattern._id.length > 0")
 </template>
 
-<script setup>
-import { computed, onUnmounted } from 'vue'
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
 import validator from 'validator'
-import { useUserStore } from 'src/stores/user'
-import { useTempPatternStore } from 'src/stores/temp-pattern'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { getLevelFilter, getLevelColor } from 'src/utils/level'
-import { getControlIcon } from 'src/utils/control'
-import CommentList from 'src/components/CommentList.vue'
-import { getI18nRoute } from 'src/i18n'
-import * as date from 'src/utils/date'
+import { computed, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import CommentList from '@/components/CommentList.vue'
+import { getI18nRoute } from '@/i18n'
+import { useTempPatternStore } from '@/stores/temp-pattern'
+import { useUserStore } from '@/stores/user'
+import { getControlIcon } from '@/utils/control'
+import * as date from '@/utils/date'
+import { getLevelColor, getLevelFilter } from '@/utils/level'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const route = useRoute()
 const user = useUserStore()
@@ -179,7 +179,7 @@ const metaData = () => ({
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     ogTitle: {
@@ -204,7 +204,7 @@ const metaData = () => ({
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     twTitle: {
@@ -255,3 +255,10 @@ onUnmounted(() => {
   // pattern.clearData()
 })
 </script>
+
+<route lang="yaml">
+name: pattern
+meta:
+  login: false
+  recaptcha: true
+</route>

@@ -6,7 +6,7 @@
   q-btn.q-mt-xl(color='white' text-color='blue' unelevated to='/' label='Go Home' no-caps)
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar'
 import { useRoute } from 'vue-router'
 
@@ -33,7 +33,7 @@ const metaData = {
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     ogTitle: {
       property: 'og:title',
@@ -54,7 +54,7 @@ const metaData = {
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     twTitle: {
       name: 'twitter:title',
@@ -73,3 +73,10 @@ const metaData = {
 }
 useMeta(metaData)
 </script>
+
+<route lang="yaml">
+name: error-404
+path: /:catchAll(.*)*
+meta:
+  login: false
+</route>

@@ -49,14 +49,14 @@ q-page#changelog
                 q-markdown.q-pa-md(:src="release.body")
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useMeta } from 'quasar'
+<script setup lang="ts">
 import axios from 'axios'
-import { useRoute } from 'vue-router'
-import { toLocaleString } from 'src/utils/date'
-import { handleError } from 'src/utils/handleError'
+import { useMeta } from 'quasar'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { toLocaleString } from '@/utils/date'
+import { handleError } from '@/utils/handleError'
 
 const route = useRoute()
 const { t } = useI18n()
@@ -82,7 +82,7 @@ const metaData = () => ({
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     ogTitle: {
       property: 'og:title',
@@ -103,7 +103,7 @@ const metaData = () => ({
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
     twTitle: {
       name: 'twitter:title',
@@ -126,7 +126,7 @@ const releases = ref([])
 const error = ref(false)
 
 onMounted(async () => {
-  if (process.env.CLIENT) {
+  if (import.meta.env.QUASAR_CLIENT) {
     try {
       // Get releases from GitHub
       const { data } = await axios.get(
@@ -143,3 +143,9 @@ onMounted(async () => {
   }
 })
 </script>
+
+<route lang="yaml">
+name: changelog
+meta:
+  login: false
+</route>

@@ -29,17 +29,17 @@ q-page#profile
     CommentsPage(v-else-if="tab === 'comments'")
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { useMeta } from 'quasar'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useTempProfileStore } from 'src/stores/temp-profile'
-import PatternsPage from './PatternsPage.vue'
-import SkinsPage from './SkinsPage.vue'
-import SetlistsPage from './SetlistsPage.vue'
+import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import { getI18nRoute } from '@/i18n'
+import { useTempProfileStore } from '@/stores/temp-profile'
 import CommentsPage from './CommentsPage.vue'
-import DiscordAvatar from 'src/components/DiscordAvatar.vue'
-import { getI18nRoute } from 'src/i18n'
+import PatternsPage from './PatternsPage.vue'
+import SetlistsPage from './SetlistsPage.vue'
+import SkinsPage from './SkinsPage.vue'
 
 const profile = useTempProfileStore()
 const route = useRoute()
@@ -69,7 +69,7 @@ const metaData = {
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     ogTitle: {
@@ -94,7 +94,7 @@ const metaData = {
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     twTitle: {
@@ -140,3 +140,10 @@ defineOptions({
   },
 })
 </script>
+
+<route lang="yaml">
+name: profile
+path: /:locale?/users/:id/:tab(patterns|skins|setlists|comments)?
+meta:
+  login: false
+</route>

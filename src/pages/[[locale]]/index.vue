@@ -129,15 +129,15 @@ q-page#index
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted, onMounted } from 'vue'
-import { useMeta, useQuasar } from 'quasar'
-import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useMeta, useQuasar } from 'quasar'
+import PatternCard from 'src/components/PatternCard.vue'
+import SetlistCard from 'src/components/SetlistCard.vue'
+import SkinCard from 'src/components/SkinCard.vue'
 import { useTempIndexStore } from 'src/stores/temp-index'
 import { toLocaleString } from 'src/utils/date'
-import PatternCard from 'src/components/PatternCard.vue'
-import SkinCard from 'src/components/SkinCard.vue'
-import SetlistCard from 'src/components/SetlistCard.vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const $q = useQuasar()
 const route = useRoute()

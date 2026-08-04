@@ -130,19 +130,19 @@ q-page#setlist
       CommentList(type="setlist" :id="setlist._id" v-if="setlist._id.length > 0")
 </template>
 
-<script setup>
-import { computed, onUnmounted } from 'vue'
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
 import validator from 'validator'
-import { useUserStore } from 'src/stores/user'
-import { useTempSetlistStore } from 'src/stores/temp-setlist'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import CommentList from 'src/components/CommentList.vue'
-import { getI18nRoute } from 'src/i18n'
-import * as date from 'src/utils/date'
-import SetlistPatternCard from 'src/components/SetlistPatternCard.vue'
-import { controls, getControlIcon } from 'src/utils/control'
+import { computed, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import CommentList from '@/components/CommentList.vue'
+import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
+import { getI18nRoute } from '@/i18n'
+import { useTempSetlistStore } from '@/stores/temp-setlist'
+import { useUserStore } from '@/stores/user'
+import { controls, getControlIcon } from '@/utils/control'
+import * as date from '@/utils/date'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const route = useRoute()
 const user = useUserStore()
@@ -180,7 +180,7 @@ const metaData = () => ({
     },
     ogUrl: {
       property: 'og:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     ogTitle: {
@@ -205,7 +205,7 @@ const metaData = () => ({
     },
     twUrl: {
       name: 'twitter:url',
-      content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
       'data-dynamic': true,
     },
     twTitle: {
@@ -256,3 +256,10 @@ onUnmounted(() => {
   // setlist.clearData()
 })
 </script>
+
+<route lang="yaml">
+name: setlist
+meta:
+  login: false
+  recaptcha: true
+</route>

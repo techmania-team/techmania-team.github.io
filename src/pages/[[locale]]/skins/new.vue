@@ -13,12 +13,12 @@ q-page#skinForm
     SkinForm
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
-import { useUserStore } from 'src/stores/user'
 import { useI18n } from 'vue-i18n'
-import SkinForm from 'src/components/SkinForm.vue'
+import { useRoute } from 'vue-router'
+import SkinForm from '@/components/SkinForm.vue'
+import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
@@ -53,7 +53,7 @@ const metaData = () => {
       },
       ogUrl: {
         property: 'og:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       ogTitle: {
@@ -79,7 +79,7 @@ const metaData = () => {
       },
       twUrl: {
         name: 'twitter:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       twTitle: {
@@ -103,3 +103,10 @@ const metaData = () => {
 }
 useMeta(metaData)
 </script>
+
+<route lang="yaml">
+name: skin-form-new
+meta:
+  login: true
+  recaptcha: true
+</route>

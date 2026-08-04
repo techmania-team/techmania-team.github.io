@@ -1,31 +1,33 @@
 <template lang="pug">
-q-page#patternForm
+q-page#setlistForm
   q-no-ssr
     //- Header
     q-parallax.header-parallax(:height="200")
       //- Header image background
       template(#media)
-        img(src="/assets/header-pattern.png")
+        img(src="/assets/header-setlist.png")
       //- Header content
       template(#content)
-        .column.items-center
-          .text-h4.text-center {{ $t('patternFormPage.titleNew') }}
-    PatternForm
+        .column.items-center.q-mb-md
+          .text-h4.text-center {{ $t('setlistFormPage.titleEdit') }}
+    SetlistForm
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
-import { useUserStore } from 'src/stores/user'
+import validator from 'validator'
 import { useI18n } from 'vue-i18n'
-import PatternForm from 'src/components/PatternForm.vue'
+import { useRoute } from 'vue-router'
+import SetlistForm from '@/components/SetlistForm.vue'
+import { useTempSetlistStore } from '@/stores/temp-setlist'
+import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute()
 
 const title = user.isLogin
-  ? 'TECHMANIA | ' + t('patternFormPage.titleNew')
+  ? 'TECHMANIA | ' + t('setlistFormPage.titleEdit')
   : 'TECHMANIA | Log in or sign up to view'
 
 const metaData = () => {
@@ -53,7 +55,7 @@ const metaData = () => {
       },
       ogUrl: {
         property: 'og:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       ogTitle: {
@@ -79,7 +81,7 @@ const metaData = () => {
       },
       twUrl: {
         name: 'twitter:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       twTitle: {
@@ -102,4 +104,44 @@ const metaData = () => {
   }
 }
 useMeta(metaData)
+
+defineOptions({
+  async preFetch({ currentRoute, redirect, ssrContext }) {
+    const setlist = useTempSetlistStore()
+    const user = useUserStore()
+
+    // Clear store
+    setlist.clearData()
+
+    // New setlist form, no need to prefetch data
+    if (!currentRoute.params.id) return
+
+    // Check if ID is valid, redirect to 404 if not
+    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+      redirect('/404')
+    }
+
+    // Note:
+    // ssrContext is only available on server side
+    // We need to check if it's available before using it
+    // router change --> client side --> ssrContext is undefined
+    // direct access or refresh page --> server side --> ssrContext is available
+    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+
+    // Prefetch setlist data
+    await setlist.fetchSetlist(currentRoute.params.id)
+
+    // Check if setlist exists and user is the submitter
+    if (setlist._id.length === 0 || setlist.submitter._id !== userId) {
+      redirect('/404')
+    }
+  },
+})
 </script>
+
+<route lang="yaml">
+name: setlist-form-edit
+meta:
+  login: true
+  recaptcha: true
+</route>

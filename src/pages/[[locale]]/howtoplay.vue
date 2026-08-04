@@ -17,10 +17,10 @@ q-page#how-to-play
           p.text-center.text-body1 When a scanline passes the center of a note, play it!
         .col-12
           q-tabs(v-model="tab" class="text-tech" align="center")
-            q-tab(name="touch" :icon="getControlIcon(CONTROL_TOUCH)" label="Touch")
-            q-tab(name="keys" :icon="getControlIcon(CONTROL_KEYS)" label="Keys")
+            q-tab(name="touch" :icon="getControlIcon(CONTROLTYPE.TOUCH)" label="Touch")
+            q-tab(name="keys" :icon="getControlIcon(CONTROLTYPE.KEYS)" label="Keys")
             q-tab(name="km")
-              q-icon.filter-tech.q-tab__icon(:name="getControlIcon(CONTROL_KM)")
+              q-icon.filter-tech.q-tab__icon(:name="getControlIcon(CONTROLTYPE.KM)")
               .q-tab__label KM
     .row
       .col-12
@@ -179,9 +179,15 @@ q-page#how-to-play
           p.text-body1.q-my-md While active, Fever will improve the judgement of notes played.
 </template>
 
-<script setup>
-import { getControlIcon, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
+<script setup lang="ts">
 import { ref } from 'vue'
+import { CONTROLTYPE, getControlIcon } from '@/utils/control'
 
 const tab = ref('touch')
 </script>
+
+<route lang="yaml">
+name: howtoplay
+meta:
+  login: false
+</route>

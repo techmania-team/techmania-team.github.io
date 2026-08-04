@@ -13,14 +13,14 @@ q-page#setlistForm
     SetlistForm
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar'
-import { useRoute } from 'vue-router'
 import validator from 'validator'
-import { useTempSetlistStore } from 'src/stores/temp-setlist'
-import { useUserStore } from 'src/stores/user'
-import SetlistForm from 'src/components/SetlistForm.vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import SetlistForm from '@/components/SetlistForm.vue'
+import { useTempSetlistStore } from '@/stores/temp-setlist'
+import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
@@ -55,7 +55,7 @@ const metaData = () => {
       },
       ogUrl: {
         property: 'og:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       ogTitle: {
@@ -81,7 +81,7 @@ const metaData = () => {
       },
       twUrl: {
         name: 'twitter:url',
-        content: new URL(route.fullPath, process.env.HOST_URL).toString(),
+        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
         'data-dynamic': true,
       },
       twTitle: {
@@ -138,3 +138,10 @@ defineOptions({
   },
 })
 </script>
+
+<route lang="yaml">
+name: setlist-form-new
+meta:
+  login: true
+  recaptcha: true
+</route>
