@@ -1,8 +1,9 @@
+import type { Express } from 'express'
 import passport from 'passport'
+import User from '../models/user'
 import discord from './discord'
-// import User from '../models/users'
 
-export const initialize = (app) => {
+export const initialize = (app: Express) => {
   // Set up passport
   app.use('/api', passport.initialize())
   app.use('/api', passport.session())
@@ -12,11 +13,13 @@ export const initialize = (app) => {
 
   // Save user info to the session
   passport.serializeUser((user, done) => {
-    done(null, user)
+    done(null, user.id)
   })
 
   // Retrieve user info from the session
-  passport.deserializeUser((user, done) => {
-    done(null, user)
+  passport.deserializeUser((id, done) => {
+    User.findById(id)
+      .then((user) => done(null, user))
+      .catch((error) => done(error, null))
   })
 }
