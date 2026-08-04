@@ -1,10 +1,32 @@
-import mongoose from 'mongoose'
-import { SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME } from 'src/utils/skin'
+import type { HydratedDocument, Types } from 'mongoose'
+import { model, Schema } from 'mongoose'
+import { SKINTYPE } from '@/utils/skin'
 
-const schema = new mongoose.Schema(
+export interface ISkinPreview {
+  name: string
+  ytid: string
+}
+
+export interface ISkin {
+  _id: Types.ObjectId
+  submitter: Types.ObjectId
+  name: string
+  type: SKINTYPE
+  link: string
+  previews: Types.DocumentArray<ISkinPreview>
+  description: string
+  image: string
+  webhook: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type TSkinDocument = HydratedDocument<ISkin>
+
+const schema = new Schema<ISkin>(
   {
     submitter: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: 'users',
     },
@@ -15,7 +37,7 @@ const schema = new mongoose.Schema(
     type: {
       type: Number,
       required: true,
-      enum: [SKIN_NOTE, SKIN_VFX, SKIN_COMBO, SKIN_GAMEUI, SKIN_THEME],
+      enum: [SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME],
     },
     link: {
       type: String,
@@ -48,11 +70,11 @@ const schema = new mongoose.Schema(
       default: '',
     },
   },
-  { versionKey: false, timestamps: true },
+  { timestamps: true },
 )
 
 // Create indexes for searching
 schema.index({ name: 'text', description: 'text' })
 schema.index({ submitter: 1 })
 
-export default mongoose.models.skins || mongoose.model('skins', schema)
+export default model('skins', schema)

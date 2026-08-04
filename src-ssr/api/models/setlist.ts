@@ -1,22 +1,50 @@
-import mongoose from 'mongoose'
-import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
-import {
-  CRITERIA_INDEX,
-  CRITERIA_LEVEL,
-  CRITERIA_HP,
-  CRITERIA_SCORE,
-  CRITERIA_COMBO,
-  CRITERIA_MAX_COMBO,
-  CRITERIA_D100,
-  CRITERIA_NONE,
-  CRITERIA_DIRECTION_LOWER,
-  CRITERIA_DIRECTION_GREATER,
-} from 'src/utils/criteria'
+import type { HydratedDocument, Types } from 'mongoose'
+import { model, Schema } from 'mongoose'
+import { CONTROLTYPE } from '@/utils/control'
+import { CRITERIA, CRITERIA_DIRECTION } from '@/utils/criteria'
 
-const schema = new mongoose.Schema(
+export interface ISetlistPreview {
+  name: string
+  ytid: string
+}
+
+export interface ISetlistSelectablePattern {
+  _id: Types.ObjectId
+  pattern: Types.ObjectId
+  difficulty: Types.ObjectId
+}
+
+export interface ISetlistHiddenPattern {
+  _id: Types.ObjectId
+  pattern: Types.ObjectId
+  difficulty: Types.ObjectId
+  criteriaType: CRITERIA
+  criteriaDirection: CRITERIA_DIRECTION
+  criteriaValue: number
+}
+
+export interface ISetlist {
+  _id: Types.ObjectId
+  submitter: Types.ObjectId
+  name: string
+  link: string
+  previews: Types.DocumentArray<ISetlistPreview>
+  description: string
+  image: string
+  control: CONTROLTYPE
+  selectablePatterns: Types.DocumentArray<ISetlistSelectablePattern>
+  hiddenPatterns: Types.DocumentArray<ISetlistHiddenPattern>
+  webhook: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type TSetlistDocument = HydratedDocument<ISetlist>
+
+const schema = new Schema<ISetlist>(
   {
     submitter: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: 'users',
     },
@@ -53,18 +81,18 @@ const schema = new mongoose.Schema(
     control: {
       type: Number,
       required: true,
-      enum: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
+      enum: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM],
     },
     selectablePatterns: {
       type: [
         {
           pattern: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'pattern',
             required: true,
           },
           difficulty: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'pattern.difficulties',
             required: true,
           },
@@ -76,12 +104,12 @@ const schema = new mongoose.Schema(
       type: [
         {
           pattern: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'pattern',
             required: true,
           },
           difficulty: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'pattern.difficulties',
             required: true,
           },
@@ -89,20 +117,20 @@ const schema = new mongoose.Schema(
             type: Number,
             required: true,
             enums: [
-              CRITERIA_INDEX,
-              CRITERIA_LEVEL,
-              CRITERIA_HP,
-              CRITERIA_SCORE,
-              CRITERIA_COMBO,
-              CRITERIA_MAX_COMBO,
-              CRITERIA_D100,
-              CRITERIA_NONE,
+              CRITERIA.INDEX,
+              CRITERIA.LEVEL,
+              CRITERIA.HP,
+              CRITERIA.SCORE,
+              CRITERIA.COMBO,
+              CRITERIA.MAX_COMBO,
+              CRITERIA.D100,
+              CRITERIA.NONE,
             ],
           },
           criteriaDirection: {
             type: Number,
             required: true,
-            enums: [CRITERIA_DIRECTION_LOWER, CRITERIA_DIRECTION_GREATER],
+            enums: [CRITERIA_DIRECTION.LOWER, CRITERIA_DIRECTION.GREATER],
           },
           criteriaValue: {
             type: Number,
@@ -117,7 +145,7 @@ const schema = new mongoose.Schema(
       default: '',
     },
   },
-  { versionKey: false, timestamps: true },
+  { timestamps: true },
 )
 
 // Create indexes for searching
@@ -126,4 +154,4 @@ schema.index({ submitter: 1 })
 schema.index({ 'selectablePatterns.pattern': 1 })
 schema.index({ 'hiddenPatterns.pattern': 1 })
 
-export default mongoose.models.setlists || mongoose.model('setlists', schema)
+export default model('setlists', schema)
