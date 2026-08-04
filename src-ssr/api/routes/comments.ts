@@ -1,22 +1,22 @@
-import express from 'express'
+import { Router } from 'express'
 import {
   create,
+  createReply,
   getByPattern,
-  getMyCommmentByPattern,
+  getBySetlist,
   getBySkin,
+  getByUser,
+  getMyCommmentByPattern,
+  getMyCommmentBySetlist,
   getMyCommmentBySkin,
   updateMyComment,
-  createReply,
   updateMyReply,
   updateReplyVote,
-  getByUser,
-  getMyCommmentBySetlist,
-  getBySetlist,
 } from '../controllers/comments.js'
-import { isAuthenticated } from '../middleware/auth'
-import recaptcha from '../middleware/recaptcha'
+import { isAuthenticated } from '../middlewares/auth'
+import recaptcha from '../middlewares/recaptcha'
 
-const router = express.Router()
+const router = Router()
 
 // Params description:
 // pid = pattern id

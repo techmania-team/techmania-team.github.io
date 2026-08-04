@@ -1,8 +1,8 @@
-import express from 'express'
-import { discordLogin, discordCallback, discordLogout, isAuthenticated } from '../middleware/auth'
+import { Router } from 'express'
 import { getInfo } from '../controllers/auth'
+import { discordCallback, discordLogin, discordLogout, isAuthenticated } from '../middlewares/auth'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/login', discordLogin)
 router.get('/login/callback', discordCallback, (req, res) => {
