@@ -10,6 +10,7 @@ import middlewareMongoSanitize from './middlewares/mongo-sanitize'
 import { initialize as passportInitialize } from './passport'
 import routerAuth from './routes/auth'
 import routerComments from './routes/comments'
+import routerInfo from './routes/info'
 import routerPatterns from './routes/patterns'
 import routerSetlists from './routes/setlists'
 import routerSkins from './routes/skins'
@@ -79,6 +80,7 @@ export const initializeApi = async (app: Express) => {
     app.use('/api/setlists', routerSetlists)
     app.use('/api/comments', routerComments)
     app.use('/api/auth', routerAuth)
+    app.use('/api/info', routerInfo)
     app.use('/api', (req, res) => {
       res.status(StatusCodes.NOT_FOUND).send({ success: false, message: 'Not Found.' })
     })
