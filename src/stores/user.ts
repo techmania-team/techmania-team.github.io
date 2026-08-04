@@ -1,6 +1,6 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref, computed } from 'vue'
-import api from '../utils/api'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+import { computed, ref } from 'vue'
+import { getAuthInfo } from '@/services/auth'
 
 export const useUserStore = defineStore('user', () => {
   const _id = ref('')
@@ -9,13 +9,9 @@ export const useUserStore = defineStore('user', () => {
 
   const isLogin = computed(() => _id.value.length > 0)
 
-  const fetchData = async (sid) => {
+  const fetchData = async () => {
     try {
-      const { data } = await api.get('/auth/user', {
-        headers: {
-          Cookie: `connect.sid=${sid}`,
-        },
-      })
+      const { data } = await getAuthInfo()
       _id.value = data.result._id
       name.value = data.result.name
       avatar.value = data.result.avatar
