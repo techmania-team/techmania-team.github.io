@@ -59,14 +59,18 @@ const update = async () => {
     changelogs.splice(
       0,
       changelogs.length,
-      ...win.value.data.map((changelog: IChangelog) => ({
-        node_id: changelog.node_id,
-        published_at: changelog.published_at,
-        name: changelog.name,
-        tag_name: changelog.tag_name,
-        html_url: changelog.html_url,
-        body: changelog.body,
-      })),
+      ...win.value.data
+        .map((changelog: IChangelog) => ({
+          node_id: changelog.node_id,
+          published_at: changelog.published_at,
+          name: changelog.name,
+          tag_name: changelog.tag_name,
+          html_url: changelog.html_url,
+          body: changelog.body,
+        }))
+        .sort((a: IChangelog, b: IChangelog) => {
+          return new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+        }),
     )
     releases.win.tag = win.value.data[0].tag_name
     releases.win.date = win.value.data[0].published_at
