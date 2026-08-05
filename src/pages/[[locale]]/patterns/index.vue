@@ -16,81 +16,73 @@ q-page#patterns
           //- Search form
           .col-12.q-mx-auto
             //- Search form
-            Form(v-slot="{ handleSubmit, isSubmitting }" :validation-schema="schema" :initial-values="initialValues" ref="formRef" as="")
-              q-form(@submit="handleSubmit(onSearchSubmit)")
-                //- Keywords
-                Field(name="keywords" v-slot="{ field, errorMessage }")
-                  q-input(
-                    square outlined color="tech"
-                    :model-value="field.value"
-                    @update:model-value="field.onChange($event)"
-                    @blur="field.onBlur($event)"
-                    :error-message="errorMessage"
-                    :error="!!errorMessage"
-                    :placeholder="$t('patternsPage.searchForm.keywords.placeholder')"
-                  )
-                    template(#after)
-                      //- NOTE:
-                      //- Button type Submit in slot does not trigger the submit event
-                      //- https://quasar.dev/vue-components/button#controlling-the-button-for-form-submission
-                      q-btn(icon="search" round desnse flat @click="handleSubmit($event, onSearchSubmit)" :loading="isSubmitting")
-                //- Filters
-                q-list
-                  //- Keysounded
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.keysounded.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            Field(name="keysounded" v-slot="{ field }")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.all')" :text-color="field.value === '' ? 'tech' : 'grey'" @click="field.onChange('')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.yes')" :text-color="field.value === 'true' ? 'tech' : 'grey'" @click="field.onChange('true')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.keysounded.no')" :text-color="field.value === 'false' ? 'tech' : 'grey'" @click="field.onChange('false')")
-                  //- Controls
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.control.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            template(v-for="(controlOption) in controlOptions" :key="controlOption")
-                              Field(name="controls" v-slot="{ field }" type="checkbox" :value="controlOption")
-                                q-checkbox(
-                                  keep-color color="tech"
-                                  :name="`controls`+controlOption"
-                                  :model-value="field.checked"
-                                  @update:model-value="field.onInput($event)"
-                                  :label="$t('patternsPage.searchForm.control.'+controls[controlOption])"
-                                )
-                  //- Lanes
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.lanes.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
-                              Field(name="lanes" v-slot="{ field }" type="checkbox" :value="lanesOption")
-                                q-checkbox(
-                                  keep-color color="tech"
-                                  :name="`lanes`+lanesOption"
-                                  :model-value="field.checked"
-                                  @update:model-value="field.onInput($event)"
-                                  :label="$t('patternsPage.searchForm.lanes.lanes', { lanes: lanesOption })"
-                                )
-                  //- Sort
-                  q-item
-                    q-item-section.no-wrap
-                      .row.align.items-center.q-gutter-y-md
-                        .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.sort.label') }}
-                        .col-12.col-sm-6.col-lg-6
-                          .q-gutter-md-xs
-                            Field(name="sortBy" v-slot="{ field }")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="field.value === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="field.value === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="field.value === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
-                              q-btn(flat :label="$t('patternsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="field.value === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
+            q-form(@submit.prevent="onFormSubmit")
+              //- Keywords
+              q-input(
+                square outlined color="tech"
+                v-model="keywordsField"
+                :error-message="form.errors.value.keywords"
+                :error="!!form.errors.value.keywords"
+                :placeholder="$t('patternsPage.searchForm.keywords.placeholder')"
+              )
+                template(#after)
+                  //- NOTE:
+                  //- Button type Submit in slot does not trigger the submit event
+                  //- https://quasar.dev/vue-components/button#controlling-the-button-for-form-submission
+                  q-btn(type="button" icon="search" round desnse flat :loading="form.isSubmitting.value" @click="onFormSubmit")
+              //- Filters
+              q-list
+                //- Keysounded
+                q-item
+                  q-item-section.no-wrap
+                    .row.align.items-center.q-gutter-y-md
+                      .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.keysounded.label') }}
+                      .col-12.col-sm-6.col-lg-6
+                        .q-gutter-md-xs
+                          q-btn(flat :label="$t('patternsPage.searchForm.keysounded.all')" :text-color="keysoundedField === undefined ? 'tech' : 'grey'" @click="keysoundedField = undefined")
+                          q-btn(flat :label="$t('patternsPage.searchForm.keysounded.yes')" :text-color="keysoundedField === true ? 'tech' : 'grey'" @click="keysoundedField = true")
+                          q-btn(flat :label="$t('patternsPage.searchForm.keysounded.no')" :text-color="keysoundedField === false ? 'tech' : 'grey'" @click="keysoundedField = false")
+                //- Controls
+                q-item
+                  q-item-section.no-wrap
+                    .row.align.items-center.q-gutter-y-md
+                      .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.control.label') }}
+                      .col-12.col-sm-6.col-lg-6
+                        .q-gutter-md-xs
+                          template(v-for="(controlOption) in controlOptions" :key="controlOption")
+                            q-checkbox(
+                              keep-color color="tech"
+                              :name="`controls`+controlOption"
+                              v-model="controlsField"
+                              :val="controlOption"
+                              :label="$t('patternsPage.searchForm.control.'+controls[controlOption])"
+                            )
+                //- Lanes
+                q-item
+                  q-item-section.no-wrap
+                    .row.align.items-center.q-gutter-y-md
+                      .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.lanes.label') }}
+                      .col-12.col-sm-6.col-lg-6
+                        .q-gutter-md-xs
+                          template(v-for="(lanesOption) in lanesOptions" :key="lanesOption")
+                            q-checkbox(
+                              keep-color color="tech"
+                              :name="`lanes`+lanesOption"
+                              v-model="lanesField"
+                              :val="lanesOption"
+                              :label="$t('patternsPage.searchForm.lanes.lanes', { lanes: lanesOption })"
+                            )
+                //- Sort
+                q-item
+                  q-item-section.no-wrap
+                    .row.align.items-center.q-gutter-y-md
+                      .col-12.col-sm-6.col-lg-6 {{ $t('patternsPage.searchForm.sort.label') }}
+                      .col-12.col-sm-6.col-lg-6
+                        .q-gutter-md-xs
+                          q-btn(flat :label="$t('patternsPage.searchForm.sort.submit')" :icon-right="getSortIcon('createdAt')" :text-color="sortByField === 'createdAt' ? 'tech' : 'grey'" @click="changeSort('createdAt')")
+                          q-btn(flat :label="$t('patternsPage.searchForm.sort.update')" :icon-right="getSortIcon('updatedAt')" :text-color="sortByField === 'updatedAt' ? 'tech' : 'grey'" @click="changeSort('updatedAt')")
+                          q-btn(flat :label="$t('patternsPage.searchForm.sort.name')" :icon-right="getSortIcon('name')" :text-color="sortByField === 'name' ? 'tech' : 'grey'" @click="changeSort('name')")
+                          q-btn(flat :label="$t('patternsPage.searchForm.sort.rating')" :icon-right="getSortIcon('rating')" :text-color="sortByField === 'rating' ? 'tech' : 'grey'" @click="changeSort('rating')")
         q-separator.q-my-md
     //- Patterns
     section.q-mx-auto.padding.q-my-md
@@ -98,7 +90,7 @@ q-page#patterns
         .row
           .col-12
             q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable" ref="infiniteScrollRef")
-              .col-12.col-sm-6.col-md-4.col-lg-3(v-for="pattern in patterns" :key="pattern.id")
+              .col-12.col-sm-6.col-md-4.col-lg-3(v-for="pattern in patterns" :key="pattern._id")
                 PatternCard(:pattern="pattern" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
@@ -106,16 +98,27 @@ q-page#patterns
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, onMounted, nextTick } from 'vue'
+import type { IPatternSortBy } from '@/types/pattern'
+import type { IPattern } from '@/types/pattern'
 import { useMeta } from 'quasar'
+import { useForm } from 'vee-validate'
+import { nextTick, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
-import { Form, Field } from 'vee-validate'
-import { useI18n } from 'vue-i18n'
 import PatternCard from '@/components/PatternCard.vue'
-import api from '@/utils/api'
+import { search as searchPatterns } from '@/services/pattern'
+import { controls, CONTROLTYPE } from '@/utils/control'
 import { handleError } from '@/utils/handleError'
-import { controls, CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from '@/utils/control'
+
+interface IPatternSearchForm {
+  keywords: string
+  keysounded: boolean | undefined
+  controls: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]
+  lanes: (2 | 3 | 4)[]
+  sort: 1 | -1
+  sortBy: IPatternSortBy
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -182,38 +185,53 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const patterns = ref([])
+const patterns = ref<IPattern[]>([])
 
 // Search form schema lanes select options
 const lanesOptions = [2, 3, 4]
-const controlOptions = [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM]
-// Search form template ref
-const formRef = useTemplateRef('formRef')
-// Search form initial values
-const initialValues = {
+const controlOptions = [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]
+const initialValues: IPatternSearchForm = {
+  keysounded: undefined,
   keywords: '',
-  keysounded: '',
-  controls: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
+  controls: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM],
   lanes: [2, 3, 4],
   sort: -1,
   sortBy: 'createdAt',
 }
 // Search form validation schema
-const schema = yup
-  .object({
-    keywords: yup.string(),
-    keysounded: yup.string().oneOf(['', 'true', 'false']),
-    controls: yup.array().of(yup.number().oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM])),
-    lanes: yup.array().of(yup.number().min(2).max(4)),
-    sort: yup.number().required().min(-1).max(1),
-    sortBy: yup.string().required().oneOf(['createdAt', 'updatedAt', 'name', 'rating']),
-  })
-  .default(initialValues)
+const schema = yup.object<IPatternSearchForm>({
+  keywords: yup.string().optional(),
+  keysounded: yup.boolean().optional(),
+  controls: yup
+    .array()
+    .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+    .required(),
+  lanes: yup
+    .array()
+    .of(yup.mixed<2 | 3 | 4>().oneOf([2, 3, 4]))
+    .required(),
+  sort: yup.number<1 | -1>().required().oneOf([1, -1]),
+  sortBy: yup
+    .string<IPatternSortBy>()
+    .oneOf(['createdAt', 'updatedAt', 'name', 'rating'])
+    .required(),
+})
+const form = useForm({
+  validationSchema: schema,
+  initialValues,
+})
+const [keywordsField] = form.defineField('keywords')
+const [keysoundedField] = form.defineField('keysounded')
+const [controlsField] = form.defineField('controls')
+const [lanesField] = form.defineField('lanes')
+const [sortField] = form.defineField('sort')
+const [sortByField] = form.defineField('sortBy')
+
 // Current search filters for API request
-const search = ref({
+const searchParams = ref<IPatternSearchForm>({
+  keysounded: undefined,
   keywords: '',
-  keysounded: '',
-  controls: [CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM],
+  controls: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM],
   lanes: [2, 3, 4],
   sort: -1,
   sortBy: 'createdAt',
@@ -234,17 +252,15 @@ let mounted = false
  */
 const fetchPatterns = async (start = 0) => {
   try {
-    const { data } = await api.get('/patterns', {
-      params: {
-        start,
-        keysounded: search.value.keysounded,
-        controls: search.value.controls.join(),
-        keywords: search.value.keywords,
-        lanes: search.value.lanes.join(),
-        sort: search.value.sort,
-        sortBy: search.value.sortBy,
-        limit: 12,
-      },
+    const { data } = await searchPatterns({
+      start,
+      keysounded: searchParams.value.keysounded,
+      controls: searchParams.value.controls.join(),
+      keywords: searchParams.value.keywords,
+      lanes: searchParams.value.lanes.join(),
+      sort: searchParams.value.sort,
+      sortBy: searchParams.value.sortBy,
+      limit: 12,
     })
     if (data.result.length > 0) {
       patterns.value = patterns.value.concat(data.result)
@@ -263,7 +279,7 @@ const fetchPatterns = async (start = 0) => {
  * @param index - The index of the patterns
  * @param done - The callback function
  */
-const loadScroll = async (index, done) => {
+const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
   if (!mounted) return done()
   await fetchPatterns((index - 1) * 12)
   done()
@@ -272,24 +288,24 @@ const loadScroll = async (index, done) => {
 /**
  * On search form submit, apply search filters
  */
-const onSearchSubmit = async (values) => {
+const applySearch = async (values: IPatternSearchForm) => {
   // Reset patterns
   patterns.value = []
   // Apply search filters
-  search.value.keywords = values.keywords
-  search.value.keysounded = values.keysounded
-  search.value.controls = values.controls
-  search.value.lanes = values.lanes
-  search.value.sort = values.sort
-  search.value.sortBy = values.sortBy
+  searchParams.value.keywords = values.keywords
+  searchParams.value.keysounded = values.keysounded
+  searchParams.value.controls = values.controls
+  searchParams.value.lanes = values.lanes
+  searchParams.value.sort = values.sort
+  searchParams.value.sortBy = values.sortBy
   // Reset infinite scroll disable flag
   scrollDisable.value = true
   // Fetch patterns
   await fetchPatterns()
-  router.replace({
+  await router.replace({
     query: {
       keywords: values.keywords,
-      keysounded: values.keysounded,
+      keysounded: values.keysounded !== undefined ? String(values.keysounded) : undefined,
       controls: values.controls.join(),
       lanes: values.lanes.join(),
       sort: values.sort,
@@ -303,10 +319,8 @@ const onSearchSubmit = async (values) => {
  * @param sortBy - The sort by field
  * @returns The icon name
  */
-const getSortIcon = (sortBy) => {
-  if (!formRef.value) return undefined
-  if (formRef.value.values.sortBy === sortBy)
-    return formRef.value.values.sort > 0 ? 'arrow_drop_up' : 'arrow_drop_down'
+const getSortIcon = (sortBy: IPatternSortBy) => {
+  if (sortByField.value === sortBy) return sortField.value > 0 ? 'arrow_drop_up' : 'arrow_drop_down'
   else return undefined
 }
 
@@ -314,15 +328,15 @@ const getSortIcon = (sortBy) => {
  * Change the sort field
  * @param sortBy - The sort by field
  */
-const changeSort = (sortBy) => {
-  const currentSortBy = formRef.value.values.sortBy
-  const currentSort = formRef.value.values.sort
-  if (currentSortBy === sortBy) formRef.value.setFieldValue('sort', currentSort * -1)
+const changeSort = (sortBy: IPatternSortBy) => {
+  if (sortByField.value === sortBy) form.setFieldValue('sort', (sortField.value * -1) as 1 | -1)
   else {
-    formRef.value.setFieldValue('sort', -1)
-    formRef.value.setFieldValue('sortBy', sortBy)
+    form.setFieldValue('sort', -1)
+    form.setFieldValue('sortBy', sortBy)
   }
 }
+
+const onFormSubmit = form.handleSubmit(applySearch)
 
 onMounted(async () => {
   if (route.query) {
@@ -330,32 +344,60 @@ onMounted(async () => {
     await nextTick()
 
     // Parse query parameters
-    const values = {
-      keywords: route.query.keywords || initialValues.keywords,
-      keysounded: route.query.keysounded || initialValues.keysounded,
-      controls: route.query.controls ? route.query.controls.split(',') : initialValues.controls,
-      lanes: route.query.lanes ? route.query.lanes.split(',') : initialValues.lanes,
-      sort: route.query.sort || initialValues.sort,
-      sortBy: route.query.sortBy || initialValues.sortBy,
-    }
-    const parsed = schema.cast(values, { stripUnknown: true })
+    const querySchema = yup.object({
+      keywords: yup.string().default(initialValues.keywords),
+      keysounded: yup
+        .boolean()
+        .optional()
+        .transform((value, originalValue) => {
+          if (originalValue === 'true') return true
+          if (originalValue === 'false') return false
+          return undefined
+        })
+        .default(initialValues.keysounded),
+      controls: yup
+        .array()
+        .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+        .transform((value, originalValue) => {
+          if (typeof originalValue === 'string' && originalValue.length > 0) {
+            return originalValue.split(',').map((v) => Number(v))
+          }
+          return initialValues.controls
+        })
+        .default(initialValues.controls),
+      lanes: yup
+        .array<(2 | 3 | 4)[]>()
+        .transform((value, originalValue) => {
+          if (typeof originalValue === 'string' && originalValue.length > 0) {
+            return originalValue.split(',').map((v) => Number(v) as 2 | 3 | 4)
+          }
+          return initialValues.lanes
+        })
+        .default(initialValues.lanes),
+      sort: yup
+        .number<1 | -1>()
+        .transform((value) => (Number(value) === 1 ? 1 : -1))
+        .default(initialValues.sort),
+      sortBy: yup.string<IPatternSortBy>().default(initialValues.sortBy),
+    })
+    const parsed = querySchema.cast(route.query, { stripUnknown: true }) as IPatternSearchForm
 
     // Set form values
-    formRef.value.setValues(parsed)
+    form.setValues(parsed)
 
     // Update query parameters
-    router.replace({
+    await router.replace({
       query: {
-        keywords: formRef.value.values.keywords,
-        keysounded: formRef.value.values.keysounded,
-        controls: formRef.value.values.controls.join(),
-        lanes: formRef.value.values.lanes.join(),
-        sort: formRef.value.values.sort,
-        sortBy: formRef.value.values.sortBy,
+        keywords: keywordsField.value,
+        keysounded: keysoundedField.value !== undefined ? String(keysoundedField.value) : undefined,
+        controls: controlsField.value.join(),
+        lanes: lanesField.value.join(),
+        sort: sortField.value,
+        sortBy: sortByField.value,
       },
     })
     // Apply search filters
-    await onSearchSubmit(parsed)
+    await applySearch(parsed)
   } else {
     // Fetch patterns
     await fetchPatterns()

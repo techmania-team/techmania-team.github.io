@@ -41,14 +41,16 @@ export interface IPattern {
   rating: IPatternRating
 }
 
+export type IPatternSortBy = 'createdAt' | 'updatedAt' | 'name' | 'rating'
+
 export interface IPatternSearchParams {
   start?: number
   limit?: number
-  keysounded?: boolean
+  keysounded?: boolean | undefined
   keywords?: string
-  controls?: CONTROLTYPE
-  lanes?: 2 | 3 | 4
-  sortBy?: 'createdAt' | 'updatedAt' | 'name' | 'rating'
+  controls?: string
+  lanes?: string
+  sortBy?: IPatternSortBy
   sort?: 1 | -1
   submitter?: string
 }
