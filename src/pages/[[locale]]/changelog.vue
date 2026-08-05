@@ -11,7 +11,7 @@ q-page#changelog
   section.container
     .row
       //- Title
-      .col-12(v-if="releases.length === 0 && !error")
+      .col-12(v-if="releases.length === 0 && !hasError")
         q-item(v-for="i in 3" :key="i")
           q-item-section(avatar)
             q-skeleton(type='QAvatar')
@@ -20,7 +20,7 @@ q-page#changelog
               q-skeleton(type='text')
             q-item-label(caption)
               q-skeleton(type='text' width='65%')
-      .col-12(v-if="error")
+      .col-12(v-if="hasError")
         h6.text-center {{ $t('changelogPage.error') }} }}
       .col-12(v-else)
         //- Timeline
@@ -50,13 +50,18 @@ q-page#changelog
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
+import type { IChangelog } from '@/types/info'
 import { useMeta } from 'quasar'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { getChangelogs } from '@/services/info'
 import { toLocaleString } from '@/utils/date'
 import { handleError } from '@/utils/handleError'
+
+interface IChangelogExpand extends IChangelog {
+  expand: boolean
+}
 
 const route = useRoute()
 const { t } = useI18n()
@@ -122,22 +127,22 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const releases = ref([])
-const error = ref(false)
+const releases = ref<IChangelogExpand[]>([])
+const hasError = ref(false)
 
 onMounted(async () => {
   if (import.meta.env.QUASAR_CLIENT) {
     try {
       // Get releases from GitHub
-      const { data } = await axios.get(
-        'https://api.github.com/repos/techmania-team/techmania/releases',
-      )
-      releases.value = data.map((data) => {
-        data.expand = false
-        return data
+      const { data } = await getChangelogs()
+      releases.value = data.result.map((data) => {
+        return {
+          ...data,
+          expand: false,
+        }
       })
     } catch (error) {
-      error.value = true
+      hasError.value = true
       handleError(error)
     }
   }
