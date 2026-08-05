@@ -1,5 +1,5 @@
 import { defineBoot } from '#q-app'
-import { getDefaultLocale, getI18nRoute, setLocale, setupI18n } from '@/i18n'
+import { getDefaultLocale, getI18nRoute, localeOptions, setLocale, setupI18n } from '@/i18n'
 
 export default defineBoot(async ({ app, router, ssrContext }) => {
   const i18n = await setupI18n(ssrContext)
@@ -11,13 +11,10 @@ export default defineBoot(async ({ app, router, ssrContext }) => {
     }
 
     const localeParam = Array.isArray(to.params.locale) ? to.params.locale[0] : to.params.locale
+    const isValidLocale = localeOptions.includes(localeParam)
+    const locale = isValidLocale ? localeParam : getDefaultLocale(ssrContext)
 
-    if (!localeParam) {
-      const locale = getDefaultLocale(ssrContext)
-      await setLocale(locale, ssrContext)
-      return getI18nRoute(to)
-    } else {
-      await setLocale(localeParam, ssrContext)
-    }
+    await setLocale(locale, ssrContext)
+    if (!isValidLocale) return getI18nRoute(to)
   })
 })
