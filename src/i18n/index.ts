@@ -1,4 +1,5 @@
 import type { QSsrContext } from '#q-app'
+import type { QuasarLanguage } from 'quasar'
 import type { Composer } from 'vue-i18n'
 import type { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router'
 import { Lang } from 'quasar'
@@ -7,6 +8,14 @@ import { createI18n } from 'vue-i18n'
 
 export const localeOptions = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP', 'ko-KR']
 export type SupportedLocale = (typeof localeOptions)[number]
+
+// relative path to your node_modules/quasar/..
+// change to YOUR path
+const langList = import.meta.glob<{ default: QuasarLanguage }>(
+  '../../node_modules/quasar/lang/{en-US,zh-TW,zh-CN,ja,ko-KR}.js',
+)
+// or just a select few (example below with only DE and FR):
+// import.meta.glob('../../node_modules/quasar/lang/{de,fr}.js')
 
 // Module-level i18n instance to avoid calling useI18n() outside of setup()
 let _i18n: ReturnType<typeof createI18n> | null = null
@@ -44,7 +53,8 @@ export const setLocale = async (locale: string, ssrContext: QSsrContext | null |
 
   // Set locale
   global.locale.value = localeToSet
-  const quasarLang = await import(`../../node_modules/quasar/lang/${localeToSet}.js`)
+  const path = `../../node_modules/quasar/lang/${localeToSet === 'ja-JP' ? 'ja' : localeToSet}.js`
+  const quasarLang = await langList[path]!()
   Lang.set(quasarLang.default, ssrContext)
 }
 
