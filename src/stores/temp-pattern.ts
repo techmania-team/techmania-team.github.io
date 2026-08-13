@@ -1,16 +1,17 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import type { IPattern, IPatternDifficulty, IPatternPreview } from '@/types/pattern'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from 'src/utils/api'
-import { handleError } from 'src/utils/handleError'
+import api from '@/utils/api'
+import { handleError } from '@/utils/handleError'
 
 export const useTempPatternStore = defineStore('temp-pattern', () => {
   const _id = ref('')
   const name = ref('')
   const composer = ref('')
   const keysounded = ref(false)
-  const difficulties = ref([])
+  const difficulties = ref<IPatternDifficulty[]>([])
   const link = ref('')
-  const previews = ref([])
+  const previews = ref<IPatternPreview[]>([])
   const image = ref('')
   const description = ref('')
   const createdAt = ref('')
@@ -18,7 +19,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
   const submitter = ref({ name: '', _id: '' })
   const rating = ref({ count: 0, avg: 0 })
 
-  const setPattern = (data) => {
+  const setPattern = (data: IPattern) => {
     _id.value = data._id
     name.value = data.name
     composer.value = data.composer
@@ -36,7 +37,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
     rating.value.avg = data.rating.avg
   }
 
-  const fetchPattern = async (id) => {
+  const fetchPattern = async (id: string) => {
     try {
       const { data } = await api.get(`/patterns/${id}`)
       setPattern(data.result)

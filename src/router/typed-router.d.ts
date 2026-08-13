@@ -71,7 +71,7 @@ declare module 'vue-router/auto-routes' {
       '/:locale?/patterns/:id',
       { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
       { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
-      | 'pattern-form-edit'
+      | never
     >,
     'pattern-form-edit': RouteRecordInfo<
       'pattern-form-edit',
@@ -203,14 +203,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/[[locale]]/patterns/[id].vue': {
+    'src/pages/[[locale]]/patterns/[id]/index.vue': {
       routes:
         | 'pattern'
-        | 'pattern-form-edit'
       views:
-        | 'default'
+        | never
       pathParamNames:
-        | 'id'
+        | never
     }
     'src/pages/[[locale]]/patterns/[id]/edit.vue': {
       routes:

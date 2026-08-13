@@ -100,7 +100,7 @@ q-page#pattern
                   .col-3.col-md-2.text-center(v-for="(difficulty, idx) in pattern.difficulties" :key="idx")
                     div.q-mx-auto
                       q-icon(size="24px" :name="`img:/assets/icons/${difficulty.lanes}L.png`" :class="getLevelFilter(difficulty.level)")
-                      q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control, difficulty.level)" :class="getLevelFilter(difficulty.level)")
+                      q-icon.text-black(size="sm" :name="getControlIcon(difficulty.control)" :class="getLevelFilter(difficulty.level)")
                     div(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
                     div(:class="getLevelColor(difficulty.level)") {{ difficulty.name }}
         //- Description
@@ -130,6 +130,8 @@ q-page#pattern
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
@@ -151,7 +153,7 @@ const backgroundImage = computed(() => {
   return pattern.image?.length > 0
     ? pattern.image
     : pattern.previews.length > 0
-      ? getYouTubeThumbnail(pattern.previews[0].ytid)
+      ? getYouTubeThumbnail(pattern.previews[0]!.ytid)
       : '/assets/header-pattern.png'
 })
 
@@ -227,18 +229,20 @@ const metaData = () => ({
 useMeta(metaData)
 
 defineOptions({
+  // RouteLocationNormalizedLoadedTyped
   async preFetch({ currentRoute, redirect }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'pattern'>
     // Prefetch pattern data
     const pattern = useTempPatternStore()
-    if (pattern._id !== currentRoute.params.id) {
+    if (pattern._id !== route.params.id) {
       pattern.clearData()
     }
 
-    if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
+    if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect('/404')
     }
 
-    await pattern.fetchPattern(currentRoute.params.id)
+    await pattern.fetchPattern(route.params.id)
 
     // Check if pattern exists and user is the submitter
     if (pattern._id.length === 0) {
