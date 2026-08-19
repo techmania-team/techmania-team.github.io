@@ -54,6 +54,15 @@ export interface IPatternSearchParams {
   submitter?: string
 }
 
+export interface IPatternSearchForm {
+  keywords: string
+  keysounded: boolean | undefined
+  controls: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]
+  lanes: (2 | 3 | 4)[]
+  sort: 1 | -1
+  sortBy: IPatternSortBy
+}
+
 export interface IPatternForm {
   name: string
   composer: string
