@@ -109,6 +109,7 @@ useMeta(metaData)
 const patterns = ref<IPattern[]>([])
 const scrollDisable = ref(true)
 const isReady = ref(false)
+const isFetching = ref(false)
 
 const defaultInitialValues: IPatternSearchForm = {
   keysounded: undefined,
@@ -122,6 +123,9 @@ const defaultInitialValues: IPatternSearchForm = {
 const searchParams = ref<IPatternSearchForm>({ ...defaultInitialValues })
 
 const fetchPatterns = async (start = 0) => {
+  if (isFetching.value) return
+  isFetching.value = true
+
   try {
     const { data } = await searchPatterns({
       start,
@@ -142,12 +146,14 @@ const fetchPatterns = async (start = 0) => {
   } catch (error) {
     handleError(error)
     scrollDisable.value = true
+  } finally {
+    isFetching.value = false
   }
 }
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
   if (!isReady.value) return done()
-  await fetchPatterns((index - 1) * 12)
+  await fetchPatterns(patterns.value.length)
   done()
 }
 
