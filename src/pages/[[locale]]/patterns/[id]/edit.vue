@@ -1,19 +1,20 @@
 <template lang="pug">
 q-page#patternForm
-  q-no-ssr
-    //- Header
-    q-parallax.header-parallax(:height="200")
-      //- Header image background
-      template(#media)
-        img(src="/assets/header-pattern.png")
-      //- Header content
-      template(#content)
-        .column.items-center
-          .text-h4.text-center {{ $t('patternFormPage.titleEdit') }}
-    PatternForm
+  //- Header
+  q-parallax.header-parallax(:height="200")
+    //- Header image background
+    template(#media)
+      img(src="/assets/header-pattern.png")
+    //- Header content
+    template(#content)
+      .column.items-center
+        .text-h4.text-center {{ $t('patternFormPage.titleEdit') }}
+  PatternForm(:pattern="pattern")
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { useI18n } from 'vue-i18n'
@@ -25,6 +26,7 @@ import { useUserStore } from '@/stores/user'
 const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute()
+const pattern = useTempPatternStore()
 
 const title = user.isLogin
   ? 'TECHMANIA | ' + t('patternFormPage.titleEdit')
@@ -106,19 +108,24 @@ const metaData = () => {
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute, redirect, ssrContext }) {
-    const pattern = useTempPatternStore()
-    const user = useUserStore()
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<
+      RouteNamedMap,
+      'pattern-form-edit'
+    >
+    const pattern = useTempPatternStore(store)
+    const user = useUserStore(store)
 
     // Clear store
     pattern.clearData()
 
     // New pattern form, no need to prefetch data
-    if (!currentRoute.params.id) return
+    if (!route.params.id) return
 
     // Check if ID is valid, redirect to 404 if not
-    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+    if (route.params.id && !validator.isMongoId(route.params.id)) {
       redirect('/404')
+      return
     }
 
     // Note:
@@ -126,14 +133,15 @@ defineOptions({
     // We need to check if it's available before using it
     // router change --> client side --> ssrContext is undefined
     // direct access or refresh page --> server side --> ssrContext is available
-    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+    const userId = user._id
 
     // Prefetch pattern data
-    await pattern.fetchPattern(currentRoute.params.id)
+    await pattern.fetchPattern(route.params.id)
 
     // Check if pattern exists and user is the submitter
     if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
       redirect('/404')
+      return
     }
   },
 })
