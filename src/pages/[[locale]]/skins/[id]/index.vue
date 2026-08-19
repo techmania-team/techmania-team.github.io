@@ -79,7 +79,7 @@ q-page#skin
                 q-item-section
                   q-item-label {{ $t('skinPage.basic.type.label') }}
                   q-item-label(caption)
-                    | {{ $t('skinPage.basic.type.' + types[skin.type]) }}
+                    | {{ $t('skinPage.basic.type.' + SKINTYPES[skin.type]) }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error
@@ -116,7 +116,9 @@ import { getI18nRoute } from '@/i18n'
 import { useTempSkinStore } from '@/stores/temp-skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
-import { types } from '@/utils/skin'
+import { SKINTYPES } from '@/utils/skin'
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const route = useRoute()
@@ -127,7 +129,7 @@ const backgroundImage = computed(() => {
   return skin.image?.length > 0
     ? skin.image
     : skin.previews.length > 0
-      ? getYouTubeThumbnail(skin.previews[0].ytid)
+      ? getYouTubeThumbnail(skin.previews[0]!.ytid)
       : '/assets/header-skin.png'
 })
 
@@ -203,18 +205,20 @@ const metaData = () => ({
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute, redirect }) {
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'skin'>
+
     // Prefetch skin data
-    const skin = useTempSkinStore()
-    if (skin._id !== currentRoute.params.id) {
+    const skin = useTempSkinStore(store)
+    if (skin._id !== route.params.id) {
       skin.clearData()
     }
 
-    if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
+    if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect('/404')
     }
 
-    await skin.fetchSkin(currentRoute.params.id)
+    await skin.fetchSkin(route.params.id)
 
     // Check if skin exists and user is the submitter
     if (skin._id.length === 0) {

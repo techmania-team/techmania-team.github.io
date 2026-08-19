@@ -1,15 +1,16 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import type { ISkin, ISkinPreview } from '@/types/skin'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from 'src/utils/api'
-import { SKIN_NOTE } from 'src/utils/skin'
-import { handleError } from 'src/utils/handleError'
+import api from '@/utils/api'
+import { handleError } from '@/utils/handleError'
+import { SKINTYPE } from '@/utils/skin'
 
 export const useTempSkinStore = defineStore('temp-skin', () => {
   const _id = ref('')
   const name = ref('')
-  const type = ref(SKIN_NOTE)
+  const type = ref(SKINTYPE.NOTE)
   const link = ref('')
-  const previews = ref([])
+  const previews = ref<ISkinPreview[]>([])
   const image = ref('')
   const description = ref('')
   const createdAt = ref('')
@@ -17,7 +18,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const submitter = ref({ name: '', _id: '' })
   const rating = ref({ count: 0, avg: 0 })
 
-  const setSkin = (data) => {
+  const setSkin = (data: ISkin) => {
     _id.value = data._id
     name.value = data.name
     type.value = data.type
@@ -31,7 +32,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
     updatedAt.value = data.updatedAt
   }
 
-  const fetchSkin = async (id) => {
+  const fetchSkin = async (id: string) => {
     try {
       const { data } = await api.get(`/skins/${id}`)
       setSkin(data.result)
@@ -43,7 +44,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const clearData = () => {
     _id.value = ''
     name.value = ''
-    type.value = SKIN_NOTE
+    type.value = SKINTYPE.NOTE
     link.value = ''
     previews.value = []
     description.value = ''

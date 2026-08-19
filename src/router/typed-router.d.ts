@@ -127,7 +127,7 @@ declare module 'vue-router/auto-routes' {
       '/:locale?/skins/:id',
       { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
       { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
-      | 'skin-form-edit'
+      | never
     >,
     'skin-form-edit': RouteRecordInfo<
       'skin-form-edit',
@@ -268,14 +268,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/[[locale]]/skins/[id].vue': {
+    'src/pages/[[locale]]/skins/[id]/index.vue': {
       routes:
         | 'skin'
-        | 'skin-form-edit'
       views:
-        | 'default'
+        | never
       pathParamNames:
-        | 'id'
+        | never
     }
     'src/pages/[[locale]]/skins/[id]/edit.vue': {
       routes:
