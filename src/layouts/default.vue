@@ -28,23 +28,21 @@ q-layout(view='hHh lpR fff')
                   q-item-section
                     q-item-label {{ locale.toUpperCase() }}
             //- User dropdown
-            q-no-ssr
-              q-btn-dropdown(stretch flat v-if="user.isLogin")
-                //- User avatar
-                template(#label)
-                  DiscordAvatar(:avatar="user.avatar" :avatar-options="{ size: '38px' }" :img-options="{ spinnerSize: '38px' }")
-                //- User dropdown items
-                q-list
-                  template(v-for="(nav, idx) in loginNavs" :key="idx")
-                    //- User Profile
-                    q-item(clickable v-close-popup v-bind="nav" active-class="text-white")
-                      q-item-section
-                        q-item-label {{ nav.label }}
+            q-btn-dropdown(stretch flat v-if="user.isLogin")
+              //- User avatar
+              template(#label)
+                DiscordAvatar(:avatar="user.avatar" :avatar-options="{ size: '38px' }" :img-options="{ spinnerSize: '38px' }")
+              //- User dropdown items
+              q-list
+                template(v-for="(nav, idx) in loginNavs" :key="idx")
+                  //- User Profile
+                  q-item(clickable v-close-popup v-bind="nav" active-class="text-white")
+                    q-item-section
+                      q-item-label {{ nav.label }}
           //-   Nav Collapse button for mobile
           template(v-else)
-            q-no-ssr
-              q-btn(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
-                DiscordAvatar(v-if="user.isLogin" :avatar="user.avatar" :avatar-options="{ size: '38px' }" :img-options="{ spinnerSize: '38px' }")
+            q-btn(:label="user.isLogin ? '' : $t('nav.menu')" :icon-right="dropdown ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" @click="dropdown = !dropdown")
+              DiscordAvatar(v-if="user.isLogin" :avatar="user.avatar" :avatar-options="{ size: '38px' }" :img-options="{ spinnerSize: '38px' }")
       //- Separator for mobile dropdown
       q-separator(v-if="!$q.screen.gt.sm && dropdown")
     //- Mobile dropdown
