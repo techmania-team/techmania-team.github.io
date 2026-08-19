@@ -25,18 +25,19 @@ export interface ISkin {
   previews: ISkinPreview[]
   description: string
   image: string
-  webhook: string
   createdAt: string
   updatedAt: string
   rating: ISkinRating
 }
+
+export type ISkinSortBy = 'createdAt' | 'updatedAt' | 'name' | 'rating'
 
 export interface ISkinSearchParams {
   start?: number
   limit?: number
   keywords?: string
   types?: SKINTYPE
-  sortBy?: 'createdAt' | 'updatedAt' | 'name' | 'rating'
+  sortBy?: ISkinSortBy
   sort?: 1 | -1
   submitter?: string
 }
@@ -49,4 +50,11 @@ export interface ISkinForm {
   type: SKINTYPE
   description?: string
   agree: boolean
+}
+
+export interface ISkinSearchForm {
+  keywords: string
+  types: number[]
+  sort: 1 | -1
+  sortBy: ISkinSortBy
 }
