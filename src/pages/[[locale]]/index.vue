@@ -235,9 +235,9 @@ const videos = [
 ]
 
 defineOptions({
-  async preFetch() {
+  async preFetch({ store }) {
     // Prefetch patterns, skins
-    const tempIndex = useTempIndexStore()
+    const tempIndex = useTempIndexStore(store)
     await tempIndex.fetchData()
   },
 })

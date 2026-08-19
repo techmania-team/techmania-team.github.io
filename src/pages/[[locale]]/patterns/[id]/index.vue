@@ -230,10 +230,10 @@ useMeta(metaData)
 
 defineOptions({
   // RouteLocationNormalizedLoadedTyped
-  async preFetch({ currentRoute, redirect }) {
+  async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'pattern'>
     // Prefetch pattern data
-    const pattern = useTempPatternStore()
+    const pattern = useTempPatternStore(store)
     if (pattern._id !== route.params.id) {
       pattern.clearData()
     }
