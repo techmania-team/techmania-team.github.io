@@ -7,7 +7,7 @@ import { getI18nRoute } from '@/i18n'
 import { useUserStore } from '@/stores/user'
 
 export const handleError = (error: unknown) => {
-  if (import.meta.env.QUASAR_DEBUG) {
+  if (import.meta.env.QUASAR_DEV) {
     console.error(error)
   }
 
@@ -25,12 +25,11 @@ export const handleError = (error: unknown) => {
  * @param {*} error Error object
  * @param {*} page Page name
  * @param {*} action Action name
- * @param {*} noLoginRedirectRoute Route to redirect to if user is not logged in
  */
 export const handleFormSubmitError = async (
   error: AxiosError<ApiResponse<undefined>>,
   page: string,
-  action: string,
+  action: 'create' | 'update' | 'delete',
 ) => {
   const user = useUserStore()
   const router = useRouter()

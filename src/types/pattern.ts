@@ -35,7 +35,6 @@ export interface IPattern {
   previews: IPatternPreview[]
   description: string
   image: string
-  webhook: string
   createdAt: string
   updatedAt: string
   rating: IPatternRating
