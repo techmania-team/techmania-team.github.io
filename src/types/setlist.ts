@@ -40,19 +40,19 @@ export interface ISetlist {
   control: CONTROLTYPE
   selectablePatterns: ISetlistSelectablePattern[]
   hiddenPatterns: ISetlistHiddenPattern[]
-  webhook: string
   createdAt: string
   updatedAt: string
   rating: ISetlistRating
 }
 
+export type ISetlistSortBy = 'createdAt' | 'updatedAt' | 'name' | 'rating'
 export interface ISetlistSearchParams {
   start?: number
   limit?: number
   keysounded?: boolean
   keywords?: string
   controls?: CONTROLTYPE
-  sortBy?: 'createdAt' | 'updatedAt' | 'name' | 'rating'
+  sortBy?: ISetlistSortBy
   sort?: 1 | -1
   submitter?: string
 }
@@ -66,4 +66,11 @@ export interface ISetlistForm {
   hiddenPatterns?: ISetlistHiddenPattern[]
   previews?: ISetlistPreview[]
   description?: string
+}
+
+export interface ISetlistSearchForm {
+  keywords: string
+  controls: number[]
+  sort: 1 | -1
+  sortBy: ISetlistSortBy
 }
