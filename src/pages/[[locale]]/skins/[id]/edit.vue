@@ -14,6 +14,8 @@ q-page#skinForm
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { useI18n } from 'vue-i18n'
@@ -106,18 +108,23 @@ const metaData = () => {
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute, redirect, ssrContext }) {
-    const skin = useTempSkinStore()
-    const user = useUserStore()
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<
+      RouteNamedMap,
+      'skin-form-edit'
+    >
+
+    const skin = useTempSkinStore(store)
+    const user = useUserStore(store)
 
     // Clear store
     skin.clearData()
 
     // New skin form, no need to prefetch data
-    if (!currentRoute.params.id) return
+    if (!route.params.id) return
 
     // Check if ID is valid, redirect to 404 if not
-    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+    if (route.params.id && !validator.isMongoId(route.params.id)) {
       redirect('/404')
     }
 
@@ -126,10 +133,10 @@ defineOptions({
     // We need to check if it's available before using it
     // router change --> client side --> ssrContext is undefined
     // direct access or refresh page --> server side --> ssrContext is available
-    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+    const userId = user._id
 
     // Prefetch skin data
-    await skin.fetchSkin(currentRoute.params.id)
+    await skin.fetchSkin(route.params.id)
 
     // Check if skin exists and user is the submitter
     if (skin._id.length === 0 || skin.submitter._id !== userId) {
