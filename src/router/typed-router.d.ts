@@ -145,9 +145,40 @@ declare module 'vue-router/auto-routes' {
     >,
     'profile': RouteRecordInfo<
       'profile',
-      '/:locale?/users/:id/:tab(patterns|skins|setlists|comments)?',
-      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true>, tab?: ParamValueZeroOrOne<true> },
-      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false>, tab?: ParamValueZeroOrOne<false> },
+      '/:locale?/users/:id',
+      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
+      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
+      | 'profile-comments'
+      | 'profile-patterns'
+      | 'profile-setlists'
+      | 'profile-skins'
+    >,
+    'profile-comments': RouteRecordInfo<
+      'profile-comments',
+      '/:locale?/users/:id/comments',
+      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
+      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
+      | never
+    >,
+    'profile-patterns': RouteRecordInfo<
+      'profile-patterns',
+      '/:locale?/users/:id/patterns',
+      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
+      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
+      | never
+    >,
+    'profile-setlists': RouteRecordInfo<
+      'profile-setlists',
+      '/:locale?/users/:id/setlists',
+      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
+      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
+      | never
+    >,
+    'profile-skins': RouteRecordInfo<
+      'profile-skins',
+      '/:locale?/users/:id/skins',
+      { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
+      { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
       | never
     >,
   }
@@ -291,13 +322,49 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/[[locale]]/users/[id]/[[tab]].vue': {
+    'src/pages/[[locale]]/users/[id].vue': {
       routes:
         | 'profile'
+        | 'profile-comments'
+        | 'profile-patterns'
+        | 'profile-setlists'
+        | 'profile-skins'
+      views:
+        | 'default'
+      pathParamNames:
+        | 'id'
+    }
+    'src/pages/[[locale]]/users/[id]/comments.vue': {
+      routes:
+        | 'profile-comments'
       views:
         | never
       pathParamNames:
-        | 'tab'
+        | never
+    }
+    'src/pages/[[locale]]/users/[id]/patterns.vue': {
+      routes:
+        | 'profile-patterns'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/[[locale]]/users/[id]/setlists.vue': {
+      routes:
+        | 'profile-setlists'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/[[locale]]/users/[id]/skins.vue': {
+      routes:
+        | 'profile-skins'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
   }
 

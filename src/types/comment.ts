@@ -1,3 +1,7 @@
+import type { IPattern } from './pattern'
+import type { ISetlist } from './setlist'
+import type { ISkin } from './skin'
+
 export interface ICommentReply {
   _id: string
   user: {
@@ -21,4 +25,14 @@ export interface IComment {
   setlist?: string
   rating: number
   replies: ICommentReply[]
+}
+
+export interface ICommentDetailed {
+  _id: string
+  pattern?: IPattern
+  skin?: ISkin
+  setlist?: ISetlist
+  replies: ICommentReply[]
+  comment: string
+  rating: number
 }

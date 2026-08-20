@@ -23,26 +23,21 @@ q-page#profile
             q-tab(name="comments" :label="$t('profile.tab.comments')" icon="comment")
               q-badge(color="tech" text-color="black" floating) {{ profile.commentCount }}
   section
-    PatternsPage(v-if="tab === 'patterns'")
-    SkinsPage(v-else-if="tab === 'skins'")
-    SetlistsPage(v-else-if="tab === 'setlists'")
-    CommentsPage(v-else-if="tab === 'comments'")
+    router-view
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempProfileStore } from '@/stores/temp-profile'
-import CommentsPage from './CommentsPage.vue'
-import PatternsPage from './PatternsPage.vue'
-import SetlistsPage from './SetlistsPage.vue'
-import SkinsPage from './SkinsPage.vue'
 
 const profile = useTempProfileStore()
-const route = useRoute()
+const route = useRoute('profile')
 const router = useRouter()
 
 const metaData = {
@@ -116,26 +111,65 @@ const metaData = {
 }
 useMeta(metaData)
 
-const tab = ref(route.params.tab || 'patterns')
+const tab = ref('patterns')
+watch(
+  () => route.name,
+  (name) => {
+    if (!name) return
 
-const setTab = (tab) => {
-  router.replace(getI18nRoute({ ...route, params: { ...route.params, tab } }))
+    if (name === 'profile-skins') tab.value = 'skins'
+    else if (name === 'profile-setlists') tab.value = 'setlists'
+    else if (name === 'profile-comments') tab.value = 'comments'
+    else tab.value = 'patterns'
+  },
+  { immediate: true },
+)
+
+const setTab = async (tab: 'patterns' | 'skins' | 'setlists' | 'comments') => {
+  if (!route.params.id) {
+    return await router.push('/404')
+  }
+
+  switch (tab) {
+    case 'patterns':
+      await router.push(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
+      break
+    case 'skins':
+      await router.push(getI18nRoute({ name: 'profile-skins', params: { id: route.params.id } }))
+      break
+    case 'setlists':
+      await router.push(getI18nRoute({ name: 'profile-setlists', params: { id: route.params.id } }))
+      break
+    case 'comments':
+      await router.push(getI18nRoute({ name: 'profile-comments', params: { id: route.params.id } }))
+      break
+  }
 }
 
 defineOptions({
-  async preFetch({ currentRoute, redirect }) {
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'profile'>
     // Prefetch profile data
-    const profile = useTempProfileStore()
+    const profile = useTempProfileStore(store)
 
     // Note:
     // Do not clear data here, as it will cause the page to flicker when navigating between tabs
     // profile.clearData()
+    if (route.params.id) {
+      await profile.fetchProfile(route.params.id)
+    } else {
+      redirect('/404')
+      return
+    }
 
-    await profile.fetchProfile(currentRoute.params.id)
+    if (route.name === 'profile') {
+      redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
+    }
 
     // Check if profile exists
     if (profile._id.length === 0) {
       redirect('/404')
+      return
     }
   },
 })
@@ -143,7 +177,6 @@ defineOptions({
 
 <route lang="yaml">
 name: profile
-path: /:locale?/users/:id/:tab(patterns|skins|setlists|comments)?
 meta:
   login: false
 </route>

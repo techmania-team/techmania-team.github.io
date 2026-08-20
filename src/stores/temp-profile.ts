@@ -1,7 +1,7 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from 'src/utils/api'
-import { handleError } from 'src/utils/handleError'
+import api from '@/utils/api'
+import { handleError } from '@/utils/handleError'
 
 export const useTempProfileStore = defineStore('temp-profile', () => {
   const name = ref('')
@@ -12,7 +12,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
   const commentCount = ref(0)
   const _id = ref('')
 
-  const fetchProfile = async (id) => {
+  const fetchProfile = async (id: string) => {
     try {
       const { data } = await api.get(`/users/${id}`)
       name.value = data.result.name || ''
