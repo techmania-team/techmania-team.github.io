@@ -107,6 +107,8 @@ q-page#skin
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
@@ -117,8 +119,6 @@ import { useTempSkinStore } from '@/stores/temp-skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { SKINTYPES } from '@/utils/skin'
-import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
-import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const route = useRoute()

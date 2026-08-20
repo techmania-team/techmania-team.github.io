@@ -72,7 +72,7 @@ section.q-mx-auto.padding.q-my-md
 </template>
 
 <script setup lang="ts">
-import type { IPatternSortBy, IPatternSearchForm } from '@/types/pattern'
+import type { IPatternSearchForm, IPatternSortBy } from '@/types/pattern'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { controls, CONTROLTYPE } from '@/utils/control'

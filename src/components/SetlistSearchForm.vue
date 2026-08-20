@@ -47,10 +47,10 @@ section.q-mx-auto.padding.q-my-md
 </template>
 
 <script setup lang="ts">
+import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
-import { CONTROLTYPE, controls } from '@/utils/control'
-import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
+import { controls, CONTROLTYPE } from '@/utils/control'
 
 const props = defineProps<{
   initialValues: ISetlistSearchForm
@@ -99,6 +99,6 @@ const changeSort = (sortBy: ISetlistSortBy) => {
 }
 
 const onFormSubmit = form.handleSubmit((values) => {
-  emit('search', values as ISetlistSearchForm)
+  emit('search', values)
 })
 </script>

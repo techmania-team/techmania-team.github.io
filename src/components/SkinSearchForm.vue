@@ -47,10 +47,10 @@ section.q-mx-auto.padding.q-my-md
 </template>
 
 <script setup lang="ts">
+import type { ISkinSearchForm, ISkinSortBy } from '@/types/skin'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { SKINTYPE, SKINTYPES } from '@/utils/skin'
-import type { ISkinSearchForm, ISkinSortBy } from '@/types/skin'
 
 const props = defineProps<{
   initialValues: ISkinSearchForm
@@ -100,6 +100,6 @@ const changeSort = (sortBy: ISkinSortBy) => {
 }
 
 const onFormSubmit = form.handleSubmit((values) => {
-  emit('search', values as ISkinSearchForm)
+  emit('search', values)
 })
 </script>
