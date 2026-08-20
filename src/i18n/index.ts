@@ -9,6 +9,8 @@ import { createI18n } from 'vue-i18n'
 export const localeOptions = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP', 'ko-KR']
 export type SupportedLocale = (typeof localeOptions)[number]
 
+type ExpectedLangType = Parameters<typeof Lang.set>[0]
+
 // relative path to your node_modules/quasar/..
 // change to YOUR path
 const langList = import.meta.glob<{ default: QuasarLanguage }>(
@@ -55,7 +57,7 @@ export const setLocale = async (locale: string, ssrContext: QSsrContext | null |
   global.locale.value = localeToSet
   const path = `../../node_modules/quasar/lang/${localeToSet === 'ja-JP' ? 'ja' : localeToSet}.js`
   const quasarLang = await langList[path]!()
-  Lang.set(quasarLang.default, ssrContext)
+  Lang.set(quasarLang.default as ExpectedLangType, ssrContext)
 }
 
 /**
