@@ -14,6 +14,8 @@ q-page#setlistForm
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { useI18n } from 'vue-i18n'
@@ -106,18 +108,23 @@ const metaData = () => {
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute, redirect, ssrContext }) {
-    const setlist = useTempSetlistStore()
-    const user = useUserStore()
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<
+      RouteNamedMap,
+      'setlist-form-edit'
+    >
+
+    const setlist = useTempSetlistStore(store)
+    const user = useUserStore(store)
 
     // Clear store
     setlist.clearData()
 
     // New setlist form, no need to prefetch data
-    if (!currentRoute.params.id) return
+    if (!route.params.id) return
 
     // Check if ID is valid, redirect to 404 if not
-    if (currentRoute.params.id && !validator.isMongoId(currentRoute.params.id)) {
+    if (route.params.id && !validator.isMongoId(route.params.id)) {
       redirect('/404')
     }
 
@@ -126,10 +133,10 @@ defineOptions({
     // We need to check if it's available before using it
     // router change --> client side --> ssrContext is undefined
     // direct access or refresh page --> server side --> ssrContext is available
-    const userId = ssrContext ? ssrContext.req.session.passport?.user?._id || false : user._id
+    const userId = user._id
 
     // Prefetch setlist data
-    await setlist.fetchSetlist(currentRoute.params.id)
+    await setlist.fetchSetlist(route.params.id)
 
     // Check if setlist exists and user is the submitter
     if (setlist._id.length === 0 || setlist.submitter._id !== userId) {

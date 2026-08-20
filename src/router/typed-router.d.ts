@@ -99,7 +99,7 @@ declare module 'vue-router/auto-routes' {
       '/:locale?/setlists/:id',
       { locale?: ParamValueZeroOrOne<true>, id: ParamValue<true> },
       { locale?: ParamValueZeroOrOne<false>, id: ParamValue<false> },
-      | 'setlist-form-edit'
+      | never
     >,
     'setlist-form-edit': RouteRecordInfo<
       'setlist-form-edit',
