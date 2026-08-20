@@ -29,6 +29,7 @@
     "vee-validate": "^4.15.1",
     "vite-plugin-vue-layouts-next": "^2.1.0",
     "vue": "^3.5.40",
+    "vue-gtag": "^3.7.1",
     "vue-i18n": "^11.4.8",
     "vue-recaptcha-v3": "^2.0.1",
     "vue-router": "^5.2.0",
