@@ -6,7 +6,7 @@ import type {
 } from '@/types/setlist'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/utils/api'
+import * as setlistService from '@/services/setlist'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError } from '@/utils/handleError'
 
@@ -43,7 +43,7 @@ export const useTempSetlistStore = defineStore('temp-setlist', () => {
 
   const fetchSetlist = async (id: string) => {
     try {
-      const { data } = await api.get(`/setlists/${id}`)
+      const { data } = await setlistService.searchID(id)
       setSetlist(data.result)
     } catch (error) {
       handleError(error)

@@ -36,7 +36,7 @@ export interface ISkinSearchParams {
   start?: number
   limit?: number
   keywords?: string
-  types?: SKINTYPE
+  types?: string
   sortBy?: ISkinSortBy
   sort?: 1 | -1
   submitter?: string
@@ -49,12 +49,12 @@ export interface ISkinForm {
   previews?: ISkinPreview[]
   type: SKINTYPE
   description?: string
-  agree: boolean
+  'g-recaptcha-response': string
 }
 
 export interface ISkinSearchForm {
   keywords: string
-  types: number[]
+  types: SKINTYPE[]
   sort: 1 | -1
   sortBy: ISkinSortBy
 }

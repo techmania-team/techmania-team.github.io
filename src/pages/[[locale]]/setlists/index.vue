@@ -39,7 +39,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SetlistSearchForm from '@/components/SetlistSearchForm.vue'
-import api from '@/utils/api'
+import * as setlistService from '@/services/setlist'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError } from '@/utils/handleError'
 
@@ -104,15 +104,13 @@ const fetchSetlists = async (start = 0) => {
   isFetching.value = true
 
   try {
-    const { data } = await api.get('/setlists', {
-      params: {
-        start,
-        keywords: searchParams.value.keywords,
-        controls: searchParams.value.controls.join(),
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-        limit: 12,
-      },
+    const { data } = await setlistService.search({
+      start,
+      keywords: searchParams.value.keywords,
+      controls: searchParams.value.controls.join(),
+      sort: searchParams.value.sort,
+      sortBy: searchParams.value.sortBy,
+      limit: 12,
     })
     if (data.result.length > 0) {
       setlists.value = setlists.value.concat(data.result)

@@ -39,7 +39,7 @@ import type { ICommentDetailed } from '@/types/comment'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
-import api from '@/utils/api'
+import * as commentService from '@/services/comment'
 import * as date from '@/utils/date'
 import { handleError } from '@/utils/handleError'
 
@@ -50,14 +50,9 @@ const scrollDisable = ref(false)
 
 const fetchComments = async (start = 0) => {
   try {
-    const { data } = await api.get('/comments/user/' + route.params.id, {
-      params: {
-        submitter: route.params.id,
-        start: start,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: 12,
-      },
+    const { data } = await commentService.getByUser(route.params.id, {
+      start: start,
+      limit: 12,
     })
 
     if (data.result.length > 0) comments.value = comments.value.concat(data.result)

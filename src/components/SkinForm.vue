@@ -180,8 +180,8 @@ import { useReCaptcha } from 'vue-recaptcha-v3'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { getI18nRoute } from '@/i18n'
+import * as skinService from '@/services/skin'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
 import { SKINTYPE, SKINTYPES } from '@/utils/skin'
 import { getIDFromYouTubeLink } from '@/utils/youtube'
@@ -279,7 +279,8 @@ const onSubmit = form.handleSubmit(async (values) => {
     if (isEdit.value) {
       // Has skin ID, update skin
       const token = await recaptcha?.executeRecaptcha('updateSkin')
-      await api.patch(`/skins/${props.skin!._id}`, {
+
+      await skinService.update(props.skin!._id, {
         name: values.name,
         link: values.link,
         image: values.image,
@@ -289,7 +290,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         })),
         type: values.type,
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -301,7 +302,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     } else {
       // No skin ID, create new skin
       const token = await recaptcha?.executeRecaptcha('newSkin')
-      const { data } = await api.post(`/skins`, {
+      const { data } = await skinService.create({
         name: values.name,
         link: values.link,
         image: values.image,
@@ -311,7 +312,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         })),
         type: values.type,
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -320,7 +321,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         position: 'top',
         timeout: 2000,
       })
-      await router.push(getI18nRoute({ name: 'skin', params: { id: data._id } }))
+      await router.push(getI18nRoute({ name: 'skin', params: { id: data.result } }))
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -350,7 +351,7 @@ const openDeleteDialog = () => {
 const deleteSkin = async () => {
   deleting.value = true
   try {
-    await api.delete(`/skins/${props.skin!._id}`)
+    await skinService.del(props.skin!._id)
     // Notify success
     $q.notify({
       icon: 'check',

@@ -348,8 +348,9 @@ import { useReCaptcha } from 'vue-recaptcha-v3'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { getI18nRoute } from '@/i18n'
+import * as patternService from '@/services/pattern'
+import * as setlistService from '@/services/setlist'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { controls, CONTROLTYPE } from '@/utils/control'
 import { CRITERIA, CRITERIA_DIRECTION, criterias } from '@/utils/criteria'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
@@ -627,9 +628,7 @@ const filterPatterns = async (val: string, update: (callback: () => void) => voi
     })
   }
   try {
-    const { data } = await api.get('/patterns', {
-      params: { keywords: val, sort: 1, sortBy: 'name' },
-    })
+    const { data } = await patternService.search({ keywords: val, sort: 1, sortBy: 'name' })
     return update(() => {
       patternOptions.value = data.result
     })
@@ -652,7 +651,7 @@ const filterDifficulties = async (
     })
   }
   try {
-    const { data } = await api.get(`/patterns/${form.values[key][idx].pattern}`)
+    const { data } = await patternService.searchID(form.values[key][idx].pattern)
     return update(() => {
       difficultyOptions.value = data.result.difficulties.filter(
         (difficulty: IDifficultyOption) => difficulty.control === form.values.control,
@@ -693,7 +692,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     if (isEdit.value) {
       // Has setlist ID, update setlist
       const token = await recaptcha?.executeRecaptcha('updateSetlist')
-      await api.patch(`/setlists/${props.setlist!._id}`, {
+      await setlistService.update(props.setlist!._id, {
         name: values.name,
         control: values.control,
         link: values.link,
@@ -705,7 +704,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           ytid: getIDFromYouTubeLink(preview.link),
         })),
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -717,7 +716,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     } else {
       // No setlist ID, create new setlist
       const token = await recaptcha?.executeRecaptcha('newSetlist')
-      const { data } = await api.post(`/setlists`, {
+      const { data } = await setlistService.create({
         name: values.name,
         control: values.control,
         link: values.link,
@@ -729,7 +728,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           ytid: getIDFromYouTubeLink(preview.link),
         })),
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -738,7 +737,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         position: 'top',
         timeout: 2000,
       })
-      await router.push(getI18nRoute({ name: 'setlist', params: { id: data._id } }))
+      await router.push(getI18nRoute({ name: 'setlist', params: { id: data.result } }))
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -768,7 +767,7 @@ const openDeleteDialog = () => {
 const deleteSetlist = async () => {
   deleting.value = true
   try {
-    await api.delete(`/setlists/${props.setlist!._id}`)
+    await setlistService.del(props.setlist!._id)
     // Notify success
     $q.notify({
       icon: 'check',

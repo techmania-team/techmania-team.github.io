@@ -1,7 +1,7 @@
 import type { ISkin, ISkinPreview } from '@/types/skin'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/utils/api'
+import * as skinService from '@/services/skin'
 import { handleError } from '@/utils/handleError'
 import { SKINTYPE } from '@/utils/skin'
 
@@ -34,7 +34,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
 
   const fetchSkin = async (id: string) => {
     try {
-      const { data } = await api.get(`/skins/${id}`)
+      const { data } = await skinService.searchID(id)
       setSkin(data.result)
     } catch (error) {
       handleError(error)

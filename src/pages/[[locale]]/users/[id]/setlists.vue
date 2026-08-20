@@ -14,8 +14,8 @@ import type { ISetlist } from '@/types/setlist'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SetlistCard from '@/components/SetlistCard.vue'
+import * as setlistService from '@/services/setlist'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-setlists')
@@ -26,16 +26,14 @@ const scrollDisable = ref(false)
 
 const fetchSetlists = async (start = 0) => {
   try {
-    const { data } = await api.get('/setlists', {
-      params: {
-        submitter: route.params.id,
-        start: start,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: 12,
-      },
+    const { data } = await setlistService.search({
+      submitter: route.params.id,
+      start: start,
+      sort: -1,
+      sortBy: 'createdAt',
+      limit: 12,
     })
-    console.log(data.result)
+
     if (data.result.length > 0) setlists.value = setlists.value.concat(data.result)
     else scrollDisable.value = true
   } catch (error) {

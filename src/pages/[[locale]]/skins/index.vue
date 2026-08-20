@@ -39,7 +39,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SkinCard from '@/components/SkinCard.vue'
 import SkinSearchForm from '@/components/SkinSearchForm.vue'
-import api from '@/utils/api'
+import * as skinService from '@/services/skin'
 import { handleError } from '@/utils/handleError'
 import { SKINTYPE } from '@/utils/skin'
 
@@ -131,15 +131,13 @@ const fetchSkins = async (start = 0) => {
   isFetching.value = true
 
   try {
-    const { data } = await api.get('/skins', {
-      params: {
-        start,
-        types: searchParams.value.types.join(),
-        keywords: searchParams.value.keywords,
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-        limit: 12,
-      },
+    const { data } = await skinService.search({
+      start,
+      types: searchParams.value.types.join(),
+      keywords: searchParams.value.keywords,
+      sort: searchParams.value.sort,
+      sortBy: searchParams.value.sortBy,
+      limit: 12,
     })
     if (data.result.length > 0) {
       skins.value = skins.value.concat(data.result)

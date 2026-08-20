@@ -6,7 +6,7 @@ export interface IPatternSubmitter {
 }
 
 export interface IPatternDifficulty {
-  _id?: string
+  _id: string
   name: string
   level: number
   control: CONTROLTYPE
@@ -72,4 +72,5 @@ export interface IPatternForm {
   previews?: IPatternPreview[]
   difficulties?: IPatternDifficulty[]
   description?: string
+  'g-recaptcha-response': string
 }

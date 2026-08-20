@@ -1,7 +1,7 @@
 import type { IPattern, IPatternDifficulty, IPatternPreview } from '@/types/pattern'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/utils/api'
+import * as patternService from '@/services/pattern'
 import { handleError } from '@/utils/handleError'
 
 export const useTempPatternStore = defineStore('temp-pattern', () => {
@@ -39,7 +39,7 @@ export const useTempPatternStore = defineStore('temp-pattern', () => {
 
   const fetchPattern = async (id: string) => {
     try {
-      const { data } = await api.get(`/patterns/${id}`)
+      const { data } = await patternService.searchID(id)
       setPattern(data.result)
     } catch (error) {
       handleError(error)

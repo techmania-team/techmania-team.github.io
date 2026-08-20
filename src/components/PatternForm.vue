@@ -244,7 +244,7 @@ q-dialog(v-model="deleteDialog" persistent)
 </template>
 
 <script setup lang="ts">
-import type { IPattern } from '@/types/pattern'
+import type { IPattern, IPatternDifficulty } from '@/types/pattern'
 import { AxiosError } from 'axios'
 import { useQuasar } from 'quasar'
 import { useFieldArray, useForm } from 'vee-validate'
@@ -254,8 +254,8 @@ import { useReCaptcha } from 'vue-recaptcha-v3'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { getI18nRoute } from '@/i18n'
+import * as patternService from '@/services/pattern'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { controls } from '@/utils/control'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
@@ -338,7 +338,7 @@ const schema = yup.object({
           t('patternFormPage.difficulties.control.error.invalid'),
         ),
       lanes: yup
-        .number()
+        .number<2 | 3 | 4>()
         .typeError(() => t('patternFormPage.difficulties.level.error.required'))
         .required(() => t('patternFormPage.difficulties.lanes.error.required'))
         .min(2, () => t('patternFormPage.difficulties.lanes.error.min'))
@@ -392,7 +392,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     if (isEdit.value) {
       // Has pattern ID, update pattern
       const token = await recaptcha?.executeRecaptcha('updatePattern')
-      await api.patch(`/patterns/${props.pattern!._id}`, {
+      await patternService.update(props.pattern!._id, {
         name: values.name,
         composer: values.composer,
         link: values.link,
@@ -402,9 +402,9 @@ const onSubmit = form.handleSubmit(async (values) => {
           name: preview.name,
           ytid: getIDFromYouTubeLink(preview.link),
         })),
-        difficulties: values.difficulties,
+        difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -416,7 +416,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     } else {
       // No pattern ID, create new pattern
       const token = await recaptcha?.executeRecaptcha('newPattern')
-      const { data } = await api.post(`/patterns`, {
+      const { data } = await patternService.create({
         name: values.name,
         composer: values.composer,
         link: values.link,
@@ -426,9 +426,9 @@ const onSubmit = form.handleSubmit(async (values) => {
           name: preview.name,
           ytid: getIDFromYouTubeLink(preview.link),
         })),
-        difficulties: values.difficulties,
+        difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       $q.notify({
         icon: 'check',
@@ -437,7 +437,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         position: 'top',
         timeout: 2000,
       })
-      await router.push(getI18nRoute({ name: 'pattern', params: { id: data._id } }))
+      await router.push(getI18nRoute({ name: 'pattern', params: { id: data.result } }))
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -467,7 +467,7 @@ const openDeleteDialog = () => {
 const deletePattern = async () => {
   deleting.value = true
   try {
-    await api.delete(`/patterns/${props.pattern!._id}`)
+    await patternService.del(props.pattern!._id)
     // Notify success
     $q.notify({
       icon: 'check',

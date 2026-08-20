@@ -131,8 +131,8 @@ import { useReCaptcha } from 'vue-recaptcha-v3'
 import * as yup from 'yup'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
+import * as commentService from '@/services/comment'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import * as date from '@/utils/date'
 import { handleError } from '@/utils/handleError'
 
@@ -262,9 +262,9 @@ const onDialogSubmit = form.handleSubmit(async (values) => {
     if (editDialog.value.mode === DIALOG_MODE.REPLY) {
       // Send reply request
       const token = await recaptcha?.executeRecaptcha('reply')
-      const { data } = await api.post(`/comments/${editDialog.value.cid}/replies`, {
+      const { data } = await commentService.createReply(editDialog.value.cid, {
         comment: values.comment,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       // Update the comment
       const comment = {
@@ -288,10 +288,10 @@ const onDialogSubmit = form.handleSubmit(async (values) => {
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_COMMENT) {
       // Send edit comment request
       const token = await recaptcha?.executeRecaptcha('editMyComment')
-      await api.patch(`/comments/${editDialog.value.cid}`, {
+      await commentService.updateMyComment(editDialog.value.cid, {
         comment: values.comment,
         rating: values.rating,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       // Update the comment
       myComment.value.replies[0]!.comment = values.comment
@@ -299,9 +299,9 @@ const onDialogSubmit = form.handleSubmit(async (values) => {
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_REPLY) {
       // Send edit reply request
       const token = await recaptcha?.executeRecaptcha('editMyReply')
-      await api.patch(`/comments/${editDialog.value.cid}/replies/${editDialog.value.rid}`, {
+      await commentService.updateMyReply(editDialog.value.cid, editDialog.value.rid, {
         comment: values.comment,
-        'g-recaptcha-response': token,
+        'g-recaptcha-response': token!,
       })
       // Update the reply
       const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
@@ -321,11 +321,11 @@ const onCommentSubmit = form.handleSubmit(async (values) => {
   try {
     // Send comment request
     const token = await recaptcha?.executeRecaptcha('comment')
-    const { data } = await api.post(`/comments`, {
+    const { data } = await commentService.create({
       comment: values.comment,
       rating: values.rating,
       [props.type]: props.id,
-      'g-recaptcha-response': token,
+      'g-recaptcha-response': token!,
     })
     // Set my comment
     myComment.value._id = data.result._id
@@ -357,9 +357,9 @@ const voteReply = async (
     // Send vote request
     const token = await recaptcha?.executeRecaptcha('vote')
     const newValue = voted === value ? 0 : value
-    await api.patch(`/comments/${cid}/replies/${rid}/votes`, {
+    await commentService.updateReplyVote(cid, rid, {
       vote: newValue,
-      'g-recaptcha-response': token,
+      'g-recaptcha-response': token!,
     })
 
     // Update value
@@ -384,9 +384,9 @@ const deleteMyReply = async (cid: string, rid: string, cidx: number, ridx: numbe
   try {
     // Send delete request
     const token = await recaptcha?.executeRecaptcha('deleteReply')
-    await api.patch(`/comments/${cid}/replies/${rid}`, {
+    await commentService.updateMyReply(cid, rid, {
       deleted: true,
-      'g-recaptcha-response': token,
+      'g-recaptcha-response': token!,
     })
     // Update the comment
     if (cid === myComment.value._id) {
@@ -409,16 +409,32 @@ const deleteMyReply = async (cid: string, rid: string, cidx: number, ridx: numbe
 onMounted(async () => {
   try {
     // Fetch other comments
-    const { data } = await api.get(`/comments/${props.type}/${props.id}`)
-    // Set other comments
-    otherComments.value = data.result
+    let commentsData
+    if (props.type === 'pattern') {
+      commentsData = await commentService.getByPattern(props.id)
+    } else if (props.type === 'skin') {
+      commentsData = await commentService.getBySkin(props.id)
+    } else if (props.type === 'setlist') {
+      commentsData = await commentService.getBySetlist(props.id)
+    }
+    if (commentsData) {
+      otherComments.value = commentsData.data.result
+    }
 
     // Fetch my comment if user is logged in
-    if (user.isLogin) {
-      const { data } = await api.get(`/comments/${props.type}/${props.id}/my`)
-      myComment.value._id = data.result._id
-      myComment.value.rating = data.result.rating
-      myComment.value.replies = data.result.replies
+    let myCommentData
+    if (props.type === 'pattern') {
+      myCommentData = await commentService.getMyCommmentByPattern(props.id)
+    } else if (props.type === 'skin') {
+      myCommentData = await commentService.getMyCommmentBySkin(props.id)
+    } else if (props.type === 'setlist') {
+      myCommentData = await commentService.getMyCommmentBySetlist(props.id)
+    }
+
+    if (myCommentData) {
+      myComment.value._id = myCommentData.data.result._id
+      myComment.value.rating = myCommentData.data.result.rating
+      myComment.value.replies = myCommentData.data.result.replies
     }
   } catch (error) {
     // Don't need to show error if the comment is not found

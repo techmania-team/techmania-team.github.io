@@ -14,8 +14,8 @@ import type { ISkin } from '@/types/skin'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SkinCard from '@/components/SkinCard.vue'
+import * as skinService from '@/services/skin'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-skins')
@@ -26,14 +26,12 @@ const scrollDisable = ref(false)
 
 const fetchSkins = async (start = 0) => {
   try {
-    const { data } = await api.get('/skins', {
-      params: {
-        submitter: route.params.id,
-        start: start,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: 12,
-      },
+    const { data } = await skinService.search({
+      submitter: route.params.id,
+      start: start,
+      sort: -1,
+      sortBy: 'createdAt',
+      limit: 12,
     })
 
     if (data.result.length > 0) skins.value = skins.value.concat(data.result)

@@ -61,10 +61,21 @@ export interface ISetlistSearchParams {
   limit?: number
   keysounded?: boolean
   keywords?: string
-  controls?: CONTROLTYPE
+  controls?: string
   sortBy?: ISetlistSortBy
   sort?: 1 | -1
   submitter?: string
+}
+
+export interface ISetlistFormSelectablePattern {
+  pattern: string
+  difficulty: string
+}
+
+export interface ISetlistFormHiddenPattern extends ISetlistFormSelectablePattern {
+  criteriaType: number
+  criteriaDirection: number
+  criteriaValue: number
 }
 
 export interface ISetlistForm {
@@ -72,10 +83,11 @@ export interface ISetlistForm {
   link: string
   image?: string
   control: CONTROLTYPE
-  selectablePatterns?: ISetlistSelectablePattern[]
-  hiddenPatterns?: ISetlistHiddenPattern[]
+  selectablePatterns?: ISetlistFormSelectablePattern[]
+  hiddenPatterns?: ISetlistFormHiddenPattern[]
   previews?: ISetlistPreview[]
   description?: string
+  'g-recaptcha-response': string
 }
 
 export interface ISetlistSearchForm {

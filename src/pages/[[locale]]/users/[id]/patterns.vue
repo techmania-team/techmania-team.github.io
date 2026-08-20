@@ -14,8 +14,8 @@ import type { IPattern } from '@/types/pattern'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
+import * as patternService from '@/services/pattern'
 import { useUserStore } from '@/stores/user'
-import api from '@/utils/api'
 import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-patterns')
@@ -26,14 +26,12 @@ const scrollDisable = ref(false)
 
 const fetchPatterns = async (start = 0) => {
   try {
-    const { data } = await api.get('/patterns', {
-      params: {
-        submitter: route.params.id,
-        start: start,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: 12,
-      },
+    const { data } = await patternService.search({
+      submitter: route.params.id,
+      start: start,
+      sort: -1,
+      sortBy: 'createdAt',
+      limit: 12,
     })
 
     if (data.result.length > 0) patterns.value = patterns.value.concat(data.result)
