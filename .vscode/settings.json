@@ -8,5 +8,6 @@
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  "npm.packageManager": "bun"
+  "npm.packageManager": "bun",
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
