@@ -46,7 +46,7 @@ q-no-ssr.row.q-gutter-y-lg
                       DiscordAvatar(:avatar="reply.user.avatar")
                     .col-auto
                       //- User name
-                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'comments', id: reply.user._id }})") {{ reply.user.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-comments', params: { id: reply.user._id }})") {{ reply.user.name }}
                       //- Rating
                       template(v-if="ridx === 0")
                         br

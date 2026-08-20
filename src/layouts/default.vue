@@ -142,8 +142,8 @@ const loginNavs = computed(() => {
   return [
     {
       to: getI18nRoute({
-        name: 'profile',
-        params: { tab: 'patterns', id: user._id },
+        name: 'profile-patterns',
+        params: { id: user._id },
       }),
       label: t('nav.myPage'),
     },

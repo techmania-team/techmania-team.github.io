@@ -38,7 +38,7 @@ q-page#setlist
                     //- This will make setlist._id empty, and cause router error: Missing required param "id"
                     //- Edit (Prefetch, clear data) --> Setlist(onUnmounted, error)
                     template(v-if="setlist.submitter._id.length > 0")
-                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-setlists', params: { id: setlist.submitter._id}})") {{ setlist.submitter.name }}
             //- List items - Rating
             .col-12.col-md-6
               q-item

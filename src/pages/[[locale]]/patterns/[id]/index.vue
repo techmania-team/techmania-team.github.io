@@ -39,7 +39,7 @@ q-page#pattern
                     //- This will make pattern._id empty, and cause router error: Missing required param "id"
                     //- Edit (Prefetch, clear data) --> Pattern(onUnmounted, error)
                     template(v-if="pattern.submitter._id.length > 0")
-                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: pattern.submitter._id}})") {{ pattern.submitter.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-patterns', params: { id: pattern.submitter._id}})") {{ pattern.submitter.name }}
             //- List items - Rating
             .col-12.col-md-6
               q-item

@@ -40,7 +40,7 @@ q-card.full-height.card-setlist
           p
             i18n-t(keypath="setlistCard.submittedBy" tag="span" v-if="!mine")
               template(#name)
-                router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: setlist.submitter._id}})") {{ setlist.submitter.name }}
+                router-link.no-underline(:to="getI18nRoute({ name: 'profile-setlists', params: { id: setlist.submitter._id}})") {{ setlist.submitter.name }}
             br(v-if="!mine")
             i18n-t(keypath="setlistCard.submittedAt" tag="span")
               template(#date)

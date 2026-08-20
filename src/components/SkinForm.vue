@@ -360,7 +360,7 @@ const deleteSkin = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    await router.push(getI18nRoute({ name: 'profile', params: { tab: 'skins', id: user._id } }))
+    await router.push(getI18nRoute({ name: 'profile-skins', params: { id: user._id } }))
   } catch (error) {
     if (error instanceof AxiosError) {
       await handleFormSubmitError(error, 'skinFormPage', 'delete')

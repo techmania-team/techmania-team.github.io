@@ -34,7 +34,7 @@ q-card.full-height.card-skin
           p
             i18n-t(keypath="skinCard.submittedBy" tag="span" v-if="!mine")
               template(#name)
-                router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
+                router-link.no-underline(:to="getI18nRoute({ name: 'profile-skins', params: { id: skin.submitter._id}})") {{ skin.submitter.name }}
             br(v-if="!mine")
             i18n-t(keypath="skinCard.submittedAt" tag="span")
               template(#date)

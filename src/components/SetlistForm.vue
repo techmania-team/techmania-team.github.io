@@ -778,7 +778,7 @@ const deleteSetlist = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    await router.push(getI18nRoute({ name: 'profile', params: { tab: 'setlists', id: user._id } }))
+    await router.push(getI18nRoute({ name: 'profile-setlists', params: { id: user._id } }))
   } catch (error) {
     if (error instanceof AxiosError) {
       await handleFormSubmitError(error, 'setlistFormPage', 'delete')
