@@ -116,7 +116,7 @@ export const create = async (req: Request, res: Response) => {
     result.webhook = webhookId
     await result.save()
   }
-  res.status(StatusCodes.OK).send({ success: true, message: '', _id: result._id })
+  res.status(StatusCodes.OK).send({ success: true, message: '', result: result._id })
 }
 
 export const search = async (req: Request, res: Response) => {
