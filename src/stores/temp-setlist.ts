@@ -1,25 +1,31 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
+import type {
+  ISetlist,
+  ISetlistHiddenPattern,
+  ISetlistPreview,
+  ISetlistSelectablePattern,
+} from '@/types/setlist'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from 'src/utils/api'
-import { CONTROL_TOUCH } from 'src/utils/control'
-import { handleError } from 'src/utils/handleError'
+import api from '@/utils/api'
+import { CONTROLTYPE } from '@/utils/control'
+import { handleError } from '@/utils/handleError'
 
 export const useTempSetlistStore = defineStore('temp-setlist', () => {
   const _id = ref('')
   const name = ref('')
   const link = ref('')
-  const previews = ref([])
+  const previews = ref<ISetlistPreview[]>([])
   const image = ref('')
   const description = ref('')
-  const control = ref(CONTROL_TOUCH)
-  const selectablePatterns = ref([])
-  const hiddenPatterns = ref([])
+  const control = ref(CONTROLTYPE.TOUCH)
+  const selectablePatterns = ref<ISetlistSelectablePattern[]>([])
+  const hiddenPatterns = ref<ISetlistHiddenPattern[]>([])
   const submitter = ref({ name: '', _id: '' })
   const rating = ref({ count: 0, avg: 0 })
   const createdAt = ref('')
   const updatedAt = ref('')
 
-  const setSetlist = (data) => {
+  const setSetlist = (data: ISetlist) => {
     _id.value = data._id
     name.value = data.name
     link.value = data.link
@@ -35,7 +41,7 @@ export const useTempSetlistStore = defineStore('temp-setlist', () => {
     updatedAt.value = data.updatedAt
   }
 
-  const fetchSetlist = async (id) => {
+  const fetchSetlist = async (id: string) => {
     try {
       const { data } = await api.get(`/setlists/${id}`)
       setSetlist(data.result)
@@ -53,7 +59,7 @@ export const useTempSetlistStore = defineStore('temp-setlist', () => {
     submitter.value = { name: '', _id: '' }
     rating.value = { count: 0, avg: 0 }
     image.value = ''
-    control.value = CONTROL_TOUCH
+    control.value = CONTROLTYPE.TOUCH
     selectablePatterns.value = []
     hiddenPatterns.value = []
     createdAt.value = ''

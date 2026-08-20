@@ -131,6 +131,8 @@ q-page#setlist
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
+import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
@@ -152,7 +154,7 @@ const backgroundImage = computed(() => {
   return setlist.image?.length > 0
     ? setlist.image
     : setlist.previews.length > 0
-      ? getYouTubeThumbnail(setlist.previews[0].ytid)
+      ? getYouTubeThumbnail(setlist.previews[0]!.ytid)
       : '/assets/header-setlist.png'
 })
 
@@ -228,18 +230,19 @@ const metaData = () => ({
 useMeta(metaData)
 
 defineOptions({
-  async preFetch({ currentRoute, redirect }) {
+  async preFetch({ currentRoute, redirect, store }) {
+    const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'setlist'>
     // Prefetch setlist data
-    const setlist = useTempSetlistStore()
-    if (setlist._id !== currentRoute.params.id) {
+    const setlist = useTempSetlistStore(store)
+    if (setlist._id !== route.params.id) {
       setlist.clearData()
     }
 
-    if (!currentRoute.params.id || !validator.isMongoId(currentRoute.params.id)) {
+    if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect('/404')
     }
 
-    await setlist.fetchSetlist(currentRoute.params.id)
+    await setlist.fetchSetlist(route.params.id)
 
     // Check if setlist exists and user is the submitter
     if (setlist._id.length === 0) {

@@ -1,3 +1,4 @@
+import type { IPatternDifficulty, IPatternPreview, IPatternSubmitter } from './pattern'
 import type { CONTROLTYPE } from '@/utils/control'
 import type { CRITERIA, CRITERIA_DIRECTION } from '@/utils/criteria'
 
@@ -13,11 +14,20 @@ export interface ISetlistPreview {
 }
 
 export interface ISetlistSelectablePattern {
-  _id?: string
+  _id: string
   pattern: string
-  difficulty: string
+  submitter: IPatternSubmitter
+  name: string
+  composer: string
+  keysounded: boolean
+  link: string
+  previews: IPatternPreview[]
+  description: string
+  image: string
+  createdAt: string
+  updatedAt: string
+  difficulty: IPatternDifficulty
 }
-
 export interface ISetlistHiddenPattern extends ISetlistSelectablePattern {
   criteriaType: CRITERIA
   criteriaDirection: CRITERIA_DIRECTION

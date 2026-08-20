@@ -235,14 +235,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/[[locale]]/setlists/[id].vue': {
+    'src/pages/[[locale]]/setlists/[id]/index.vue': {
       routes:
         | 'setlist'
-        | 'setlist-form-edit'
       views:
-        | 'default'
+        | never
       pathParamNames:
-        | 'id'
+        | never
     }
     'src/pages/[[locale]]/setlists/[id]/edit.vue': {
       routes:
