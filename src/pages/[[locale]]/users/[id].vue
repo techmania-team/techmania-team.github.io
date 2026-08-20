@@ -13,14 +13,34 @@ q-page#profile
     .container
       .row
         .col-12
-          q-tabs(align="justify" indicator-color="tech" v-model="tab" @update:model-value="setTab")
-            q-tab(name="patterns" :label="$t('profile.tab.patterns')" icon="music_note")
+          q-tabs(align="justify" indicator-color="tech")
+            q-route-tab(
+              :to="getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } })"
+              :label="$t('profile.tab.patterns')"
+              icon="music_note"
+              exact
+            )
               q-badge(color="tech" text-color="black" floating) {{ profile.patternCount }}
-            q-tab(name="skins" :label="$t('profile.tab.skins')" icon="stars")
+            q-route-tab(
+              :to="getI18nRoute({ name: 'profile-skins', params: { id: route.params.id } })"
+              :label="$t('profile.tab.skins')"
+              icon="stars"
+              exact
+            )
               q-badge(color="tech" text-color="black" floating) {{ profile.skinCount }}
-            q-tab(name="setlists" :label="$t('profile.tab.setlists')" icon="list_alt")
+            q-route-tab(
+              :to="getI18nRoute({ name: 'profile-setlists', params: { id: route.params.id } })"
+              :label="$t('profile.tab.setlists')"
+              icon="list_alt"
+              exact
+            )
               q-badge(color="tech" text-color="black" floating) {{ profile.setlistCount }}
-            q-tab(name="comments" :label="$t('profile.tab.comments')" icon="comment")
+            q-route-tab(
+              :to="getI18nRoute({ name: 'profile-comments', params: { id: route.params.id } })"
+              :label="$t('profile.tab.comments')"
+              icon="comment"
+              exact
+            )
               q-badge(color="tech" text-color="black" floating) {{ profile.commentCount }}
   section
     router-view
@@ -31,14 +51,13 @@ import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import { ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempUserStore } from '@/stores/temp-user'
 
 const profile = useTempUserStore()
 const route = useRoute('profile')
-const router = useRouter()
 
 const metaData = {
   title: `TECHMANIA | ${profile.name}`,
@@ -124,27 +143,6 @@ watch(
   },
   { immediate: true },
 )
-
-const setTab = async (tab: 'patterns' | 'skins' | 'setlists' | 'comments') => {
-  if (!route.params.id) {
-    return await router.push('/404')
-  }
-
-  switch (tab) {
-    case 'patterns':
-      await router.push(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
-      break
-    case 'skins':
-      await router.push(getI18nRoute({ name: 'profile-skins', params: { id: route.params.id } }))
-      break
-    case 'setlists':
-      await router.push(getI18nRoute({ name: 'profile-setlists', params: { id: route.params.id } }))
-      break
-    case 'comments':
-      await router.push(getI18nRoute({ name: 'profile-comments', params: { id: route.params.id } }))
-      break
-  }
-}
 
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
