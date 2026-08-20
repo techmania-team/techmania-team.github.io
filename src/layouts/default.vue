@@ -70,7 +70,7 @@ q-layout(view='hHh lpR fff')
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
   q-page-container
-    router-view.q-mb-xl(:key="$route.name")
+    router-view.q-mb-xl(:key="viewKey")
     //- Back to top button
     q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
@@ -171,4 +171,12 @@ const setLocaleOption = async (locale: string) => {
   await router.replace(getI18nRoute(route))
   dropdown.value = false
 }
+
+const viewKey = computed(() => {
+  if (route.name && String(route.name).startsWith('profile')) {
+    return 'profile'
+  }
+
+  return route.fullPath
+})
 </script>
