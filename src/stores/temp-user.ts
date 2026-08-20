@@ -1,9 +1,9 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/utils/api'
+import * as userService from '@/services/user'
 import { handleError } from '@/utils/handleError'
 
-export const useTempProfileStore = defineStore('temp-profile', () => {
+export const useTempUserStore = defineStore('temp-profile', () => {
   const name = ref('')
   const avatar = ref('')
   const patternCount = ref(0)
@@ -14,7 +14,7 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
 
   const fetchProfile = async (id: string) => {
     try {
-      const { data } = await api.get(`/users/${id}`)
+      const { data } = await userService.searchID(id)
       name.value = data.result.name || ''
       avatar.value = data.result.avatar || ''
       patternCount.value = data.result.patternCount || 0
@@ -51,5 +51,5 @@ export const useTempProfileStore = defineStore('temp-profile', () => {
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useTempProfileStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useTempUserStore, import.meta.hot))
 }

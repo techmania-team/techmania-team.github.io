@@ -34,9 +34,9 @@ import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
-import { useTempProfileStore } from '@/stores/temp-profile'
+import { useTempUserStore } from '@/stores/temp-user'
 
-const profile = useTempProfileStore()
+const profile = useTempUserStore()
 const route = useRoute('profile')
 const router = useRouter()
 
@@ -150,7 +150,7 @@ defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'profile'>
     // Prefetch profile data
-    const profile = useTempProfileStore(store)
+    const profile = useTempUserStore(store)
 
     // Note:
     // Do not clear data here, as it will cause the page to flicker when navigating between tabs
