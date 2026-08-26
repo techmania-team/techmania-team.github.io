@@ -29,7 +29,7 @@
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('setlistFormPage.basic.name.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="nameField"
                       :error-message="form.errors.value.name"
                       :error="!!form.errors.value.name"
@@ -58,7 +58,7 @@
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('setlistFormPage.basic.download.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech" type="url"
+                      outlined square color="tech" type="url" hide-bottom-space
                       v-model="linkField"
                       :error-message="form.errors.value.link"
                       :error="!!form.errors.value.link"
@@ -70,7 +70,7 @@
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('setlistFormPage.basic.image.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="imageField"
                       :error-message="form.errors.value.image"
                       :error="!!form.errors.value.image"
@@ -90,7 +90,7 @@
                             //- Pattern
                             .col-12.col-md-8
                               q-select.q-pb-none(
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getSelectablePattern(idx)[0].value"
                                 @update:model-value="clearDifficulty('selectablePatterns', idx)"
                                 :error-message="form.errors.value[`selectablePatterns[${idx}].pattern`]"
@@ -112,7 +112,7 @@
                             //- Difficulty
                             .col-12.col-md-4
                               q-select.q-pb-none(
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getSelectableDifficulty(idx)[0].value"
                                 :error-message="form.errors.value[`selectablePatterns[${idx}].difficulty`]"
                                 :error="!!form.errors.value[`selectablePatterns[${idx}].difficulty`]"
@@ -157,7 +157,7 @@
                             //- Pattern
                             .col-12.col-md-8
                               q-select.q-pb-none(
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getHiddenPattern(idx)[0].value"
                                 @update:model-value="clearDifficulty('hiddenPatterns', idx)"
                                 :error-message="form.errors.value[`hiddenPatterns[${idx}].pattern`]"
@@ -179,7 +179,7 @@
                             //- Difficulty
                             .col-12.col-md-4
                               q-select.q-pb-none(
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getHiddenDifficulty(idx)[0].value"
                                 :error-message="form.errors.value[`hiddenPatterns[${idx}].difficulty`]"
                                 :error="!!form.errors.value[`hiddenPatterns[${idx}].difficulty`]"
@@ -200,7 +200,7 @@
                             .col-4
                               q-select.q-pb-none(
                                 :disable="idx === hiddenPatternsField.fields.value.length - 1"
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getHiddenCriteriaType(idx)[0].value"
                                 :error-message="form.errors.value[`hiddenPatterns[${idx}].criteriaType`]"
                                 :error="!!form.errors.value[`hiddenPatterns[${idx}].criteriaType`]"
@@ -211,7 +211,7 @@
                             .col-4
                               q-select.q-pb-none(
                                 :disable="idx === hiddenPatternsField.fields.value.length - 1"
-                                outlined square color="tech"
+                                outlined square color="tech" hide-bottom-space
                                 v-model="getHiddenCriteriaDirection(idx)[0].value"
                                 :error-message="form.errors.value[`hiddenPatterns[${idx}].criteriaDirection`]"
                                 :error="!!form.errors.value[`hiddenPatterns[${idx}].criteriaDirection`]"
@@ -222,7 +222,7 @@
                             .col-4
                               q-input.q-pb-none(
                                 :disable="idx === hiddenPatternsField.fields.value.length - 1"
-                                outlined square color="tech" type="number"
+                                outlined square color="tech" type="number" hide-bottom-space
                                 v-model="getHiddenCriteriaValue(idx)[0].value"
                                 :error-message="form.errors.value[`hiddenPatterns[${idx}].criteriaValue`]"
                                 :error="!!form.errors.value[`hiddenPatterns[${idx}].criteriaValue`]"

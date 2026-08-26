@@ -29,7 +29,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.name.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="nameField"
                       :error-message="form.errors.value.name"
                       :error="!!form.errors.value.name"
@@ -57,7 +57,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.download.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech" type="url"
+                      outlined square color="tech" type="url" hide-bottom-space
                       v-model="linkField"
                       :error-message="form.errors.value.link"
                       :error="!!form.errors.value.link"
@@ -69,7 +69,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.image.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="imageField"
                       :error-message="form.errors.value.image"
                       :error="!!form.errors.value.image"

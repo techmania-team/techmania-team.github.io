@@ -29,7 +29,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.name.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="nameField"
                       :error-message="form.errors.value.name"
                       :error="!!form.errors.value.name"
@@ -41,7 +41,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.composer.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech"
+                      outlined square color="tech" hide-bottom-space
                       v-model="composerField"
                       :error-message="form.errors.value.composer"
                       :error="!!form.errors.value.composer"
@@ -65,7 +65,7 @@ section.q-mx-auto.padding
                   .col-2 {{ $t('patternFormPage.basic.keysounded.label') }}
                   .col-10
                     q-field.q-pb-none(
-                      borderless color="white"
+                      borderless color="white" hide-bottom-space
                       :error-message="form.errors.value.keysounded"
                       :error="!!form.errors.value.keysounded"
                     )
@@ -81,6 +81,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.image.label') }}
                   .col-12.col-md-10
                       q-input.q-pb-none(
+                        outlined square color="tech" type="url" hide-bottom-space
                         v-model="imageField"
                         :error-message="form.errors.value.image"
                         :error="!!form.errors.value.image"
