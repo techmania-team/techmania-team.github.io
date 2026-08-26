@@ -77,7 +77,30 @@ export const create = async (req: Request, res: Response) => {
 
   const result = await Comment.create(createQuery)
 
-  res.status(StatusCodes.OK).send({ success: true, message: '', result })
+  const resultObj = result.toObject()
+  delete (resultObj as { __v?: number }).__v
+
+  res.status(StatusCodes.OK).send({
+    success: true,
+    message: '',
+    result: {
+      ...resultObj,
+      replies: [
+        {
+          ...resultObj.replies[0],
+          user: {
+            _id: user._id,
+            name: user.name,
+            avatar: `https://cdn.discordapp.com/avatars/${user.discord}/${user.avatar}.png`,
+          },
+          votes: {
+            sum: 0,
+            voted: 0,
+          },
+        },
+      ],
+    },
+  })
 }
 
 export const getByPattern = async (req: Request, res: Response) => {
