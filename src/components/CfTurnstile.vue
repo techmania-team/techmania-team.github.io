@@ -3,15 +3,32 @@ div(ref="turnstileContainer")
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-const siteKey = import.meta.env.QCLI_TURNSTILE_SITE_KEY
+interface TurnstileRenderOptions {
+  sitekey: string
+  action?: string
+  theme?: 'light' | 'dark' | 'auto'
+  size?: 'normal' | 'flexible' | 'compact'
+  callback?: (token: string) => void
+  'error-callback'?: (code: string) => void
+  'expired-callback'?: () => void
+}
+
+interface Turnstile {
+  render: (container: string | HTMLElement, options: TurnstileRenderOptions) => string
+  reset: (widgetId?: string) => void
+  remove: (widgetId?: string) => void
+  getResponse: (widgetId?: string) => string | undefined
+}
 
 declare global {
   interface Window {
-    turnstile: any
+    turnstile?: Turnstile
   }
 }
+
+const siteKey = import.meta.env.QCLI_TURNSTILE_SITE_KEY
 
 const props = withDefaults(
   defineProps<{
