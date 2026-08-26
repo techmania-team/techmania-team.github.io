@@ -10,7 +10,7 @@ q-page#skinForm
       template(#content)
         .column.items-center
           .text-h4.text-center {{ $t('skinFormPage.titleEdit') }}
-    SkinForm
+    SkinForm(:skin="skin")
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,7 @@ import { useUserStore } from '@/stores/user'
 const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute()
+const skin = useTempSkinStore()
 
 const title = user.isLogin
   ? 'TECHMANIA | ' + t('skinFormPage.titleEdit')

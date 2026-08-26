@@ -10,7 +10,7 @@ q-page#setlistForm
       template(#content)
         .column.items-center.q-mb-md
           .text-h4.text-center {{ $t('setlistFormPage.titleEdit') }}
-    SetlistForm
+    SetlistForm(:setlist="setlist")
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,7 @@ import { useUserStore } from '@/stores/user'
 const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute()
+const setlist = useTempSetlistStore()
 
 const title = user.isLogin
   ? 'TECHMANIA | ' + t('setlistFormPage.titleEdit')
