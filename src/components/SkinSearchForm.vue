@@ -66,11 +66,7 @@ const schema = yup.object<ISkinSearchForm>({
   keywords: yup.string().optional(),
   types: yup
     .array()
-    .of(
-      yup
-        .number()
-        .oneOf([SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME]),
-    )
+    .of(yup.number<SKINTYPE>().oneOf(Object.values(SKINTYPE) as number[]))
     .required(),
   sort: yup.number<1 | -1>().required().oneOf([1, -1]),
   sortBy: yup.string<ISkinSortBy>().oneOf(['createdAt', 'updatedAt', 'name', 'rating']).required(),

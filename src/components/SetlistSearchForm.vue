@@ -66,7 +66,7 @@ const schema = yup.object<ISetlistSearchForm>({
   keywords: yup.string().optional(),
   controls: yup
     .array()
-    .of(yup.number().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+    .of(yup.number<CONTROLTYPE>().oneOf(Object.values(CONTROLTYPE) as number[]))
     .required(),
   sort: yup.number<1 | -1>().required().oneOf([1, -1]),
   sortBy: yup

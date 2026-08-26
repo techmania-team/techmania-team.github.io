@@ -93,7 +93,7 @@ const schema = yup.object<IPatternSearchForm>({
   keysounded: yup.boolean().optional(),
   controls: yup
     .array()
-    .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+    .of(yup.number<CONTROLTYPE>().oneOf(Object.values(CONTROLTYPE) as number[]))
     .required(),
   lanes: yup
     .array()
