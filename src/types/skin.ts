@@ -49,7 +49,7 @@ export interface ISkinForm {
   previews?: ISkinPreview[]
   type: SKINTYPE
   description?: string
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ISkinSearchForm {

@@ -47,27 +47,26 @@ export interface ICommentForm {
   pattern?: string
   skin?: string
   setlist?: string
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ICommentUpdateForm {
   comment?: string
   rating?: number
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ICommentReplyForm {
   comment: string
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ICommentReplyUpdateForm {
   comment?: string
   deleted?: boolean
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ICommentVoteForm {
   vote: number
-  'g-recaptcha-response': string
 }

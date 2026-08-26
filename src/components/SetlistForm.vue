@@ -318,6 +318,9 @@
             template(v-if="!!form.errors.value.agree")
               .text-negative {{ form.errors.value.agree }}
             br
+             //- Turnstile
+            .row.justify-center.q-my-md
+              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'pattern-update' : 'pattern-create'")
             //- Submit button
             q-btn.q-my-md(:label="isEdit ? $t('setlistFormPage.submit.edit') : $t('setlistFormPage.submit.new')" color="tech" text-color="black" type="submit" style="width: 150px")
 //- Delete confirmation dialog
@@ -344,7 +347,6 @@ import validator from 'validator'
 import { useFieldArray, useForm } from 'vee-validate'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useReCaptcha } from 'vue-recaptcha-v3'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { getI18nRoute } from '@/i18n'
@@ -355,6 +357,7 @@ import { controls, CONTROLTYPE } from '@/utils/control'
 import { CRITERIA, CRITERIA_DIRECTION, criterias } from '@/utils/criteria'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
 import { getIDFromYouTubeLink } from '@/utils/youtube'
+import CfTurnstile from './CfTurnstile.vue'
 
 // Local helper interfaces for populated API response types
 interface IDifficultyOption {
@@ -389,7 +392,8 @@ const $q = useQuasar()
 const router = useRouter()
 const user = useUserStore()
 const { t } = useI18n()
-const recaptcha = useReCaptcha()
+
+const turnstileToken = ref('')
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
@@ -707,9 +711,20 @@ const onSubmit = form.handleSubmit(async (values) => {
   $q.loading.show()
 
   try {
+    if (!turnstileToken.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('setlistFormPage.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
     if (isEdit.value) {
       // Has setlist ID, update setlist
-      const token = await recaptcha?.executeRecaptcha('updateSetlist')
       await setlistService.update(props.setlist!._id, {
         name: values.name,
         control: values.control,
@@ -724,7 +739,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             ytid: getIDFromYouTubeLink(preview.link),
           })),
         description: values.description,
-        'g-recaptcha-response': token!,
+        'cf-turnstile-response': turnstileToken.value,
       })
       $q.notify({
         icon: 'check',
@@ -733,9 +748,9 @@ const onSubmit = form.handleSubmit(async (values) => {
         position: 'top',
         timeout: 2000,
       })
+      await router.push(getI18nRoute({ name: 'setlist', params: { id: props.setlist!._id } }))
     } else {
       // No setlist ID, create new setlist
-      const token = await recaptcha?.executeRecaptcha('newSetlist')
       const { data } = await setlistService.create({
         name: values.name,
         control: values.control,
@@ -750,7 +765,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             ytid: getIDFromYouTubeLink(preview.link),
           })),
         description: values.description,
-        'g-recaptcha-response': token!,
+        'cf-turnstile-response': turnstileToken.value,
       })
       $q.notify({
         icon: 'check',

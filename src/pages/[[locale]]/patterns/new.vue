@@ -108,5 +108,4 @@ useMeta(metaData)
 name: pattern-form-new
 meta:
   login: true
-  recaptcha: true
 </route>

@@ -72,5 +72,5 @@ export interface IPatternForm {
   previews?: IPatternPreview[]
   difficulties?: IPatternDifficulty[]
   description?: string
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }

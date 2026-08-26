@@ -151,5 +151,4 @@ defineOptions({
 name: skin-form-edit
 meta:
   login: true
-  recaptcha: true
 </route>

@@ -151,5 +151,4 @@ defineOptions({
 name: pattern-form-edit
 meta:
   login: true
-  recaptcha: true
 </route>

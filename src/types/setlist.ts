@@ -87,7 +87,7 @@ export interface ISetlistForm {
   hiddenPatterns?: ISetlistFormHiddenPattern[]
   previews?: ISetlistPreview[]
   description?: string
-  'g-recaptcha-response': string
+  'cf-turnstile-response': string
 }
 
 export interface ISetlistSearchForm {

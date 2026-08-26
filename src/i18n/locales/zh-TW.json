@@ -212,6 +212,11 @@
         "required": "您必須同意使用條款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
+    },
     "submit": {
       "new": "上傳",
       "edit": "編輯"
@@ -382,6 +387,11 @@
       "label": "送出造型代表您已閱讀並同意{tos}",
       "error": {
         "required": "您必須同意使用條款"
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
       }
     },
     "submit": {
@@ -663,6 +673,11 @@
         "required": "您必須同意使用條款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
+    },
     "submit": {
       "new": "上傳",
       "edit": "編輯"
@@ -729,6 +744,11 @@
         "edit": "編輯"
       },
       "cancel": "取消"
+    },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
     }
   },
   "profile": {

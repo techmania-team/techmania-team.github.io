@@ -22,7 +22,7 @@ interface ImportMetaEnv {
   readonly QCLI_HOST_URL: string
   readonly DB_URL: string
   readonly JWT_SECRET: string
-  readonly QCLI_RECAPTCHA_SITE_KEY: string
-  readonly RECAPTCHA_SECRET_KEY: string
+  readonly QCLI_TURNSTILE_SITE_KEY: string
+  readonly TURNSTILE_SECRET_KEY: string
   readonly SESSION_SECRET: string
 }

@@ -151,5 +151,4 @@ defineOptions({
 name: setlist-form-edit
 meta:
   login: true
-  recaptcha: true
 </route>

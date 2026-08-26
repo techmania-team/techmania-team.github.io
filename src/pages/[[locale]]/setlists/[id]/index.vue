@@ -264,5 +264,4 @@ onUnmounted(() => {
 name: setlist
 meta:
   login: false
-  recaptcha: true
 </route>

@@ -212,6 +212,11 @@
         "required": "You need to accept the terms first."
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
+    },
     "submit": {
       "new": "Submit",
       "edit": "Update"
@@ -382,6 +387,11 @@
       "label": "Submitting the pattern signifies that you have read and agree to the {tos}",
       "error": {
         "required": "You need to accept the terms first."
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
       }
     },
     "submit": {
@@ -663,6 +673,11 @@
         "required": "You need to accept the terms first."
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
+    },
     "submit": {
       "new": "Submit",
       "edit": "Update"
@@ -729,6 +744,11 @@
         "edit": "Update"
       },
       "cancel": "Cancel"
+    },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
     }
   },
   "profile": {

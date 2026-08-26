@@ -240,5 +240,4 @@ onUnmounted(() => {
 name: skin
 meta:
   login: false
-  recaptcha: true
 </route>

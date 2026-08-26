@@ -22,8 +22,13 @@ q-no-ssr.row.q-gutter-y-lg
                   icon="star" size="2em"
                 )
               .text-center.text-negative(v-if="!!form.errors.value.rating") {{ form.errors.value.rating }}
+              .q-mt-md.row.justify-center
+                cf-turnstile(
+                  v-model="turnstileTokenMain"
+                  action="comment-create"
+                )
               .q-mt-md.text-center
-                q-btn(:label="$t('commentList.commentForm.submit')" color="tech" text-color="black" type="submit" :loading="form.isSubmitting.value" style="width: 150px")
+                q-btn(:label="$t('commentList.commentForm.submit')" color="tech" text-color="black" type="submit" :loading="form.isSubmitting.value" style="width: 150px" :disable="!turnstileTokenMain")
   //- Comments
   .col-12
     q-list
@@ -115,19 +120,25 @@ q-no-ssr.row.q-gutter-y-lg
                   icon="star" size="2em"
                 )
               .text-center.text-negative(v-if="!!form.errors.value.rating") {{ form.errors.value.rating }}
+          .row.justify-center.q-my-md
+            cf-turnstile(
+              v-model="turnstileTokenDialog"
+              :action="dialogTurnstileAction"
+              :key="editDialog.mode"
+            )
           q-separator
           q-card-actions(align="around")
             q-btn(flat :label="$t('commentList.dialog.cancel')" color="red" :loading="form.isSubmitting.value" v-close-popup )
-            q-btn(flat :label="$t('commentList.dialog.submit.' + editDialog.mode)" color="green" :loading="form.isSubmitting.value" @click="onDialogSubmit")
+            q-btn(flat :label="$t('commentList.dialog.submit.' + editDialog.mode)" color="green" :loading="form.isSubmitting.value" @click="onDialogSubmit" :disable="!turnstileTokenDialog")
 </template>
 
 <script setup lang="ts">
 import type { IComment, ICommentReply } from '@/types/comment'
 import { AxiosError } from 'axios'
+import { useQuasar } from 'quasar'
 import { useForm } from 'vee-validate'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useReCaptcha } from 'vue-recaptcha-v3'
 import * as yup from 'yup'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
@@ -135,12 +146,16 @@ import * as commentService from '@/services/comment'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { handleError } from '@/utils/handleError'
+import CfTurnstile from './CfTurnstile.vue'
 
+const $q = useQuasar()
 const user = useUserStore()
-const recaptcha = useReCaptcha()
 const { t } = useI18n()
 
 const loaded = ref(false)
+
+const turnstileTokenMain = ref('')
+const turnstileTokenDialog = ref('')
 
 // Props
 const props = defineProps({
@@ -214,6 +229,19 @@ enum DIALOG_MODE {
   EDIT_MY_REPLY = 'edit',
 }
 
+const dialogTurnstileAction = computed(() => {
+  switch (editDialog.value.mode) {
+    case DIALOG_MODE.REPLY:
+      return 'comment-createReply'
+    case DIALOG_MODE.EDIT_MY_COMMENT:
+      return 'comment-updateMyComment'
+    case DIALOG_MODE.EDIT_MY_REPLY:
+      return 'comment-updateMyReply'
+    default:
+      return ''
+  }
+})
+
 const editDialog = ref({
   // Open or close dialog
   open: false,
@@ -259,12 +287,23 @@ const openDialog = async (reply: ICommentReply, cidx: number, ridx: number, mode
 
 const onDialogSubmit = form.handleSubmit(async (values) => {
   try {
+    if (!turnstileTokenDialog.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('commentList.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
     if (editDialog.value.mode === DIALOG_MODE.REPLY) {
       // Send reply request
-      const token = await recaptcha?.executeRecaptcha('reply')
       const { data } = await commentService.createReply(editDialog.value.cid, {
         comment: values.comment,
-        'g-recaptcha-response': token!,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the comment
       const comment = {
@@ -287,21 +326,19 @@ const onDialogSubmit = form.handleSubmit(async (values) => {
       }
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_COMMENT) {
       // Send edit comment request
-      const token = await recaptcha?.executeRecaptcha('editMyComment')
       await commentService.updateMyComment(editDialog.value.cid, {
         comment: values.comment,
         rating: values.rating,
-        'g-recaptcha-response': token!,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the comment
       myComment.value.replies[0]!.comment = values.comment
       myComment.value.rating = values.rating
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_REPLY) {
       // Send edit reply request
-      const token = await recaptcha?.executeRecaptcha('editMyReply')
       await commentService.updateMyReply(editDialog.value.cid, editDialog.value.rid, {
         comment: values.comment,
-        'g-recaptcha-response': token!,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the reply
       const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
@@ -314,18 +351,30 @@ const onDialogSubmit = form.handleSubmit(async (values) => {
     editDialog.value.open = false
   } catch (error) {
     handleError(error)
+    turnstileTokenDialog.value = ''
   }
 })
 
 const onCommentSubmit = form.handleSubmit(async (values) => {
   try {
+    if (!turnstileTokenMain.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('commentList.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
     // Send comment request
-    const token = await recaptcha?.executeRecaptcha('comment')
     const { data } = await commentService.create({
       comment: values.comment,
       rating: values.rating,
       [props.type]: props.id,
-      'g-recaptcha-response': token!,
+      'cf-turnstile-response': turnstileTokenMain.value,
     })
     // Set my comment
     myComment.value._id = data.result._id
@@ -333,6 +382,7 @@ const onCommentSubmit = form.handleSubmit(async (values) => {
     myComment.value.replies = data.result.replies
   } catch (error) {
     handleError(error)
+    turnstileTokenMain.value = ''
   }
 })
 
@@ -355,11 +405,9 @@ const voteReply = async (
 ) => {
   try {
     // Send vote request
-    const token = await recaptcha?.executeRecaptcha('vote')
     const newValue = voted === value ? 0 : value
     await commentService.updateReplyVote(cid, rid, {
       vote: newValue,
-      'g-recaptcha-response': token!,
     })
 
     // Update value

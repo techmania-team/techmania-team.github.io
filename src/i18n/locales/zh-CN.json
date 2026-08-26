@@ -212,6 +212,11 @@
         "required": "您必须同意使用条款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
+    },
     "submit": {
       "new": "上传",
       "edit": "编辑"
@@ -382,6 +387,11 @@
       "label": "送出皮肤代表您已阅读并同意{tos}",
       "error": {
         "required": "您必须同意使用条款"
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
       }
     },
     "submit": {
@@ -663,6 +673,11 @@
         "required": "您必须同意使用条款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
+    },
     "submit": {
       "new": "上传",
       "edit": "编辑"
@@ -729,6 +744,11 @@
         "edit": "编辑"
       },
       "cancel": "取消"
+    },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
     }
   },
   "profile": {

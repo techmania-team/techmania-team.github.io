@@ -212,6 +212,11 @@
         "required": "規約に同意する必要があります"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
+    },
     "submit": {
       "new": "投稿",
       "edit": "編集"
@@ -382,6 +387,11 @@
       "label": "スキンを投稿した場合、{tos}に同意したものとみなします",
       "error": {
         "required": "規約に同意する必要があります"
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
       }
     },
     "submit": {
@@ -663,6 +673,11 @@
         "required": "規約に同意する必要があります"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
+    },
     "submit": {
       "new": "投稿",
       "edit": "編集"
@@ -729,6 +744,11 @@
         "edit": "編集"
       },
       "cancel": "キャンセル"
+    },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
     }
   },
   "profile": {

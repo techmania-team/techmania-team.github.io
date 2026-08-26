@@ -264,5 +264,4 @@ onUnmounted(() => {
 name: pattern
 meta:
   login: false
-  recaptcha: true
 </route>

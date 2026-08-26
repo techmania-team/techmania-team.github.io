@@ -108,5 +108,4 @@ useMeta(metaData)
 name: skin-form-new
 meta:
   login: true
-  recaptcha: true
 </route>
