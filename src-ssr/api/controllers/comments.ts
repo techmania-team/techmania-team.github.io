@@ -521,34 +521,22 @@ export const updateMyReply = async (req: Request, res: Response) => {
 
   const bodyschema = yup
     .object({
-      comment: yup.string(),
-      deleted: yup.boolean(),
+      comment: yup.string().required(),
     })
     .required()
-    .test('at-least-one', 'At least one field is required', (value) => {
-      return Boolean(value.comment || value.deleted)
-    })
   const parsedBody = await bodyschema.validate(req.body, { stripUnknown: true })
 
   const paramsSchema = yup.object({
     cid: yup
       .string()
       .required()
-      .test('mongoID', 'Invalid ID', (value) => {
-        return validator.isMongoId(value)
-      }),
+      .test('mongoID', 'Invalid ID', (value) => validator.isMongoId(value)),
     rid: yup
       .string()
       .required()
-      .test('mongoID', 'Invalid ID', (value) => {
-        return validator.isMongoId(value)
-      }),
+      .test('mongoID', 'Invalid ID', (value) => validator.isMongoId(value)),
   })
   const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
-
-  const $set: { comment?: string; deleted?: boolean } = {}
-  if (parsedBody.comment) $set['comment'] = parsedBody.comment
-  if (parsedBody.deleted) $set['deleted'] = parsedBody.deleted
 
   // Find comment with matching comment id and reply id
   const comment = await Comment.findOne({
@@ -557,7 +545,6 @@ export const updateMyReply = async (req: Request, res: Response) => {
   }).orFail()
 
   const reply = comment.replies.id(parsedParams.rid)
-
   if (!reply) throw new AppError('REPLY_NOT_FOUND')
 
   // Check if user is the owner of the comment
@@ -565,13 +552,46 @@ export const updateMyReply = async (req: Request, res: Response) => {
     throw new AppError('PERMISSION')
   }
 
-  // Delete comment if first reply deleted
-  if (parsedBody.deleted && comment.replies[0]?._id.toString() === parsedParams.rid) {
-    await Comment.findByIdAndDelete(parsedParams.cid).orFail()
-  }
   // Update comment
-  else {
-    reply.set($set)
+  reply.set({ comment: parsedBody.comment })
+  await comment.save()
+
+  res.status(StatusCodes.OK).send({ success: true, message: '' })
+}
+
+export const deleteMyReply = async (req: Request, res: Response) => {
+  const user = req.user!
+
+  const paramsSchema = yup.object({
+    cid: yup
+      .string()
+      .required()
+      .test('mongoID', 'Invalid ID', (value) => validator.isMongoId(value)),
+    rid: yup
+      .string()
+      .required()
+      .test('mongoID', 'Invalid ID', (value) => validator.isMongoId(value)),
+  })
+  const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+  // Find comment with matching comment id and reply id
+  const comment = await Comment.findOne({
+    _id: new mongoose.Types.ObjectId(parsedParams.cid),
+    'replies._id': new mongoose.Types.ObjectId(parsedParams.rid),
+  }).orFail()
+
+  const reply = comment.replies.id(parsedParams.rid)
+  if (!reply) throw new AppError('REPLY_NOT_FOUND')
+
+  // Check if user is the owner of the comment
+  if (reply.user.toString() !== user._id.toString()) {
+    throw new AppError('PERMISSION')
+  }
+
+  if (comment.replies[0]?._id.toString() === parsedParams.rid) {
+    await Comment.findByIdAndDelete(parsedParams.cid).orFail()
+  } else {
+    reply.set({ deleted: true })
     await comment.save()
   }
 

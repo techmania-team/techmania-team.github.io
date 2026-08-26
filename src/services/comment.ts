@@ -74,6 +74,13 @@ export const updateMyReply = (
   return api.patch(`/comments/${cid}/replies/${rid}`, form)
 }
 
+export const deleteMyReply = (
+  cid: string,
+  rid: string,
+): Promise<AxiosResponse<ApiResponse<null>>> => {
+  return api.delete(`/comments/${cid}/replies/${rid}`)
+}
+
 export const updateReplyVote = (
   cid: string,
   rid: string,

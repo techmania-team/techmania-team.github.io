@@ -383,11 +383,7 @@ const voteReply = async (
 const deleteMyReply = async (cid: string, rid: string, cidx: number, ridx: number) => {
   try {
     // Send delete request
-    const token = await recaptcha?.executeRecaptcha('deleteReply')
-    await commentService.updateMyReply(cid, rid, {
-      deleted: true,
-      'g-recaptcha-response': token!,
-    })
+    await commentService.deleteMyReply(cid, rid)
     // Update the comment
     if (cid === myComment.value._id) {
       if (ridx === 0) {

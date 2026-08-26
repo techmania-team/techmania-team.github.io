@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   create,
   createReply,
+  deleteMyReply,
   getByPattern,
   getBySetlist,
   getBySkin,
@@ -36,6 +37,7 @@ router.get('/user/:uid', getByUser)
 router.patch('/:cid', recaptcha, isAuthenticated, updateMyComment)
 router.post('/:cid/replies', recaptcha, isAuthenticated, createReply)
 router.patch('/:cid/replies/:rid', recaptcha, isAuthenticated, updateMyReply)
+router.delete('/:cid/replies/:rid', recaptcha, isAuthenticated, deleteMyReply)
 router.patch('/:cid/replies/:rid/votes', recaptcha, isAuthenticated, updateReplyVote)
 
 export default router
