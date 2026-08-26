@@ -201,7 +201,7 @@ export const create = async (req: Request, res: Response) => {
       }),
     description: yup
       .string()
-      .required()
+      .notRequired()
       .transform((value) => sanitizeHtml(value)),
   })
   // Parsed request query
@@ -212,6 +212,7 @@ export const create = async (req: Request, res: Response) => {
     ...parseedBody,
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
+    description: parseedBody.description ?? '',
     submitter: user._id,
   })
 
@@ -724,7 +725,10 @@ export const update = async (req: Request, res: Response) => {
           return false
         }
       }),
-    description: yup.string().transform((value) => sanitizeHtml(value)),
+    description: yup
+      .string()
+      .notRequired()
+      .transform((value) => sanitizeHtml(value)),
   })
   // Parsed request query
   const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
@@ -740,6 +744,7 @@ export const update = async (req: Request, res: Response) => {
     ...parseedBody,
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
+    description: parseedBody.description ?? '',
   })
 
   await setlist.save()

@@ -124,7 +124,7 @@ export const create = async (req: Request, res: Response) => {
       ),
     description: yup
       .string()
-      .required()
+      .notRequired()
       .transform((value) => sanitizeHtml(value)),
   })
   // Parsed request query
@@ -135,6 +135,7 @@ export const create = async (req: Request, res: Response) => {
     ...parseedBody,
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
+    description: parseedBody.description ?? '',
     submitter: user._id,
   })
 
@@ -523,7 +524,7 @@ export const update = async (req: Request, res: Response) => {
       ),
     description: yup
       .string()
-      .required()
+      .notRequired()
       .transform((value) => sanitizeHtml(value)),
   })
   // Parsed request query
@@ -540,6 +541,7 @@ export const update = async (req: Request, res: Response) => {
     ...parseedBody,
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
+    description: parseedBody.description ?? '',
   })
 
   await pattern.save()
