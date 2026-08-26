@@ -53,7 +53,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.download.label') }}
                   .col-12.col-md-10
                     q-input.q-pb-none(
-                      outlined square color="tech" type="url"
+                      outlined square color="tech" type="url" hide-bottom-space
                       v-model="linkField"
                       :error-message="form.errors.value.link"
                       :error="!!form.errors.value.link"
