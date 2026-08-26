@@ -310,16 +310,43 @@ const schema = yup.object({
     .url(() => t('patternFormPage.basic.download.error.invalid'))
     .required(() => t('patternFormPage.basic.download.error.required')),
   keysounded: yup.boolean().required(() => t('patternFormPage.basic.keysounded.error.required')),
-  image: yup.string().url(() => t('patternFormPage.basic.image.error.invalid')),
+  image: yup
+    .string()
+    .notRequired()
+    .test(
+      'is-valid-url-or-empty',
+      () => t('patternFormPage.basic.image.error.invalid'),
+      (value) => !value || yup.string().url().isValidSync(value),
+    ),
   previews: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(() => t('patternFormPage.preview.name.error.required')),
+      name: yup.string().test(
+        'name-required-if-link',
+        () => t('patternFormPage.preview.name.error.required'),
+        function (value) {
+          const { link } = this.parent
+          if (link && !value) return false
+          return true
+        },
+      ),
       link: yup
         .string()
-        .required(() => t('patternFormPage.preview.link.error.required'))
-        .url(() => t('patternFormPage.preview.link.error.invalid'))
-        .test('youtube', t('patternFormPage.preview.link.error.youtube'), (value: string) =>
-          Boolean(getIDFromYouTubeLink(value)),
+        .test(
+          'link-required-if-name',
+          () => t('patternFormPage.preview.link.error.required'),
+          function (value) {
+            const { name } = this.parent
+            if (name && !value) return false
+            return true
+          },
+        )
+        .test(
+          'youtube',
+          () => t('patternFormPage.preview.link.error.youtube'),
+          (value) => {
+            if (!value) return true
+            return Boolean(getIDFromYouTubeLink(value))
+          },
         ),
     }),
   ),
@@ -332,10 +359,10 @@ const schema = yup.object({
         .required(() => t('patternFormPage.difficulties.level.error.required'))
         .min(1, () => t('patternFormPage.difficulties.level.error.min')),
       control: yup
-        .number()
+        .number<CONTROLTYPE>()
         .typeError(() => t('patternFormPage.difficulties.control.error.required'))
         .required(() => t('patternFormPage.difficulties.control.error.required'))
-        .oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM], () =>
+        .oneOf(Object.values(CONTROLTYPE) as number[], () =>
           t('patternFormPage.difficulties.control.error.invalid'),
         ),
       lanes: yup
@@ -399,10 +426,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         link: values.link,
         keysounded: values.keysounded,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
         'g-recaptcha-response': token!,
@@ -423,10 +452,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         link: values.link,
         keysounded: values.keysounded,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
         'g-recaptcha-response': token!,

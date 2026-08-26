@@ -73,15 +73,19 @@ export const create = async (req: Request, res: Response) => {
     link: yup.string().url().required(),
     image: yup
       .string()
-      .required()
-      .url()
+      .notRequired()
+      .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
+        if (!value) return true
+        return yup.string().url().isValidSync(value)
+      })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
         return await checkImage(value)
       }),
     previews: yup
       .array()
-      .required()
+      .notRequired()
+      .default([])
       .of(
         yup.object().shape({
           name: yup.string().required(),
@@ -101,7 +105,12 @@ export const create = async (req: Request, res: Response) => {
   const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
 
   // Create pattern
-  const result = await Skin.create({ ...parseedBody, submitter: user._id })
+  const result = await Skin.create({
+    ...parseedBody,
+    image: parseedBody.image ?? '',
+    previews: parseedBody.previews ?? [],
+    submitter: user._id,
+  })
 
   // Setup Discord webhook embed message
   const embed = buildSkinEmbed(result)
@@ -420,15 +429,19 @@ export const update = async (req: Request, res: Response) => {
     link: yup.string().url().required(),
     image: yup
       .string()
-      .required()
-      .url()
+      .notRequired()
+      .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
+        if (!value) return true
+        return yup.string().url().isValidSync(value)
+      })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
         return await checkImage(value)
       }),
     previews: yup
       .array()
-      .required()
+      .notRequired()
+      .default([])
       .of(
         yup.object().shape({
           name: yup.string().required(),
@@ -454,7 +467,11 @@ export const update = async (req: Request, res: Response) => {
     throw new AppError('PERMISSION')
   }
 
-  skin.set(parseedBody)
+  skin.set({
+    ...parseedBody,
+    image: parseedBody.image ?? '',
+    previews: parseedBody.previews ?? [],
+  })
 
   await skin.save()
 

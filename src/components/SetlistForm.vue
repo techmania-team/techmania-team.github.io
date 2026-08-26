@@ -462,12 +462,51 @@ const schema = yup.object({
     .string()
     .url(() => t('setlistFormPage.basic.download.error.invalid'))
     .required(() => t('setlistFormPage.basic.download.error.required')),
-  image: yup.string().url(() => t('setlistFormPage.basic.image.error.invalid')),
+  image: yup
+    .string()
+    .notRequired()
+    .test(
+      'is-valid-url-or-empty',
+      () => t('setlistFormPage.basic.image.error.invalid'),
+      (value) => !value || yup.string().url().isValidSync(value),
+    ),
+  previews: yup.array().of(
+    yup.object().shape({
+      name: yup.string().test(
+        'name-required-if-link',
+        () => t('setlistFormPage.preview.name.error.required'),
+        function (value) {
+          const { link } = this.parent
+          if (link && !value) return false
+          return true
+        },
+      ),
+      link: yup
+        .string()
+        .test(
+          'link-required-if-name',
+          () => t('setlistFormPage.preview.link.error.required'),
+          function (value) {
+            const { name } = this.parent
+            if (name && !value) return false
+            return true
+          },
+        )
+        .test(
+          'youtube',
+          () => t('setlistFormPage.preview.link.error.youtube'),
+          (value) => {
+            if (!value) return true
+            return Boolean(getIDFromYouTubeLink(value))
+          },
+        ),
+    }),
+  ),
   control: yup
     .number<CONTROLTYPE>()
     .typeError(() => t('setlistFormPage.basic.control.error.required'))
     .required(() => t('setlistFormPage.basic.control.error.required'))
-    .oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM], () =>
+    .oneOf(Object.values(CONTROLTYPE) as number[], () =>
       t('setlistFormPage.basic.control.error.invalid'),
     ),
   selectablePatterns: yup.array().of(
@@ -522,20 +561,11 @@ const schema = yup.object({
           .number<CRITERIA>()
           .typeError(() => t('setlistFormPage.hiddenPatterns.criteriaType.error.required'))
           .required(() => t('setlistFormPage.hiddenPatterns.criteriaType.error.required'))
-          .oneOf([
-            CRITERIA.INDEX,
-            CRITERIA.LEVEL,
-            CRITERIA.HP,
-            CRITERIA.SCORE,
-            CRITERIA.COMBO,
-            CRITERIA.MAX_COMBO,
-            CRITERIA.D100,
-            CRITERIA.NONE,
-          ]),
+          .oneOf(Object.values(CRITERIA) as number[]),
         criteriaDirection: yup
           .number<CRITERIA_DIRECTION>()
           .required()
-          .oneOf([CRITERIA_DIRECTION.LOWER, CRITERIA_DIRECTION.GREATER]),
+          .oneOf(Object.values(CRITERIA_DIRECTION) as number[]),
         criteriaValue: yup
           .number()
           .typeError(() => t('setlistFormPage.hiddenPatterns.criteriaValue.error.required'))
@@ -553,18 +583,6 @@ const schema = yup.object({
         })
       },
     ),
-  previews: yup.array().of(
-    yup.object().shape({
-      name: yup.string().required(() => t('setlistFormPage.preview.name.error.required')),
-      link: yup
-        .string()
-        .required(() => t('setlistFormPage.preview.link.error.required'))
-        .url(() => t('setlistFormPage.preview.link.error.invalid'))
-        .test('youtube', t('setlistFormPage.preview.link.error.youtube'), (value: string) =>
-          Boolean(getIDFromYouTubeLink(value)),
-        ),
-    }),
-  ),
   description: yup.string(),
   agree: yup
     .bool()
@@ -699,10 +717,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         image: values.image,
         selectablePatterns: values.selectablePatterns,
         hiddenPatterns: values.hiddenPatterns,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         description: values.description,
         'g-recaptcha-response': token!,
       })
@@ -723,10 +743,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         image: values.image,
         selectablePatterns: values.selectablePatterns,
         hiddenPatterns: values.hiddenPatterns,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         description: values.description,
         'g-recaptcha-response': token!,
       })

@@ -219,26 +219,51 @@ const schema = yup.object({
     .string()
     .url(() => t('skinFormPage.basic.download.error.invalid'))
     .required(() => t('skinFormPage.basic.download.error.required')),
-  image: yup.string().url(() => t('skinFormPage.basic.image.error.invalid')),
+  image: yup
+    .string()
+    .notRequired()
+    .test(
+      'is-valid-url-or-empty',
+      () => t('skinFormPage.basic.image.error.invalid'),
+      (value) => !value || yup.string().url().isValidSync(value),
+    ),
   previews: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(() => t('skinFormPage.preview.name.error.required')),
+      name: yup.string().test(
+        'name-required-if-link',
+        () => t('skinFormPage.preview.name.error.required'),
+        function (value) {
+          const { link } = this.parent
+          if (link && !value) return false
+          return true
+        },
+      ),
       link: yup
         .string()
-        .required(() => t('skinFormPage.preview.link.error.required'))
-        .url(() => t('skinFormPage.preview.link.error.invalid'))
-        .test('youtube', t('skinFormPage.preview.link.error.youtube'), (value: string) =>
-          Boolean(getIDFromYouTubeLink(value)),
+        .test(
+          'link-required-if-name',
+          () => t('skinFormPage.preview.link.error.required'),
+          function (value) {
+            const { name } = this.parent
+            if (name && !value) return false
+            return true
+          },
+        )
+        .test(
+          'youtube',
+          () => t('skinFormPage.preview.link.error.youtube'),
+          (value) => {
+            if (!value) return true
+            return Boolean(getIDFromYouTubeLink(value))
+          },
         ),
     }),
   ),
   type: yup
-    .number()
+    .number<SKINTYPE>()
     .typeError(() => t('skinFormPage.basic.type.error.required'))
     .required(() => t('skinFormPage.basic.type.error.required'))
-    .oneOf([SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME], () =>
-      t('skinFormPage.basic.type.error.invalid'),
-    ),
+    .oneOf(Object.values(SKINTYPE) as number[], () => t('skinFormPage.basic.type.error.invalid')),
   description: yup.string(),
   agree: yup
     .bool()
@@ -284,10 +309,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         name: values.name,
         link: values.link,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         type: values.type,
         description: values.description,
         'g-recaptcha-response': token!,
@@ -306,10 +333,12 @@ const onSubmit = form.handleSubmit(async (values) => {
         name: values.name,
         link: values.link,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
         type: values.type,
         description: values.description,
         'g-recaptcha-response': token!,

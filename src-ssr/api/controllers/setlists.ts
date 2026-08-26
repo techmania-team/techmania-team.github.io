@@ -91,12 +91,25 @@ export const create = async (req: Request, res: Response) => {
     link: yup.string().url().required(),
     image: yup
       .string()
-      .required()
-      .url()
+      .notRequired()
+      .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
+        if (!value) return true
+        return yup.string().url().isValidSync(value)
+      })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
         return await checkImage(value)
       }),
+    previews: yup
+      .array()
+      .notRequired()
+      .default([])
+      .of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
     control: yup
       .number<CONTROLTYPE>()
       .required()
@@ -186,15 +199,6 @@ export const create = async (req: Request, res: Response) => {
           return false
         }
       }),
-    previews: yup
-      .array()
-      .required()
-      .of(
-        yup.object().shape({
-          name: yup.string().required(),
-          ytid: yup.string().required(),
-        }),
-      ),
     description: yup
       .string()
       .required()
@@ -204,7 +208,12 @@ export const create = async (req: Request, res: Response) => {
   const parseedBody = await bodySchema.validate(req.body, { stripUnknown: true })
 
   // Create setlist
-  const result = await Setlist.create({ ...parseedBody, submitter: user._id })
+  const result = await Setlist.create({
+    ...parseedBody,
+    image: parseedBody.image ?? '',
+    previews: parseedBody.previews ?? [],
+    submitter: user._id,
+  })
 
   // Setup Discord webhook embed message
   const embed = buildSetlistEmbed(result)
@@ -609,11 +618,25 @@ export const update = async (req: Request, res: Response) => {
     link: yup.string().url().required(),
     image: yup
       .string()
-      .url()
+      .notRequired()
+      .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
+        if (!value) return true
+        return yup.string().url().isValidSync(value)
+      })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
         return await checkImage(value)
       }),
+    previews: yup
+      .array()
+      .notRequired()
+      .default([])
+      .of(
+        yup.object().shape({
+          name: yup.string().required(),
+          ytid: yup.string().required(),
+        }),
+      ),
     control: yup
       .number<CONTROLTYPE>()
       .required()
@@ -701,12 +724,6 @@ export const update = async (req: Request, res: Response) => {
           return false
         }
       }),
-    previews: yup.array().of(
-      yup.object().shape({
-        name: yup.string().required(),
-        ytid: yup.string().required(),
-      }),
-    ),
     description: yup.string().transform((value) => sanitizeHtml(value)),
   })
   // Parsed request query
@@ -719,7 +736,11 @@ export const update = async (req: Request, res: Response) => {
     throw new AppError('PERMISSION')
   }
 
-  setlist.set(parseedBody)
+  setlist.set({
+    ...parseedBody,
+    image: parseedBody.image ?? '',
+    previews: parseedBody.previews ?? [],
+  })
 
   await setlist.save()
 
