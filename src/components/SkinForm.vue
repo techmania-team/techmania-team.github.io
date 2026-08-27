@@ -153,7 +153,7 @@ section.q-mx-auto.padding
             br
             //- Turnstile
             .row.justify-center.q-my-md
-              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'pattern-update' : 'pattern-create'")
+              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'skin-update' : 'skin-create'")
             //- Submit button
             q-btn.q-my-md(:label="isEdit ? $t('skinFormPage.submit.edit') : $t('skinFormPage.submit.new')" color="tech" text-color="black" type="submit" style="width: 150px")
 //- Delete confirmation dialog

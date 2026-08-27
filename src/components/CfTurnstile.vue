@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-const siteKey = import.meta.env.QCLI_TURNSTILE_SITE_KEY
+const siteKey = import.meta.env.QCLI_TURNSTILE_SITE_KEY || ''
 
 const props = withDefaults(
   defineProps<{
@@ -79,7 +79,6 @@ const renderWidget = () => {
 }
 
 onMounted(() => {
-  // 檢查是否已經載入過 Cloudflare 腳本
   if (!window.turnstile) {
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'

@@ -320,7 +320,7 @@
             br
              //- Turnstile
             .row.justify-center.q-my-md
-              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'pattern-update' : 'pattern-create'")
+              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'setlist-update' : 'setlist-create'")
             //- Submit button
             q-btn.q-my-md(:label="isEdit ? $t('setlistFormPage.submit.edit') : $t('setlistFormPage.submit.new')" color="tech" text-color="black" type="submit" style="width: 150px")
 //- Delete confirmation dialog
