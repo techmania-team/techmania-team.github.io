@@ -466,19 +466,20 @@ onMounted(async () => {
     }
 
     // Fetch my comment if user is logged in
-    let myCommentData
-    if (props.type === 'pattern') {
-      myCommentData = await commentService.getMyCommmentByPattern(props.id)
-    } else if (props.type === 'skin') {
-      myCommentData = await commentService.getMyCommmentBySkin(props.id)
-    } else if (props.type === 'setlist') {
-      myCommentData = await commentService.getMyCommmentBySetlist(props.id)
-    }
-
-    if (myCommentData) {
-      myComment.value._id = myCommentData.data.result._id
-      myComment.value.rating = myCommentData.data.result.rating
-      myComment.value.replies = myCommentData.data.result.replies
+    if (user.isLogin) {
+      let myCommentData
+      if (props.type === 'pattern') {
+        myCommentData = await commentService.getMyCommmentByPattern(props.id)
+      } else if (props.type === 'skin') {
+        myCommentData = await commentService.getMyCommmentBySkin(props.id)
+      } else if (props.type === 'setlist') {
+        myCommentData = await commentService.getMyCommmentBySetlist(props.id)
+      }
+      if (myCommentData) {
+        myComment.value._id = myCommentData.data.result._id
+        myComment.value.rating = myCommentData.data.result.rating
+        myComment.value.replies = myCommentData.data.result.replies
+      }
     }
   } catch (error) {
     // Don't need to show error if the comment is not found
