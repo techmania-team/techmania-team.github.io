@@ -13,7 +13,10 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Install
+      - name: Install Root Dependencies
+        run: bun install
+      - name: Install SSR Dependencies
+        working-directory: src-ssr
         run: bun install
       - name: Lint
         run: bun run lint:check
