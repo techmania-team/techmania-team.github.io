@@ -108,10 +108,10 @@ const navs = computed(() => {
   // Explicitly read locale so Vue tracks it and re-evaluates routes on language change
   void i18n.locale.value
   return [
-    // {
-    //   to: '/howtoplay',
-    //   label: t('nav.howtoplay'),
-    // },
+    {
+      to: '/howtoplay',
+      label: t('nav.howtoplay'),
+    },
     {
       href: 'https://techmania-team.github.io/techmania-docs/',
       label: t('nav.documentations'),
