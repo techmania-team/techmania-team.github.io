@@ -93,8 +93,8 @@ q-page#index
         .col-12.q-mx-auto
           h4.text-center {{ $t('indexPage.newPatterns') }}
           q-separator
-          .row
-            .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(pattern) in patterns" :key="pattern._id")
+          .row.q-my-md.q-col-gutter-md
+            .col-12.col-md-6.col-lg-3(v-for="(pattern) in patterns" :key="pattern._id")
               PatternCard(:pattern="pattern" :mine="false")
   //- Skins
   section.q-mx-auto.padding.q-my-md
@@ -103,8 +103,8 @@ q-page#index
         .col-12.q-mx-auto
           h4.text-center {{ $t('indexPage.newSkins') }}
           q-separator
-          .row
-            .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(skin) in skins" :key="skin._id")
+          .row.q-my-md.q-col-gutter-md
+            .col-12.col-md-6.col-lg-3(v-for="(skin) in skins" :key="skin._id")
               SkinCard(:skin="skin" :mine="false")
   //- Setlists
   section.q-mx-auto.padding.q-my-md
@@ -113,8 +113,8 @@ q-page#index
         .col-12.q-mx-auto
           h4.text-center {{ $t('indexPage.newSetlists') }}
           q-separator
-          .row
-            .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(setlist) in setlists" :key="setlist._id")
+          .row.q-my-md.q-col-gutter-md
+            .col-12.col-md-6.col-lg-3(v-for="(setlist) in setlists" :key="setlist._id")
               SetlistCard(:setlist="setlist" :mine="false")
   //- Videos
   section.q-mx-auto.padding.q-my-md
@@ -123,8 +123,8 @@ q-page#index
         .col-12.q-mx-auto
           h4.text-center {{ $t('indexPage.videos') }}
           q-separator
-          .row
-            .col-12.col-md-6.col-lg-3.q-pa-md.q-my-xs(v-for="(video, idx) in videos" :key="idx")
+          .row.q-my-md.q-col-gutter-md
+            .col-12.col-md-6.col-lg-3(v-for="(video, idx) in videos" :key="idx")
               q-video(:ratio="16/9" :src="video")
 </template>
 
