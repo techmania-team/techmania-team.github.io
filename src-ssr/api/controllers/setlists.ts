@@ -25,8 +25,8 @@ const buildSetlistEmbed = (setlist: ISetlist) => {
   }
 
   const ytid =
-    setlist.previews.length > 0 && setlist.previews[0]!.ytid && setlist.previews[0]!.ytid.length > 0
-      ? setlist.previews[0]!.ytid
+    setlist.previews[0] && setlist.previews[0].ytid && setlist.previews[0].ytid.length > 0
+      ? setlist.previews[0].ytid
       : ''
 
   const image =
@@ -34,11 +34,11 @@ const buildSetlistEmbed = (setlist: ISetlist) => {
       ? setlist.image
       : ytid.length > 0
         ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-        : import.meta.env.QCLI_HOST_URL + '/assets/unknown.jpg'
+        : import.meta.env.QCLI_HOST_URL || '' + '/assets/unknown.jpg'
 
   const url = new URL(
     `/setlists/${setlist._id.toString()}`,
-    import.meta.env.QCLI_HOST_URL,
+    import.meta.env.QCLI_HOST_URL || '',
   ).toString()
 
   const embed = new EmbedBuilder()
@@ -221,7 +221,7 @@ export const create = async (req: Request, res: Response) => {
 
   // Send Discord webhook message
   const id = await postWebhook(
-    import.meta.env.DISCORD_WEBHOOK_SETLISTS!,
+    import.meta.env.DISCORD_WEBHOOK_SETLISTS || '',
     `New setlist submitted by <@${user.discord}>`,
     [embed],
   )
@@ -592,7 +592,7 @@ export const del = async (req: Request, res: Response) => {
   await Comment.deleteMany({ setlist: parsedParams.id })
 
   if (setlist.webhook) {
-    await deleteWebhook(import.meta.env.DISCORD_WEBHOOK_SETLISTS!, setlist.webhook)
+    await deleteWebhook(import.meta.env.DISCORD_WEBHOOK_SETLISTS || '', setlist.webhook)
   }
 
   res.status(StatusCodes.OK).send({ success: true, message: '' })
@@ -752,7 +752,7 @@ export const update = async (req: Request, res: Response) => {
   if (setlist.webhook) {
     const embed = buildSetlistEmbed(setlist)
     await editWebhook(
-      import.meta.env.DISCORD_WEBHOOK_SETLISTS!,
+      import.meta.env.DISCORD_WEBHOOK_SETLISTS || '',
       setlist.webhook,
       `New setlist submitted by <@${user.discord}>`,
       [embed],

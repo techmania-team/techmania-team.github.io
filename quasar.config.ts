@@ -53,7 +53,7 @@ export default defineConfig((ctx) => {
       // publicPath: '/',
       // define: {},
       defineEnv: {
-        DISCORD_CLIENT: import.meta.env.DISCORD_CLIENT?.replace('abc', ''),
+        DISCORD_CLIENT: import.meta.env.DISCORD_CLIENT?.replace('abc', '') || undefined,
       },
       // ignorePublicFolder: true,
       // minify: false,

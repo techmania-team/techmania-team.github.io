@@ -27,8 +27,8 @@ const buildPatternEmbed = (pattern: IPattern) => {
     strDifficulty += `${controls_capitalize[difficulty.control]} / ${difficulty.lanes}L / ${difficulty.name} / lv.${difficulty.level}\n`
   }
   const ytid =
-    pattern.previews.length > 0 && pattern.previews[0]!.ytid && pattern.previews[0]!.ytid.length > 0
-      ? pattern.previews[0]!.ytid
+    pattern.previews[0] && pattern.previews[0].ytid && pattern.previews[0].ytid.length > 0
+      ? pattern.previews[0].ytid
       : ''
 
   const image =
@@ -36,11 +36,11 @@ const buildPatternEmbed = (pattern: IPattern) => {
       ? pattern.image
       : ytid.length > 0
         ? `https://i3.ytimg.com/vi/${ytid}/hqdefault.jpg`
-        : import.meta.env.QCLI_HOST_URL + '/assets/unknown.jpg'
+        : import.meta.env.QCLI_HOST_URL || '' + '/assets/unknown.jpg'
 
   const url = new URL(
     `/patterns/${pattern._id.toString()}`,
-    import.meta.env.QCLI_HOST_URL,
+    import.meta.env.QCLI_HOST_URL || '',
   ).toString()
 
   const embed = new EmbedBuilder()
@@ -144,7 +144,7 @@ export const create = async (req: Request, res: Response) => {
 
   // Send Discord webhook message
   const webhookId = await postWebhook(
-    import.meta.env.DISCORD_WEBHOOK_PATTERNS!,
+    import.meta.env.DISCORD_WEBHOOK_PATTERNS || '',
     `New pattern submitted by <@${user.discord}>`,
     [embed],
   )
@@ -460,7 +460,7 @@ export const del = async (req: Request, res: Response) => {
   await Comment.deleteMany({ pattern: parsedParams.id })
   // Delete webhook message
   if (pattern.webhook) {
-    await deleteWebhook(import.meta.env._PATTERNS, pattern.webhook)
+    await deleteWebhook(import.meta.env._PATTERNS || '', pattern.webhook)
   }
 
   res.status(StatusCodes.OK).send({ success: true, message: '' })
@@ -549,7 +549,7 @@ export const update = async (req: Request, res: Response) => {
   if (pattern.webhook) {
     const embed = buildPatternEmbed(pattern)
     await editWebhook(
-      import.meta.env.DISCORD_WEBHOOK_PATTERNS!,
+      import.meta.env.DISCORD_WEBHOOK_PATTERNS || '',
       pattern.webhook,
       `New pattern submitted by <@${user.discord}>`,
       [embed],

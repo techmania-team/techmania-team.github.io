@@ -13,16 +13,16 @@
  * }
  */
 interface ImportMetaEnv {
-  readonly DISCORD_CLIENT: string
-  readonly DISCORD_SECRET: string
-  readonly DISCORD_WEBHOOK_PATTERNS: string
-  readonly DISCORD_WEBHOOK_SKINS: string
-  readonly DISCORD_WEBHOOK_SETLISTS: string
-  readonly DISCORD_GUILD: number
-  readonly QCLI_HOST_URL: string
-  readonly DB_URL: string
-  readonly JWT_SECRET: string
-  readonly QCLI_TURNSTILE_SITE_KEY: string
-  readonly TURNSTILE_SECRET_KEY: string
-  readonly SESSION_SECRET: string
+  readonly DISCORD_CLIENT?: string
+  readonly DISCORD_SECRET?: string
+  readonly DISCORD_WEBHOOK_PATTERNS?: string
+  readonly DISCORD_WEBHOOK_SKINS?: string
+  readonly DISCORD_WEBHOOK_SETLISTS?: string
+  readonly DISCORD_GUILD?: number
+  readonly QCLI_HOST_URL?: string
+  readonly DB_URL?: string
+  readonly JWT_SECRET?: string
+  readonly QCLI_TURNSTILE_SITE_KEY?: string
+  readonly TURNSTILE_SECRET_KEY?: string
+  readonly SESSION_SECRET?: string
 }

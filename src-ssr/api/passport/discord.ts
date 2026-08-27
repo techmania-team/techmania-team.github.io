@@ -4,9 +4,12 @@ import User from '../models/user'
 
 export default new Strategy(
   {
-    clientID: import.meta.env.DISCORD_CLIENT,
-    clientSecret: import.meta.env.DISCORD_SECRET!,
-    callbackURL: new URL('/api/auth/login/callback', import.meta.env.QCLI_HOST_URL).toString(),
+    clientID: import.meta.env.DISCORD_CLIENT || '',
+    clientSecret: import.meta.env.DISCORD_SECRET || '',
+    callbackURL: new URL(
+      '/api/auth/login/callback',
+      import.meta.env.QCLI_HOST_URL || '',
+    ).toString(),
     scope: [DiscordScope.Identify],
     // Note:
     // According to documentation, these fields are not required.

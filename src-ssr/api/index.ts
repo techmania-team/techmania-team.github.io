@@ -30,7 +30,7 @@ const limiter = rateLimit({
 
 export const initializeApi = async (app: Express) => {
   try {
-    await mongoose.connect(import.meta.env.DB_URL!)
+    await mongoose.connect(import.meta.env.DB_URL || '')
 
     // Set up Express
     app.set('trust proxy', 1)
@@ -42,10 +42,10 @@ export const initializeApi = async (app: Express) => {
     // Set up session
     app.use(
       session({
-        secret: import.meta.env.SESSION_SECRET!,
+        secret: import.meta.env.SESSION_SECRET || '',
         saveUninitialized: false,
         resave: true,
-        store: MongoStore.create({ mongoUrl: import.meta.env.DB_URL! }),
+        store: MongoStore.create({ mongoUrl: import.meta.env.DB_URL || '' }),
         cookie: {
           secure: Boolean(import.meta.env.PROD || false),
           // 14 days, same as connect mongo default ttl

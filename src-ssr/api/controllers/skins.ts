@@ -22,8 +22,8 @@ const buildSkinEmbed = (skin: ISkin) => {
     strPreveiw += `${preview.name}\nhttps://www.youtube.com/watch?v=${preview.ytid}\n`
   }
   const ytid =
-    skin.previews.length > 0 && skin.previews[0]!.ytid && skin.previews[0]!.ytid.length > 0
-      ? skin.previews[0]!.ytid
+    skin.previews[0] && skin.previews[0].ytid && skin.previews[0].ytid.length > 0
+      ? skin.previews[0].ytid
       : ''
 
   const image =
@@ -117,7 +117,7 @@ export const create = async (req: Request, res: Response) => {
   const embed = buildSkinEmbed(result)
   // Send Discord webhook message
   const webhookId = await postWebhook(
-    import.meta.env.DISCORD_WEBHOOK_SKINS!,
+    import.meta.env.DISCORD_WEBHOOK_SKINS || '',
     `New skin submitted by <@${user.discord}>`,
     [embed],
   )
@@ -403,7 +403,7 @@ export const del = async (req: Request, res: Response) => {
   await Comment.deleteMany({ skin: parsedParams.id })
   // Delete webhook message
   if (skin.webhook) {
-    await deleteWebhook(import.meta.env.DISCORD_WEBHOOK_SKINS!, skin.webhook)
+    await deleteWebhook(import.meta.env.DISCORD_WEBHOOK_SKINS || '', skin.webhook)
   }
 
   res.status(StatusCodes.OK).send({ success: true, message: '' })
@@ -480,7 +480,7 @@ export const update = async (req: Request, res: Response) => {
   if (skin.webhook) {
     const embed = buildSkinEmbed(skin)
     await editWebhook(
-      import.meta.env.DISCORD_WEBHOOK_SKINS!,
+      import.meta.env.DISCORD_WEBHOOK_SKINS || '',
       skin.webhook,
       `New skin submitted by <@${user.discord}>`,
       [embed],
