@@ -41,7 +41,15 @@ const buildSkinEmbed = (skin: ISkin) => {
     .setTitle(skin.name)
     .setColor(WEBHOOK_COLOR)
     .addFields(
-      { name: 'Type', value: SKINTYPES_CAPITALIZE[skin.type]!, inline: false },
+      {
+        name: 'Type',
+        value:
+          skin.type
+            .map((t) => SKINTYPES_CAPITALIZE[t])
+            .filter(Boolean)
+            .join(', ') || 'None',
+        inline: false,
+      },
       { name: 'Previews', value: strPreveiw || 'None', inline: false },
       { name: 'Download', value: skin.link, inline: false },
     )
@@ -93,9 +101,15 @@ export const create = async (req: Request, res: Response) => {
         }),
       ),
     type: yup
-      .number<SKINTYPE>()
-      .required()
-      .oneOf(Object.values(SKINTYPE) as number[]),
+      .array()
+      .of(
+        yup
+          .number<SKINTYPE>()
+          .required()
+          .oneOf(Object.values(SKINTYPE) as number[]),
+      )
+      .min(1)
+      .required(),
     description: yup
       .string()
       .notRequired()
@@ -107,6 +121,7 @@ export const create = async (req: Request, res: Response) => {
   // Create pattern
   const result = await Skin.create({
     ...parseedBody,
+    type: parseedBody.type.sort((a, b) => a - b),
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
     description: parseedBody.description ?? '',
@@ -450,9 +465,15 @@ export const update = async (req: Request, res: Response) => {
         }),
       ),
     type: yup
-      .number<SKINTYPE>()
-      .required()
-      .oneOf(Object.values(SKINTYPE) as number[]),
+      .array()
+      .of(
+        yup
+          .number<SKINTYPE>()
+          .required()
+          .oneOf(Object.values(SKINTYPE) as number[]),
+      )
+      .min(1)
+      .required(),
     description: yup
       .string()
       .notRequired()
@@ -470,6 +491,7 @@ export const update = async (req: Request, res: Response) => {
 
   skin.set({
     ...parseedBody,
+    type: parseedBody.type.sort((a, b) => a - b),
     image: parseedBody.image ?? '',
     previews: parseedBody.previews ?? [],
     description: parseedBody.description ?? '',

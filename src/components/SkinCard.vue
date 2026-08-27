@@ -22,7 +22,7 @@ q-card.full-height.card-skin
       //- Type
       q-item
         q-item-section
-          span {{ $t('skinCard.type.label') }}: {{ $t('skinCard.type.' + SKINTYPES[skin.type]) }}
+          span {{ $t('skinCard.type.label') }}: {{ (Array.isArray(skin.type) ? skin.type : [skin.type]).map((t) => $t('skinCard.type.' + SKINTYPES[t])).join(', ') }}
       //- Rating
       q-item
         q-item-section

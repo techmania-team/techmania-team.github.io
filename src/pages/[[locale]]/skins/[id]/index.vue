@@ -79,7 +79,7 @@ q-page#skin
                 q-item-section
                   q-item-label {{ $t('skinPage.basic.type.label') }}
                   q-item-label(caption)
-                    | {{ $t('skinPage.basic.type.' + SKINTYPES[skin.type]) }}
+                    | {{ (Array.isArray(skin.type) ? skin.type : [skin.type]).map((t) => $t('skinPage.basic.type.' + SKINTYPES[t])).join(', ') }}
         //- Description
         //- NOTE:
         //- Use q-no-ssr to prevent hydration error

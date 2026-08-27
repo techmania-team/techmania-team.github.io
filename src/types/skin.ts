@@ -20,7 +20,7 @@ export interface ISkin {
   _id: string
   submitter: ISkinSubmitter
   name: string
-  type: SKINTYPE
+  type: SKINTYPE[]
   link: string
   previews: ISkinPreview[]
   description: string
@@ -47,7 +47,7 @@ export interface ISkinForm {
   link: string
   image?: string
   previews?: ISkinPreview[]
-  type: SKINTYPE
+  type: SKINTYPE[]
   description?: string
   'cf-turnstile-response': string
 }

@@ -8,7 +8,7 @@ import { SKINTYPE } from '@/utils/skin'
 export const useTempSkinStore = defineStore('temp-skin', () => {
   const _id = ref('')
   const name = ref('')
-  const type = ref(SKINTYPE.NOTE)
+  const type = ref<SKINTYPE[]>([SKINTYPE.NOTE])
   const link = ref('')
   const previews = ref<ISkinPreview[]>([])
   const image = ref('')
@@ -44,7 +44,7 @@ export const useTempSkinStore = defineStore('temp-skin', () => {
   const clearData = () => {
     _id.value = ''
     name.value = ''
-    type.value = SKINTYPE.NOTE
+    type.value = [SKINTYPE.NOTE]
     link.value = ''
     previews.value = []
     description.value = ''

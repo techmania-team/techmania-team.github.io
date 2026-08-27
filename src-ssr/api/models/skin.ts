@@ -11,7 +11,7 @@ export interface ISkin {
   _id: Types.ObjectId
   submitter: Types.ObjectId
   name: string
-  type: SKINTYPE
+  type: SKINTYPE[]
   link: string
   previews: Types.DocumentArray<ISkinPreview>
   description: string
@@ -35,9 +35,18 @@ const schema = new Schema<ISkin>(
       required: true,
     },
     type: {
-      type: Number,
+      type: [
+        {
+          type: Number,
+          enum: [SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME],
+        },
+      ],
       required: true,
       enum: [SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME],
+      validate: [
+        (val: number[]) => Array.isArray(val) && val.length > 0,
+        'Skin must have at least one type',
+      ],
     },
     link: {
       type: String,

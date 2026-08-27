@@ -41,7 +41,7 @@ section.q-mx-auto.padding
                   .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.type.label') }}
                   .col-12.col-md-10
                     template(v-for="(typeOption) in typeOptions" :key="typeOption.value")
-                      q-radio(
+                      q-checkbox(
                         name="type"
                         keep-color color="tech"
                         v-model="typeField"
@@ -264,10 +264,16 @@ const schema = yup.object({
     }),
   ),
   type: yup
-    .number<SKINTYPE>()
-    .typeError(() => t('skinFormPage.basic.type.error.required'))
-    .required(() => t('skinFormPage.basic.type.error.required'))
-    .oneOf(Object.values(SKINTYPE) as number[], () => t('skinFormPage.basic.type.error.invalid')),
+    .array()
+    .of(
+      yup
+        .number<SKINTYPE>()
+        .oneOf(Object.values(SKINTYPE) as number[], () =>
+          t('skinFormPage.basic.type.error.invalid'),
+        ),
+    )
+    .min(1, () => t('skinFormPage.basic.type.error.required'))
+    .required(() => t('skinFormPage.basic.type.error.required')),
   description: yup.string(),
   agree: yup
     .bool()
@@ -281,7 +287,7 @@ const initialValues = {
   link: '',
   image: '',
   previews: [{ name: '', link: '' }],
-  type: SKINTYPE.NOTE,
+  type: [SKINTYPE.NOTE],
   description: '',
   agree: false,
 }
@@ -329,7 +335,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             name: preview.name,
             ytid: getIDFromYouTubeLink(preview.link),
           })),
-        type: values.type,
+        type: [...values.type].sort((a, b) => a - b),
         description: values.description,
         'cf-turnstile-response': turnstileToken.value,
       })
@@ -353,7 +359,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             name: preview.name,
             ytid: getIDFromYouTubeLink(preview.link),
           })),
-        type: values.type,
+        type: [...values.type].sort((a, b) => a - b),
         description: values.description,
         'cf-turnstile-response': turnstileToken.value,
       })
@@ -435,7 +441,10 @@ onMounted(async () => {
     form.setFieldValue('link', props.skin!.link)
     form.setFieldValue('image', props.skin!.image)
     form.setFieldValue('previews', previews)
-    form.setFieldValue('type', props.skin!.type)
+    form.setFieldValue(
+      'type',
+      Array.isArray(props.skin!.type) ? props.skin!.type : [props.skin!.type],
+    )
     form.setFieldValue('description', props.skin!.description)
   }
 })
