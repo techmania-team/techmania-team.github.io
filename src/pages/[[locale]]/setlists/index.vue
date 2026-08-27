@@ -112,8 +112,10 @@ const fetchSetlists = async (start = 0) => {
       sortBy: searchParams.value.sortBy,
       limit: 12,
     })
-    if (data.result.length > 0) {
-      setlists.value = setlists.value.concat(data.result)
+
+    setlists.value = setlists.value.concat(data.result)
+
+    if (data.result.length === 12) {
       scrollDisable.value = false
     } else {
       scrollDisable.value = true

@@ -139,8 +139,10 @@ const fetchSkins = async (start = 0) => {
       sortBy: searchParams.value.sortBy,
       limit: 12,
     })
-    if (data.result.length > 0) {
-      skins.value = skins.value.concat(data.result)
+
+    skins.value = skins.value.concat(data.result)
+
+    if (data.result.length === 12) {
       scrollDisable.value = false
     } else {
       scrollDisable.value = true

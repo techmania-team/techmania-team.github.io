@@ -37,7 +37,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import PatternCard from '@/components/PatternCard.vue'
 import PatternSearchForm from '@/components/PatternSearchForm.vue'
-import { search as searchPatterns } from '@/services/pattern'
+import * as patternService from '@/services/pattern'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError } from '@/utils/handleError'
 
@@ -127,7 +127,7 @@ const fetchPatterns = async (start = 0) => {
   isFetching.value = true
 
   try {
-    const { data } = await searchPatterns({
+    const { data } = await patternService.search({
       start,
       keysounded: searchParams.value.keysounded,
       controls: searchParams.value.controls.join(),
@@ -137,8 +137,10 @@ const fetchPatterns = async (start = 0) => {
       sortBy: searchParams.value.sortBy,
       limit: 12,
     })
-    if (data.result.length > 0) {
-      patterns.value = patterns.value.concat(data.result)
+
+    patterns.value = patterns.value.concat(data.result)
+
+    if (data.result.length === 12) {
       scrollDisable.value = false
     } else {
       scrollDisable.value = true
