@@ -265,10 +265,10 @@ export const search = async (req: Request, res: Response) => {
   pipeline.push({ $sort: sortStage })
 
   // Skip & Limit stages
-  if (parseedQuery.start) {
+  if (parseedQuery.start !== undefined) {
     pipeline.push({ $skip: parseedQuery.start })
   }
-  if (parseedQuery.limit) {
+  if (parseedQuery.limit !== undefined) {
     pipeline.push({ $limit: parseedQuery.limit })
   }
 
@@ -288,15 +288,7 @@ export const search = async (req: Request, res: Response) => {
       },
     },
     {
-      $unset: [
-        'submitter.discord',
-        'submitter.avatar',
-        'submitter.discordRefreshToken',
-        'submitter.discordToken',
-        'submitter.accessInfo',
-        'comments',
-        'webhook',
-      ],
+      $unset: ['submitter.discord', 'submitter.avatar', 'comments', 'webhook'],
     },
   )
 
