@@ -31,6 +31,58 @@
     "hideDetail": "Hide Detail",
     "error": "Failed to load data from GitHub."
   },
+  "howtoplayPage": {
+    "title": "HOW TO PLAY",
+    "scanlineNotice": "When a scanline passes the center of a note, play it!",
+    "tabs": {
+      "touch": "Touch",
+      "keys": "Keys",
+      "km": "KM"
+    },
+    "keysDesc": "The Keys control scheme uses these 4 rows of keys on your keyboard.\nEach row corresponds to one of four lanes on the screen.\nTo play a note in a certain lane, press any key in the corresponding row.",
+    "kmDesc": "KM stands for Keyboard and Mouse.\nIn the KM control scheme, you use the mouse to play some types of notes (basic, chain, drag), and the keyboard to play the other types (hold, repeat).\nDifferent from the Keys control scheme, here you can press any key in any row to play the keyboard notes, wherever they are.",
+    "notes": {
+      "basic": {
+        "title": "Basic Note",
+        "touchDesc": "Touch the note when the scanline passes its center.",
+        "keysDesc": "Press a key when the scanline passes the note’s center.",
+        "kmDesc": "Click the note when the scanline passes its center."
+      },
+      "chain": {
+        "title": "Chain Note",
+        "touchDesc": "Touch and drag along the chain, following the speed of the scanline.",
+        "keysDesc": "Play each node as a separate basic note.",
+        "kmDesc": "Click and drag along the chain, following the speed of the scanline."
+      },
+      "drag": {
+        "title": "Drag Note",
+        "touchDesc": "Touch and drag along the curve, following the speed of the scanline.\nYou do not need to release your finger on time.",
+        "keysDesc": "Press and hold a key until the note head reaches the end of the curve.\nYou do not need to release the key on time.",
+        "kmDesc": "Click and drag along the curve, following the speed of the scanline.\nYou do not need to release the mouse button on time."
+      },
+      "hold": {
+        "title": "Hold Note",
+        "touchDesc": "Touch and hold your finger on the note head, until the scanline reaches the end of the note.\nYou do not need to release your finger on time.",
+        "keysDesc": "Press and hold a key until the scanline reaches the end of the note.\nYou do not need to release the key on time.",
+        "kmDesc": "Press and hold any key until the scanline reaches the end of the note.\nYou do not need to release the key on time."
+      },
+      "repeat": {
+        "title": "Repeat Note",
+        "touchDesc": "Touch the note head when the scanline passes its center, as well as any little note after it.\nFor long notes, hold your finger on the note head, the same way as with hold notes.",
+        "keysDesc": "Press a key when the scanline passes the note head’s center, as well as any little note after it.\nFor long notes, hold the key, the same way as with drag and hold notes.",
+        "kmDesc": "Press any key when the scanline passes the note head’s center, as well as any little note after it.\nFor long notes, hold the key, the same way as with hold notes."
+      }
+    },
+    "fever": {
+      "activateNotice": "Regardless of control scheme, you can activate Fever in any of the following ways.",
+      "methods": {
+        "touch": "Touching the Fever button",
+        "keyboard": "Pressing Space/Backspace/Numpad 0/Numpad Enter",
+        "click": "Clicking the Fever button"
+      },
+      "effect": "While active, Fever will improve the judgement of notes played."
+    }
+  },
   "patternsPage": {
     "title": "Patterns",
     "searchForm": {
