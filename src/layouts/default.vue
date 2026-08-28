@@ -109,7 +109,7 @@ const navs = computed(() => {
   void i18n.locale.value
   return [
     {
-      to: '/howtoplay',
+      to: getI18nRoute({ name: 'howtoplay' }),
       label: t('nav.howtoplay'),
     },
     {
