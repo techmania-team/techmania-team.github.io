@@ -41,12 +41,12 @@ import * as patternService from '@/services/pattern'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError } from '@/utils/handleError'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
 
 const metaData = () => ({
-  title: `TECHMANIA | ${t('patternsPage.title')}`,
+  title: t('patternsPage.meta.title'),
   meta: {
     color: {
       name: 'theme-color',
@@ -54,11 +54,13 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: t('patternsPage.meta.title'),
+      'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: 'Patterns for TECHMANIA.',
+      content: t('patternsPage.meta.description'),
+      'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
@@ -70,11 +72,13 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: t('patternsPage.meta.title'),
+      'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: 'Patterns for TECHMANIA.',
+      content: t('patternsPage.meta.description'),
+      'data-dynamic': true,
     },
     ogImage: {
       property: 'og:image',
@@ -91,11 +95,13 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${t('patternsPage.title')}`,
+      content: t('patternsPage.meta.title'),
+      'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: 'Patterns for TECHMANIA.',
+      content: t('patternsPage.meta.description'),
+      'data-dynamic': true,
     },
     twImage: {
       name: 'twitter:image',

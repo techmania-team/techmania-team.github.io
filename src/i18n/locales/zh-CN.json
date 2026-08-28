@@ -16,6 +16,10 @@
     "language": "语言"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "一款开源音乐游戏，无论是否使用触屏皆可游玩。"
+    },
     "download": "下载",
     "latestVersion": "最新版本",
     "latestReleaseDate": "发布于",
@@ -25,6 +29,10 @@
     "videos": "视频"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新历史",
+      "description": "TECHMANIA 的更新历史。"
+    },
     "title": "更新历史",
     "downloads": "下载次数",
     "showDetail": "展开",
@@ -32,6 +40,10 @@
     "error": "无法从 GitHub 加载更新历史"
   },
   "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 游戏说明",
+      "description": "一款开源音乐游戏，无论是否使用触屏皆可游玩。"
+    },
     "title": "游戏说明",
     "scanlineNotice": "当扫描线经过音符中心时，击打它！",
     "tabs": {
@@ -84,6 +96,10 @@
     }
   },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 谱面",
+      "description": "TECHMANIA 的谱面。"
+    },
     "title": "谱面",
     "searchForm": {
       "keywords": {
@@ -116,6 +132,10 @@
     "notFound": "找不到谱面"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲：{composer}。上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
@@ -124,7 +144,7 @@
         "label": "作曲家"
       },
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "keysounded": {
         "label": "按键音",
@@ -154,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新谱面",
     "titleEdit": "编辑谱面",
     "rules": {
@@ -295,7 +320,7 @@
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "keysounded": "按键音",
@@ -306,6 +331,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 皮肤",
+      "description": "TECHMANIA 的皮肤。"
+    },
     "title": "皮肤",
     "searchForm": {
       "keywords": {
@@ -330,12 +359,16 @@
     "notFound": "找不到皮肤"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
       "title": "皮肤详情",
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "type": {
         "label": "类型",
@@ -365,6 +398,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新皮肤",
     "titleEdit": "编辑皮肤",
     "rules": {
@@ -472,7 +510,7 @@
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "type": {
@@ -485,6 +523,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 组曲",
+      "description": "TECHMANIA 的组曲。"
+    },
     "title": "组曲",
     "searchForm": {
       "keywords": {
@@ -507,12 +549,16 @@
     "notFound": "找不到组曲"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
       "title": "组曲详情",
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "comments": {
         "count": "{count} 个评论"
@@ -566,7 +612,7 @@
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "selectablePatterns": "可选谱面",
@@ -583,6 +629,11 @@
     "updatedAt": "最后更新时间：{date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新组曲",
     "titleEdit": "编辑组曲",
     "rules": {
@@ -804,6 +855,10 @@
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} 在 TECHMANIA 上的主页。"
+    },
     "tab": {
       "patterns": "谱面",
       "skins": "皮肤",

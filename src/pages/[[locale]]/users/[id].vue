@@ -51,16 +51,18 @@ import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempUserStore } from '@/stores/temp-user'
 
+const { t } = useI18n()
 const profile = useTempUserStore()
 const route = useRoute('profile')
 
-const metaData = {
-  title: `TECHMANIA | ${profile.name}`,
+const metaData = () => ({
+  title: t('profile.meta.title', { name: profile.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -68,32 +70,30 @@ const metaData = {
     },
     title: {
       name: 'title',
-      content: `${profile.name}`,
+      content: t('profile.meta.title', { name: profile.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: `${profile.name}'s profile on TECHMANIA.`,
+      content: t('profile.meta.description', { name: profile.name }),
       'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
       content: 'website',
-      'data-dynamic': true,
     },
     ogUrl: {
       property: 'og:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${profile.name}`,
+      content: t('profile.meta.title', { name: profile.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: `${profile.name}'s profile on TECHMANIA.`,
+      content: t('profile.meta.description', { name: profile.name }),
       'data-dynamic': true,
     },
     ogImage: {
@@ -104,21 +104,19 @@ const metaData = {
     twCard: {
       name: 'twitter:card',
       content: 'summary_large_image',
-      'data-dynamic': true,
     },
     twUrl: {
       name: 'twitter:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${profile.name}`,
+      content: t('profile.meta.title', { name: profile.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: `${profile.name}'s profile on TECHMANIA.`,
+      content: t('profile.meta.description', { name: profile.name }),
       'data-dynamic': true,
     },
     twImage: {
@@ -127,7 +125,7 @@ const metaData = {
       'data-dynamic': true,
     },
   },
-}
+})
 useMeta(metaData)
 
 const tab = ref('patterns')

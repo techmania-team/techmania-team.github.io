@@ -67,7 +67,7 @@ const route = useRoute()
 const { t } = useI18n()
 
 const metaData = () => ({
-  title: `TECHMANIA | ${t('changelogPage.title')}`,
+  title: t('changelogPage.meta.title'),
   meta: {
     color: {
       name: 'theme-color',
@@ -75,11 +75,13 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `TECHMANIA | ${t('changelogPage.title')}`,
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: 'Changelog of TECHMANIA.',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
@@ -91,11 +93,13 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${t('changelogPage.title')}`,
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: 'Changelog of TECHMANIA.',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
     },
     ogImage: {
       property: 'og:image',
@@ -112,11 +116,13 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${t('changelogPage.title')}`,
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: 'Changelog of TECHMANIA.',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
     },
     twImage: {
       name: 'twitter:image',

@@ -48,7 +48,7 @@ const router = useRouter()
 const { t } = useI18n()
 
 const metaData = () => ({
-  title: `TECHMANIA | ${t('skinsPage.title')}`,
+  title: t('skinsPage.meta.title'),
   meta: {
     color: {
       name: 'theme-color',
@@ -56,11 +56,13 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `TECHMANIA | ${t('skinsPage.title')}`,
+      content: t('skinsPage.meta.title'),
+      'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: 'Skins for TECHMANIA.',
+      content: t('skinsPage.meta.description'),
+      'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
@@ -72,11 +74,13 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${t('skinsPage.title')}`,
+      content: t('skinsPage.meta.title'),
+      'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: 'Skins for TECHMANIA.',
+      content: t('skinsPage.meta.description'),
+      'data-dynamic': true,
     },
     ogImage: {
       property: 'og:image',
@@ -93,11 +97,13 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${t('skinsPage.title')}`,
+      content: t('skinsPage.meta.title'),
+      'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: 'Skins for TECHMANIA.',
+      content: t('skinsPage.meta.description'),
+      'data-dynamic': true,
     },
     twImage: {
       name: 'twitter:image',

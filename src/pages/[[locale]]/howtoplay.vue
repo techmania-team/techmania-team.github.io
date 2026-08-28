@@ -152,8 +152,81 @@ q-page#how-to-play
 </template>
 
 <script setup lang="ts">
+import { useMeta } from 'quasar'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { CONTROLTYPE, getControlIcon } from '@/utils/control'
+
+const { t } = useI18n()
+const route = useRoute()
+
+const metaData = () => ({
+  title: t('howtoplayPage.meta.title'),
+  meta: {
+    color: {
+      name: 'theme-color',
+      content: '#E74C3C',
+    },
+    title: {
+      name: 'title',
+      content: t('howtoplayPage.meta.title'),
+      'data-dynamic': true,
+    },
+    description: {
+      name: 'description',
+      content: t('howtoplayPage.meta.description'),
+      'data-dynamic': true,
+    },
+    ogType: {
+      property: 'og:type',
+      content: 'website',
+    },
+    ogUrl: {
+      property: 'og:url',
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
+    },
+    ogTitle: {
+      property: 'og:title',
+      content: t('howtoplayPage.meta.title'),
+      'data-dynamic': true,
+    },
+    ogDescription: {
+      property: 'og:description',
+      content: t('howtoplayPage.meta.description'),
+      'data-dynamic': true,
+    },
+    ogImage: {
+      property: 'og:image',
+      content:
+        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+    },
+    twCard: {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    twUrl: {
+      name: 'twitter:url',
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
+    },
+    twTitle: {
+      name: 'twitter:title',
+      content: t('howtoplayPage.meta.title'),
+      'data-dynamic': true,
+    },
+    twDescription: {
+      name: 'twitter:description',
+      content: t('howtoplayPage.meta.description'),
+      'data-dynamic': true,
+    },
+    twImage: {
+      name: 'twitter:image',
+      content:
+        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+    },
+  },
+})
+useMeta(metaData)
 
 const tab = ref('touch')
 </script>

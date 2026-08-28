@@ -135,6 +135,7 @@ import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import { getI18nRoute } from '@/i18n'
@@ -145,6 +146,7 @@ import * as date from '@/utils/date'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
+const { t } = useI18n()
 const route = useRoute()
 const user = useUserStore()
 const pattern = useTempPatternStore()
@@ -158,7 +160,7 @@ const backgroundImage = computed(() => {
 })
 
 const metaData = () => ({
-  title: `TECHMANIA | ${pattern.name}`,
+  title: t('patternPage.meta.title', { name: pattern.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -166,32 +168,36 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `${pattern.name}`,
+      content: t('patternPage.meta.title', { name: pattern.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: `Composed by ${pattern.composer}. Submitted by ${pattern.submitter.name}.`,
+      content: t('patternPage.meta.description', {
+        composer: pattern.composer,
+        submitter: pattern.submitter.name,
+      }),
       'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
       content: 'website',
-      'data-dynamic': true,
     },
     ogUrl: {
       property: 'og:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${pattern.name}`,
+      content: t('patternPage.meta.title', { name: pattern.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: `Composed by ${pattern.composer}. Submitted by ${pattern.submitter.name}.`,
+      content: t('patternPage.meta.description', {
+        composer: pattern.composer,
+        submitter: pattern.submitter.name,
+      }),
       'data-dynamic': true,
     },
     ogImage: {
@@ -202,21 +208,22 @@ const metaData = () => ({
     twCard: {
       name: 'twitter:card',
       content: 'summary_large_image',
-      'data-dynamic': true,
     },
     twUrl: {
       name: 'twitter:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${pattern.name}`,
+      content: t('patternPage.meta.title', { name: pattern.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: `Composed by ${pattern.composer}. Submitted by ${pattern.submitter.name}.`,
+      content: t('patternPage.meta.description', {
+        composer: pattern.composer,
+        submitter: pattern.submitter.name,
+      }),
       'data-dynamic': true,
     },
     twImage: {

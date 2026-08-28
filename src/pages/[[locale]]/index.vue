@@ -132,6 +132,7 @@ q-page#index
 import { storeToRefs } from 'pinia'
 import { useMeta, useQuasar } from 'quasar'
 import { computed, onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
 import SetlistCard from '@/components/SetlistCard.vue'
@@ -140,12 +141,13 @@ import { useTempIndexStore } from '@/stores/temp-index'
 import { toLocaleString } from '@/utils/date'
 
 const $q = useQuasar()
+const { t } = useI18n()
 const route = useRoute()
 const tempIndex = useTempIndexStore()
 const { releases, patterns, skins, setlists } = storeToRefs(tempIndex)
 
-const metaData = {
-  title: 'TECHMANIA',
+const metaData = () => ({
+  title: t('indexPage.meta.title'),
   meta: {
     color: {
       name: 'theme-color',
@@ -153,11 +155,13 @@ const metaData = {
     },
     title: {
       name: 'title',
-      content: 'TECHMANIA',
+      content: t('indexPage.meta.title'),
+      'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: 'Official TECHMANIA Website',
+      content: t('indexPage.meta.description'),
+      'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
@@ -169,11 +173,13 @@ const metaData = {
     },
     ogTitle: {
       property: 'og:title',
-      content: 'TECHMANIA',
+      content: t('indexPage.meta.title'),
+      'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: 'Official TECHMANIA Website',
+      content: t('indexPage.meta.description'),
+      'data-dynamic': true,
     },
     ogImage: {
       property: 'og:image',
@@ -190,11 +196,13 @@ const metaData = {
     },
     twTitle: {
       name: 'twitter:title',
-      content: 'TECHMANIA',
+      content: t('indexPage.meta.title'),
+      'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: 'Official TECHMANIA Website',
+      content: t('indexPage.meta.description'),
+      'data-dynamic': true,
     },
     twImage: {
       name: 'twitter:image',
@@ -202,7 +210,7 @@ const metaData = {
         'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
     },
   },
-}
+})
 useMeta(metaData)
 
 // Selected platform

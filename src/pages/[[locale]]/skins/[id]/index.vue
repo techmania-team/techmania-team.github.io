@@ -112,6 +112,7 @@ import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import { getI18nRoute } from '@/i18n'
@@ -121,6 +122,7 @@ import * as date from '@/utils/date'
 import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
+const { t } = useI18n()
 const route = useRoute()
 const user = useUserStore()
 const skin = useTempSkinStore()
@@ -134,7 +136,7 @@ const backgroundImage = computed(() => {
 })
 
 const metaData = () => ({
-  title: `TECHMANIA | ${skin.name}`,
+  title: t('skinPage.meta.title', { name: skin.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -142,32 +144,34 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: `${skin.name}`,
+      content: t('skinPage.meta.title', { name: skin.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: `Submitted by ${skin.submitter.name}.`,
+      content: t('skinPage.meta.description', {
+        submitter: skin.submitter.name,
+      }),
       'data-dynamic': true,
     },
     ogType: {
       property: 'og:type',
       content: 'website',
-      'data-dynamic': true,
     },
     ogUrl: {
       property: 'og:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     ogTitle: {
       property: 'og:title',
-      content: `TECHMANIA | ${skin.name}`,
+      content: t('skinPage.meta.title', { name: skin.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: `Submitted by ${skin.submitter.name}.`,
+      content: t('skinPage.meta.description', {
+        submitter: skin.submitter.name,
+      }),
       'data-dynamic': true,
     },
     ogImage: {
@@ -178,21 +182,21 @@ const metaData = () => ({
     twCard: {
       name: 'twitter:card',
       content: 'summary_large_image',
-      'data-dynamic': true,
     },
     twUrl: {
       name: 'twitter:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-      'data-dynamic': true,
     },
     twTitle: {
       name: 'twitter:title',
-      content: `TECHMANIA | ${skin.name}`,
+      content: t('skinPage.meta.title', { name: skin.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: `Submitted by ${skin.submitter.name}.`,
+      content: t('skinPage.meta.description', {
+        submitter: skin.submitter.name,
+      }),
       'data-dynamic': true,
     },
     twImage: {

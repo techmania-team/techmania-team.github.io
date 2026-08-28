@@ -49,30 +49,63 @@ const { t } = useI18n()
 
 // SEO MetaData
 const metaData = () => ({
-  title: `TECHMANIA | ${t('setlistsPage.title')}`,
+  title: t('setlistsPage.meta.title'),
   meta: {
-    color: { name: 'theme-color', content: '#E74C3C' },
-    title: { name: 'title', content: `TECHMANIA | ${t('setlistsPage.title')}` },
-    description: { name: 'description', content: 'Setlists for TECHMANIA.' },
-    ogType: { property: 'og:type', content: 'website' },
+    color: {
+      name: 'theme-color',
+      content: '#E74C3C',
+    },
+    title: {
+      name: 'title',
+      content: t('setlistsPage.meta.title'),
+      'data-dynamic': true,
+    },
+    description: {
+      name: 'description',
+      content: t('setlistsPage.meta.description'),
+      'data-dynamic': true,
+    },
+    ogType: {
+      property: 'og:type',
+      content: 'website',
+    },
     ogUrl: {
       property: 'og:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
-    ogTitle: { property: 'og:title', content: `TECHMANIA | ${t('setlistsPage.title')}` },
-    ogDescription: { property: 'og:description', content: 'Setlists for TECHMANIA.' },
+    ogTitle: {
+      property: 'og:title',
+      content: t('setlistsPage.meta.title'),
+      'data-dynamic': true,
+    },
+    ogDescription: {
+      property: 'og:description',
+      content: t('setlistsPage.meta.description'),
+      'data-dynamic': true,
+    },
     ogImage: {
       property: 'og:image',
       content:
         'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
     },
-    twCard: { name: 'twitter:card', content: 'summary_large_image' },
+    twCard: {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
     twUrl: {
       name: 'twitter:url',
       content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
     },
-    twTitle: { name: 'twitter:title', content: `TECHMANIA | ${t('setlistsPage.title')}` },
-    twDescription: { name: 'twitter:description', content: 'Setlists for TECHMANIA.' },
+    twTitle: {
+      name: 'twitter:title',
+      content: t('setlistsPage.meta.title'),
+      'data-dynamic': true,
+    },
+    twDescription: {
+      name: 'twitter:description',
+      content: t('setlistsPage.meta.description'),
+      'data-dynamic': true,
+    },
     twImage: {
       name: 'twitter:image',
       content:

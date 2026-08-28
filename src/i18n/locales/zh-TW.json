@@ -16,6 +16,10 @@
     "language": "語言"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "一款開源音樂遊戲，不論是否使用觸控螢幕皆可遊玩。"
+    },
     "download": "遊戲下載",
     "latestVersion": "最新版本",
     "latestReleaseDate": "發布於",
@@ -25,6 +29,10 @@
     "videos": "遊戲影片"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新紀錄",
+      "description": "TECHMANIA 的更新紀錄。"
+    },
     "title": "更新紀錄",
     "downloads": "下載數",
     "showDetail": "顯示內容",
@@ -32,7 +40,11 @@
     "error": "無法從 GitHub 載入更新紀錄"
   },
   "howtoplayPage": {
-    "title": "如何遊玩",
+    "meta": {
+      "title": "TECHMANIA {'|'} 遊玩方式",
+      "description": "一款開源音樂遊戲，不論是否使用觸控螢幕皆可遊玩。"
+    },
+    "title": "遊玩方式",
     "scanlineNotice": "當掃描線經過音符中心時，擊打它！",
     "tabs": {
       "touch": "觸控",
@@ -84,6 +96,10 @@
     }
   },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 譜面",
+      "description": "TECHMANIA 的譜面。"
+    },
     "title": "譜面",
     "searchForm": {
       "keywords": {
@@ -116,6 +132,10 @@
     "notFound": "找不到譜面"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲：{composer}。上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -154,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新譜面",
     "titleEdit": "編輯譜面",
     "rules": {
@@ -306,6 +331,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 造型",
+      "description": "TECHMANIA 的造型。"
+    },
     "title": "造型",
     "searchForm": {
       "keywords": {
@@ -330,6 +359,10 @@
     "notFound": "找不到造型"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -365,6 +398,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新造型",
     "titleEdit": "編輯造型",
     "rules": {
@@ -485,6 +523,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 組曲",
+      "description": "TECHMANIA 的組曲。"
+    },
     "title": "組曲",
     "searchForm": {
       "keywords": {
@@ -507,6 +549,10 @@
     "notFound": "找不到組曲"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -583,6 +629,11 @@
     "updatedAt": "最後更新於 {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新組曲",
     "titleEdit": "編輯組曲",
     "rules": {
@@ -804,6 +855,10 @@
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} 在 TECHMANIA 上的個人頁面。"
+    },
     "tab": {
       "patterns": "譜面",
       "skins": "造型",

@@ -18,6 +18,7 @@ import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import SetlistForm from '@/components/SetlistForm.vue'
@@ -29,13 +30,21 @@ const { t } = useI18n()
 const route = useRoute()
 const setlist = useTempSetlistStore()
 
-const title = user.isLogin
-  ? 'TECHMANIA | ' + t('setlistFormPage.titleEdit')
-  : 'TECHMANIA | Log in or sign up to view'
+const title = computed(() =>
+  user.isLogin
+    ? t('setlistFormPage.meta.title', { text: t('setlistFormPage.titleEdit') })
+    : t('setlistFormPage.meta.title', { text: t('setlistFormPage.meta.login') }),
+)
+
+const description = computed(() =>
+  user.isLogin
+    ? t('setlistFormPage.meta.description', { text: t('setlistFormPage.titleEdit') })
+    : t('setlistFormPage.meta.description', { text: t('setlistFormPage.meta.login') }),
+)
 
 const metaData = () => {
   return {
-    title,
+    title: title.value,
     meta: {
       color: {
         name: 'theme-color',
@@ -43,18 +52,17 @@ const metaData = () => {
       },
       title: {
         name: 'title',
-        content: title,
+        content: title.value,
         'data-dynamic': true,
       },
       description: {
         name: 'description',
-        content: title,
+        content: description.value,
         'data-dynamic': true,
       },
       ogType: {
         property: 'og:type',
         content: 'website',
-        'data-dynamic': true,
       },
       ogUrl: {
         property: 'og:url',
@@ -63,24 +71,22 @@ const metaData = () => {
       },
       ogTitle: {
         property: 'og:title',
-        content: title,
+        content: title.value,
         'data-dynamic': true,
       },
       ogDescription: {
         property: 'og:description',
-        content: title,
+        content: description.value,
         'data-dynamic': true,
       },
       ogImage: {
         property: 'og:image',
         content:
           'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-        'data-dynamic': true,
       },
       twCard: {
         name: 'twitter:card',
         content: 'summary_large_image',
-        'data-dynamic': true,
       },
       twUrl: {
         name: 'twitter:url',
@@ -89,19 +95,18 @@ const metaData = () => {
       },
       twTitle: {
         name: 'twitter:title',
-        content: title,
+        content: title.value,
         'data-dynamic': true,
       },
       twDescription: {
         name: 'twitter:description',
-        content: title,
+        content: description.value,
         'data-dynamic': true,
       },
       twImage: {
         name: 'twitter:image',
         content:
           'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-        'data-dynamic': true,
       },
     },
   }

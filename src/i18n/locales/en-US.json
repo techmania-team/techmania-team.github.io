@@ -16,6 +16,10 @@
     "language": "Language"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "An open source rhythm game, playable with or without a touchscreen."
+    },
     "download": "Download",
     "latestVersion": "Latest Version",
     "latestReleaseDate": "Released at ",
@@ -25,6 +29,10 @@
     "videos": "Videos"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Changelog",
+      "description": "Changelog of TECHMANIA."
+    },
     "title": "Changelog",
     "downloads": "Downloads",
     "showDetail": "Show Detail",
@@ -32,6 +40,10 @@
     "error": "Failed to load data from GitHub."
   },
   "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} How To Play",
+      "description": "An open source rhythm game, playable with or without a touchscreen."
+    },
     "title": "HOW TO PLAY",
     "scanlineNotice": "When a scanline passes the center of a note, play it!",
     "tabs": {
@@ -84,6 +96,10 @@
     }
   },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Patterns",
+      "description": "Patterns for TECHMANIA."
+    },
     "title": "Patterns",
     "searchForm": {
       "keywords": {
@@ -116,6 +132,10 @@
     "notFound": "No patterns found"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Composed by {composer}. Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -154,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Pattern",
     "titleEdit": "Edit Pattern",
     "rules": {
@@ -306,6 +331,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Skins",
+      "description": "Skins for TECHMANIA."
+    },
     "title": "Skins",
     "searchForm": {
       "keywords": {
@@ -330,6 +359,10 @@
     "notFound": "No skins found"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -365,6 +398,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Skin",
     "titleEdit": "Edit Skin",
     "rules": {
@@ -485,6 +523,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Setlists",
+      "description": "Setlists for TECHMANIA."
+    },
     "title": "Setlists",
     "searchForm": {
       "keywords": {
@@ -507,6 +549,10 @@
     "notFound": "No setlists found"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -583,6 +629,11 @@
     "updatedAt": "Updated at {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Setlist",
     "titleEdit": "Edit Setlist",
     "rules": {
@@ -804,6 +855,10 @@
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name}'s profile on TECHMANIA.."
+    },
     "tab": {
       "patterns": "Patterns",
       "skins": "Skins",

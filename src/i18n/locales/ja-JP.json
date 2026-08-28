@@ -2,7 +2,7 @@
   "nav": {
     "howtoplay": "遊び方",
     "documentations": "ドキュメント",
-    "changelog": "チェンジログ",
+    "changelog": "更新履歴",
     "patterns": "パターン",
     "skins": "スキン",
     "setlists": "セットリスト",
@@ -16,6 +16,10 @@
     "language": "言語"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "タッチパネルの有無を問わずプレイできる、オープンソースの音ゲー。"
+    },
     "download": "ダウンロード",
     "latestVersion": "最新バージョン",
     "latestReleaseDate": "リリーズ日: ",
@@ -25,14 +29,22 @@
     "videos": "ビデオ"
   },
   "changelogPage": {
-    "title": "チェンジログ",
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新履歴",
+      "description": "TECHMANIA の更新履歴。"
+    },
+    "title": "更新履歴",
     "downloads": "ダウンロード",
     "showDetail": "詳細を表示",
     "hideDetail": "詳細を非表示",
     "error": "GitHubからデータの読み込みに失敗しました。"
   },
   "howtoplayPage": {
-    "title": "HOW TO PLAY",
+    "meta": {
+      "title": "TECHMANIA {'|'} 遊び方",
+      "description": "タッチパネルの有無を問わずプレイできる、オープンソースの音ゲー。"
+    },
+    "title": "遊び方",
     "scanlineNotice": "スキャンラインがノートの中心を通過したときにプレイしよう！",
     "tabs": {
       "touch": "タッチ",
@@ -84,6 +96,10 @@
     }
   },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} パターン",
+      "description": "TECHMANIA のパターン。"
+    },
     "title": "パターン",
     "searchForm": {
       "keywords": {
@@ -116,6 +132,10 @@
     "notFound": "パターンがありません"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲家：{composer}。投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -154,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいパターンを投稿",
     "titleEdit": "パターン編集",
     "rules": {
@@ -306,6 +331,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} スキン",
+      "description": "TECHMANIA のスキン。"
+    },
     "title": "スキン",
     "searchForm": {
       "keywords": {
@@ -330,6 +359,10 @@
     "notFound": "スキンがありません"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -365,6 +398,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいスキンを投稿",
     "titleEdit": "スキン編集",
     "rules": {
@@ -485,6 +523,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} セットリスト",
+      "description": "TECHMANIA のセットリスト。"
+    },
     "title": "セットリスト",
     "searchForm": {
       "keywords": {
@@ -507,6 +549,10 @@
     "notFound": "セットリストがありません"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -583,6 +629,11 @@
     "updatedAt": "更新日: {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいセットリストを投稿",
     "titleEdit": "セットリスト編集",
     "rules": {
@@ -804,6 +855,10 @@
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} の TECHMANIA マイページ。"
+    },
     "tab": {
       "patterns": "パターン",
       "skins": "スキン",
