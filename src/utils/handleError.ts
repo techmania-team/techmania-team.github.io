@@ -1,9 +1,8 @@
 import type { ApiResponse } from '@/types/api'
 import type { AxiosError } from 'axios'
 import { Notify } from 'quasar'
-import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { getI18nRoute } from '@/i18n'
+import { getGlobal, getI18nRoute } from '@/i18n'
 import { useUserStore } from '@/stores/user'
 
 export const handleError = (error: unknown) => {
@@ -11,12 +10,13 @@ export const handleError = (error: unknown) => {
     console.error(error)
   }
 
-  const i18n = useI18n()
+  const t = getGlobal()?.t
+  if (!t) return
 
   Notify.create({
     icon: 'warning',
     color: 'negative',
-    message: i18n.t('error.unknown'),
+    message: t('error.unknown'),
   })
 }
 
@@ -33,8 +33,10 @@ export const handleFormSubmitError = async (
 ) => {
   const user = useUserStore()
   const router = useRouter()
-  const i18n = useI18n()
-  const { t } = i18n
+
+  const t = getGlobal()?.t
+  if (!t) return
+
   switch (error.response?.data?.message) {
     case 'Not in guild':
       Notify.create({

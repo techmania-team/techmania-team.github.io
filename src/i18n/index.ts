@@ -23,7 +23,7 @@ const langList = import.meta.glob<{ default: QuasarLanguage }>(
 let _i18n: ReturnType<typeof createI18n> | null = null
 
 // Helper to get the global Composer with correct typing (legacy: false mode)
-const getGlobal = () => _i18n?.global as Composer | undefined
+export const getGlobal = () => _i18n?.global as Composer | undefined
 
 export const setupI18n = async (ssrContext: QSsrContext | null | undefined) => {
   _i18n = createI18n({
