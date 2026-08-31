@@ -154,7 +154,7 @@ defineOptions({
     if (route.params.id) {
       await profile.fetchProfile(route.params.id)
     } else {
-      redirect('/404')
+      redirect({ name: 'index' })
       return
     }
 
@@ -164,7 +164,7 @@ defineOptions({
 
     // Check if profile exists
     if (profile._id.length === 0) {
-      redirect('/404')
+      redirect({ name: 'index' })
       return
     }
   },

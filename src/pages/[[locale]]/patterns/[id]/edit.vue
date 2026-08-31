@@ -129,7 +129,7 @@ defineOptions({
 
     // Check if ID is valid, redirect to 404 if not
     if (route.params.id && !validator.isMongoId(route.params.id)) {
-      redirect('/404')
+      redirect({ name: 'index' })
       return
     }
 
@@ -145,7 +145,7 @@ defineOptions({
 
     // Check if pattern exists and user is the submitter
     if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
-      redirect('/404')
+      redirect({ name: 'index' })
       return
     }
   },

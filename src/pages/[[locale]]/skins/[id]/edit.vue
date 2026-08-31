@@ -131,7 +131,8 @@ defineOptions({
 
     // Check if ID is valid, redirect to 404 if not
     if (route.params.id && !validator.isMongoId(route.params.id)) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
 
     // Note:
@@ -146,7 +147,8 @@ defineOptions({
 
     // Check if skin exists and user is the submitter
     if (skin._id.length === 0 || skin.submitter._id !== userId) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
   },
 })

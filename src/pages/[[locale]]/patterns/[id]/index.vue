@@ -246,14 +246,16 @@ defineOptions({
     }
 
     if (!route.params.id || !validator.isMongoId(route.params.id)) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
 
     await pattern.fetchPattern(route.params.id)
 
     // Check if pattern exists and user is the submitter
     if (pattern._id.length === 0) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
   },
 })

@@ -219,14 +219,16 @@ defineOptions({
     }
 
     if (!route.params.id || !validator.isMongoId(route.params.id)) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
 
     await skin.fetchSkin(route.params.id)
 
     // Check if skin exists and user is the submitter
     if (skin._id.length === 0) {
-      redirect('/404')
+      redirect({ name: 'index' })
+      return
     }
   },
 })
