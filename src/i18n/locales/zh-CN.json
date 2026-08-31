@@ -313,7 +313,8 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑谱面",
       "updatePermission": "您没有权限编辑此谱面",
       "updateUnauthorized": "您需要登录才能编辑谱面",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传谱面"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传谱面",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "patternCard": {
@@ -503,7 +504,8 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑皮肤",
       "updatePermission": "您没有权限编辑此皮肤",
       "updateUnauthorized": "您需要登录才能编辑皮肤",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传皮肤"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传皮肤",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "skinCard": {
@@ -800,7 +802,8 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑组曲",
       "updatePermission": "您没有权限编辑此组曲",
       "updateUnauthorized": "您需要登录才能编辑组曲",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传组曲"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传组曲",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "commentList": {

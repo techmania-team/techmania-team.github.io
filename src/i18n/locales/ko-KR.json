@@ -313,7 +313,8 @@
       "updateNotInGuild": "이 패턴을 업데이트하려면 Discord 서버에 참가해야 합니다.",
       "updatePermission": "이 패턴을 업데이트할 권한이 없습니다.",
       "updateUnauthorized": "이 패턴을 업데이트하려면 로그인해야 합니다.",
-      "createNotInGuild": "새로운 패턴을 투고하려면 Discord 서버에 참가해야 합니다."
+      "createNotInGuild": "새로운 패턴을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
     }
   },
   "patternCard": {
@@ -503,7 +504,8 @@
       "updateNotInGuild": "이 스킨을 업데이트하려면 Discord 서버에 참가해야 합니다.",
       "updatePermission": "이 스킨을 업데이트할 권한이 없습니다.",
       "updateUnauthorized": "이 스킨을 업데이트하려면 로그인해야 합니다.",
-      "createNotInGuild": "새로운 스킨을 투고하려면 Discord 서버에 참가해야 합니다."
+      "createNotInGuild": "새로운 스킨을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
     }
   },
   "skinCard": {
@@ -800,7 +802,8 @@
       "updateNotInGuild": "이 디스크셋을 업데이트하려면 Discord 서버에 참가해야 합니다.",
       "updatePermission": "이 디스크셋을 업데이트할 권한이 없습니다.",
       "updateUnauthorized": "이 디스크셋을 업데이트하려면 로그인해야 합니다.",
-      "createNotInGuild": "새로운 디스크셋을 투고하려면 Discord 서버에 참가해야 합니다."
+      "createNotInGuild": "새로운 디스크셋을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
     }
   },
   "commentList": {

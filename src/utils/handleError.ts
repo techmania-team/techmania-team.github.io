@@ -59,6 +59,13 @@ export const handleFormSubmitError = async (
       user.clearData()
       await router.push(getI18nRoute({ name: 'index' }))
       break
+    case 'Invalid image URL':
+      Notify.create({
+        icon: 'warning',
+        message: t(`${page}.result.image`),
+        color: 'negative',
+      })
+      break
     default:
       handleError(error)
       break

@@ -313,7 +313,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯譜面",
       "updatePermission": "您沒有編輯這個譜面的權限",
       "updateUnauthorized": "您必須登入才能編輯譜面",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳譜面"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳譜面",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "patternCard": {
@@ -503,7 +504,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯造型",
       "updatePermission": "您沒有編輯這個造型的權限",
       "updateUnauthorized": "您必須登入才能編輯造型",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳造型"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳造型",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "skinCard": {
@@ -800,7 +802,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯組曲",
       "updatePermission": "您沒有編輯這個組曲的權限",
       "updateUnauthorized": "您必須登入才能編輯組曲",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳組曲"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳組曲",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "commentList": {

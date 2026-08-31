@@ -313,7 +313,8 @@
       "updateNotInGuild": "パターンを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このパターンを編集する権限がありません",
       "updateUnauthorized": "このパターンを編集するにはログインする必要があります",
-      "createNotInGuild": "パターンを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "パターンを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "patternCard": {
@@ -503,7 +504,8 @@
       "updateNotInGuild": "スキンを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このスキンを編集する権限がありません",
       "updateUnauthorized": "このスキンを編集するにはログインする必要があります",
-      "createNotInGuild": "スキンを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "スキンを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "skinCard": {
@@ -800,7 +802,8 @@
       "updateNotInGuild": "セットリストを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このセットリストを編集する権限がありません",
       "updateUnauthorized": "このセットリストを編集するにはログインする必要があります",
-      "createNotInGuild": "セットリストを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "セットリストを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "commentList": {

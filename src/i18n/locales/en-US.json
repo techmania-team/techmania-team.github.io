@@ -313,7 +313,8 @@
       "updateNotInGuild": "You must join our discord to update this pattern",
       "updatePermission": "You don't have permission to update this pattern",
       "updateUnauthorized": "You must login to update this pattern",
-      "createNotInGuild": "You must join our discord to submit pattern"
+      "createNotInGuild": "You must join our discord to submit pattern",
+      "image": "Please enter a valid image URL."
     }
   },
   "patternCard": {
@@ -503,7 +504,8 @@
       "updateNotInGuild": "You must join our discord to update this skin",
       "updatePermission": "You don't have permission to update this skin",
       "updateUnauthorized": "You must login to update this skin",
-      "createNotInGuild": "You must join our discord to submit skin"
+      "createNotInGuild": "You must join our discord to submit skin",
+      "image": "Please enter a valid image URL."
     }
   },
   "skinCard": {
@@ -800,7 +802,8 @@
       "updateNotInGuild": "You must join our discord to update this setlist",
       "updatePermission": "You don't have permission to update this setlist",
       "updateUnauthorized": "You must login to update this setlist",
-      "createNotInGuild": "You must join our discord to submit setlist"
+      "createNotInGuild": "You must join our discord to submit setlist",
+      "image": "Please enter a valid preview image URL."
     }
   },
   "commentList": {
