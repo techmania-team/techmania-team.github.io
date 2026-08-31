@@ -18,7 +18,8 @@ interface ImportMetaEnv {
   readonly DISCORD_WEBHOOK_PATTERNS?: string
   readonly DISCORD_WEBHOOK_SKINS?: string
   readonly DISCORD_WEBHOOK_SETLISTS?: string
-  readonly DISCORD_GUILD?: number
+  readonly DISCORD_GUILD?: string
+  readonly DISCORD_BOT_TOKEN?: string
   readonly QCLI_HOST_URL?: string
   readonly DB_URL?: string
   readonly JWT_SECRET?: string

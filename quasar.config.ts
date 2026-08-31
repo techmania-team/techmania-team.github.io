@@ -54,6 +54,7 @@ export default defineConfig((ctx) => {
       // define: {},
       defineEnv: {
         DISCORD_CLIENT: import.meta.env.DISCORD_CLIENT?.replace('abc', '') || undefined,
+        DISCORD_GUILD: import.meta.env.DISCORD_GUILD?.replace('abc', '') || undefined,
       },
       // ignorePublicFolder: true,
       // minify: false,
