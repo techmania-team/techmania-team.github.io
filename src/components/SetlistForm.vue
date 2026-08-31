@@ -320,7 +320,7 @@
             br
              //- Turnstile
             .row.justify-center.q-my-md
-              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'setlist-update' : 'setlist-create'")
+              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'setlist-update' : 'setlist-create'" ref="turnstileRef")
             //- Submit button
             q-btn.q-my-md(:label="isEdit ? $t('setlistFormPage.submit.edit') : $t('setlistFormPage.submit.new')" color="tech" text-color="black" type="submit" style="width: 150px")
 //- Delete confirmation dialog
@@ -345,7 +345,7 @@ import { AxiosError } from 'axios'
 import { useQuasar } from 'quasar'
 import validator from 'validator'
 import { useFieldArray, useForm } from 'vee-validate'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
@@ -394,6 +394,7 @@ const user = useUserStore()
 const { t } = useI18n()
 
 const turnstileToken = ref('')
+const turnstileRef = useTemplateRef('turnstileRef')
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
@@ -788,8 +789,10 @@ const onSubmit = form.handleSubmit(async (values) => {
     } else {
       handleError(error)
     }
+    turnstileRef.value?.reset()
+  } finally {
+    $q.loading.hide()
   }
-  $q.loading.hide()
 })
 
 // Delete confirmation dialog state
