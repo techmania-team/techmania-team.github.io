@@ -5,268 +5,232 @@ section.q-mx-auto.padding
     .row
       .col-12
         //- Form
-        Form(v-slot="{ handleSubmit }" :validation-schema="schema" :initial-values="initialValues" ref="form" as="")
-          q-form(@submit.prevent="handleSubmit($event, onSubmit)")
-            //- Rules
-            q-card.text-white.bg-red.q-my-lg(rounded)
-              q-card-section
-                p {{ $t('patternFormPage.rules.title') }}
-                ul.q-mb-none
-                  li {{ $t('patternFormPage.rules.rule1') }}
-                  li {{ $t('patternFormPage.rules.rule2') }}
-                  li {{ $t('patternFormPage.rules.rule3') }}
-            //- Basic informations
-            q-list.q-mb-lg
-              //- List header
-              q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.basic.title') }}
-              q-separator.q-mb-md(inset)
-              //- Field - Song name
-              //- NOTE:
-              //- QItem has a hardcoded no-wrap class
-              //- so we need to wrap it in a div to make it wrap
-              q-item.q-py-lg.q-py-md-md
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.name.label') }}
-                    .col-12.col-md-10
-                      Field(name="name" v-slot="{ field, errorMessage }")
-                        q-input.q-pb-none(
-                          outlined square color="tech"
-                          :model-value="field.value"
-                          @update:model-value="field.onChange($event)"
-                          @blur="field.onBlur($event)"
-                          :error-message="errorMessage"
-                          :error="!!errorMessage"
-                        )
-              //- Field - Composer
-              q-item.q-py-lg.q-py-md-md
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.composer.label') }}
-                    .col-12.col-md-10
-                      Field(name="composer" v-slot="{ field, errorMessage }")
-                        q-input.q-pb-none(
-                          outlined square color="tech"
-                          :model-value="field.value"
-                          @update:model-value="field.onChange($event)"
-                          @blur="field.onBlur($event)"
-                          :error-message="errorMessage"
-                          :error="!!errorMessage"
-                        )
-              //- Field - Download link
-              q-item.q-py-lg.q-py-md-md
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.download.label') }}
-                    .col-12.col-md-10
-                      Field(name="link" v-slot="{ field, errorMessage }")
-                        q-input.q-pb-none(
-                          outlined square color="tech" type="url"
-                          :model-value="field.value"
-                          @update:model-value="field.onChange($event)"
-                          @blur="field.onBlur($event)"
-                          :error-message="errorMessage"
-                          :error="!!errorMessage"
-                        )
-              //- Field - Keysounded
-              q-item.q-py-lg.q-py-md-md
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-2 {{ $t('patternFormPage.basic.keysounded.label') }}
-                    .col-10
-                      Field(name="keysounded" v-slot="{ field, errorMessage }")
-                        q-field.q-pb-none(
-                          borderless color="white"
-                          :error-message="errorMessage"
-                          :error="!!errorMessage"
-                        )
-                          q-checkbox(
-                            keep-color color="tech"
-                            :true-value="true" :false-value="false"
-                            :model-value="field.value"
-                            @update:model-value="field.onChange($event)"
-                          )
-              //- Field - Image link
-              q-item.q-py-lg.q-py-md-md
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.image.label') }}
-                    .col-12.col-md-10
-                      Field(name="image" v-slot="{ field, errorMessage }")
-                        q-input.q-pb-none(
-                          outlined square color="tech"
-                          :model-value="field.value"
-                          @update:model-value="field.onChange($event)"
-                          @blur="field.onBlur($event)"
-                          :error-message="errorMessage"
-                          :error="!!errorMessage"
-                        )
-            //- Previews
-            q-list.q-my-lg
-              q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.preview.title')}}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  .row.items-start.justify-between.q-col-gutter-y-xl
-                    FieldArray(name="previews" v-slot="{ fields, push, remove }")
-                      template(v-for="(field, idx) in fields" :key="field.key")
-                        .col-12
-                          .row
-                            .col-10.col-md-11
-                              .row.q-col-gutter-x-md.q-col-gutter-y-lg
-                                //- Name
-                                .col-12.col-md-3
-                                  Field(:name="`previews[${idx}].name`" v-slot="{ field, errorMessage }")
-                                    q-input.q-pb-none(
-                                      outlined square color="tech"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :placeholder="$t('patternFormPage.preview.name.label')"
-                                    )
-                                //- Link
-                                .col-12.col-md-9
-                                  Field(:name="`previews[${idx}].link`" v-slot="{ field, errorMessage }")
-                                    q-input.q-pb-none(
-                                      outlined square color="tech" type="url"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :placeholder="$t('patternFormPage.preview.link.label')"
-                                    )
-                            //- Action buttons
-                            .col-2.col-md-1.text-center.self-center.q-py-none
-                              q-btn(
-                                flat round icon="delete" color="tech"
-                                v-if="idx !== 0"
-                                @click="remove(idx)"
-                              )
-                              q-btn(
-                                flat round icon="add" color="tech"
-                                v-else
-                                @click="push({ name: '', link: '' })"
-                              )
-            //- Difficulties
-            q-list.q-my-lg
-              q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.difficulties.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  .row.items-start.justify-between.q-col-gutter-y-xl
-                    FieldArray(name="difficulties" v-slot="{ fields, push, remove }")
-                      template(v-for="(field, idx) in fields" :key="field.key")
-                        .col-12
-                          .row
-                            .col-10.col-md-11
-                              .row.q-col-gutter-x-md.q-col-gutter-y-md
-                                //- Control
-                                .col-6.col-md-2
-                                  Field(:name="`difficulties[${idx}].control`" v-slot="{ field, errorMessage }")
-                                    q-select.q-pb-none(
-                                      outlined square color="tech"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :options="controlTypes" :placeholder="$t('patternFormPage.difficulties.control.label')"
-                                      emit-value map-options
-                                    )
-                                //- Lanes
-                                .col-6.col-md-2
-                                  Field(:name="`difficulties[${idx}].lanes`" v-slot="{ field, errorMessage }")
-                                    q-select.q-pb-none(
-                                      outlined square color="tech"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :options="lanesOptions" :placeholder="$t('patternFormPage.difficulties.lanes.label')"
-                                      emit-value map-options
-                                    )
-                                //- Name
-                                .col-6.col-md-6
-                                  Field(:name="`difficulties[${idx}].name`" v-slot="{ field, errorMessage }")
-                                    q-input.q-pb-none(
-                                      outlined square color="tech"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :placeholder="$t('patternFormPage.difficulties.name.label')"
-                                    )
-                                //- Level
-                                .col-6.col-md-2
-                                  Field(:name="`difficulties[${idx}].level`" v-slot="{ field, errorMessage }")
-                                    q-input.q-pb-none(
-                                      outlined square color="tech" type="number"
-                                      :model-value="field.value"
-                                      @update:model-value="field.onChange($event)"
-                                      @blur="field.onBlur($event)"
-                                      :error-message="errorMessage"
-                                      :error="!!errorMessage"
-                                      :placeholder="$t('patternFormPage.difficulties.level.label')"
-                                      min="1"
-                                    )
-                            //- Action buttons
-                            .col-2.col-md-1.text-center.self-center.q-py-none
-                              q-btn(
-                                flat round icon="delete" color="tech"
-                                v-if="idx !== 0"
-                                @click="remove(idx)"
-                              )
-                              q-btn(
-                                flat round icon="add" color="tech"
-                                v-else
-                                @click="push({ name: '', level: undefined, control: 0, lanes: 4 })"
-                              )
-            //- Description
-            q-list.q-my-lg
-              q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.description.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  Field(name="description" v-slot="{ field }")
-                    q-editor(
-                      outlined
-                      @update:model-value="field.onChange($event)"
-                      :model-value="field.value"
-                      :toolbar="toolbar"
-                      toolbar-toggle-color="tech"
+        q-form(@submit.prevent="onSubmit")
+          //- Rules
+          q-card.text-white.bg-red.q-my-lg(rounded)
+            q-card-section
+              p {{ $t('patternFormPage.rules.title') }}
+              ul.q-mb-none
+                li {{ $t('patternFormPage.rules.rule1') }}
+                li {{ $t('patternFormPage.rules.rule2') }}
+                li {{ $t('patternFormPage.rules.rule3') }}
+          //- Basic informations
+          q-list.q-mb-lg
+            //- List header
+            q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.basic.title') }}
+            q-separator.q-mb-md(inset)
+            //- Field - Song name
+            //- NOTE:
+            //- QItem has a hardcoded no-wrap class
+            //- so we need to wrap it in a div to make it wrap
+            q-item.q-py-lg.q-py-md-md
+              q-item-section
+                .row.justify-center.items-center
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.name.label') }}
+                  .col-12.col-md-10
+                    q-input.q-pb-none(
+                      outlined square color="tech" hide-bottom-space
+                      v-model="nameField"
+                      :error-message="form.errors.value.name"
+                      :error="!!form.errors.value.name"
                     )
-            //- Field - Danger Zone
-            q-list.q-my-lg(v-if="$route.params.id")
-              //- List header
-              q-item-label.text-h6.text-red(header) {{ $t('patternFormPage.dangerZone.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  .row.justify-center.items-center
-                    .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.dangerZone.delete.label') }}
-                    .col-12.col-md-10
-                      q-btn(outline color="red" @click="openDeleteDialog") {{ $t('patternFormPage.dangerZone.delete.button') }}
-            //- Terms of Service
-            .q-mt-xl.q-mx-auto.text-center
-              Field(name="agree" v-slot="{ field, errorMessage }")
-                q-checkbox(
-                  keep-color color="tech"
-                  :model-value="field.value"
-                  @update:model-value="field.onChange($event)"
+            //- Field - Composer
+            q-item.q-py-lg.q-py-md-md
+              q-item-section
+                .row.justify-center.items-center
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.composer.label') }}
+                  .col-12.col-md-10
+                    q-input.q-pb-none(
+                      outlined square color="tech" hide-bottom-space
+                      v-model="composerField"
+                      :error-message="form.errors.value.composer"
+                      :error="!!form.errors.value.composer"
+                    )
+            //- Field - Download link
+            q-item.q-py-lg.q-py-md-md
+              q-item-section
+                .row.justify-center.items-center
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.download.label') }}
+                  .col-12.col-md-10
+                    q-input.q-pb-none(
+                      outlined square color="tech" type="url" hide-bottom-space
+                      v-model="linkField"
+                      :error-message="form.errors.value.link"
+                      :error="!!form.errors.value.link"
+                    )
+            //- Field - Keysounded
+            q-item.q-py-lg.q-py-md-md
+              q-item-section
+                .row.justify-center.items-center
+                  .col-2 {{ $t('patternFormPage.basic.keysounded.label') }}
+                  .col-10
+                    q-field.q-pb-none(
+                      borderless color="white" hide-bottom-space
+                      :error-message="form.errors.value.keysounded"
+                      :error="!!form.errors.value.keysounded"
+                    )
+                      q-checkbox(
+                        keep-color color="tech"
+                        :true-value="true" :false-value="false"
+                        v-model="keysoundedField"
+                      )
+            //- Field - Image link
+            q-item.q-py-lg.q-py-md-md
+              q-item-section
+                .row.justify-center.items-center
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.image.label') }}
+                  .col-12.col-md-10
+                      q-input.q-pb-none(
+                        outlined square color="tech" type="url" hide-bottom-space
+                        v-model="imageField"
+                        :error-message="form.errors.value.image"
+                        :error="!!form.errors.value.image"
+                      )
+          //- Previews
+          q-list.q-my-lg
+            q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.preview.title')}}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                .row.items-start.justify-between.q-col-gutter-y-xl
+                  template(v-for="(field, idx) in previewsField.fields.value" :key="field.key")
+                    .col-12
+                      .row
+                        .col-10.col-md-11
+                          .row.q-col-gutter-x-md.q-col-gutter-y-lg
+                            //- Name
+                            .col-12.col-md-3
+                              q-input.q-pb-none(
+                                outlined square color="tech" hide-bottom-space
+                                v-model="getPreviewName(idx)[0].value"
+                                :error-message="form.errors.value[`previews[${idx}].name`]"
+                                :error="!!form.errors.value[`previews[${idx}].name`]"
+                                :placeholder="$t('patternFormPage.preview.name.label')"
+                              )
+                            //- Link
+                            .col-12.col-md-9
+                              q-input.q-pb-none(
+                                outlined square color="tech" type="url" hide-bottom-space
+                                v-model="getPreviewLink(idx)[0].value"
+                                :error-message="form.errors.value[`previews[${idx}].link`]"
+                                :error="!!form.errors.value[`previews[${idx}].link`]"
+                                :placeholder="$t('patternFormPage.preview.link.label')"
+                              )
+                        //- Action buttons
+                        .col-2.col-md-1.text-center.self-center.q-py-none
+                          q-btn(
+                            flat round icon="delete" color="tech"
+                            v-if="idx !== 0"
+                            @click="previewsField.remove(idx)"
+                          )
+                          q-btn(
+                            flat round icon="add" color="tech"
+                            v-else
+                            @click="previewsField.push({ name: '', link: '' })"
+                          )
+          //- Difficulties
+          q-list.q-my-lg
+            q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.difficulties.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                .row.items-start.justify-between.q-col-gutter-y-xl
+                  template(v-for="(field, idx) in difficultiesField.fields.value" :key="field.key")
+                    .col-12
+                      .row
+                        .col-10.col-md-11
+                          .row.q-col-gutter-x-md.q-col-gutter-y-md
+                            //- Control
+                            .col-6.col-md-2
+                              q-select.q-pb-none(
+                                outlined square color="tech" hide-bottom-space
+                                v-model="getDiffControl(idx)[0].value"
+                                :error-message="form.errors.value[`difficulties[${idx}].control`]"
+                                :error="!!form.errors.value[`difficulties[${idx}].control`]"
+                                :options="controlTypes" :placeholder="$t('patternFormPage.difficulties.control.label')"
+                                emit-value map-options
+                              )
+                            //- Lanes
+                            .col-6.col-md-2
+                              q-select.q-pb-none(
+                                outlined square color="tech" hide-bottom-space
+                                v-model="getDiffLanes(idx)[0].value"
+                                :error-message="form.errors.value[`difficulties[${idx}].lanes`]"
+                                :error="!!form.errors.value[`difficulties[${idx}].lanes`]"
+                                :options="lanesOptions" :placeholder="$t('patternFormPage.difficulties.lanes.label')"
+                                emit-value map-options
+                              )
+                            //- Name
+                            .col-6.col-md-6
+                              q-input.q-pb-none(
+                                outlined square color="tech" hide-bottom-space
+                                v-model="getDiffName(idx)[0].value"
+                                :error-message="form.errors.value[`difficulties[${idx}].name`]"
+                                :error="!!form.errors.value[`difficulties[${idx}].name`]"
+                                :placeholder="$t('patternFormPage.difficulties.name.label')"
+                              )
+                            //- Level
+                            .col-6.col-md-2
+                              q-input.q-pb-none(
+                                outlined square color="tech" type="number" hide-bottom-space
+                                v-model="getDiffLevel(idx)[0].value"
+                                :error-message="form.errors.value[`difficulties[${idx}].level`]"
+                                :error="!!form.errors.value[`difficulties[${idx}].level`]"
+                                :placeholder="$t('patternFormPage.difficulties.level.label')"
+                                min="1"
+                              )
+                        //- Action buttons
+                        .col-2.col-md-1.text-center.self-center.q-py-none
+                          q-btn(
+                            flat round icon="delete" color="tech"
+                            v-if="idx !== 0"
+                            @click="difficultiesField.remove(idx)"
+                          )
+                          q-btn(
+                            flat round icon="add" color="tech"
+                            v-else
+                            @click="difficultiesField.push({ name: '', level: undefined, control: 0, lanes: 4 })"
+                          )
+          //- Description
+          q-list.q-my-lg
+            q-item-label.text-h6.text-tech(header) {{ $t('patternFormPage.description.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                q-editor(
+                  outlined
+                  v-model="descriptionField"
+                  :toolbar="toolbar"
+                  toolbar-toggle-color="tech"
                 )
-                i18n-t(keypath="patternFormPage.tos.label" tag="span")
-                  template(#tos)
-                    a(:href="tosURL" target="_blank") {{ $t('patternFormPage.tos.tos') }}
-                template(v-if="!!errorMessage")
-                  .text-negative {{ errorMessage }}
-              br
-              //- Submit button
-              q-btn.q-my-md(:label="pattern._id.length === 0 ? $t('patternFormPage.submit.new') : $t('patternFormPage.submit.edit')" color="tech" text-color="black" type="submit" style="width: 150px")
+          //- Field - Danger Zone
+          q-list.q-my-lg(v-if="isEdit")
+            //- List header
+            q-item-label.text-h6.text-red(header) {{ $t('patternFormPage.dangerZone.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                .row.justify-center.items-center
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.dangerZone.delete.label') }}
+                  .col-12.col-md-10
+                    q-btn(outline color="red" @click="openDeleteDialog") {{ $t('patternFormPage.dangerZone.delete.button') }}
+          //- Terms of Service
+          .q-mt-xl.q-mx-auto.text-center
+            q-checkbox(
+              keep-color color="tech"
+              v-model="agreeField"
+            )
+            i18n-t(keypath="patternFormPage.tos.label" tag="span")
+              template(#tos)
+                a(:href="tosURL" target="_blank") {{ $t('patternFormPage.tos.tos') }}
+            template(v-if="!!form.errors.value.agree")
+              .text-negative {{ form.errors.value.agree }}
+            br
+            //- Turnstile
+            .row.justify-center.q-my-md
+              cf-turnstile(v-model="turnstileToken" :action="isEdit ? 'pattern-update' : 'pattern-create'" ref="turnstileRef")
+            //- Submit button
+            q-btn.q-my-md(:label="isEdit ? $t('patternFormPage.submit.edit') : $t('patternFormPage.submit.new')" color="tech" text-color="black" type="submit" style="width: 150px")
 //- Delete confirmation dialog
 q-dialog(v-model="deleteDialog" persistent)
   q-card(rounded)
@@ -283,31 +247,36 @@ q-dialog(v-model="deleteDialog" persistent)
       q-btn(color="red" flat :label="$t('patternFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
-<script setup>
-import { ref, computed, onMounted, useTemplateRef, nextTick } from 'vue'
-import { useQuasar } from 'quasar'
-import { useRoute, useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { Form, Field, FieldArray } from 'vee-validate'
-import * as yup from 'yup'
-import { useReCaptcha } from 'vue-recaptcha-v3'
-import { getIDFromYouTubeLink } from 'src/utils/youtube'
-import { useUserStore } from 'src/stores/user'
-import { useTempPatternStore } from 'src/stores/temp-pattern'
-import { controls } from 'src/utils/control'
-import api from 'src/utils/api'
-import { handleError, handleFormSubmitError } from 'src/utils/handleError'
-import { CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM } from 'src/utils/control'
-import { getI18nRoute } from 'src/i18n'
+<script setup lang="ts">
+import type { IPattern, IPatternDifficulty } from '@/types/pattern'
 import { AxiosError } from 'axios'
+import { useQuasar } from 'quasar'
+import { useFieldArray, useForm } from 'vee-validate'
+import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import * as yup from 'yup'
+import { getI18nRoute } from '@/i18n'
+import * as patternService from '@/services/pattern'
+import { useUserStore } from '@/stores/user'
+import { controls } from '@/utils/control'
+import { CONTROLTYPE } from '@/utils/control'
+import { handleError, handleFormSubmitError } from '@/utils/handleError'
+import { getIDFromYouTubeLink } from '@/utils/youtube'
+import CfTurnstile from './CfTurnstile.vue'
+
+const props = defineProps<{
+  pattern?: IPattern
+}>()
+const isEdit = computed(() => Boolean(props.pattern?._id))
 
 const $q = useQuasar()
-const route = useRoute()
 const router = useRouter()
 const user = useUserStore()
-const pattern = useTempPatternStore()
 const { t } = useI18n()
-const recaptcha = useReCaptcha()
+
+const turnstileToken = ref('')
+const turnstileRef = useTemplateRef('turnstileRef')
 
 const tosURL = 'https://github.com/techmania-team/techmania-team.github.io/blob/master/ToS.md'
 const toolbar = [
@@ -324,18 +293,18 @@ const lanesOptions = [
 ]
 const controlTypes = computed(() => [
   {
-    label: t('patternFormPage.difficulties.control.' + controls[CONTROL_TOUCH]),
-    value: CONTROL_TOUCH,
+    label: t('patternFormPage.difficulties.control.' + controls[CONTROLTYPE.TOUCH]),
+    value: CONTROLTYPE.TOUCH,
   },
   {
-    label: t('patternFormPage.difficulties.control.' + controls[CONTROL_KEYS]),
-    value: CONTROL_KEYS,
+    label: t('patternFormPage.difficulties.control.' + controls[CONTROLTYPE.KEYS]),
+    value: CONTROLTYPE.KEYS,
   },
-  { label: t('patternFormPage.difficulties.control.' + controls[CONTROL_KM]), value: CONTROL_KM },
+  {
+    label: t('patternFormPage.difficulties.control.' + controls[CONTROLTYPE.KM]),
+    value: CONTROLTYPE.KM,
+  },
 ])
-
-// Template refs
-const form = useTemplateRef('form')
 
 // Form validation schema
 const schema = yup.object({
@@ -346,15 +315,44 @@ const schema = yup.object({
     .url(() => t('patternFormPage.basic.download.error.invalid'))
     .required(() => t('patternFormPage.basic.download.error.required')),
   keysounded: yup.boolean().required(() => t('patternFormPage.basic.keysounded.error.required')),
-  image: yup.string().url(() => t('patternFormPage.basic.image.error.invalid')),
+  image: yup
+    .string()
+    .notRequired()
+    .test(
+      'is-valid-url-or-empty',
+      () => t('patternFormPage.basic.image.error.invalid'),
+      (value) => !value || yup.string().url().isValidSync(value),
+    ),
   previews: yup.array().of(
     yup.object().shape({
-      name: yup.string().required(() => t('patternFormPage.preview.name.error.required')),
+      name: yup.string().test(
+        'name-required-if-link',
+        () => t('patternFormPage.preview.name.error.required'),
+        function (value) {
+          const { link } = this.parent
+          if (link && !value) return false
+          return true
+        },
+      ),
       link: yup
         .string()
-        .required(() => t('patternFormPage.preview.link.error.required'))
-        .url(() => t('patternFormPage.preview.link.error.invalid'))
-        .test('youtube', t('patternFormPage.preview.link.error.youtube'), getIDFromYouTubeLink),
+        .test(
+          'link-required-if-name',
+          () => t('patternFormPage.preview.link.error.required'),
+          function (value) {
+            const { name } = this.parent
+            if (name && !value) return false
+            return true
+          },
+        )
+        .test(
+          'youtube',
+          () => t('patternFormPage.preview.link.error.youtube'),
+          (value) => {
+            if (!value) return true
+            return Boolean(getIDFromYouTubeLink(value))
+          },
+        ),
     }),
   ),
   difficulties: yup.array().of(
@@ -366,14 +364,14 @@ const schema = yup.object({
         .required(() => t('patternFormPage.difficulties.level.error.required'))
         .min(1, () => t('patternFormPage.difficulties.level.error.min')),
       control: yup
-        .number()
+        .number<CONTROLTYPE>()
         .typeError(() => t('patternFormPage.difficulties.control.error.required'))
         .required(() => t('patternFormPage.difficulties.control.error.required'))
-        .oneOf([CONTROL_TOUCH, CONTROL_KEYS, CONTROL_KM], () =>
+        .oneOf(Object.values(CONTROLTYPE) as number[], () =>
           t('patternFormPage.difficulties.control.error.invalid'),
         ),
       lanes: yup
-        .number()
+        .number<2 | 3 | 4>()
         .typeError(() => t('patternFormPage.difficulties.level.error.required'))
         .required(() => t('patternFormPage.difficulties.lanes.error.required'))
         .min(2, () => t('patternFormPage.difficulties.lanes.error.min'))
@@ -394,30 +392,65 @@ const initialValues = {
   keysounded: false,
   image: '',
   previews: [{ name: '', link: '' }],
-  difficulties: [{ name: '', level: undefined, control: 0, lanes: 4 }],
+  difficulties: [{ name: '', level: 0, control: 0, lanes: 4 }],
   description: '',
   agree: false,
 }
+const form = useForm({
+  validationSchema: schema,
+  initialValues,
+})
+const [nameField] = form.defineField('name')
+const [composerField] = form.defineField('composer')
+const [linkField] = form.defineField('link')
+const [keysoundedField] = form.defineField('keysounded')
+const [imageField] = form.defineField('image')
+const [descriptionField] = form.defineField('description')
+const [agreeField] = form.defineField('agree')
+const previewsField = useFieldArray('previews')
+const difficultiesField = useFieldArray('difficulties')
+
+const getPreviewName = (i: number) => form.defineField(`previews[${i}].name`)
+const getPreviewLink = (i: number) => form.defineField(`previews[${i}].link`)
+
+const getDiffName = (i: number) => form.defineField(`difficulties[${i}].name`)
+const getDiffLevel = (i: number) => form.defineField(`difficulties[${i}].level`)
+const getDiffControl = (i: number) => form.defineField(`difficulties[${i}].control`)
+const getDiffLanes = (i: number) => form.defineField(`difficulties[${i}].lanes`)
+
 // On form submit
-const onSubmit = async (values) => {
+const onSubmit = form.handleSubmit(async (values) => {
   $q.loading.show()
   try {
-    if (route.params.id) {
+    if (!turnstileToken.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('patternFormPage.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
+    if (isEdit.value) {
       // Has pattern ID, update pattern
-      const token = await recaptcha.executeRecaptcha('updatePattern')
-      await api.patch(`/patterns/${pattern._id}`, {
+      await patternService.update(props.pattern!._id, {
         name: values.name,
         composer: values.composer,
         link: values.link,
         keysounded: values.keysounded,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
-        difficulties: values.difficulties,
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
+        difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
-        'g-recaptcha-response': token,
+        'cf-turnstile-response': turnstileToken.value,
       })
       $q.notify({
         icon: 'check',
@@ -426,22 +459,24 @@ const onSubmit = async (values) => {
         position: 'top',
         timeout: 2000,
       })
+      await router.push(getI18nRoute({ name: 'pattern', params: { id: props.pattern!._id } }))
     } else {
       // No pattern ID, create new pattern
-      const token = await recaptcha.executeRecaptcha('newPattern')
-      const { data } = await api.post(`/patterns`, {
+      const { data } = await patternService.create({
         name: values.name,
         composer: values.composer,
         link: values.link,
         keysounded: values.keysounded,
         image: values.image,
-        previews: values.previews.map((preview) => ({
-          name: preview.name,
-          ytid: getIDFromYouTubeLink(preview.link),
-        })),
-        difficulties: values.difficulties,
+        previews: values.previews
+          .filter((preview) => preview.name || preview.link)
+          .map((preview) => ({
+            name: preview.name,
+            ytid: getIDFromYouTubeLink(preview.link),
+          })),
+        difficulties: values.difficulties as IPatternDifficulty[],
         description: values.description,
-        'g-recaptcha-response': token,
+        'cf-turnstile-response': turnstileToken.value,
       })
       $q.notify({
         icon: 'check',
@@ -450,23 +485,25 @@ const onSubmit = async (values) => {
         position: 'top',
         timeout: 2000,
       })
-      router.push(getI18nRoute({ name: 'pattern', params: { id: data._id } }))
+      await router.push(getI18nRoute({ name: 'pattern', params: { id: data.result } }))
     }
   } catch (error) {
-    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
-      if (route.params.id) {
+    if (error instanceof AxiosError) {
+      if (isEdit.value) {
         // Editing pattern
-        handleFormSubmitError(error, 'patternFormPage', 'update', 'patterns')
+        await handleFormSubmitError(error, 'patternFormPage', 'update')
       } else {
         // Creating new pattern
-        handleFormSubmitError(error, 'patternFormPage', 'create', 'patterns')
+        await handleFormSubmitError(error, 'patternFormPage', 'create')
       }
     } else {
       handleError(error)
     }
+    turnstileRef.value?.reset()
+  } finally {
+    $q.loading.hide()
   }
-  $q.loading.hide()
-}
+})
 
 // Delete confirmation dialog state
 const deleteDialog = ref(false)
@@ -480,7 +517,7 @@ const openDeleteDialog = () => {
 const deletePattern = async () => {
   deleting.value = true
   try {
-    await api.delete(`/patterns/${pattern._id}`)
+    await patternService.del(props.pattern!._id)
     // Notify success
     $q.notify({
       icon: 'check',
@@ -490,10 +527,10 @@ const deletePattern = async () => {
       timeout: 2000,
     })
     // Redirect to home
-    router.push(getI18nRoute({ name: 'profile', params: { tab: 'patterns', id: user._id } }))
+    await router.push(getI18nRoute({ name: 'profile-patterns', params: { id: user._id } }))
   } catch (error) {
-    if (error instanceof AxiosError && [403, 401].includes(error?.response?.status)) {
-      handleFormSubmitError(error, 'patternFormPage', 'delete', 'patterns')
+    if (error instanceof AxiosError) {
+      await handleFormSubmitError(error, 'patternFormPage', 'delete')
     } else {
       handleError(error)
     }
@@ -504,42 +541,34 @@ const deletePattern = async () => {
 
 onMounted(async () => {
   // Get pattern data if editing
-  if (route.params.id) {
-    // Set initial values for the form
-    if (pattern.previews.length == 0) {
-      pattern.previews = [{ name: '', link: '' }]
-    } else {
-      pattern.previews.map((preview) => {
-        preview.link = 'https://www.youtube.com/watch?v=' + preview.ytid
-        return preview
-      })
-    }
+  if (isEdit.value) {
+    const previews =
+      props.pattern!.previews.length === 0
+        ? [{ name: '', link: '' }]
+        : props.pattern!.previews.map((preview) => ({
+            name: preview.name,
+            link: preview.ytid ? `https://www.youtube.com/watch?v=${preview.ytid}` : '',
+          }))
 
     // Wait for the form to be ready to get template ref
     await nextTick()
 
     // Set form values
-    form.value.setFieldValue('name', pattern.name)
-    form.value.setFieldValue('composer', pattern.composer)
-    form.value.setFieldValue('link', pattern.link)
-    form.value.setFieldValue('keysounded', pattern.keysounded)
-    form.value.setFieldValue('image', pattern.image)
-    form.value.setFieldValue('previews', pattern.previews)
-    form.value.setFieldValue('difficulties', pattern.difficulties)
-    form.value.setFieldValue('description', pattern.description)
+    form.setFieldValue('name', props.pattern!.name)
+    form.setFieldValue('composer', props.pattern!.composer)
+    form.setFieldValue('link', props.pattern!.link)
+    form.setFieldValue('keysounded', props.pattern!.keysounded)
+    form.setFieldValue('image', props.pattern!.image)
+    form.setFieldValue('previews', previews)
+    form.setFieldValue('difficulties', props.pattern!.difficulties)
+    form.setFieldValue('description', props.pattern!.description)
 
     // NOTE:
     // Do not use setValues, it will also validate agree field
     //
-    // form.value.setValues({
-    //   name: pattern.name,
-    //   composer: pattern.composer,
-    //   link: pattern.link,
-    //   keysounded: pattern.keysounded,
-    //   image: pattern.image,
-    //   previews: pattern.previews,
-    //   difficulties: pattern.difficulties,
-    //   description: pattern.description,
+    // form.setValues({
+    //   name: pattern.name
+    //   // ...
     // })
   }
 })

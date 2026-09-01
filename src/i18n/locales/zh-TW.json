@@ -16,6 +16,10 @@
     "language": "語言"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "一款開源音樂遊戲，不論是否使用觸控螢幕皆可遊玩。"
+    },
     "download": "遊戲下載",
     "latestVersion": "最新版本",
     "latestReleaseDate": "發布於",
@@ -25,13 +29,77 @@
     "videos": "遊戲影片"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新紀錄",
+      "description": "TECHMANIA 的更新紀錄。"
+    },
     "title": "更新紀錄",
     "downloads": "下載數",
     "showDetail": "顯示內容",
     "hideDetail": "隱藏內容",
     "error": "無法從 GitHub 載入更新紀錄"
   },
+  "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 遊玩方式",
+      "description": "一款開源音樂遊戲，不論是否使用觸控螢幕皆可遊玩。"
+    },
+    "title": "遊玩方式",
+    "scanlineNotice": "當掃描線經過音符中心時，擊打它！",
+    "tabs": {
+      "touch": "觸控",
+      "keys": "鍵盤",
+      "km": "鍵鼠"
+    },
+    "keysDesc": "鍵盤操作方式使用鍵盤上的這 4 行按鍵。\n每行按鍵對應螢幕上的 4 個軌道之一。\n要演奏特定軌道上的音符，請按下對應按鍵行中的任意按鍵。",
+    "kmDesc": "KM 代表鍵盤與滑鼠（Keyboard and Mouse）。\n在鍵鼠操作方式中，您使用滑鼠來演奏某些類型的音符（基本音符、鎖鏈音符、拖動音符），並使用鍵盤演奏其他類型（長按音符、連打音符）。\n與鍵盤操作方式不同，在這裡您可以按下任意行的任意按鍵來演奏鍵盤音符，無論它們位於哪個軌道。",
+    "notes": {
+      "basic": {
+        "title": "基本音符",
+        "touchDesc": "當掃描線經過音符中心時點擊。",
+        "keysDesc": "當掃描線經過音符中心時按下按鍵。",
+        "kmDesc": "當掃描線經過音符中心時點擊滑鼠。"
+      },
+      "chain": {
+        "title": "鎖鏈音符",
+        "touchDesc": "順著掃描線的速度，沿著鎖鏈滑動。",
+        "keysDesc": "將每個節點當作獨立的基本音符來演奏。",
+        "kmDesc": "順著掃描線的速度，點擊並沿著鎖鏈拖曳。"
+      },
+      "drag": {
+        "title": "拖動音符",
+        "touchDesc": "順著掃描線的速度，沿著曲線滑動。\n您不需要精準地按時鬆開手指。",
+        "keysDesc": "按住按鍵直到音符頭到達曲線末端。\n您不需要精準地按時鬆開按鍵。",
+        "kmDesc": "順著掃描線的速度，點擊並沿著曲線拖曳。\n您不需要精準地按時鬆開滑鼠按鍵。"
+      },
+      "hold": {
+        "title": "長按音符",
+        "touchDesc": "按住音符頭，直到掃描線到達音符末端。\n您不需要精準地按時鬆開手指。",
+        "keysDesc": "按住按鍵，直到掃描線到達音符末端。\n您不需要精準地按時鬆開按鍵。",
+        "kmDesc": "按住任意按鍵，直到掃描線到達音符末端。\n您不需要精準地按時鬆開按鍵。"
+      },
+      "repeat": {
+        "title": "連打音符",
+        "touchDesc": "當掃描線經過連打頭音符中心及其後續的小音符時進行點擊。\n對於長音符，請按住連打頭，方式與長按音符相同。",
+        "keysDesc": "當掃描線經過連打頭音符中心及其後續的小音符時按下按鍵。\n對於長音符，請按住按鍵，方式與拖動音符及長按音符相同。",
+        "kmDesc": "當掃描線經過連打頭音符中心及其後續的小音符時按下任意按鍵。\n對於長音符，請按住按鍵，方式與長按音符相同。"
+      }
+    },
+    "fever": {
+      "activateNotice": "無論使用何種操作方式，您都可以透過以下任一方式發動 Fever。",
+      "methods": {
+        "touch": "點擊 Fever 按鈕",
+        "keyboard": "按下 Space / Backspace / Numpad 0 / Numpad Enter",
+        "click": "點擊 Fever 按鈕"
+      },
+      "effect": "在 Fever 啟用期間，將會提升演奏音符的判定。"
+    }
+  },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 譜面",
+      "description": "TECHMANIA 的譜面。"
+    },
     "title": "譜面",
     "searchForm": {
       "keywords": {
@@ -64,6 +132,10 @@
     "notFound": "找不到譜面"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲：{composer}。上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -102,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新譜面",
     "titleEdit": "編輯譜面",
     "rules": {
@@ -212,6 +289,11 @@
         "required": "您必須同意使用條款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
+    },
     "submit": {
       "new": "上傳",
       "edit": "編輯"
@@ -231,7 +313,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯譜面",
       "updatePermission": "您沒有編輯這個譜面的權限",
       "updateUnauthorized": "您必須登入才能編輯譜面",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳譜面"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳譜面",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "patternCard": {
@@ -249,6 +332,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 造型",
+      "description": "TECHMANIA 的造型。"
+    },
     "title": "造型",
     "searchForm": {
       "keywords": {
@@ -273,6 +360,10 @@
     "notFound": "找不到造型"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -308,6 +399,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新造型",
     "titleEdit": "編輯造型",
     "rules": {
@@ -384,6 +480,11 @@
         "required": "您必須同意使用條款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
+    },
     "submit": {
       "new": "上傳",
       "edit": "編輯"
@@ -403,7 +504,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯造型",
       "updatePermission": "您沒有編輯這個造型的權限",
       "updateUnauthorized": "您必須登入才能編輯造型",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳造型"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳造型",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "skinCard": {
@@ -423,6 +525,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 組曲",
+      "description": "TECHMANIA 的組曲。"
+    },
     "title": "組曲",
     "searchForm": {
       "keywords": {
@@ -445,6 +551,10 @@
     "notFound": "找不到組曲"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上傳者：${submitter}。"
+    },
     "download": "下載",
     "edit": "編輯",
     "basic": {
@@ -521,6 +631,11 @@
     "updatedAt": "最後更新於 {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "請先登入以檢視",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上傳新組曲",
     "titleEdit": "編輯組曲",
     "rules": {
@@ -663,6 +778,11 @@
         "required": "您必須同意使用條款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
+    },
     "submit": {
       "new": "上傳",
       "edit": "編輯"
@@ -682,7 +802,8 @@
       "updateNotInGuild": "您必須要加入 Discord 伺服器才能編輯組曲",
       "updatePermission": "您沒有編輯這個組曲的權限",
       "updateUnauthorized": "您必須登入才能編輯組曲",
-      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳組曲"
+      "createNotInGuild": "您必須要加入 Discord 伺服器才能上傳組曲",
+      "image": "請輸入有效的預覽圖片網址。"
     }
   },
   "commentList": {
@@ -729,9 +850,18 @@
         "edit": "編輯"
       },
       "cancel": "取消"
+    },
+    "turnstile": {
+      "error": {
+        "required": "請完成安全性驗證"
+      }
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} 在 TECHMANIA 上的個人頁面。"
+    },
     "tab": {
       "patterns": "譜面",
       "skins": "造型",

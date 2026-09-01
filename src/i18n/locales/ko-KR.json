@@ -1,133 +1,887 @@
 {
   "nav": {
-    "manual": "매뉴얼",
+    "howtoplay": "플레이 방법",
+    "documentations": "문서",
     "changelog": "변경 사항",
     "patterns": "패턴",
+    "skins": "스킨",
+    "setlists": "디스크셋",
     "login": "로그인",
     "myPage": "마이페이지",
+    "submitNewPattern": "새 패턴 투고",
+    "submitNewSkin": "새 스킨 투고",
+    "submitNewSetlist": "새 디스크셋 투고",
     "logout": "로그아웃",
     "menu": "메뉴",
-    "myPatterns": "내 패턴",
-    "lang": "언어",
-    "skins": "스킨"
+    "language": "언어"
   },
-  "index": {
+  "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "터치스크린 유무에 상관없이 플레이할 수 있는 오픈 소스 리듬 게임입니다."
+    },
     "download": "다운로드",
-    "version": "최신 버전",
-    "release": "출시일: ",
-    "videos": "비디오",
-    "patterns": "최신 패턴",
-    "skins": "최신 스킨",
-    "platform": "{platform} 사용자"
+    "latestVersion": "최신 버전",
+    "latestReleaseDate": "출시일: ",
+    "newPatterns": "최신 패턴",
+    "newSkins": "최신 스킨",
+    "newSetlists": "최신 디스크셋",
+    "videos": "비디오"
   },
-  "changelog": {
+  "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 변경 사항",
+      "description": "TECHMANIA의 변경 사항입니다."
+    },
+    "title": "변경 사항",
     "downloads": "다운로드",
     "showDetail": "자세히 보기",
-    "hideDetail": "숨기기"
+    "hideDetail": "숨기기",
+    "error": "GitHub에서 데이터를 불러오지 못했습니다."
   },
-  "patterns": {
-    "all": "전체",
-    "yes": "있음",
-    "no": "없음",
-    "search": "검색",
-    "sort": "분류",
-    "sortSubmit": "투고일",
-    "sortUpdate": "갱신일",
-    "sortName": "곡명",
+  "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 플레이 방법",
+      "description": "터치스크린 유무에 상관없이 플레이할 수 있는 오픈 소스 리듬 게임입니다."
+    },
+    "title": "HOW TO PLAY",
+    "scanlineNotice": "타임라인이 노트의 중심을 지날 때 노트패드를 연주하세요!",
+    "tabs": {
+      "touch": "터치",
+      "keys": "키보드",
+      "km": "키보드/마우스"
+    },
+    "keysDesc": "키보드 플레이 방식은 키보드의 4개 행을 사용합니다.\n각 행은 화면의 4개 트랙 중 하나에 대응합니다.\n특정 트랙의 노트를 연주하려면 해당 행의 아무 키나 누르세요.",
+    "kmDesc": "KM은 키보드와 마우스(Keyboard and Mouse)를 의미합니다.\nKM 플레이 방식에서는 마우스로 일부 노트(기본 노트, 연결형 노트, 드래그 노트)를 연주하고, 키보드로 나머지 노트(홀딩 노트, 연타 노트)를 연주합니다.\n키보드 플레이 방식과 달리, 여기서는 키보드 노트를 연주할 때 위치에 상관없이 어느 행의 키든 누를 수 있습니다.",
+    "notes": {
+      "basic": {
+        "title": "기본 노트",
+        "touchDesc": "타임라인이 노트 중심을 지날 때 터치하세요.",
+        "keysDesc": "타임라인이 노트 중심을 지날 때 키를 누르세요.",
+        "kmDesc": "타임라인이 노트 중심을 지날 때 클릭하세요."
+      },
+      "chain": {
+        "title": "연결형 노트",
+        "touchDesc": "타임라인의 속도에 맞춰 연결선을 따라 드래그하세요.",
+        "keysDesc": "각 노드를 개별 기본 노트처럼 연주하세요.",
+        "kmDesc": "타임라인의 속도에 맞춰 클릭 후 연결선을 따라 드래그하세요."
+      },
+      "drag": {
+        "title": "드래그 노트",
+        "touchDesc": "타임라인의 속도에 맞춰 곡선을 따라 드래그하세요.\n정확한 타이밍에 손가락을 뗠 필요는 없습니다.",
+        "keysDesc": "노트 머리가 곡선 끝에 도달할 때까지 키를 누르고 계세요.\n정확한 타이밍에 키를 뗠 필요는 없습니다.",
+        "kmDesc": "타임라인의 속도에 맞춰 클릭 후 곡선을 따라 드래그하세요.\n정확한 타이밍에 마우스 버튼을 뗠 필요는 없습니다."
+      },
+      "hold": {
+        "title": "홀딩 노트",
+        "touchDesc": "타임라인이 노트 끝에 도달할 때까지 노트 머리를 터치하고 계세요.\n정확한 타이밍에 손가락을 뗠 필요는 없습니다.",
+        "keysDesc": "타임라인이 노트 끝에 도달할 때까지 키를 누르고 계세요.\n정확한 타이밍에 키를 뗠 필요는 없습니다.",
+        "kmDesc": "타임라인이 노트 끝에 도달할 때까지 아무 키나 누르고 계세요.\n정확한 타이밍에 키를 뗠 필요는 없습니다."
+      },
+      "repeat": {
+        "title": "연타 노트",
+        "touchDesc": "타임라인이 연타 노트 머리의 중심 및 그 뒤에 오는 작은 노트를 지날 때 터치하세요.\n긴 노트의 경우 홀딩 노트와 동일한 방식으로 노트 머리를 터치하고 계세요.",
+        "keysDesc": "타임라인이 연타 노트 머리의 중심 및 그 뒤에 오는 작은 노트를 지날 때 키를 누르세요.\n긴 노트의 경우 드래그 및 홀딩 노트와 동일한 방식으로 키를 누르고 계세요.",
+        "kmDesc": "타임라인이 연타 노트 머리의 중심 및 그 뒤에 오는 작은 노트를 지날 때 아무 키나 누르세요.\n긴 노트의 경우 홀딩 노트와 동일한 방식으로 키를 누르고 계세요."
+      }
+    },
+    "fever": {
+      "activateNotice": "플레이 방식과 관계없이 다음 방법 중 하나로 피버를 발동할 수 있습니다.",
+      "methods": {
+        "touch": "피버 버튼 터치",
+        "keyboard": "Space / Backspace / Numpad 0 / Numpad Enter 입력",
+        "click": "피버 버튼 클릭"
+      },
+      "effect": "피버가 활성화된 동안 노트 연주 판정이 완화됩니다."
+    }
+  },
+  "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 패턴",
+      "description": "TECHMANIA의 패턴 목록입니다."
+    },
+    "title": "패턴",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "키워드를 입력해 주세요..."
+      },
+      "keysounded": {
+        "label": "키사운드",
+        "all": "전체",
+        "yes": "있음",
+        "no": "없음"
+      },
+      "control": {
+        "label": "플레이 방식",
+        "touch": "터치",
+        "keys": "키보드",
+        "km": "키보드/마우스"
+      },
+      "lanes": {
+        "label": "트랙",
+        "lanes": "{lanes}트랙"
+      },
+      "sort": {
+        "label": "정렬",
+        "submit": "투고일",
+        "update": "갱신일",
+        "name": "곡명",
+        "rating": "평가"
+      }
+    },
     "notFound": "패턴이 없습니다"
   },
-  "pattern": {
-    "keysounded": "키사운드",
-    "author": "제작자: ",
-    "submitted": "투고일: ",
-    "submittedBy": "투고자: ",
-    "updated": "갱신일: ",
-    "keys": "키보드",
-    "touch": "터치",
-    "km": "키보드/마우스",
-    "composer": "작곡가: ",
-    "patternData": "패턴 데이터",
-    "description": "패턴 정보",
-    "previews": "미리보기",
-    "noPreview": "미리보기 없음",
-    "noDescription": "정보가 없습니다.",
-    "rateThisPattern": "패턴 평가하기",
-    "commentPlaceholder": "댓글을 작성하세요",
-    "edit": "편집",
+  "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "작곡가: {composer}. 투고자: ${submitter}."
+    },
     "download": "다운로드",
-    "reply": "답글",
-    "rating": "평가",
-    "ratingCount": "{count}개의 평가"
+    "edit": "편집",
+    "basic": {
+      "title": "기본 정보",
+      "composer": {
+        "label": "작곡가"
+      },
+      "submittedBy": {
+        "label": "투고자"
+      },
+      "keysounded": {
+        "label": "키사운드",
+        "yes": "있음",
+        "no": "없음"
+      },
+      "comments": {
+        "count": "{count}개의 댓글"
+      },
+      "submittedAt": {
+        "label": "투고일"
+      },
+      "updatedAt": {
+        "label": "갱신일"
+      }
+    },
+    "difficulties": {
+      "title": "난이도"
+    },
+    "description": {
+      "title": "정보",
+      "noDescription": "정보가 없습니다."
+    },
+    "previews": {
+      "title": "미리보기",
+      "noPreview": "미리보기 없음"
+    }
   },
-  "skins": {
-    "sortName": "이름",
+  "patternFormPage": {
+    "meta": {
+      "login": "로그인하여 보기",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
+    "titleNew": "새로운 패턴을 투고하기",
+    "titleEdit": "패턴 편집",
+    "rules": {
+      "title": "패턴을 투고하기 전에 규칙을 읽어 주세요.",
+      "rule1": "DJMAX 및 DJMAX RESPECT의 음악을 사용한 패턴은 엄격히 금지됩니다.",
+      "rule2": "모든 이미지 및 BGA는 성인 콘텐츠를 포함해서는 안 됩니다.",
+      "rule3": "다른 사람이 제작한 패턴을 업로드하는 것은 허용되지 않습니다."
+    },
+    "basic": {
+      "title": "기본 정보",
+      "name": {
+        "label": "곡명",
+        "error": {
+          "required": "곡명을 입력해야 합니다"
+        }
+      },
+      "composer": {
+        "label": "작곡가",
+        "error": {
+          "required": "작곡가를 입력해야 합니다"
+        }
+      },
+      "download": {
+        "label": "다운로드 링크",
+        "error": {
+          "required": "다운로드 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      },
+      "keysounded": {
+        "label": "키사운드",
+        "error": {
+          "required": "키사운드 여부를 선택해야 합니다"
+        }
+      },
+      "image": {
+        "label": "미리보기 이미지",
+        "error": {
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 미리보기",
+      "name": {
+        "label": "이름",
+        "error": {
+          "required": "이름을 입력해야 합니다"
+        }
+      },
+      "link": {
+        "label": "YouTube 링크",
+        "error": {
+          "required": "YouTube 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요.",
+          "youtube": "유효한 YouTube URL을 입력해 주세요."
+        }
+      }
+    },
+    "difficulties": {
+      "title": "난이도",
+      "control": {
+        "label": "플레이 방식",
+        "touch": "터치",
+        "keys": "키보드",
+        "km": "키보드/마우스",
+        "error": {
+          "required": "플레이 방식을 선택해야 합니다",
+          "invalid": "유효하지 않은 플레이 방식입니다"
+        }
+      },
+      "lanes": {
+        "label": "트랙",
+        "error": {
+          "required": "트랙을 입력해야 합니다",
+          "min": "유효하지 않은 트랙 수입니다",
+          "max": "유효하지 않은 트랙 수입니다"
+        }
+      },
+      "name": {
+        "label": "이름",
+        "error": {
+          "required": "이름을 입력해야 합니다"
+        }
+      },
+      "level": {
+        "label": "레벨",
+        "error": {
+          "required": "레벨을 입력해야 합니다",
+          "min": "레벨은 0보다 커야 합니다"
+        }
+      }
+    },
+    "description": {
+      "title": "정보"
+    },
+    "dangerZone": {
+      "title": "위험 구역",
+      "delete": {
+        "label": "삭제",
+        "button": "이 패턴을 삭제하기"
+      }
+    },
+    "tos": {
+      "tos": "서비스 이용약관",
+      "label": "패턴을 투고할 시 {tos}을 읽고 동의한 것으로 간주합니다.",
+      "error": {
+        "required": "먼저 약관에 동의해야 합니다."
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "보안 확인을 완료해 주세요."
+      }
+    },
+    "submit": {
+      "new": "투고",
+      "edit": "갱신"
+    },
+    "deleteDialog": {
+      "text": "정말로 이 패턴을 삭제하시겠습니까?",
+      "no": "취소",
+      "yes": "예, 삭제합니다"
+    },
+    "result": {
+      "submitted": "투고에 성공했습니다.",
+      "deleted": "삭제되었습니다.",
+      "updated": "업데이트에 성공했습니다.",
+      "deleteNotInGuild": "이 패턴을 삭제하려면 Discord 서버에 참가해야 합니다.",
+      "deletePermission": "이 패턴을 삭제할 권한이 없습니다.",
+      "deleteUnauthorized": "이 패턴을 삭제하려면 로그인해야 합니다.",
+      "updateNotInGuild": "이 패턴을 업데이트하려면 Discord 서버에 참가해야 합니다.",
+      "updatePermission": "이 패턴을 업데이트할 권한이 없습니다.",
+      "updateUnauthorized": "이 패턴을 업데이트하려면 로그인해야 합니다.",
+      "createNotInGuild": "새로운 패턴을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
+    }
+  },
+  "patternCard": {
+    "comments": {
+      "count": "{count}개의 댓글"
+    },
+    "submittedBy": "투고자: {name}",
+    "submittedAt": "투고일: {date}",
+    "updatedAt": "갱신일: {date}",
+    "keysounded": "키사운드",
+    "control": {
+      "touch": "터치",
+      "keys": "키보드",
+      "km": "키보드/마우스"
+    }
+  },
+  "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 스킨",
+      "description": "TECHMANIA의 스킨 목록입니다."
+    },
+    "title": "스킨",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "키워드를 입력해 주세요..."
+      },
+      "type": {
+        "label": "스킨 종류",
+        "note": "노트",
+        "vfx": "쿨밤",
+        "combo": "콤보",
+        "gameUI": "게임 UI",
+        "theme": "테마"
+      },
+      "sort": {
+        "label": "정렬",
+        "submit": "투고일",
+        "update": "갱신일",
+        "name": "스킨 이름",
+        "rating": "평가"
+      }
+    },
     "notFound": "스킨이 없습니다"
   },
-  "skin": {
-    "note": "노트",
-    "vfx": "쿨밤",
-    "combo": "콤보",
-    "gameUI": "게임 UI",
-    "skinData": "스킨 데이터",
-    "description": "스킨 상세정보",
-    "rateThisSkin": "스킨 평가하기"
+  "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "투고자: ${submitter}."
+    },
+    "download": "다운로드",
+    "edit": "편집",
+    "basic": {
+      "title": "기본 정보",
+      "submittedBy": {
+        "label": "투고자"
+      },
+      "type": {
+        "label": "스킨 종류",
+        "note": "노트",
+        "vfx": "쿨밤",
+        "combo": "콤보",
+        "gameUI": "게임 UI",
+        "theme": "테마"
+      },
+      "comments": {
+        "count": "{count}개의 댓글"
+      },
+      "submittedAt": {
+        "label": "투고일"
+      },
+      "updatedAt": {
+        "label": "갱신일"
+      }
+    },
+    "description": {
+      "title": "정보",
+      "noDescription": "정보가 없습니다."
+    },
+    "previews": {
+      "title": "미리보기",
+      "noPreview": "미리보기 없음"
+    }
   },
-  "submitForm": {
-    "composer": "작곡가",
-    "control": "플레이 방식",
-    "dangerZone": "위험 구역",
-    "delete": "이 패턴을 삭제하기",
-    "deleteNo": "취소",
-    "deleteText": "정말로 이 패턴을 삭제하시겠습니까?",
-    "deleteYes": "예, 삭제합니다",
-    "description": "정보",
-    "difficulties": "난이도",
-    "dlLink": "다운로드 링크",
-    "editTitle": "패턴 편집",
-    "errorGuild": "새로운 패턴을 투고하려면 Discord 서버에 참가해야 합니다.",
-    "errorServer": "서버 오류",
-    "errorUnauthorized": "허가되지 않은 요청",
-    "lanes": "트랙",
-    "level": "레벨",
-    "name": "이름",
-    "preview": "YouTube 미리보기",
-    "rules1": "DJMAX 및 DJMAX RESPECT의 음악을 사용한 패턴은 엄격히 금지됩니다.",
-    "rules2": "모든 이미지 및 BGA는 성인 컨텐츠를 포함해서는 안 됩니다.",
-    "rules3": "다른 사람이 제작한 패턴을 업로드하는 것은 허용되지 않습니다.",
-    "rulesTitle": "패턴을 투고하기 전에 규칙을 읽어 주세요.",
-    "songName": "곡명",
-    "submit": "투고",
-    "title": "새로운 패턴을 투고하기",
-    "ytLink": "YouTube 링크",
-    "required": "필수",
-    "invalidLink": "유효한 URL을 입력해 주세요.",
-    "submitted": "투고에 성공했습니다.",
-    "updated": "업데이트에 성공했습니다.",
-    "deleted": "삭제되었습니다.",
-    "agreetos": "패턴을 투고할 시 <a href=\"{tosURL}\" target=\"_blank\">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.",
-    "agreetos2": "먼저 약관에 동의해야 합니다.",
-    "invalidPreviews": "유효하지 않은 YouTube 미리보기 링크 또는 이름입니다."
+  "skinFormPage": {
+    "meta": {
+      "login": "로그인하여 보기",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
+    "titleNew": "새 스킨 투고",
+    "titleEdit": "스킨 편집",
+    "rules": {
+      "title": "스킨을 투고하기 전에 규칙을 읽어 주세요.",
+      "rule1": "DJMAX 및 DJMAX RESPECT에서 가져온 스킨은 엄격히 금지됩니다.",
+      "rule2": "모든 구성요소는 성인 콘텐츠를 포함해서는 안 됩니다.",
+      "rule3": "다른 사람의 스킨을 업로드하는 것은 허용되지 않습니다."
+    },
+    "basic": {
+      "title": "기본 정보",
+      "name": {
+        "label": "스킨 이름",
+        "error": {
+          "required": "스킨 이름을 입력해야 합니다"
+        }
+      },
+      "type": {
+        "label": "스킨 종류",
+        "note": "노트",
+        "vfx": "쿨밤",
+        "combo": "콤보",
+        "gameUI": "게임 UI",
+        "theme": "테마",
+        "error": {
+          "required": "스킨 종류를 선택해야 합니다",
+          "invalid": "유효하지 않은 스킨 종류입니다"
+        }
+      },
+      "download": {
+        "label": "다운로드 링크",
+        "error": {
+          "required": "다운로드 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      },
+      "image": {
+        "label": "미리보기 이미지",
+        "error": {
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 미리보기",
+      "name": {
+        "label": "이름",
+        "error": {
+          "required": "이름을 입력해야 합니다"
+        }
+      },
+      "link": {
+        "label": "YouTube 링크",
+        "error": {
+          "required": "YouTube 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요.",
+          "youtube": "유효한 YouTube URL을 입력해 주세요."
+        }
+      }
+    },
+    "description": {
+      "title": "정보"
+    },
+    "dangerZone": {
+      "title": "위험 구역",
+      "delete": {
+        "label": "삭제",
+        "button": "이 스킨을 삭제하기"
+      }
+    },
+    "tos": {
+      "tos": "서비스 이용약관",
+      "label": "스킨을 투고할 시 {tos}을 읽고 동의한 것으로 간주합니다.",
+      "error": {
+        "required": "먼저 약관에 동의해야 합니다."
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "보안 확인을 완료해 주세요."
+      }
+    },
+    "submit": {
+      "new": "투고",
+      "edit": "갱신"
+    },
+    "deleteDialog": {
+      "text": "정말로 이 스킨을 삭제하시겠습니까?",
+      "no": "취소",
+      "yes": "예, 삭제합니다"
+    },
+    "result": {
+      "submitted": "투고에 성공했습니다.",
+      "deleted": "삭제되었습니다.",
+      "updated": "업데이트에 성공했습니다.",
+      "deleteNotInGuild": "이 스킨을 삭제하려면 Discord 서버에 참가해야 합니다.",
+      "deletePermission": "이 스킨을 삭제할 권한이 없습니다.",
+      "deleteUnauthorized": "이 스킨을 삭제하려면 로그인해야 합니다.",
+      "updateNotInGuild": "이 스킨을 업데이트하려면 Discord 서버에 참가해야 합니다.",
+      "updatePermission": "이 스킨을 업데이트할 권한이 없습니다.",
+      "updateUnauthorized": "이 스킨을 업데이트하려면 로그인해야 합니다.",
+      "createNotInGuild": "새로운 스킨을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
+    }
   },
-  "submitSkinForm": {
-    "title": "새 스킨 투고",
-    "editTitle": "스킨 편집",
-    "rules1": "DJMAX 및 DJMAX RESPECT에서 가져온 스킨은 엄격히 금지됩니다.",
-    "rules2": "모든 구성요소는 성인 컨텐츠를 포함해서는 안 됩니다.",
-    "rules3": "다른 사람의 스킨을 업로드하는 것은 허용되지 않습니다.",
-    "rulesTitle": "스킨을 투고하기 전에 규칙을 읽어 주세요.",
-    "skinName": "스킨 이름",
-    "skinType": "스킨 종류",
-    "agreetos": "스킨을 투고할 시 <a href=\"{tosURL}\" target=\"_blank\">서비스 이용약관</a>을 읽고 동의한 것으로 간주합니다.",
-    "delete": "이 스킨을 삭제하기"
+  "skinCard": {
+    "comments": {
+      "count": "{count}개의 댓글"
+    },
+    "submittedBy": "투고자: {name}",
+    "submittedAt": "투고일: {date}",
+    "updatedAt": "갱신일: {date}",
+    "type": {
+      "label": "스킨 종류",
+      "note": "노트",
+      "vfx": "쿨밤",
+      "combo": "콤보",
+      "gameUI": "게임 UI",
+      "theme": "테마"
+    }
   },
-  "comment": {
-    "comments": "댓글",
-    "deleted": "삭제됨",
-    "editComment": "댓글 수정",
-    "editReply": "답글 수정",
-    "reply": "답글",
-    "deleteCommentConfirm": "댓글을 삭제하시겠습니까?",
-    "deleteReplyConfirm": "답글을 삭제하시겠습니까?",
-    "noComment": "댓글이 없습니다."
+  "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 디스크셋",
+      "description": "TECHMANIA의 디스크셋 목록입니다."
+    },
+    "title": "디스크셋",
+    "searchForm": {
+      "keywords": {
+        "placeholder": "키워드를 입력해 주세요..."
+      },
+      "control": {
+        "label": "플레이 방식",
+        "touch": "터치",
+        "keys": "키보드",
+        "km": "키보드/마우스"
+      },
+      "sort": {
+        "label": "정렬",
+        "submit": "투고일",
+        "update": "갱신일",
+        "name": "디스크셋 이름",
+        "rating": "평가"
+      }
+    },
+    "notFound": "디스크셋이 없습니다"
+  },
+  "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "투고자: ${submitter}."
+    },
+    "download": "다운로드",
+    "edit": "편집",
+    "basic": {
+      "title": "기본 정보",
+      "submittedBy": {
+        "label": "투고자"
+      },
+      "comments": {
+        "count": "{count}개의 댓글"
+      },
+      "submittedAt": {
+        "label": "투고일"
+      },
+      "updatedAt": {
+        "label": "갱신일"
+      },
+      "control": {
+        "label": "플레이 방식",
+        "touch": "터치",
+        "keys": "키보드",
+        "km": "키보드/마우스"
+      },
+      "patterns": {
+        "label": "패턴"
+      }
+    },
+    "description": {
+      "title": "정보",
+      "noDescription": "정보가 없습니다."
+    },
+    "previews": {
+      "title": "미리보기",
+      "noPreview": "미리보기 없음"
+    },
+    "selectablePatterns": {
+      "title": "선택 가능 패턴"
+    },
+    "hiddenPatterns": {
+      "title": "히든 패턴",
+      "criteriaType": {
+        "index": "순번",
+        "level": "난이도",
+        "hp": "HP%",
+        "score": "점수",
+        "combo": "콤보",
+        "maxCombo": "최대 콤보",
+        "d100": "D100",
+        "none": "없음"
+      },
+      "criteriaDirection": {
+        "lower": "<",
+        "greater": ">"
+      }
+    }
+  },
+  "setlistCard": {
+    "comments": {
+      "count": "{count}개의 댓글"
+    },
+    "submittedBy": "투고자: {name}",
+    "submittedAt": "투고일: {date}",
+    "updatedAt": "갱신일: {date}",
+    "selectablePatterns": "선택 가능 패턴",
+    "hiddenPatterns": "히든 패턴",
+    "control": {
+      "label": "플레이 방식",
+      "touch": "터치",
+      "keys": "키보드",
+      "km": "키보드/마우스"
+    }
+  },
+  "setlistPatternCard": {
+    "submittedAt": "투고일: {date}",
+    "updatedAt": "갱신일: {date}"
+  },
+  "setlistFormPage": {
+    "meta": {
+      "login": "로그인하여 보기",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
+    "titleNew": "새 디스크셋 투고",
+    "titleEdit": "디스크셋 편집",
+    "rules": {
+      "title": "디스크셋을 투고하기 전에 규칙을 읽어 주세요.",
+      "rule1": "DJMAX 및 DJMAX RESPECT의 리소스를 사용한 디스크셋은 엄격히 금지됩니다.",
+      "rule2": "모든 리소스는 성인 콘텐츠를 포함해서는 안 됩니다.",
+      "rule3": "다른 사람의 디스크셋을 업로드하는 것은 허용되지 않습니다."
+    },
+    "basic": {
+      "title": "기본 정보",
+      "name": {
+        "label": "디스크셋 이름",
+        "error": {
+          "required": "디스크셋 이름을 입력해야 합니다"
+        }
+      },
+      "download": {
+        "label": "다운로드 링크",
+        "error": {
+          "required": "다운로드 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      },
+      "image": {
+        "label": "미리보기 이미지",
+        "error": {
+          "invalid": "유효한 URL을 입력해 주세요."
+        }
+      },
+      "control": {
+        "label": "플레이 방식",
+        "touch": "터치",
+        "keys": "키보드",
+        "km": "키보드/마우스",
+        "error": {
+          "required": "플레이 방식을 선택해야 합니다",
+          "invalid": "유효하지 않은 플레이 방식입니다"
+        }
+      }
+    },
+    "selectablePatterns": {
+      "title": "선택 가능 패턴",
+      "name": {
+        "label": "이름",
+        "searchNotFound": "패턴이 없습니다",
+        "error": {
+          "required": "패턴을 선택해야 합니다",
+          "invalid": "유효하지 않은 패턴입니다",
+          "notFound": "패턴을 찾을 수 없습니다"
+        }
+      },
+      "difficulty": {
+        "label": "난이도",
+        "searchNotFound": "난이도가 없습니다",
+        "error": {
+          "required": "난이도를 선택해야 합니다",
+          "invalid": "유효하지 않은 난이도입니다"
+        }
+      }
+    },
+    "hiddenPatterns": {
+      "title": "히든 패턴",
+      "name": {
+        "label": "이름",
+        "searchNotFound": "패턴이 없습니다",
+        "error": {
+          "required": "패턴을 선택해야 합니다",
+          "invalid": "유효하지 않은 패턴입니다",
+          "notFound": "패턴을 찾을 수 없습니다"
+        }
+      },
+      "difficulty": {
+        "label": "난이도",
+        "searchNotFound": "난이도가 없습니다",
+        "error": {
+          "required": "난이도를 선택해야 합니다",
+          "invalid": "유효하지 않은 난이도입니다"
+        }
+      },
+      "criteriaType": {
+        "label": "조건 종류",
+        "index": "순번",
+        "level": "난이도",
+        "hp": "HP%",
+        "score": "점수",
+        "combo": "콤보",
+        "maxCombo": "최대 콤보",
+        "d100": "D100",
+        "none": "없음",
+        "error": {
+          "required": "조건을 선택해야 합니다",
+          "lastType": "조건 '없음'은 마지막 히든 패턴에만 적용 가능합니다"
+        }
+      },
+      "criteriaDirection": {
+        "label": "조건 부등호",
+        "error": {
+          "required": "조건 부등호를 선택해야 합니다"
+        }
+      },
+      "criteriaValue": {
+        "label": "조건 값",
+        "error": {
+          "required": "조건 값을 입력해야 합니다",
+          "min": "조건 값은 0보다 커야 합니다"
+        }
+      }
+    },
+    "preview": {
+      "title": "YouTube 미리보기",
+      "name": {
+        "label": "이름",
+        "error": {
+          "required": "이름을 입력해야 합니다"
+        }
+      },
+      "link": {
+        "label": "YouTube 링크",
+        "error": {
+          "required": "YouTube 링크를 입력해야 합니다",
+          "invalid": "유효한 URL을 입력해 주세요.",
+          "youtube": "유효한 YouTube URL을 입력해 주세요."
+        }
+      }
+    },
+    "description": {
+      "title": "정보"
+    },
+    "dangerZone": {
+      "title": "위험 구역",
+      "delete": {
+        "label": "삭제",
+        "button": "이 디스크셋을 삭제하기"
+      }
+    },
+    "tos": {
+      "tos": "서비스 이용약관",
+      "label": "디스크셋을 투고할 시 {tos}을 읽고 동의한 것으로 간주합니다.",
+      "error": {
+        "required": "먼저 약관에 동의해야 합니다."
+      }
+    },
+    "turnstile": {
+      "error": {
+        "required": "보안 확인을 완료해 주세요."
+      }
+    },
+    "submit": {
+      "new": "투고",
+      "edit": "갱신"
+    },
+    "deleteDialog": {
+      "text": "정말로 이 디스크셋을 삭제하시겠습니까?",
+      "no": "취소",
+      "yes": "예, 삭제합니다"
+    },
+    "result": {
+      "submitted": "투고에 성공했습니다.",
+      "deleted": "삭제되었습니다.",
+      "updated": "업데이트에 성공했습니다.",
+      "deleteNotInGuild": "이 디스크셋을 삭제하려면 Discord 서버에 참가해야 합니다.",
+      "deletePermission": "이 디스크셋을 삭제할 권한이 없습니다.",
+      "deleteUnauthorized": "이 디스크셋을 삭제하려면 로그인해야 합니다.",
+      "updateNotInGuild": "이 디스크셋을 업데이트하려면 Discord 서버에 참가해야 합니다.",
+      "updatePermission": "이 디스크셋을 업데이트할 권한이 없습니다.",
+      "updateUnauthorized": "이 디스크셋을 업데이트하려면 로그인해야 합니다.",
+      "createNotInGuild": "새로운 디스크셋을 투고하려면 Discord 서버에 참가해야 합니다.",
+      "image": "유효한 미리보기 이미지 URL을 입력해 주세요."
+    }
+  },
+  "commentList": {
+    "commentForm": {
+      "title": {
+        "pattern": "패턴 평가하기",
+        "skin": "스킨 평가하기",
+        "setlist": "디스크셋 평가하기"
+      },
+      "submit": "투고",
+      "comment": {
+        "error": {
+          "required": "댓글을 입력해야 합니다"
+        }
+      },
+      "rating": {
+        "error": {
+          "required": "평점을 입력해야 합니다",
+          "min": "유효하지 않은 평점입니다",
+          "max": "유효하지 않은 평점입니다"
+        }
+      }
+    },
+    "replyForm": {
+      "comment": {
+        "error": {
+          "required": "댓글을 입력해야 합니다"
+        }
+      }
+    },
+    "comments": {
+      "title": "댓글",
+      "notFound": "댓글이 없습니다."
+    },
+    "dialog": {
+      "title": {
+        "comment": "내 댓글 수정",
+        "reply": "답글",
+        "edit": "내 답글 수정"
+      },
+      "submit": {
+        "comment": "갱신",
+        "reply": "투고",
+        "edit": "갱신"
+      },
+      "cancel": "취소"
+    },
+    "turnstile": {
+      "error": {
+        "required": "보안 확인을 완료해 주세요."
+      }
+    }
+  },
+  "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} 님의 TECHMANIA 마이페이지."
+    },
+    "tab": {
+      "patterns": "패턴",
+      "skins": "스킨",
+      "comments": "댓글",
+      "setlists": "디스크셋"
+    },
+    "patterns": {
+      "notFound": "패턴이 없습니다"
+    },
+    "skins": {
+      "notFound": "스킨이 없습니다"
+    },
+    "comments": {
+      "notFound": "댓글이 없습니다"
+    },
+    "setlists": {
+      "notFound": "디스크셋이 없습니다"
+    }
+  },
+  "error": {
+    "unknown": "서버 오류가 발생했습니다. 다시 시도하시거나 Discord 서버에서 개발자에게 문의하세요."
   }
 }

@@ -16,6 +16,10 @@
     "language": "语言"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "一款开源音乐游戏，无论是否使用触屏皆可游玩。"
+    },
     "download": "下载",
     "latestVersion": "最新版本",
     "latestReleaseDate": "发布于",
@@ -25,13 +29,77 @@
     "videos": "视频"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新历史",
+      "description": "TECHMANIA 的更新历史。"
+    },
     "title": "更新历史",
     "downloads": "下载次数",
     "showDetail": "展开",
     "hideDetail": "收起",
     "error": "无法从 GitHub 加载更新历史"
   },
+  "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 游戏说明",
+      "description": "一款开源音乐游戏，无论是否使用触屏皆可游玩。"
+    },
+    "title": "游戏说明",
+    "scanlineNotice": "当扫描线经过音符中心时，击打它！",
+    "tabs": {
+      "touch": "触屏",
+      "keys": "键盘",
+      "km": "键鼠"
+    },
+    "keysDesc": "键盘操作方式使用键盘上的这 4 行按键。\n每行按键对应屏幕上的 4 个轨道之一。\n要演奏特定轨道上的音符，请按下对应按键行中的任意按键。",
+    "kmDesc": "KM 代表键盘与鼠标（Keyboard and Mouse）。\n在键鼠操作方式中，你使用鼠标来演奏某些类型的音符（基本音符、锁链音符、拖拽音符），并使用键盘演奏其他类型（长按音符、连打音符）。\n与键盘操作方式不同，在这里你可以按下任意行的任意按键来演奏键盘音符，无论它们位于哪个轨道。",
+    "notes": {
+      "basic": {
+        "title": "基本音符",
+        "touchDesc": "当扫描线经过音符中心时轻触。",
+        "keysDesc": "当扫描线经过音符中心时按下按键。",
+        "kmDesc": "当扫描线经过音符中心时点击鼠标。"
+      },
+      "chain": {
+        "title": "锁链音符",
+        "touchDesc": "顺着扫描线的速度，沿着锁链滑动。",
+        "keysDesc": "将每个节点当作独立的基本音符来演奏。",
+        "kmDesc": "顺着扫描线的速度，点击并沿着锁链拖拽。"
+      },
+      "drag": {
+        "title": "拖拽音符",
+        "touchDesc": "顺着扫描线的速度，沿着曲线滑动。\n你不需要精准地按时松开手指。",
+        "keysDesc": "按住按键直到音符头到达曲线末端。\n你不需要精准地按时松开按键。",
+        "kmDesc": "顺着扫描线的速度，点击并沿着曲线拖拽。\n你不需要精准地按时松开鼠标按键。"
+      },
+      "hold": {
+        "title": "长按音符",
+        "touchDesc": "按住音符头，直到扫描线到达音符末端。\n你不需要精准地按时松开手指。",
+        "keysDesc": "按住按键，直到扫描线到达音符末端。\n你不需要精准地按时松开按键。",
+        "kmDesc": "按住任意按键，直到扫描线到达音符末端。\n你不需要精准地按时松开按键。"
+      },
+      "repeat": {
+        "title": "连打音符",
+        "touchDesc": "当扫描线经过连打头音符中心及其后续的小音符时进行轻触。\n对于长音符，请按住连打头，方式与长按音符相同。",
+        "keysDesc": "当扫描线经过连打头音符中心及其后续的小音符时按下按键。\n对于长音符，请按住按键，方式与拖拽音符及长按音符相同。",
+        "kmDesc": "当扫描线经过连打头音符中心及其后续的小音符时按下任意按键。\n对于长音符，请按住按键，方式与长按音符相同。"
+      }
+    },
+    "fever": {
+      "activateNotice": "无论使用何种操作方式，你都可以通过以下任一方式发动 Fever。",
+      "methods": {
+        "touch": "轻触 Fever 按钮",
+        "keyboard": "按下 Space / Backspace / Numpad 0 / Numpad Enter",
+        "click": "点击 Fever 按钮"
+      },
+      "effect": "在 Fever 激活期间，将会提升演奏音符的判定。"
+    }
+  },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 谱面",
+      "description": "TECHMANIA 的谱面。"
+    },
     "title": "谱面",
     "searchForm": {
       "keywords": {
@@ -64,6 +132,10 @@
     "notFound": "找不到谱面"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲：{composer}。上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
@@ -72,7 +144,7 @@
         "label": "作曲家"
       },
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "keysounded": {
         "label": "按键音",
@@ -102,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新谱面",
     "titleEdit": "编辑谱面",
     "rules": {
@@ -212,6 +289,11 @@
         "required": "您必须同意使用条款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
+    },
     "submit": {
       "new": "上传",
       "edit": "编辑"
@@ -231,14 +313,15 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑谱面",
       "updatePermission": "您没有权限编辑此谱面",
       "updateUnauthorized": "您需要登录才能编辑谱面",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传谱面"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传谱面",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "patternCard": {
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "keysounded": "按键音",
@@ -249,6 +332,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 皮肤",
+      "description": "TECHMANIA 的皮肤。"
+    },
     "title": "皮肤",
     "searchForm": {
       "keywords": {
@@ -273,12 +360,16 @@
     "notFound": "找不到皮肤"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
       "title": "皮肤详情",
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "type": {
         "label": "类型",
@@ -308,6 +399,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新皮肤",
     "titleEdit": "编辑皮肤",
     "rules": {
@@ -384,6 +480,11 @@
         "required": "您必须同意使用条款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
+    },
     "submit": {
       "new": "上传",
       "edit": "编辑"
@@ -403,14 +504,15 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑皮肤",
       "updatePermission": "您没有权限编辑此皮肤",
       "updateUnauthorized": "您需要登录才能编辑皮肤",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传皮肤"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传皮肤",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "skinCard": {
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "type": {
@@ -423,6 +525,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 组曲",
+      "description": "TECHMANIA 的组曲。"
+    },
     "title": "组曲",
     "searchForm": {
       "keywords": {
@@ -445,12 +551,16 @@
     "notFound": "找不到组曲"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "上传者：${submitter}。"
+    },
     "download": "下载",
     "edit": "编辑",
     "basic": {
       "title": "组曲详情",
       "submittedBy": {
-        "label": "提交者"
+        "label": "上传者"
       },
       "comments": {
         "count": "{count} 个评论"
@@ -504,7 +614,7 @@
     "comments": {
       "count": "{count} 个评论"
     },
-    "submittedBy": "提交者：{name}",
+    "submittedBy": "上传者：{name}",
     "submittedAt": "上传时间：{date}",
     "updatedAt": "最后更新时间：{date}",
     "selectablePatterns": "可选谱面",
@@ -521,6 +631,11 @@
     "updatedAt": "最后更新时间：{date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "请登录后查看",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "上传新组曲",
     "titleEdit": "编辑组曲",
     "rules": {
@@ -663,6 +778,11 @@
         "required": "您必须同意使用条款"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
+    },
     "submit": {
       "new": "上传",
       "edit": "编辑"
@@ -682,7 +802,8 @@
       "updateNotInGuild": "您需要加入 Discord 服务器才能编辑组曲",
       "updatePermission": "您没有权限编辑此组曲",
       "updateUnauthorized": "您需要登录才能编辑组曲",
-      "createNotInGuild": "您需要加入 Discord 服务器才能上传组曲"
+      "createNotInGuild": "您需要加入 Discord 服务器才能上传组曲",
+      "image": "请输入有效的预览图网址。"
     }
   },
   "commentList": {
@@ -729,9 +850,18 @@
         "edit": "编辑"
       },
       "cancel": "取消"
+    },
+    "turnstile": {
+      "error": {
+        "required": "请完成安全性验证"
+      }
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} 在 TECHMANIA 上的主页。"
+    },
     "tab": {
       "patterns": "谱面",
       "skins": "皮肤",

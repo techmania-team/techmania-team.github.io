@@ -1,0 +1,162 @@
+<template lang="pug">
+q-page#changelog
+  //- Header
+  q-parallax.q-mb-xl.header-parallax(:height="200")
+    //- Header image background
+    template(#media)
+      img(src="/assets/header-changelog.png")
+    //- Header content
+    template(#content)
+      h4.text-center {{ $t('changelogPage.title') }}
+  section.container
+    .row
+      //- Title
+      .col-12(v-if="releases.length === 0 && !hasError")
+        q-item(v-for="i in 3" :key="i")
+          q-item-section(avatar)
+            q-skeleton(type='QAvatar')
+          q-item-section
+            q-item-label
+              q-skeleton(type='text')
+            q-item-label(caption)
+              q-skeleton(type='text' width='65%')
+      .col-12(v-if="hasError")
+        h6.text-center {{ $t('changelogPage.error') }} }}
+      .col-12(v-else)
+        //- Timeline
+        q-timeline(color="tech" transition-show="fade")
+          q-timeline-entry(
+            v-for="release in releases"
+            :key="release.node_id"
+            :subtitle="toLocaleString(release.published_at)"
+          )
+            template(#title)
+              //- Timeline title
+              h4.q.q-timeline__title
+                //- Release name
+                | {{ release.name.length === 0 ? release.tag_name : release.name }}
+                | &nbsp;
+                //- Download button
+                q-btn.q-mr-xs(flat round icon="download" color="tech" :href="release.html_url" target="_blank")
+                //- Downloads count
+                img(:src="'https://img.shields.io/github/downloads/techmania-team/techmania/' + release.tag_name +'/total?label=' + $t('changelogPage.downloads')")
+            q-separator
+            //- Detail collapse button
+            q-btn.full-width(flat align="between" @click="release.expand = !release.expand" :label="release.expand ? $t('changelogPage.hideDetail') : $t('changelogPage.showDetail')" :icon-right="release.expand ? 'expand_less' : 'expand_more'")
+            //- Release detail
+            q-slide-transition
+              div(v-if="release.expand")
+                q-markdown.q-pa-md(:src="release.body")
+</template>
+
+<script setup lang="ts">
+import type { IChangelog } from '@/types/info'
+import { useMeta } from 'quasar'
+import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { getChangelogs } from '@/services/info'
+import { toLocaleString } from '@/utils/date'
+import { handleError } from '@/utils/handleError'
+
+interface IChangelogExpand extends IChangelog {
+  expand: boolean
+}
+
+const route = useRoute()
+const { t } = useI18n()
+
+const metaData = () => ({
+  title: t('changelogPage.meta.title'),
+  meta: {
+    color: {
+      name: 'theme-color',
+      content: '#E74C3C',
+    },
+    title: {
+      name: 'title',
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
+    },
+    description: {
+      name: 'description',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
+    },
+    ogType: {
+      property: 'og:type',
+      content: 'website',
+    },
+    ogUrl: {
+      property: 'og:url',
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
+    },
+    ogTitle: {
+      property: 'og:title',
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
+    },
+    ogDescription: {
+      property: 'og:description',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
+    },
+    ogImage: {
+      property: 'og:image',
+      content:
+        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+    },
+    twCard: {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    twUrl: {
+      name: 'twitter:url',
+      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
+    },
+    twTitle: {
+      name: 'twitter:title',
+      content: t('changelogPage.meta.title'),
+      'data-dynamic': true,
+    },
+    twDescription: {
+      name: 'twitter:description',
+      content: t('changelogPage.meta.description'),
+      'data-dynamic': true,
+    },
+    twImage: {
+      name: 'twitter:image',
+      content:
+        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
+    },
+  },
+})
+useMeta(metaData)
+
+const releases = ref<IChangelogExpand[]>([])
+const hasError = ref(false)
+
+onMounted(async () => {
+  if (import.meta.env.QUASAR_CLIENT) {
+    try {
+      // Get releases from GitHub
+      const { data } = await getChangelogs()
+      releases.value = data.result.map((data) => {
+        return {
+          ...data,
+          expand: false,
+        }
+      })
+    } catch (error) {
+      hasError.value = true
+      handleError(error)
+    }
+  }
+})
+</script>
+
+<route lang="yaml">
+name: changelog
+meta:
+  login: false
+</route>

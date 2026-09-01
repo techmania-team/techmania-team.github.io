@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Disallow form pages (create/edit) with locale prefix
+Disallow: /*/patterns/new
+Disallow: /*/patterns/*/edit
+Disallow: /*/skins/new
+Disallow: /*/skins/*/edit
+Disallow: /*/setlists/new
+Disallow: /*/setlists/*/edit
+
+# Disallow API
+Disallow: /api/
+
+Sitemap: https://techmania-team.herokuapp.com/sitemap.xml

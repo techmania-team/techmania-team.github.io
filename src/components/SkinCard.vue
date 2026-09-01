@@ -22,7 +22,7 @@ q-card.full-height.card-skin
       //- Type
       q-item
         q-item-section
-          span {{ $t('skinCard.type.label') }}: {{ $t('skinCard.type.' + types[skin.type]) }}
+          span {{ $t('skinCard.type.label') }}: {{ (Array.isArray(skin.type) ? skin.type : [skin.type]).map((t) => $t('skinCard.type.' + SKINTYPES[t])).join(', ') }}
       //- Rating
       q-item
         q-item-section
@@ -34,7 +34,7 @@ q-card.full-height.card-skin
           p
             i18n-t(keypath="skinCard.submittedBy" tag="span" v-if="!mine")
               template(#name)
-                router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'skins', id: skin.submitter._id}})") {{ skin.submitter.name }}
+                router-link.no-underline(:to="getI18nRoute({ name: 'profile-skins', params: { id: skin.submitter._id}})") {{ skin.submitter.name }}
             br(v-if="!mine")
             i18n-t(keypath="skinCard.submittedAt" tag="span")
               template(#date)
@@ -49,18 +49,19 @@ q-card.full-height.card-skin
                   | {{ formattedUpdateTime.text }}
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import type { ISkin } from '@/types/skin'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import * as date from 'src/utils/date'
-import { getYouTubeThumbnail } from 'src/utils/youtube'
-import { types } from 'src/utils/skin'
-import { getI18nRoute } from 'src/i18n'
+import { getI18nRoute } from '@/i18n'
+import * as date from '@/utils/date'
+import { SKINTYPES } from '@/utils/skin'
+import { getYouTubeThumbnail } from '@/utils/youtube'
 
-const props = defineProps({
-  skin: Object,
-  mine: Boolean,
-})
+const props = defineProps<{
+  skin: ISkin
+  mine: boolean
+}>()
 
 const video = ref(false)
 const videoLink = ref('')
@@ -84,9 +85,9 @@ const formattedUpdateTime = computed(() => {
   }
 })
 
-const clickHeader = () => {
+const clickHeader = async () => {
   if (hasVideo.value) video.value = true
-  else router.push(getI18nRoute({ name: 'skin', params: { id: props.skin._id } }))
+  else await router.push(getI18nRoute({ name: 'skin', params: { id: props.skin._id } }))
 }
 
 onMounted(() => {
@@ -97,7 +98,7 @@ onMounted(() => {
     props.skin.image?.length > 0
       ? props.skin.image
       : props.skin.previews.length > 0
-        ? getYouTubeThumbnail(props.skin.previews[0].ytid)
+        ? getYouTubeThumbnail(props.skin.previews[0]!.ytid)
         : '/assets/unknown.jpg'
 })
 </script>

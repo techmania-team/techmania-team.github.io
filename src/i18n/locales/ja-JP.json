@@ -2,7 +2,7 @@
   "nav": {
     "howtoplay": "遊び方",
     "documentations": "ドキュメント",
-    "changelog": "チェンジログ",
+    "changelog": "更新履歴",
     "patterns": "パターン",
     "skins": "スキン",
     "setlists": "セットリスト",
@@ -16,6 +16,10 @@
     "language": "言語"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "タッチパネルの有無を問わずプレイできる、オープンソースの音ゲー。"
+    },
     "download": "ダウンロード",
     "latestVersion": "最新バージョン",
     "latestReleaseDate": "リリーズ日: ",
@@ -25,13 +29,77 @@
     "videos": "ビデオ"
   },
   "changelogPage": {
-    "title": "チェンジログ",
+    "meta": {
+      "title": "TECHMANIA {'|'} 更新履歴",
+      "description": "TECHMANIA の更新履歴。"
+    },
+    "title": "更新履歴",
     "downloads": "ダウンロード",
     "showDetail": "詳細を表示",
     "hideDetail": "詳細を非表示",
     "error": "GitHubからデータの読み込みに失敗しました。"
   },
+  "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} 遊び方",
+      "description": "タッチパネルの有無を問わずプレイできる、オープンソースの音ゲー。"
+    },
+    "title": "遊び方",
+    "scanlineNotice": "スキャンラインがノートの中心を通過したときにプレイしよう！",
+    "tabs": {
+      "touch": "タッチ",
+      "keys": "キーボード",
+      "km": "キーボード・マウス"
+    },
+    "keysDesc": "キーボード操作では、キーボードの4行のキーを使用します。\n各行は画面上の4つのレーンのいずれかに対応しています。\n特定レーンのノートをプレイするには、対応する行のいずれかのキーを押します。",
+    "kmDesc": "KMはキーボード・マウス（Keyboard and Mouse）の略です。\nKM操作では、一部のノート（基本、チェーン、ドラッグ）をマウスで、その他のノート（ホールド、リピート）をキーボードでプレイします。\nキーボード操作と異なり、キーボード用ノートはどのレーンにあっても任意の行のキーでプレイできます。",
+    "notes": {
+      "basic": {
+        "title": "基本ノート",
+        "touchDesc": "スキャンラインがノートの中心を通過したときにタッチします。",
+        "keysDesc": "スキャンラインがノートの中心を通過したときにキーを押します。",
+        "kmDesc": "スキャンラインがノートの中心を通過したときにクリックします。"
+      },
+      "chain": {
+        "title": "チェーンノート",
+        "touchDesc": "スキャンラインの速度に合わせて、チェーンに沿ってドラッグします。",
+        "keysDesc": "各ノードを独立した基本ノートとしてプレイします。",
+        "kmDesc": "スキャンラインの速度に合わせて、チェーンに沿ってクリック＆ドラッグします。"
+      },
+      "drag": {
+        "title": "ドラッグノート",
+        "touchDesc": "スキャンラインの速度に合わせて、曲線に沿ってドラッグします。\nタイミング通りに指を離す必要はありません。",
+        "keysDesc": "ノートヘッドが曲線の終点に達するまでキーを押し続けます。\nタイミング通りにキーを離す必要はありません。",
+        "kmDesc": "スキャンラインの速度に合わせて、曲線に沿ってクリック＆ドラッグします。\nタイミング通りにマウスボタンを離す必要はありません。"
+      },
+      "hold": {
+        "title": "ホールドノート",
+        "touchDesc": "スキャンラインがノートの終点に達するまで、ノートヘッドを押し続けます。\nタイミング通りに指を離す必要はありません。",
+        "keysDesc": "スキャンラインがノートの終点に達するまで、キーを押し続けます。\nタイミング通りにキーを離す必要はありません。",
+        "kmDesc": "スキャンラインがノートの終点に達するまで、任意のキーを押し続けます。\nタイミング通りにキーを離す必要はありません。"
+      },
+      "repeat": {
+        "title": "リピートノート",
+        "touchDesc": "スキャンラインがリピートヘッドの中心および後続の小さいノートを通過したときにタッチします。\nロングノートの場合は、ホールドノートと同様にリピートヘッドを押し続けます。",
+        "keysDesc": "スキャンラインがリピートヘッドの中心および後続の小さいノートを通過したときにキーを押します。\nロングノートの場合は、ドラッグやホールドノートと同様にキーを押し続けます。",
+        "kmDesc": "スキャンラインがリピートヘッドの中心および後続の小さいノートを通過したときに任意のキーを押します。\nロングノートの場合は、ホールドノートと同様にキーを押し続けます。"
+      }
+    },
+    "fever": {
+      "activateNotice": "操作方法に関わらず、以下のいずれかの方法でフィーバーを発動できます。",
+      "methods": {
+        "touch": "フィーバーボタンをタッチする",
+        "keyboard": "Space / Backspace / テンキー 0 / テンキー Enter を押す",
+        "click": "フィーバーボタンをクリックする"
+      },
+      "effect": "フィーバー発動中は、プレイするノートの判定が緩和されます。"
+    }
+  },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} パターン",
+      "description": "TECHMANIA のパターン。"
+    },
     "title": "パターン",
     "searchForm": {
       "keywords": {
@@ -64,6 +132,10 @@
     "notFound": "パターンがありません"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "作曲家：{composer}。投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -102,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいパターンを投稿",
     "titleEdit": "パターン編集",
     "rules": {
@@ -212,6 +289,11 @@
         "required": "規約に同意する必要があります"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
+    },
     "submit": {
       "new": "投稿",
       "edit": "編集"
@@ -231,7 +313,8 @@
       "updateNotInGuild": "パターンを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このパターンを編集する権限がありません",
       "updateUnauthorized": "このパターンを編集するにはログインする必要があります",
-      "createNotInGuild": "パターンを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "パターンを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "patternCard": {
@@ -249,6 +332,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} スキン",
+      "description": "TECHMANIA のスキン。"
+    },
     "title": "スキン",
     "searchForm": {
       "keywords": {
@@ -273,6 +360,10 @@
     "notFound": "スキンがありません"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -308,6 +399,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいスキンを投稿",
     "titleEdit": "スキン編集",
     "rules": {
@@ -384,6 +480,11 @@
         "required": "規約に同意する必要があります"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
+    },
     "submit": {
       "new": "投稿",
       "edit": "編集"
@@ -403,7 +504,8 @@
       "updateNotInGuild": "スキンを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このスキンを編集する権限がありません",
       "updateUnauthorized": "このスキンを編集するにはログインする必要があります",
-      "createNotInGuild": "スキンを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "スキンを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "skinCard": {
@@ -423,6 +525,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} セットリスト",
+      "description": "TECHMANIA のセットリスト。"
+    },
     "title": "セットリスト",
     "searchForm": {
       "keywords": {
@@ -445,6 +551,10 @@
     "notFound": "セットリストがありません"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "投稿者：${submitter}。"
+    },
     "download": "ダウンロード",
     "edit": "編集",
     "basic": {
@@ -521,6 +631,11 @@
     "updatedAt": "更新日: {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "ログインして表示",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "新しいセットリストを投稿",
     "titleEdit": "セットリスト編集",
     "rules": {
@@ -663,6 +778,11 @@
         "required": "規約に同意する必要があります"
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
+    },
     "submit": {
       "new": "投稿",
       "edit": "編集"
@@ -682,7 +802,8 @@
       "updateNotInGuild": "セットリストを編集するにはDiscordサーバーに参加する必要があります",
       "updatePermission": "このセットリストを編集する権限がありません",
       "updateUnauthorized": "このセットリストを編集するにはログインする必要があります",
-      "createNotInGuild": "セットリストを投稿するにはDiscordサーバーに参加する必要があります"
+      "createNotInGuild": "セットリストを投稿するにはDiscordサーバーに参加する必要があります",
+      "image": "有効なサムネイル画像URLを入力してください。"
     }
   },
   "commentList": {
@@ -729,9 +850,18 @@
         "edit": "編集"
       },
       "cancel": "キャンセル"
+    },
+    "turnstile": {
+      "error": {
+        "required": "セキュリティの確認を完了してください"
+      }
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name} の TECHMANIA マイページ。"
+    },
     "tab": {
       "patterns": "パターン",
       "skins": "スキン",

@@ -7,29 +7,28 @@ q-no-ssr.row.q-gutter-y-lg
       q-separator.q-mb-md(inset)
       q-item
         q-item-section
-          Form(v-slot="{ isSubmitting, handleSubmit }" :validation-schema="rateSchema" :initial-values="rateInitialValues" ref="commentFormRef" as="")
-            q-form(@submit.prevent="handleSubmit($event, onCommentSubmit)")
-              Field(name="comment" v-slot="{ field, errorMessage }")
-                q-input(
-                  type="textarea"
-                  outlined square color="tech"
-                  :model-value="field.value"
-                  @update:model-value="field.onChange($event)"
-                  @blur="field.onBlur($event)"
-                  :error-message="errorMessage"
-                  :error="!!errorMessage"
+            q-form(@submit.prevent="onCommentSubmit")
+              q-input(
+                type="textarea"
+                outlined square color="tech"
+                v-model="commentField"
+                :error-message="form.errors.value.comment"
+                :error="!!form.errors.value.comment"
+              )
+              .text-center
+                q-rating(
+                  :max="5"
+                  v-model="ratingField"
+                  icon="star" size="2em"
                 )
-              Field(name="rating" v-slot="{ field, errorMessage }")
-                .text-center
-                  q-rating(
-                    :max="5"
-                    :model-value="field.value"
-                    @update:model-value="field.onChange($event)"
-                    icon="star" size="2em"
-                  )
-                .text-center.text-negative(v-if="!!errorMessage") {{ errorMessage }}
+              .text-center.text-negative(v-if="!!form.errors.value.rating") {{ form.errors.value.rating }}
+              .q-mt-md.row.justify-center
+                cf-turnstile(
+                  v-model="turnstileTokenMain"
+                  action="comment-create"
+                )
               .q-mt-md.text-center
-                q-btn(:label="$t('commentList.commentForm.submit')" color="tech" text-color="black" type="submit" :loading="isSubmitting" style="width: 150px")
+                q-btn(:label="$t('commentList.commentForm.submit')" color="tech" text-color="black" type="submit" :loading="form.isSubmitting.value" style="width: 150px" :disable="!turnstileTokenMain")
   //- Comments
   .col-12
     q-list
@@ -52,7 +51,7 @@ q-no-ssr.row.q-gutter-y-lg
                       DiscordAvatar(:avatar="reply.user.avatar")
                     .col-auto
                       //- User name
-                      router-link.no-underline(:to="getI18nRoute({ name: 'profile', params: { tab: 'comments', id: reply.user._id }})") {{ reply.user.name }}
+                      router-link.no-underline(:to="getI18nRoute({ name: 'profile-comments', params: { id: reply.user._id }})") {{ reply.user.name }}
                       //- Rating
                       template(v-if="ridx === 0")
                         br
@@ -72,14 +71,14 @@ q-no-ssr.row.q-gutter-y-lg
                       flat round dense color="tech" size="sm"
                       :icon="reply.votes.voted != 1 ? 'keyboard_arrow_up' : 'arrow_drop_up'"
                       :disable="!user.isLogin"
-                      @click="voteReply(comment._id, reply._id, reply.votes.voted, 1)"
+                      @click="voteReply(comment._id, reply._id, cidx, ridx, reply.votes.voted, 1)"
                     )
                     span {{ reply.votes.sum }}
                     q-btn(
                       flat round dense color="tech" size="sm"
                       :icon="reply.votes.voted != -1 ? 'keyboard_arrow_down' : 'arrow_drop_down'"
                       :disable="!user.isLogin"
-                      @click="voteReply(comment._id, reply._id, reply.votes.voted, -1)"
+                      @click="voteReply(comment._id, reply._id, cidx, ridx, reply.votes.voted, -1)"
                     )
                   //- Other actions
                   template(v-if="user.isLogin")
@@ -102,62 +101,61 @@ q-no-ssr.row.q-gutter-y-lg
   //- Edit dialog
   q-dialog(v-model="editDialog.open" persistent)
     q-card(rounded style="width: 700px; max-width: 80vw;")
-      Form(
-        :validation-schema="editDialog.mode === DIALOG_MODE.EDIT_MY_COMMENT ? rateSchema : replySchema"
-        :initial-values="editDialog.mode === DIALOG_MODE.EDIT_MY_COMMENT ? rateInitialValues : replyInitialValues"
-        ref="dialogFormRef" as=""
-        v-slot="{ handleSubmit, isSubmitting }"
-      )
-        q-form(@submit.prevent="handleSubmit($event, onCommentSubmit)")
+        q-form(@submit.prevent="onDialogSubmit")
           q-card-section.text-center.text-h6
             | {{ $t('commentList.dialog.title.' + editDialog.mode) }}
           q-card-section
-            Field(name="comment" v-slot="{ field, errorMessage }")
-              q-input(
-                type="textarea"
-                outlined square color="tech"
-                :model-value="field.value"
-                @update:model-value="field.onChange($event)"
-                @blur="field.onBlur($event)"
-                :error-message="errorMessage"
-                :error="!!errorMessage"
-              )
-            Field(
-              name="rating" v-slot="{ field, errorMessage }"
-              v-if="editDialog.mode === DIALOG_MODE.EDIT_MY_COMMENT"
+            q-input(
+              type="textarea"
+              outlined square color="tech"
+              v-model="commentField"
+              :error-message="form.errors.value.comment"
+              :error="!!form.errors.value.comment"
             )
+            template(v-if="editDialog.mode == DIALOG_MODE.EDIT_MY_COMMENT")
               .text-center
                 q-rating(
                   :max="5"
-                  :model-value="field.value"
-                  @update:model-value="field.onChange($event)"
+                  v-model="ratingField"
                   icon="star" size="2em"
                 )
-              .text-center.text-negative(v-if="!!errorMessage") {{ errorMessage }}
+              .text-center.text-negative(v-if="!!form.errors.value.rating") {{ form.errors.value.rating }}
+          .row.justify-center.q-my-md
+            cf-turnstile(
+              v-model="turnstileTokenDialog"
+              :action="dialogTurnstileAction"
+              :key="editDialog.mode"
+            )
           q-separator
           q-card-actions(align="around")
-            q-btn(flat :label="$t('commentList.dialog.cancel')" color="red" :loading="isSubmitting" v-close-popup )
-            q-btn(flat :label="$t('commentList.dialog.submit.' + editDialog.mode)" color="green" :loading="isSubmitting" @click="handleSubmit($event, onDialogSubmit)")
+            q-btn(flat :label="$t('commentList.dialog.cancel')" color="red" :loading="form.isSubmitting.value" v-close-popup )
+            q-btn(flat :label="$t('commentList.dialog.submit.' + editDialog.mode)" color="green" :loading="form.isSubmitting.value" @click="onDialogSubmit" :disable="!turnstileTokenDialog")
 </template>
 
-<script setup>
-import { ref, computed, onMounted, useTemplateRef, nextTick } from 'vue'
-import { Form, Field } from 'vee-validate'
-import * as yup from 'yup'
+<script setup lang="ts">
+import type { IComment, ICommentReply } from '@/types/comment'
+import { AxiosError } from 'axios'
+import { useQuasar } from 'quasar'
+import { useForm } from 'vee-validate'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useReCaptcha } from 'vue-recaptcha-v3'
-import * as date from 'src/utils/date'
-import api from 'src/utils/api'
-import { useUserStore } from 'src/stores/user'
-import { getI18nRoute } from 'src/i18n'
-import { handleError } from 'src/utils/handleError'
-import DiscordAvatar from 'src/components/DiscordAvatar.vue'
+import * as yup from 'yup'
+import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import { getI18nRoute } from '@/i18n'
+import * as commentService from '@/services/comment'
+import { useUserStore } from '@/stores/user'
+import * as date from '@/utils/date'
+import { handleError } from '@/utils/handleError'
+import CfTurnstile from './CfTurnstile.vue'
 
+const $q = useQuasar()
 const user = useUserStore()
-const recaptcha = useReCaptcha()
 const { t } = useI18n()
 
 const loaded = ref(false)
+
+const turnstileTokenMain = ref('')
+const turnstileTokenDialog = ref('')
 
 // Props
 const props = defineProps({
@@ -165,7 +163,7 @@ const props = defineProps({
   type: {
     type: String,
     required: true,
-    validator(value) {
+    validator(value: string) {
       return ['pattern', 'skin', 'setlist'].includes(value)
     },
   },
@@ -177,13 +175,14 @@ const props = defineProps({
 })
 
 // Other users' comments
-const otherComments = ref([])
+const otherComments = ref<IComment[]>([])
 // Current user's comment
-const myComment = ref({
+const myComment = ref<IComment>({
   _id: '',
   rating: 0,
   replies: [],
 })
+
 // All comments for the pattern
 const comments = computed(() => {
   if (myComment.value._id === '') {
@@ -192,57 +191,73 @@ const comments = computed(() => {
   return [myComment.value, ...otherComments.value]
 })
 
-// Form refs
-const commentFormRef = useTemplateRef('commentFormRef')
-const dialogFormRef = useTemplateRef('dialogFormRef')
-// Rate form validation schema
-const rateSchema = yup.object({
+// Form
+const schema = yup.object({
   comment: yup.string().required(() => t('commentList.commentForm.comment.error.required')),
   rating: yup
     .number()
-    .typeError(() => t('commentList.commentForm.rating.error.required'))
-    .required(() => t('commentList.commentForm.rating.error.required'))
-    .min(1, () => t('commentList.commentForm.rating.error.min'))
-    .max(5, () => t('commentList.commentForm.rating.error.max')),
+    .nullable()
+    .when([], {
+      // rating is not required in reply mode
+      is: () => editDialog.value.mode === DIALOG_MODE.REPLY,
+      then: (schema) => schema.optional().nullable(),
+      otherwise: (schema) =>
+        schema
+          .typeError(() => t('commentList.commentForm.rating.error.required'))
+          .required(() => t('commentList.commentForm.rating.error.required'))
+          .min(1, () => t('commentList.commentForm.rating.error.min'))
+          .max(5, () => t('commentList.commentForm.rating.error.max')),
+    }),
 })
-// Rate form initial values
-const rateInitialValues = {
-  comment: '',
-  rating: 0,
-}
-// Reply form validation schema
-const replySchema = yup.object({
-  comment: yup.string().required(() => t('commentList.replyForm.comment.error.required')),
+
+const form = useForm({
+  validationSchema: schema,
+  initialValues: {
+    comment: '',
+    rating: 0,
+  },
 })
-// Reply form initial values
-const replyInitialValues = {
-  comment: '',
+const [commentField] = form.defineField('comment')
+const [ratingField] = form.defineField('rating')
+
+enum DIALOG_MODE {
+  // Edit my comment
+  EDIT_MY_COMMENT = 'comment',
+  // Reply to a comment
+  REPLY = 'reply',
+  // Edit a reply
+  EDIT_MY_REPLY = 'edit',
 }
 
-const DIALOG_MODE = {
-  // Edit my comment
-  EDIT_MY_COMMENT: 'comment',
-  // Reply to a comment
-  REPLY: 'reply',
-  // Edit a reply
-  EDIT_MY_REPLY: 'edit',
-}
+const dialogTurnstileAction = computed(() => {
+  switch (editDialog.value.mode) {
+    case DIALOG_MODE.REPLY:
+      return 'comment-createReply'
+    case DIALOG_MODE.EDIT_MY_COMMENT:
+      return 'comment-updateMyComment'
+    case DIALOG_MODE.EDIT_MY_REPLY:
+      return 'comment-updateMyReply'
+    default:
+      return ''
+  }
+})
+
 const editDialog = ref({
   // Open or close dialog
   open: false,
   // Dialog mode
-  mode: DIALOG_MODE.COMMENT,
+  mode: DIALOG_MODE.EDIT_MY_COMMENT,
   cid: '',
   rid: '',
-  cidx: '',
-  ridx: '',
+  cidx: -1,
+  ridx: -1,
 })
 
-const openDialog = async (reply, cidx, ridx, mode) => {
+const openDialog = async (reply: ICommentReply, cidx: number, ridx: number, mode: DIALOG_MODE) => {
   // Set dialog values
   editDialog.value.mode = mode
   editDialog.value.open = true
-  editDialog.value.cid = comments.value[cidx]._id
+  editDialog.value.cid = comments.value[cidx]!._id
   editDialog.value.rid = reply._id
   editDialog.value.cidx = cidx
   editDialog.value.ridx = ridx
@@ -251,27 +266,44 @@ const openDialog = async (reply, cidx, ridx, mode) => {
   await nextTick()
 
   // Reset the form
-  dialogFormRef.value.resetForm()
+  form.resetForm()
 
   // Set the form values
+  // Note:
+  // rating is not needed in reply,
+  // but i'm too lazy to split forms, make rating field optional, or solve typescript errors.
+  // that's why i set 5 here as a simple workaround
+  form.setFieldValue('rating', 5)
+
   if (mode === DIALOG_MODE.REPLY) {
-    dialogFormRef.value.setFieldValue('comment', '')
+    form.setFieldValue('comment', '')
   } else if (mode === DIALOG_MODE.EDIT_MY_COMMENT) {
-    dialogFormRef.value.setFieldValue('comment', myComment.value.replies[0].comment)
-    dialogFormRef.value.setFieldValue('rating', myComment.value.rating)
+    form.setFieldValue('comment', myComment.value.replies[0]!.comment)
+    form.setFieldValue('rating', myComment.value.rating)
   } else if (mode === DIALOG_MODE.EDIT_MY_REPLY) {
-    dialogFormRef.value.setFieldValue('comment', myComment.value.replies[ridx].comment)
+    form.setFieldValue('comment', myComment.value.replies[ridx]!.comment)
   }
 }
 
-const onDialogSubmit = async (values) => {
+const onDialogSubmit = form.handleSubmit(async (values) => {
   try {
+    if (!turnstileTokenDialog.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('commentList.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
     if (editDialog.value.mode === DIALOG_MODE.REPLY) {
       // Send reply request
-      const token = await recaptcha.executeRecaptcha('reply')
-      const { data } = await api.post(`/comments/${editDialog.value.cid}/replies`, {
+      const { data } = await commentService.createReply(editDialog.value.cid, {
         comment: values.comment,
-        'g-recaptcha-response': token,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the comment
       const comment = {
@@ -290,49 +322,59 @@ const onDialogSubmit = async (values) => {
         myComment.value.replies.push(comment)
       } else {
         const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
-        otherComments.value[cidx].replies.push(comment)
+        otherComments.value[cidx]!.replies.push(comment)
       }
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_COMMENT) {
       // Send edit comment request
-      const token = await recaptcha.executeRecaptcha('editMyComment')
-      await api.patch(`/comments/${editDialog.value.cid}`, {
+      await commentService.updateMyComment(editDialog.value.cid, {
         comment: values.comment,
         rating: values.rating,
-        'g-recaptcha-response': token,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the comment
-      myComment.value.replies[0].comment = values.comment
+      myComment.value.replies[0]!.comment = values.comment
       myComment.value.rating = values.rating
     } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_REPLY) {
       // Send edit reply request
-      const token = await recaptcha.executeRecaptcha('editMyReply')
-      await api.patch(`/comments/${editDialog.value.cid}/replies/${editDialog.value.rid}`, {
+      await commentService.updateMyReply(editDialog.value.cid, editDialog.value.rid, {
         comment: values.comment,
-        'g-recaptcha-response': token,
+        'cf-turnstile-response': turnstileTokenDialog.value,
       })
       // Update the reply
       const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
       if (editDialog.value.cid === myComment.value._id) {
-        myComment.value.replies[editDialog.value.ridx].comment = values.comment
+        myComment.value.replies[editDialog.value.ridx]!.comment = values.comment
       } else {
-        otherComments[cidx].replies[editDialog.value.ridx].comment = values.comment
+        otherComments.value[cidx]!.replies[editDialog.value.ridx]!.comment = values.comment
       }
     }
     editDialog.value.open = false
   } catch (error) {
     handleError(error)
+    turnstileTokenDialog.value = ''
   }
-}
+})
 
-const onCommentSubmit = async (values) => {
+const onCommentSubmit = form.handleSubmit(async (values) => {
   try {
+    if (!turnstileTokenMain.value) {
+      $q.notify({
+        icon: 'warning',
+        message: t('commentList.turnstile.error.required'),
+        color: 'warning',
+        position: 'top',
+        timeout: 2000,
+      })
+      $q.loading.hide()
+      return
+    }
+
     // Send comment request
-    const token = await recaptcha.executeRecaptcha('comment')
-    const { data } = await api.post(`/comments`, {
+    const { data } = await commentService.create({
       comment: values.comment,
       rating: values.rating,
       [props.type]: props.id,
-      'g-recaptcha-response': token,
+      'cf-turnstile-response': turnstileTokenMain.value,
     })
     // Set my comment
     myComment.value._id = data.result._id
@@ -340,36 +382,41 @@ const onCommentSubmit = async (values) => {
     myComment.value.replies = data.result.replies
   } catch (error) {
     handleError(error)
+    turnstileTokenMain.value = ''
   }
-}
+})
 
 /**
  * Vote a reply
- * @param commentId Comment id
- * @param replyId Reply id
+ * @param cid Comment id
+ * @param rid Reply id
+ * @param cidx Comment index
+ * @param ridx Reply index
  * @param voted Current vote value
  * @param value Vote value to set, 0 = No vote, 1 = Upvote, -1 = Downvote
  */
-const voteReply = async (cid, rid, voted, value) => {
+const voteReply = async (
+  cid: string,
+  rid: string,
+  cidx: number,
+  ridx: number,
+  voted: number,
+  value: number,
+) => {
   try {
     // Send vote request
-    const token = await recaptcha.executeRecaptcha('vote')
     const newValue = voted === value ? 0 : value
-    await api.patch(`/comments/${cid}/replies/${rid}/votes`, {
+    await commentService.updateReplyVote(cid, rid, {
       vote: newValue,
-      'g-recaptcha-response': token,
     })
 
     // Update value
     if (cid === myComment.value._id) {
-      const idx = myComment.value.replies.findIndex((reply) => reply._id === rid)
-      myComment.value.replies[idx].votes.voted = newValue
-      myComment.value.replies[idx].votes.sum += newValue - voted
+      myComment.value.replies[ridx]!.votes.voted = newValue
+      myComment.value.replies[ridx]!.votes.sum += newValue - voted
     } else {
-      const comment = otherComments.value.find((comment) => comment._id === cid)
-      const idx = comment.replies.findIndex((reply) => reply._id === rid)
-      comment.replies[idx].votes.voted = newValue
-      comment.replies[idx].votes.sum += newValue - voted
+      otherComments.value[cidx]!.replies[ridx]!.votes.voted = newValue
+      otherComments.value[cidx]!.replies[ridx]!.votes.sum += newValue - voted
     }
   } catch (error) {
     handleError(error)
@@ -381,14 +428,10 @@ const voteReply = async (cid, rid, voted, value) => {
  * @param commentId Comment id
  * @param replyId Reply id
  */
-const deleteMyReply = async (cid, rid, cidx, ridx) => {
+const deleteMyReply = async (cid: string, rid: string, cidx: number, ridx: number) => {
   try {
     // Send delete request
-    const token = await recaptcha.executeRecaptcha('deleteReply')
-    await api.patch(`/comments/${cid}/replies/${rid}`, {
-      deleted: true,
-      'g-recaptcha-response': token,
-    })
+    await commentService.deleteMyReply(cid, rid)
     // Update the comment
     if (cid === myComment.value._id) {
       if (ridx === 0) {
@@ -400,7 +443,7 @@ const deleteMyReply = async (cid, rid, cidx, ridx) => {
       }
     } else {
       const realCidx = myComment.value._id === '' ? cidx : cidx - 1
-      otherComments.value[realCidx].replies.splice(ridx, 1)
+      otherComments.value[realCidx]?.replies?.splice(ridx, 1)
     }
   } catch (error) {
     handleError(error)
@@ -410,21 +453,38 @@ const deleteMyReply = async (cid, rid, cidx, ridx) => {
 onMounted(async () => {
   try {
     // Fetch other comments
-    const { data } = await api.get(`/comments/${props.type}/${props.id}`)
-    // Set other comments
-    otherComments.value = data.result
+    let commentsData
+    if (props.type === 'pattern') {
+      commentsData = await commentService.getByPattern(props.id)
+    } else if (props.type === 'skin') {
+      commentsData = await commentService.getBySkin(props.id)
+    } else if (props.type === 'setlist') {
+      commentsData = await commentService.getBySetlist(props.id)
+    }
+    if (commentsData) {
+      otherComments.value = commentsData.data.result
+    }
 
     // Fetch my comment if user is logged in
     if (user.isLogin) {
-      const { data } = await api.get(`/comments/${props.type}/${props.id}/my`)
-      myComment.value._id = data.result._id
-      myComment.value.rating = data.result.rating
-      myComment.value.replies = data.result.replies
+      let myCommentData
+      if (props.type === 'pattern') {
+        myCommentData = await commentService.getMyCommmentByPattern(props.id)
+      } else if (props.type === 'skin') {
+        myCommentData = await commentService.getMyCommmentBySkin(props.id)
+      } else if (props.type === 'setlist') {
+        myCommentData = await commentService.getMyCommmentBySetlist(props.id)
+      }
+      if (myCommentData) {
+        myComment.value._id = myCommentData.data.result._id
+        myComment.value.rating = myCommentData.data.result.rating
+        myComment.value.replies = myCommentData.data.result.replies
+      }
     }
   } catch (error) {
     // Don't need to show error if the comment is not found
     // Maybe this pattern, skin or setlist doesn't have any comments
-    if (error.response.status !== 404) {
+    if (error instanceof AxiosError && error?.response?.status !== 404) {
       handleError(error)
     }
   }

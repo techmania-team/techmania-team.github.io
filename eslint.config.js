@@ -1,17 +1,13 @@
 import js from '@eslint/js'
-import globals from 'globals'
-import pluginVue from 'eslint-plugin-vue'
 import pluginQuasar from '@quasar/app-vite/eslint'
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting'
-import { FlatCompat } from '@eslint/eslintrc'
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import perfectionist from 'eslint-plugin-perfectionist'
+import pluginVue from 'eslint-plugin-vue'
+import pluginVuePug from 'eslint-plugin-vue-pug'
+import globals from 'globals'
 
-const __filename = fileURLToPath(import.meta.url) // I think these two are only needed for Vite based projects
-const __dirname = dirname(__filename)
-const compat = new FlatCompat({ baseDirectory: __dirname })
-
-export default [
+export default defineConfigWithVueTs(
   {
     /**
      * Ignore the following files.
@@ -21,17 +17,10 @@ export default [
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-    ignores: [
-      '/dist',
-      '/src-bex/www',
-      '/src-capacitor',
-      '/src-cordova',
-      '/.quasar',
-      '/node_modules',
-    ],
+    // ignores: []
   },
 
-  ...pluginQuasar.configs.recommended(),
+  pluginQuasar.configs.recommended(),
   js.configs.recommended,
 
   /**
@@ -46,8 +35,17 @@ export default [
    * pluginVue.configs["flat/recommended"]
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
-  ...pluginVue.configs['flat/essential'],
-  ...compat.extends('plugin:vue-pug/vue3-recommended'),
+  pluginVue.configs['flat/essential'],
+  ...pluginVuePug.configs['flat/essential'],
+
+  {
+    files: ['**/*.ts', '**/*.vue'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+    },
+  },
+  // https://github.com/vuejs/eslint-config-typescript
+  vueTsConfigs.recommendedTypeChecked,
 
   {
     languageOptions: {
@@ -69,6 +67,7 @@ export default [
     // add your custom rules here
     rules: {
       'prefer-promise-reject-errors': 'off',
+      'vue/multi-word-component-names': 'off',
 
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -76,7 +75,7 @@ export default [
   },
 
   {
-    files: ['src-pwa/custom-service-worker.js'],
+    files: ['src-pwa/sw/**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.serviceworker,
@@ -85,4 +84,48 @@ export default [
   },
 
   prettierSkipFormatting,
-]
+
+  {
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      'perfectionist/sort-imports': [
+        'error',
+        {
+          groups: [
+            'type',
+            ['type-parent', 'type-sibling', 'type-index', 'type-internal'],
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling', 'index'],
+            'side-effect',
+            'unknown',
+          ],
+          newlinesBetween: 'ignore',
+          order: 'asc',
+          type: 'natural',
+        },
+      ],
+      'perfectionist/sort-named-imports': [
+        'error',
+        {
+          order: 'asc',
+          type: 'natural',
+        },
+      ],
+    },
+  },
+
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
+)

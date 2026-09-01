@@ -16,6 +16,10 @@
     "language": "Language"
   },
   "indexPage": {
+    "meta": {
+      "title": "TECHMANIA",
+      "description": "An open source rhythm game, playable with or without a touchscreen."
+    },
     "download": "Download",
     "latestVersion": "Latest Version",
     "latestReleaseDate": "Released at ",
@@ -25,13 +29,77 @@
     "videos": "Videos"
   },
   "changelogPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Changelog",
+      "description": "Changelog of TECHMANIA."
+    },
     "title": "Changelog",
     "downloads": "Downloads",
     "showDetail": "Show Detail",
     "hideDetail": "Hide Detail",
     "error": "Failed to load data from GitHub."
   },
+  "howtoplayPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} How To Play",
+      "description": "An open source rhythm game, playable with or without a touchscreen."
+    },
+    "title": "HOW TO PLAY",
+    "scanlineNotice": "When a scanline passes the center of a note, play it!",
+    "tabs": {
+      "touch": "Touch",
+      "keys": "Keys",
+      "km": "KM"
+    },
+    "keysDesc": "The Keys control scheme uses these 4 rows of keys on your keyboard.\nEach row corresponds to one of four lanes on the screen.\nTo play a note in a certain lane, press any key in the corresponding row.",
+    "kmDesc": "KM stands for Keyboard and Mouse.\nIn the KM control scheme, you use the mouse to play some types of notes (basic, chain, drag), and the keyboard to play the other types (hold, repeat).\nDifferent from the Keys control scheme, here you can press any key in any row to play the keyboard notes, wherever they are.",
+    "notes": {
+      "basic": {
+        "title": "Basic Note",
+        "touchDesc": "Touch the note when the scanline passes its center.",
+        "keysDesc": "Press a key when the scanline passes the note’s center.",
+        "kmDesc": "Click the note when the scanline passes its center."
+      },
+      "chain": {
+        "title": "Chain Note",
+        "touchDesc": "Touch and drag along the chain, following the speed of the scanline.",
+        "keysDesc": "Play each node as a separate basic note.",
+        "kmDesc": "Click and drag along the chain, following the speed of the scanline."
+      },
+      "drag": {
+        "title": "Drag Note",
+        "touchDesc": "Touch and drag along the curve, following the speed of the scanline.\nYou do not need to release your finger on time.",
+        "keysDesc": "Press and hold a key until the note head reaches the end of the curve.\nYou do not need to release the key on time.",
+        "kmDesc": "Click and drag along the curve, following the speed of the scanline.\nYou do not need to release the mouse button on time."
+      },
+      "hold": {
+        "title": "Hold Note",
+        "touchDesc": "Touch and hold your finger on the note head, until the scanline reaches the end of the note.\nYou do not need to release your finger on time.",
+        "keysDesc": "Press and hold a key until the scanline reaches the end of the note.\nYou do not need to release the key on time.",
+        "kmDesc": "Press and hold any key until the scanline reaches the end of the note.\nYou do not need to release the key on time."
+      },
+      "repeat": {
+        "title": "Repeat Note",
+        "touchDesc": "Touch the note head when the scanline passes its center, as well as any little note after it.\nFor long notes, hold your finger on the note head, the same way as with hold notes.",
+        "keysDesc": "Press a key when the scanline passes the note head’s center, as well as any little note after it.\nFor long notes, hold the key, the same way as with drag and hold notes.",
+        "kmDesc": "Press any key when the scanline passes the note head’s center, as well as any little note after it.\nFor long notes, hold the key, the same way as with hold notes."
+      }
+    },
+    "fever": {
+      "activateNotice": "Regardless of control scheme, you can activate Fever in any of the following ways.",
+      "methods": {
+        "touch": "Touching the Fever button",
+        "keyboard": "Pressing Space/Backspace/Numpad 0/Numpad Enter",
+        "click": "Clicking the Fever button"
+      },
+      "effect": "While active, Fever will improve the judgement of notes played."
+    }
+  },
   "patternsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Patterns",
+      "description": "Patterns for TECHMANIA."
+    },
     "title": "Patterns",
     "searchForm": {
       "keywords": {
@@ -64,6 +132,10 @@
     "notFound": "No patterns found"
   },
   "patternPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Composed by {composer}. Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -102,6 +174,11 @@
     }
   },
   "patternFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Pattern",
     "titleEdit": "Edit Pattern",
     "rules": {
@@ -212,6 +289,11 @@
         "required": "You need to accept the terms first."
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
+    },
     "submit": {
       "new": "Submit",
       "edit": "Update"
@@ -231,7 +313,8 @@
       "updateNotInGuild": "You must join our discord to update this pattern",
       "updatePermission": "You don't have permission to update this pattern",
       "updateUnauthorized": "You must login to update this pattern",
-      "createNotInGuild": "You must join our discord to submit pattern"
+      "createNotInGuild": "You must join our discord to submit pattern",
+      "image": "Please enter a valid image URL."
     }
   },
   "patternCard": {
@@ -249,6 +332,10 @@
     }
   },
   "skinsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Skins",
+      "description": "Skins for TECHMANIA."
+    },
     "title": "Skins",
     "searchForm": {
       "keywords": {
@@ -273,6 +360,10 @@
     "notFound": "No skins found"
   },
   "skinPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -308,6 +399,11 @@
     }
   },
   "skinFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Skin",
     "titleEdit": "Edit Skin",
     "rules": {
@@ -384,6 +480,11 @@
         "required": "You need to accept the terms first."
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
+    },
     "submit": {
       "new": "Submit",
       "edit": "Update"
@@ -403,7 +504,8 @@
       "updateNotInGuild": "You must join our discord to update this skin",
       "updatePermission": "You don't have permission to update this skin",
       "updateUnauthorized": "You must login to update this skin",
-      "createNotInGuild": "You must join our discord to submit skin"
+      "createNotInGuild": "You must join our discord to submit skin",
+      "image": "Please enter a valid image URL."
     }
   },
   "skinCard": {
@@ -423,6 +525,10 @@
     }
   },
   "setlistsPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} Setlists",
+      "description": "Setlists for TECHMANIA."
+    },
     "title": "Setlists",
     "searchForm": {
       "keywords": {
@@ -445,6 +551,10 @@
     "notFound": "No setlists found"
   },
   "setlistPage": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "Submitted by ${submitter}."
+    },
     "download": "Download",
     "edit": "Edit",
     "basic": {
@@ -521,6 +631,11 @@
     "updatedAt": "Updated at {date}"
   },
   "setlistFormPage": {
+    "meta": {
+      "login": "Login to view",
+      "title": "TECHMANIA {'|'} {text}",
+      "description": "{text}"
+    },
     "titleNew": "Submit New Setlist",
     "titleEdit": "Edit Setlist",
     "rules": {
@@ -663,6 +778,11 @@
         "required": "You need to accept the terms first."
       }
     },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
+    },
     "submit": {
       "new": "Submit",
       "edit": "Update"
@@ -682,7 +802,8 @@
       "updateNotInGuild": "You must join our discord to update this setlist",
       "updatePermission": "You don't have permission to update this setlist",
       "updateUnauthorized": "You must login to update this setlist",
-      "createNotInGuild": "You must join our discord to submit setlist"
+      "createNotInGuild": "You must join our discord to submit setlist",
+      "image": "Please enter a valid preview image URL."
     }
   },
   "commentList": {
@@ -729,9 +850,18 @@
         "edit": "Update"
       },
       "cancel": "Cancel"
+    },
+    "turnstile": {
+      "error": {
+        "required": "Please complete the security check."
+      }
     }
   },
   "profile": {
+    "meta": {
+      "title": "TECHMANIA {'|'} {name}",
+      "description": "${name}'s profile on TECHMANIA.."
+    },
     "tab": {
       "patterns": "Patterns",
       "skins": "Skins",
