@@ -13,6 +13,7 @@ import routerComments from './routes/comments'
 import routerInfo from './routes/info'
 import routerPatterns from './routes/patterns'
 import routerSetlists from './routes/setlists'
+import routerSitemap from './routes/sitemap'
 import routerSkins from './routes/skins'
 import routerUsers from './routes/users'
 
@@ -72,6 +73,9 @@ export const initializeApi = async (app: Express) => {
 
     // Initialize Passport
     passportInitialize(app)
+
+    // Sitemap (outside /api to be accessible at /sitemap.xml)
+    app.use('/sitemap.xml', routerSitemap)
 
     // Set up routes
     app.use('/api/users', routerUsers)
