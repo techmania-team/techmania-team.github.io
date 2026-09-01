@@ -113,15 +113,6 @@ const navs = computed(() => {
       label: t('nav.howtoplay'),
     },
     {
-      href: 'https://techmania-team.github.io/techmania-docs/',
-      label: t('nav.documentations'),
-      target: '_blank',
-    },
-    {
-      to: getI18nRoute({ name: 'changelog' }),
-      label: t('nav.changelog'),
-    },
-    {
       to: getI18nRoute({ name: 'patterns' }),
       label: t('nav.patterns'),
     },
@@ -132,6 +123,15 @@ const navs = computed(() => {
     {
       to: getI18nRoute({ name: 'setlists' }),
       label: t('nav.setlists'),
+    },
+    {
+      to: getI18nRoute({ name: 'changelog' }),
+      label: t('nav.changelog'),
+    },
+    {
+      href: 'https://techmania-team.github.io/techmania-docs/',
+      label: t('nav.documentations'),
+      target: '_blank',
     },
   ]
 })
