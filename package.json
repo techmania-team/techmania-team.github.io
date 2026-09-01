@@ -10,7 +10,7 @@
     "lint": "prettier --write \"**/*.{js,ts,vue,css,scss,html,md,json}\" && eslint --fix -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
     "lint:check": "prettier --check \"**/*.{js,ts,vue,css,scss,html,md,json}\" && eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
     "dev": "quasar dev -m ssr",
-    "build": "quasar build -m ssr",
+    "build": "quasar build -m ssr && cd dist/ssr && bun install --production",
     "icons": "icongenie g -i ./public/assets/notes/basic.png",
     "start": "cd dist/ssr && bun run start",
     "typecheck": "vue-tsc --noEmit",
