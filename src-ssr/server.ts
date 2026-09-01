@@ -40,7 +40,18 @@ export const create = defineSsrCreate(async (/* { ... } */) => {
      * (https://helmetjs.github.io/)
      */
     const { default: helmet } = await import('helmet')
-    app.use(helmet())
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            'script-src': ["'self'", "'unsafe-inline'"],
+            'frame-src': ["'self'", 'https://www.youtube.com'],
+            'img-src': ["'self'", 'data:', 'https://i3.ytimg.com', 'https://img.youtube.com'],
+          },
+        },
+      }),
+    )
 
     const { default: compression } = await import('compression')
     app.use(compression())
