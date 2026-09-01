@@ -2,8 +2,8 @@
 #profile-setlists
   .container
     .text-center.q-mt-md.text-body1(v-if="setlists.length === 0 && scrollDisable") {{ $t('profile.setlists.notFound') }}
-    q-infinite-scroll.row.q-my-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
-      .col-xs-12.col-sm-6.col-lg-3.q-pa-md.q-my-xs(v-for="(setlist) in setlists" :key="setlist._id")
+    q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+      .col-12.col-sm-6.col-md-4.col-lg-3(v-for="(setlist) in setlists" :key="setlist._id")
         SetlistCard(:setlist="setlist" :mine="route.params.id === user._id")
       template(#loading)
         q-spinner-dots(color="tech" size="40px")
