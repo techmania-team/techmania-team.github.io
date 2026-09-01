@@ -1,3 +1,4 @@
+import type { Router } from 'vue-router'
 import { setupLayouts } from 'virtual:generated-layouts'
 import {
   createMemoryHistory,
@@ -16,6 +17,8 @@ import { defineRouter } from '#q-app'
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+
+export let router: Router | undefined
 
 export default defineRouter((/* { store, ssrContext } */) => {
   const createHistory = import.meta.env.QUASAR_SERVER
@@ -38,6 +41,8 @@ export default defineRouter((/* { store, ssrContext } */) => {
   if (import.meta.hot) {
     handleHotUpdate(Router)
   }
+
+  router = Router
 
   return Router
 })

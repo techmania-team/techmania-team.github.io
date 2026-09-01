@@ -1,8 +1,8 @@
 import type { ApiResponse } from '@/types/api'
 import type { AxiosError } from 'axios'
 import { Notify } from 'quasar'
-import { useRouter } from 'vue-router'
 import { getGlobal, getI18nRoute } from '@/i18n'
+import { router } from '@/router'
 import { useUserStore } from '@/stores/user'
 
 export const handleError = (error: unknown) => {
@@ -32,7 +32,6 @@ export const handleFormSubmitError = async (
   action: 'create' | 'update' | 'delete',
 ) => {
   const user = useUserStore()
-  const router = useRouter()
 
   const t = getGlobal()?.t
   if (!t) return
@@ -59,7 +58,7 @@ export const handleFormSubmitError = async (
         color: 'negative',
       })
       user.clearData()
-      await router.push(getI18nRoute({ name: 'index' }))
+      await router?.push(getI18nRoute({ name: 'index' }))
       break
     case 'Invalid image URL':
       Notify.create({
