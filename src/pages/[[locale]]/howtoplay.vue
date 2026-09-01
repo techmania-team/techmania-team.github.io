@@ -16,11 +16,11 @@ q-page#how-to-play
           img(src="/assets/guides/scan.gif")
           p.text-center.text-body1 {{ $t('howtoplayPage.scanlineNotice') }}
         .col-12
-          q-tabs(v-model="tab" class="text-tech" align="justify")
+          q-tabs(v-model="tab" align="justify" indicator-color="tech")
             q-tab(name="touch" :icon="getControlIcon(CONTROLTYPE.TOUCH)" :label="$t('howtoplayPage.tabs.touch')")
             q-tab(name="keys" :icon="getControlIcon(CONTROLTYPE.KEYS)" :label="$t('howtoplayPage.tabs.keys')")
             q-tab(name="km")
-              q-icon.filter-tech.q-tab__icon(:name="getControlIcon(CONTROLTYPE.KM)")
+              q-icon.filter-white.q-tab__icon(:name="getControlIcon(CONTROLTYPE.KM)")
               .q-tab__label {{ $t('howtoplayPage.tabs.km') }}
     .row
       .col-12
