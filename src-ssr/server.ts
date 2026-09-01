@@ -45,14 +45,35 @@ export const create = defineSsrCreate(async (/* { ... } */) => {
         contentSecurityPolicy: {
           directives: {
             ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-            'script-src': ["'self'", "'unsafe-inline'"],
-            'frame-src': ["'self'", 'https://www.youtube.com'],
+            'script-src': [
+              "'self'",
+              "'unsafe-inline'",
+              'https://challenges.cloudflare.com',
+              'https://www.googletagmanager.com',
+            ],
+            'frame-src': [
+              "'self'",
+              'https://www.youtube.com',
+              'https://www.youtube-nocookie.com',
+              'https://challenges.cloudflare.com',
+            ],
             'img-src': [
               "'self'",
               'data:',
-              'https://i3.ytimg.com',
+              'https://*.ytimg.com',
               'https://img.youtube.com',
+              'https://*.ggpht.com',
               'https://cdn.discordapp.com',
+              'https://media.discordapp.net',
+              'https://www.googletagmanager.com',
+              'https://*.google-analytics.com',
+            ],
+            'connect-src': [
+              "'self'",
+              'https://challenges.cloudflare.com',
+              'https://*.google-analytics.com',
+              'https://*.analytics.google.com',
+              'https://*.googletagmanager.com',
             ],
           },
         },
