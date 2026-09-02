@@ -4,13 +4,13 @@ q-page#setlist
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
         .text-h4.text-center {{ setlist.name }}
       .row.q-gutter-x-md
-        q-btn(color="secondary" icon="download" :href="setlist.link" target="__blank") {{ $t('setlistPage.download') }}
+        q-btn(color="secondary" icon="download" :href="setlist.link" target="__blank" rel="noopener noreferrer") {{ $t('setlistPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="setlist.submitter._id === user._id" :to="getI18nRoute({ name: 'setlist-form-edit', params: { id: setlist._id }})") {{ $t('setlistPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -99,7 +99,7 @@ q-page#setlist
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
-                  p(v-html="setlist.description" v-if="setlist.description")
+                  p(v-html="descriptionSanitized" v-if="setlist.description")
                   p(v-else) {{ $t('setlistPage.description.noDescription') }}
         //- Selectable Patterns
         .col-12.pre-line
@@ -123,7 +123,7 @@ q-page#setlist
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in setlist.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              YoutubeVideo(:ytid="video.ytid" :name="video.name")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='setlist.previews.length === 0') {{ $t('setlistPage.previews.noPreview') }}
       //- Comments
@@ -134,17 +134,21 @@ q-page#setlist
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
+import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
+import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempSetlistStore } from '@/stores/temp-setlist'
 import { useUserStore } from '@/stores/user'
 import { controls, getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
@@ -152,13 +156,25 @@ const route = useRoute()
 const user = useUserStore()
 const setlist = useTempSetlistStore()
 
-const backgroundImage = computed(() => {
-  return setlist.image?.length > 0
-    ? setlist.image
-    : setlist.previews.length > 0
-      ? getYouTubeThumbnail(setlist.previews[0]!.ytid)
-      : '/assets/header-setlist.png'
+const isImageError = ref(false)
+
+const descriptionSanitized = computed(() => {
+  return sanitizeHtml(setlist.description)
 })
+
+const backgroundImage = computed(() => {
+  if (setlist.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('setlists', setlist._id)
+  } else if (setlist.previews?.length > 0) {
+    return getYouTubeThumbnail(setlist.previews[0]!.ytid)
+  } else {
+    return '/assets/header-setlist.png'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('setlistPage.meta.title', { name: setlist.name }),

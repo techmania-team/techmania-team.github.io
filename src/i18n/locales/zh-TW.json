@@ -134,7 +134,7 @@
   "patternPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "作曲：{composer}。上傳者：${submitter}。"
+      "description": "作曲：{composer}。上傳者：{submitter}。"
     },
     "download": "下載",
     "edit": "編輯",
@@ -362,7 +362,7 @@
   "skinPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "上傳者：${submitter}。"
+      "description": "上傳者：{submitter}。"
     },
     "download": "下載",
     "edit": "編輯",
@@ -553,7 +553,7 @@
   "setlistPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "上傳者：${submitter}。"
+      "description": "上傳者：{submitter}。"
     },
     "download": "下載",
     "edit": "編輯",
@@ -860,7 +860,7 @@
   "profile": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "${name} 在 TECHMANIA 上的個人頁面。"
+      "description": "{name} 在 TECHMANIA 上的個人頁面。"
     },
     "tab": {
       "patterns": "譜面",

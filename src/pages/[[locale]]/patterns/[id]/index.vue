@@ -4,14 +4,14 @@ q-page#pattern
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
         .text-h4.text-center {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-md
-        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('patternPage.download') }}
+        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank" rel="noopener noreferrer") {{ $t('patternPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id }})") {{ $t('patternPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -113,7 +113,7 @@ q-page#pattern
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
-                  p(v-html="pattern.description" v-if="pattern.description")
+                  p(v-html="descriptionSanitized" v-if="pattern.description")
                   p(v-else) {{ $t('patternPage.description.noDescription') }}
         //- Previews
         .col-12
@@ -122,7 +122,7 @@ q-page#pattern
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              YoutubeVideo(:ytid="video.ytid" :name="video.name")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('patternPage.previews.noPreview') }}
       //- Comments
@@ -133,16 +133,20 @@ q-page#pattern
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
+import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
+import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempPatternStore } from '@/stores/temp-pattern'
 import { useUserStore } from '@/stores/user'
 import { getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -151,13 +155,25 @@ const route = useRoute()
 const user = useUserStore()
 const pattern = useTempPatternStore()
 
-const backgroundImage = computed(() => {
-  return pattern.image?.length > 0
-    ? pattern.image
-    : pattern.previews.length > 0
-      ? getYouTubeThumbnail(pattern.previews[0]!.ytid)
-      : '/assets/header-pattern.png'
+const isImageError = ref(false)
+
+const descriptionSanitized = computed(() => {
+  return sanitizeHtml(pattern.description)
 })
+
+const backgroundImage = computed(() => {
+  if (pattern.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', pattern._id)
+  } else if (pattern.previews?.length > 0) {
+    return getYouTubeThumbnail(pattern.previews[0]!.ytid)
+  } else {
+    return '/assets/header-pattern.png'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('patternPage.meta.title', { name: pattern.name }),

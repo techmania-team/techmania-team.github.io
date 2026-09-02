@@ -26,7 +26,9 @@ section.q-mx-auto.padding
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.name.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('skinFormPage.basic.name.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" hide-bottom-space
@@ -54,7 +56,9 @@ section.q-mx-auto.padding
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('skinFormPage.basic.download.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('skinFormPage.basic.download.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" type="url" hide-bottom-space
@@ -185,6 +189,7 @@ import { getI18nRoute } from '@/i18n'
 import * as skinService from '@/services/skin'
 import { useUserStore } from '@/stores/user'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
+import { isSafeUrl } from '@/utils/image'
 import { SKINTYPE, SKINTYPES } from '@/utils/skin'
 import { getIDFromYouTubeLink } from '@/utils/youtube'
 import CfTurnstile from './CfTurnstile.vue'
@@ -227,6 +232,10 @@ const schema = yup.object({
   image: yup
     .string()
     .notRequired()
+    .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+      if (!value) return true
+      return isSafeUrl(value)
+    })
     .test(
       'is-valid-url-or-empty',
       () => t('skinFormPage.basic.image.error.invalid'),

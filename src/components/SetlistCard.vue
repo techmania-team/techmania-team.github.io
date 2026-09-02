@@ -1,17 +1,34 @@
 <template lang="pug">
 q-card.full-height.card-setlist
-  //- Header video
-  q-video(v-if="video && hasVideo" :src="`https://www.youtube.com/embed/${videoLink}`" :ratio="16/9")
   //- Header image
-  q-img.cursor-pointer(v-else :src="headerImage" :ratio="16/9" @click="clickHeader")
-    .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
-      h1.q-ma-none
-        q-icon.text-white(name="play_circle_outline")
+  YoutubeVideo(
+    v-if="hasVideo"
+    :ytid="videoLink"
+    :name="setlist.name"
+    :img="headerImage"
+  )
+  q-img.cursor-pointer(
+    v-else
+    :src="headerImage"
+    :ratio="16/9"
+    @click="goToDetail"
+    @error="onImageError"
+  )
   //- Content
   q-card-section
     //- Download or edit button
-    q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="setlist.link" target="__blank")
-    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push(getI18nRoute({ name: 'setlist-form-edit', params: { id: setlist._id}}))")
+    q-btn.btn-dl.absolute(
+      v-if="!mine"
+      fab icon="download"
+      color="tech" text-color="black"
+      type="a" :href="setlist.link" target="__blank"
+    )
+    q-btn.btn-dl.absolute(
+      v-else
+      fab icon="edit"
+      color="tech" text-color="black"
+      :to="getI18nRoute({ name: 'setlist-form-edit', params: { id: setlist._id}})"
+    )
     //- Informations
     q-list
       //- Link
@@ -57,25 +74,26 @@ q-card.full-height.card-setlist
 
 <script setup lang="ts">
 import type { ISetlist } from '@/types/setlist'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import { controls } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getYouTubeThumbnail } from '@/utils/youtube'
+import YoutubeVideo from './YoutubeVideo.vue'
 
 const props = defineProps<{
   setlist: ISetlist
   mine: boolean
 }>()
 
-const video = ref(false)
-const videoLink = ref('')
-const hasVideo = ref(false)
-const hasImage = ref(false)
-const headerImage = ref('')
+const isImageError = ref(false)
 
 const router = useRouter()
+
+const videoLink = computed(() => props.setlist.previews?.[0]?.ytid || '')
+const hasVideo = computed(() => Boolean(videoLink.value))
 
 const formattedTime = computed(() => {
   return {
@@ -91,20 +109,26 @@ const formattedUpdateTime = computed(() => {
   }
 })
 
-const clickHeader = async () => {
-  if (hasVideo.value) video.value = true
-  else await router.push(getI18nRoute({ name: 'setlist', params: { id: props.setlist._id } }))
+const headerImage = computed(() => {
+  if (props.setlist.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('setlists', props.setlist._id)
+  } else if (props.setlist.previews?.length > 0) {
+    return getYouTubeThumbnail(props.setlist.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
 }
 
-onMounted(() => {
-  videoLink.value = props.setlist.previews?.[0]?.ytid || ''
-  hasVideo.value = props.setlist.previews?.[0]?.ytid !== undefined
-  hasImage.value = props.setlist.image?.length > 0 || false
-  headerImage.value =
-    props.setlist.image?.length > 0
-      ? props.setlist.image
-      : props.setlist.previews.length > 0
-        ? getYouTubeThumbnail(props.setlist.previews[0]!.ytid)
-        : '/assets/unknown.jpg'
-})
+const goToDetail = async () => {
+  await router.push(
+    getI18nRoute({
+      name: 'setlist',
+      params: { id: props.setlist._id },
+    }),
+  )
+}
 </script>

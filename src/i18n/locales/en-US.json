@@ -134,7 +134,7 @@
   "patternPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "Composed by {composer}. Submitted by ${submitter}."
+      "description": "Composed by {composer}. Submitted by {submitter}."
     },
     "download": "Download",
     "edit": "Edit",
@@ -362,7 +362,7 @@
   "skinPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "Submitted by ${submitter}."
+      "description": "Submitted by {submitter}."
     },
     "download": "Download",
     "edit": "Edit",
@@ -553,7 +553,7 @@
   "setlistPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "Submitted by ${submitter}."
+      "description": "Submitted by {submitter}."
     },
     "download": "Download",
     "edit": "Edit",
@@ -860,7 +860,7 @@
   "profile": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "${name}'s profile on TECHMANIA.."
+      "description": "{name}'s profile on TECHMANIA.."
     },
     "tab": {
       "patterns": "Patterns",

@@ -1,6 +1,7 @@
 import type { IPattern } from '../models/pattern'
 import type { Request, Response } from 'express'
 import type { PipelineStage } from 'mongoose'
+import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
 import { StatusCodes } from 'http-status-codes'
 import _ from 'lodash'
@@ -9,6 +10,7 @@ import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import * as yup from 'yup'
 import { controls_capitalize, CONTROLTYPE } from '@/utils/control'
+import { isSafeUrl } from '@/utils/image'
 import Comment from '../models/comment'
 import Pattern from '../models/pattern'
 import User from '../models/user'
@@ -93,6 +95,10 @@ export const create = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
@@ -425,6 +431,50 @@ export const searchID = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).send({ success: true, message: '', result: result[0] })
 }
 
+export const getImage = async (req: Request, res: Response) => {
+  // Request params validation schema
+  const paramsSchema = yup.object({
+    id: yup
+      .string()
+      .required()
+      .test('mongoID', 'Invalid ID', (value) => {
+        return validator.isMongoId(value)
+      }),
+  })
+  // Parsed request params
+  const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+  const pattern = await Pattern.findById(parsedParams.id).select('image').orFail()
+
+  if (!pattern.image) {
+    throw new AppError('NOT_FOUND')
+  }
+
+  if (!isSafeUrl(pattern.image)) {
+    throw new AppError('FORBIDDEN')
+  }
+
+  const response = await axios.get(pattern.image, {
+    responseType: 'stream',
+    timeout: 3000,
+    maxRedirects: 0,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      Accept: 'image/*, */*',
+    },
+    validateStatus: (status) => status >= 200 && status < 300,
+  })
+
+  const contentType = response.headers['content-type']
+  if (typeof contentType !== 'string' || !contentType.startsWith('image/')) {
+    throw new AppError('BAD_REQUEST')
+  }
+
+  res.setHeader('Content-Type', contentType)
+  res.setHeader('Cache-Control', 'public, max-age=3600')
+  response.data.pipe(res)
+}
+
 export const del = async (req: Request, res: Response) => {
   const user = req.user!
 
@@ -485,6 +535,10 @@ export const update = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true

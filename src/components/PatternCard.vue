@@ -1,17 +1,34 @@
 <template lang="pug">
 q-card.full-height.card-pattern
-  //- Header video
-  q-video(v-if="video && hasVideo" :src="`https://www.youtube.com/embed/${videoLink}`" :ratio="16/9")
   //- Header image
-  q-img.cursor-pointer(v-else :src="headerImage" :ratio="16/9" @click="clickHeader")
-    .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
-      h1.q-ma-none
-        q-icon.text-white(name="play_circle_outline")
+  YoutubeVideo(
+    v-if="hasVideo"
+    :ytid="videoLink"
+    :name="pattern.name"
+    :img="headerImage"
+  )
+  q-img.cursor-pointer(
+    v-else
+    :src="headerImage"
+    :ratio="16/9"
+    @click="goToDetail"
+    @error="onImageError"
+  )
   //- Content
   q-card-section
     //- Download or edit button
-    q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="pattern.link" target="__blank")
-    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id}})")
+    q-btn.btn-dl.absolute(
+      v-if="!mine"
+      fab icon="download"
+      color="tech" text-color="black"
+      type="a" :href="pattern.link" target="__blank"
+    )
+    q-btn.btn-dl.absolute(
+      v-else
+      fab icon="edit"
+      color="tech" text-color="black"
+      :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id}})"
+    )
     //- Informations
     q-list
       //- Link
@@ -75,27 +92,28 @@ q-card.full-height.card-pattern
 
 <script setup lang="ts">
 import type { IPattern } from '@/types/pattern'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import { getControlIcon } from '@/utils/control'
 import { controls } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
+import YoutubeVideo from './YoutubeVideo.vue'
 
 const props = defineProps<{
   mine: boolean
   pattern: IPattern
 }>()
 
-const video = ref(false)
-const videoLink = ref('')
-const hasVideo = ref(false)
-const hasImage = ref(false)
-const headerImage = ref('')
+const isImageError = ref(false)
 
 const router = useRouter()
+
+const videoLink = computed(() => props.pattern.previews?.[0]?.ytid || '')
+const hasVideo = computed(() => Boolean(videoLink.value))
 
 const formattedTime = computed(() => {
   return {
@@ -119,26 +137,26 @@ const hasLanes = computed(() => {
   return lanes
 })
 
-const clickHeader = async () => {
-  if (hasVideo.value) video.value = true
-  else
-    await router.push(
-      getI18nRoute({
-        name: 'pattern',
-        params: { id: props.pattern._id },
-      }),
-    )
+const headerImage = computed(() => {
+  if (props.pattern.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', props.pattern._id)
+  } else if (props.pattern.previews?.length > 0) {
+    return getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
 }
 
-onMounted(() => {
-  videoLink.value = props.pattern.previews?.[0]?.ytid || ''
-  hasVideo.value = props.pattern.previews?.[0]?.ytid !== undefined
-  hasImage.value = props.pattern.image?.length > 0 || false
-  headerImage.value =
-    props.pattern.image?.length > 0
-      ? props.pattern.image
-      : props.pattern.previews.length > 0
-        ? getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
-        : '/assets/unknown.jpg'
-})
+const goToDetail = async () => {
+  await router.push(
+    getI18nRoute({
+      name: 'pattern',
+      params: { id: props.pattern._id },
+    }),
+  )
+}
 </script>

@@ -1,6 +1,6 @@
 <template lang="pug">
 q-card
-  q-img(:src="image" :ratio="16/9" height="150px")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @error="onImageError")
   q-card-section
     router-link.no-underline(:to="getI18nRoute({ name: 'pattern', params: { id: pattern._id } })")
       .text-h6.text-tech {{ pattern.name }}
@@ -40,10 +40,12 @@ q-card
 <script setup lang="ts">
 import type { ISetlistHiddenPattern, ISetlistSelectablePattern } from '@/types/setlist'
 import { computed } from 'vue'
+import { ref } from 'vue'
 import { getI18nRoute } from '@/i18n'
 import { getControlIcon } from '@/utils/control'
 import { criterias, criteriasDirections } from '@/utils/criteria'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -58,13 +60,21 @@ const props = withDefaults(
   },
 )
 
-const image = computed(() => {
-  return props.pattern.image?.length > 0
-    ? props.pattern.image
-    : props.pattern.previews.length > 0
-      ? getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
-      : '/assets/header-pattern.png'
+const isImageError = ref(false)
+
+const headerImage = computed(() => {
+  if (props.pattern.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', props.pattern._id)
+  } else if (props.pattern.previews?.length > 0) {
+    return getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
 })
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const formattedTime = computed(() => {
   return {

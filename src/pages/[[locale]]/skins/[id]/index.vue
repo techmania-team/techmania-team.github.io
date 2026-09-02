@@ -4,13 +4,13 @@ q-page#skin
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
         .text-h4.text-center {{ skin.name }}
       .row.q-gutter-x-md
-        q-btn(color="secondary" icon="download" :href="skin.link" target="__blank") {{ $t('skinPage.download') }}
+        q-btn(color="secondary" icon="download" :href="skin.link" target="__blank" rel="noopener noreferrer") {{ $t('skinPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="skin.submitter._id === user._id" :to="getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id }})") {{ $t('skinPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -90,7 +90,7 @@ q-page#skin
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
-                  p(v-html="skin.description" v-if="skin.description")
+                  p(v-html="descriptionSanitized" v-if="skin.description")
                   p(v-else) {{ $t('skinPage.description.noDescription') }}
         //- Previews
         .col-12
@@ -99,7 +99,7 @@ q-page#skin
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              YoutubeVideo(:ytid="video.ytid" :name="video.name")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='skin.previews.length === 0') {{ $t('skinPage.previews.noPreview') }}
       //- Comments
@@ -110,15 +110,19 @@ q-page#skin
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
+import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
+import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempSkinStore } from '@/stores/temp-skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -127,13 +131,25 @@ const route = useRoute()
 const user = useUserStore()
 const skin = useTempSkinStore()
 
-const backgroundImage = computed(() => {
-  return skin.image?.length > 0
-    ? skin.image
-    : skin.previews.length > 0
-      ? getYouTubeThumbnail(skin.previews[0]!.ytid)
-      : '/assets/header-skin.png'
+const isImageError = ref(false)
+
+const descriptionSanitized = computed(() => {
+  return sanitizeHtml(skin.description)
 })
+
+const backgroundImage = computed(() => {
+  if (skin.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('skins', skin._id)
+  } else if (skin.previews?.length > 0) {
+    return getYouTubeThumbnail(skin.previews[0]!.ytid)
+  } else {
+    return '/assets/header-skin.png'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('skinPage.meta.title', { name: skin.name }),

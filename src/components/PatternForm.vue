@@ -26,7 +26,9 @@ section.q-mx-auto.padding
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.name.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('patternFormPage.basic.name.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" hide-bottom-space
@@ -38,7 +40,9 @@ section.q-mx-auto.padding
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.composer.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('patternFormPage.basic.composer.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" hide-bottom-space
@@ -50,7 +54,9 @@ section.q-mx-auto.padding
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('patternFormPage.basic.download.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    |{{ $t('patternFormPage.basic.download.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" type="url" hide-bottom-space
@@ -262,6 +268,7 @@ import { useUserStore } from '@/stores/user'
 import { controls } from '@/utils/control'
 import { CONTROLTYPE } from '@/utils/control'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
+import { isSafeUrl } from '@/utils/image'
 import { getIDFromYouTubeLink } from '@/utils/youtube'
 import CfTurnstile from './CfTurnstile.vue'
 
@@ -318,6 +325,10 @@ const schema = yup.object({
   image: yup
     .string()
     .notRequired()
+    .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+      if (!value) return true
+      return isSafeUrl(value)
+    })
     .test(
       'is-valid-url-or-empty',
       () => t('patternFormPage.basic.image.error.invalid'),
