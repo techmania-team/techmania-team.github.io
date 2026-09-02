@@ -9,6 +9,7 @@ import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import * as yup from 'yup'
 import { controls_capitalize, CONTROLTYPE } from '@/utils/control'
+import { isSafeUrl } from '@/utils/image'
 import Comment from '../models/comment'
 import Pattern from '../models/pattern'
 import User from '../models/user'
@@ -93,6 +94,10 @@ export const create = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
@@ -485,6 +490,10 @@ export const update = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true

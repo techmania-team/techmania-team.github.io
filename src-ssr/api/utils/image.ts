@@ -1,11 +1,24 @@
 import axios from 'axios'
+import { isSafeUrl } from '@/utils/image'
 
 export const checkImage = async (link: string) => {
-  let valid = false
-  const response = await axios.head(link)
-  const contentType = response.headers?.['content-type']
-  if (typeof contentType === 'string' && contentType.includes('image')) {
-    valid = true
+  if (!isSafeUrl(link)) {
+    return false
   }
-  return valid
+
+  try {
+    const response = await axios.head(link, {
+      timeout: 3000,
+      maxRedirects: 0,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+      validateStatus: (status) => status >= 200 && status < 300,
+    })
+
+    const contentType = response.headers?.['content-type']
+    return typeof contentType === 'string' && contentType.startsWith('image/')
+  } catch {
+    return false
+  }
 }

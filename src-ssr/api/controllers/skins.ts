@@ -8,6 +8,7 @@ import mongoose from 'mongoose'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import * as yup from 'yup'
+import { isSafeUrl } from '@/utils/image'
 import { SKINTYPE, SKINTYPES_CAPITALIZE } from '@/utils/skin'
 import Comment from '../models/comment'
 import Skin from '../models/skin'
@@ -85,6 +86,10 @@ export const create = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true
@@ -441,6 +446,10 @@ export const update = async (req: Request, res: Response) => {
       .test('is-valid-url-or-empty', 'Invalid image URL', (value) => {
         if (!value) return true
         return yup.string().url().isValidSync(value)
+      })
+      .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+        if (!value) return true
+        return isSafeUrl(value)
       })
       .test('valid', 'Invalid image URL', async (value) => {
         if (!value) return true

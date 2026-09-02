@@ -185,6 +185,7 @@ import { getI18nRoute } from '@/i18n'
 import * as skinService from '@/services/skin'
 import { useUserStore } from '@/stores/user'
 import { handleError, handleFormSubmitError } from '@/utils/handleError'
+import { isSafeUrl } from '@/utils/image'
 import { SKINTYPE, SKINTYPES } from '@/utils/skin'
 import { getIDFromYouTubeLink } from '@/utils/youtube'
 import CfTurnstile from './CfTurnstile.vue'
@@ -227,6 +228,10 @@ const schema = yup.object({
   image: yup
     .string()
     .notRequired()
+    .test('is-safe-url', 'Unsafe or private IP image URL', (value) => {
+      if (!value) return true
+      return isSafeUrl(value)
+    })
     .test(
       'is-valid-url-or-empty',
       () => t('skinFormPage.basic.image.error.invalid'),
