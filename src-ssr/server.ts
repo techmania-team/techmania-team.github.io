@@ -67,6 +67,7 @@ export const create = defineSsrCreate(async (/* { ... } */) => {
               'https://media.discordapp.net',
               'https://www.googletagmanager.com',
               'https://*.google-analytics.com',
+              'https://img.shields.io',
             ],
             'connect-src': [
               "'self'",
