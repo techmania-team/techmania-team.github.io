@@ -26,7 +26,9 @@
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('setlistFormPage.basic.name.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('setlistFormPage.basic.name.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" hide-bottom-space
@@ -55,7 +57,9 @@
             q-item.q-py-lg.q-py-md-md
               q-item-section
                 .row.justify-center.items-center
-                  .col-12.col-md-2.q-mb-md.q-mb-md-none {{ $t('setlistFormPage.basic.download.label') }}
+                  .col-12.col-md-2.q-mb-md.q-mb-md-none
+                    | {{ $t('setlistFormPage.basic.download.label') }}
+                    span.text-tech &nbsp;*
                   .col-12.col-md-10
                     q-input.q-pb-none(
                       outlined square color="tech" type="url" hide-bottom-space
