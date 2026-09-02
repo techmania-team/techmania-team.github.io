@@ -62,6 +62,7 @@ q-dialog(v-model="showVideoDialog" backdrop-filter="blur(4px)")
         v-if="showVideoDialog"
         :src="`https://www.youtube-nocookie.com/embed/${videoLink}?autoplay=1`"
         :ratio="16/9"
+        loading="lazy"
       )
 </template>
 

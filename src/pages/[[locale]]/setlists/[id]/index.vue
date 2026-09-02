@@ -10,7 +10,7 @@ q-page#setlist
       .column.items-center.q-mb-md
         .text-h4.text-center {{ setlist.name }}
       .row.q-gutter-x-md
-        q-btn(color="secondary" icon="download" :href="setlist.link" target="__blank") {{ $t('setlistPage.download') }}
+        q-btn(color="secondary" icon="download" :href="setlist.link" target="__blank" rel="noopener noreferrer") {{ $t('setlistPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="setlist.submitter._id === user._id" :to="getI18nRoute({ name: 'setlist-form-edit', params: { id: setlist._id }})") {{ $t('setlistPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -123,7 +123,7 @@ q-page#setlist
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in setlist.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              q-video(:ratio="16/9" :src="'https://www.youtube-nocookie.com/embed/'+video.ytid" loading="lazy")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='setlist.previews.length === 0') {{ $t('setlistPage.previews.noPreview') }}
       //- Comments

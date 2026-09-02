@@ -125,7 +125,7 @@ q-page#index
           q-separator
           .row.q-my-md.q-col-gutter-md
             .col-12.col-md-6.col-lg-3(v-for="(video, idx) in videos" :key="idx")
-              q-video(:ratio="16/9" :src="video")
+              q-video(:ratio="16/9" :src="video" loading="lazy")
 </template>
 
 <script setup lang="ts">
@@ -232,14 +232,14 @@ const published = computed(() => {
 
 // Videos
 const videos = [
-  'https://www.youtube.com/embed/MtkxhEmCWwU',
-  'https://www.youtube.com/embed/1v_LVASKrsQ',
-  'https://www.youtube.com/embed/czRzORpQy3U',
-  'https://www.youtube.com/embed/3a3XRaqvsWc',
-  'https://www.youtube.com/embed/74f7p-t3YeU',
-  'https://www.youtube.com/embed/fmJ_BRHP3w0',
-  'https://www.youtube.com/embed/peH2TjiPSfI',
-  'https://www.youtube.com/embed/3qlUwAas-wY',
+  'https://www.youtube-nocookie.com/embed/MtkxhEmCWwU',
+  'https://www.youtube-nocookie.com/embed/1v_LVASKrsQ',
+  'https://www.youtube-nocookie.com/embed/czRzORpQy3U',
+  'https://www.youtube-nocookie.com/embed/3a3XRaqvsWc',
+  'https://www.youtube-nocookie.com/embed/74f7p-t3YeU',
+  'https://www.youtube-nocookie.com/embed/fmJ_BRHP3w0',
+  'https://www.youtube-nocookie.com/embed/peH2TjiPSfI',
+  'https://www.youtube-nocookie.com/embed/3qlUwAas-wY',
 ]
 
 defineOptions({

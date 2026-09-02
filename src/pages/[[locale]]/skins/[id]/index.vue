@@ -10,7 +10,7 @@ q-page#skin
       .column.items-center.q-mb-md
         .text-h4.text-center {{ skin.name }}
       .row.q-gutter-x-md
-        q-btn(color="secondary" icon="download" :href="skin.link" target="__blank") {{ $t('skinPage.download') }}
+        q-btn(color="secondary" icon="download" :href="skin.link" target="__blank" rel="noopener noreferrer") {{ $t('skinPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="skin.submitter._id === user._id" :to="getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id }})") {{ $t('skinPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -99,7 +99,7 @@ q-page#skin
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in skin.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              q-video(:ratio="16/9" :src="'https://www.youtube-nocookie.com/embed/'+video.ytid" loading="lazy")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='skin.previews.length === 0') {{ $t('skinPage.previews.noPreview') }}
       //- Comments

@@ -11,7 +11,7 @@ q-page#pattern
         .text-h4.text-center {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-md
-        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank") {{ $t('patternPage.download') }}
+        q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank" rel="noopener noreferrer") {{ $t('patternPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="pattern.submitter._id === user._id" :to="getI18nRoute({ name: 'pattern-form-edit', params: { id: pattern._id }})") {{ $t('patternPage.edit') }}
   //- Content
   section.q-mx-auto.padding.q-mt-lg
@@ -122,7 +122,7 @@ q-page#pattern
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in pattern.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube.com/embed/'+video.ytid")
+              q-video(:ratio="16/9" :src="'https://www.youtube-nocookie.com/embed/'+video.ytid" loading="lazy")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='pattern.previews.length === 0') {{ $t('patternPage.previews.noPreview') }}
       //- Comments
