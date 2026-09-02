@@ -90,7 +90,7 @@ q-page#skin
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
-                  p(v-html="skin.description" v-if="skin.description")
+                  p(v-html="descriptionSanitized" v-if="skin.description")
                   p(v-else) {{ $t('skinPage.description.noDescription') }}
         //- Previews
         .col-12
@@ -110,6 +110,7 @@ q-page#skin
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
+import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
 import { ref } from 'vue'
@@ -131,6 +132,10 @@ const user = useUserStore()
 const skin = useTempSkinStore()
 
 const isImageError = ref(false)
+
+const descriptionSanitized = computed(() => {
+  return sanitizeHtml(skin.description)
+})
 
 const backgroundImage = computed(() => {
   if (skin.image?.length > 0 && !isImageError.value) {

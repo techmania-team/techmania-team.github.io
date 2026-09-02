@@ -99,7 +99,7 @@ q-page#setlist
               q-separator.q-mb-md(inset)
               q-item
                 q-item-section
-                  p(v-html="setlist.description" v-if="setlist.description")
+                  p(v-html="descriptionSanitized" v-if="setlist.description")
                   p(v-else) {{ $t('setlistPage.description.noDescription') }}
         //- Selectable Patterns
         .col-12.pre-line
@@ -134,6 +134,7 @@ q-page#setlist
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
+import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
 import { ref } from 'vue'
@@ -156,6 +157,10 @@ const user = useUserStore()
 const setlist = useTempSetlistStore()
 
 const isImageError = ref(false)
+
+const descriptionSanitized = computed(() => {
+  return sanitizeHtml(setlist.description)
+})
 
 const backgroundImage = computed(() => {
   if (setlist.image?.length > 0 && !isImageError.value) {
