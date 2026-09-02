@@ -1,9 +1,7 @@
 <template lang="pug">
 q-card.full-height.card-pattern
-  //- Header video
-  q-video(v-if="video && hasVideo" :src="`https://www.youtube.com/embed/${videoLink}`" :ratio="16/9")
   //- Header image
-  q-img.cursor-pointer(v-else :src="headerImage" :ratio="16/9" @click="clickHeader")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick")
     .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
@@ -71,6 +69,18 @@ q-card.full-height.card-pattern
                 | {{ $t('patternCard.control.'+controls[difficulty.control]) }} / {{ difficulty.lanes }}L / {{ difficulty.name }}
                 br
                 span.text-bold(:class="getLevelColor(difficulty.level)") Lv.{{ difficulty.level }}
+q-dialog(v-model="showVideoDialog" backdrop-filter="blur(4px)")
+  q-card(style="width: 800px; max-width: 90vw;")
+    q-bar.bg-dark.text-white
+      div {{ pattern.name }}
+      q-space
+      q-btn(dense flat icon="close" v-close-popup)
+    q-card-section.q-pa-none
+      q-video(
+        v-if="showVideoDialog"
+        :src="`https://www.youtube-nocookie.com/embed/${videoLink}?autoplay=1`"
+        :ratio="16/9"
+      )
 </template>
 
 <script setup lang="ts">
@@ -89,11 +99,11 @@ const props = defineProps<{
   pattern: IPattern
 }>()
 
-const video = ref(false)
 const videoLink = ref('')
 const hasVideo = ref(false)
 const hasImage = ref(false)
 const headerImage = ref('')
+const showVideoDialog = ref(false)
 
 const router = useRouter()
 
@@ -119,15 +129,17 @@ const hasLanes = computed(() => {
   return lanes
 })
 
-const clickHeader = async () => {
-  if (hasVideo.value) video.value = true
-  else
+const onHeaderClick = async () => {
+  if (hasVideo.value && videoLink.value) {
+    showVideoDialog.value = true
+  } else {
     await router.push(
       getI18nRoute({
         name: 'pattern',
         params: { id: props.pattern._id },
       }),
     )
+  }
 }
 
 onMounted(() => {
