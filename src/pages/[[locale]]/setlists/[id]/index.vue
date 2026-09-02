@@ -4,7 +4,7 @@ q-page#setlist
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
@@ -136,6 +136,7 @@ import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
@@ -145,6 +146,7 @@ import { useTempSetlistStore } from '@/stores/temp-setlist'
 import { useUserStore } from '@/stores/user'
 import { controls, getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
@@ -152,13 +154,21 @@ const route = useRoute()
 const user = useUserStore()
 const setlist = useTempSetlistStore()
 
+const isImageError = ref(false)
+
 const backgroundImage = computed(() => {
-  return setlist.image?.length > 0
-    ? setlist.image
-    : setlist.previews.length > 0
-      ? getYouTubeThumbnail(setlist.previews[0]!.ytid)
-      : '/assets/header-setlist.png'
+  if (setlist.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('setlists', setlist._id)
+  } else if (setlist.previews?.length > 0) {
+    return getYouTubeThumbnail(setlist.previews[0]!.ytid)
+  } else {
+    return '/assets/header-setlist.png'
+  }
 })
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('setlistPage.meta.title', { name: setlist.name }),

@@ -1,6 +1,7 @@
 import type { ISetlist } from '../models/setlist'
 import type { Request, Response } from 'express'
 import type { PipelineStage } from 'mongoose'
+import axios from 'axios'
 import { EmbedBuilder } from 'discord.js'
 import { StatusCodes } from 'http-status-codes'
 import _ from 'lodash'
@@ -81,6 +82,48 @@ const buildSetlistEmbed = (setlist: ISetlist) => {
   embed.setTimestamp()
 
   return embed
+}
+
+export const getImage = async (req: Request, res: Response) => {
+  // Request params validation schema
+  const paramsSchema = yup.object({
+    id: yup
+      .string()
+      .required()
+      .test('mongoID', 'Invalid ID', (value) => {
+        return validator.isMongoId(value)
+      }),
+  })
+  // Parsed request params
+  const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
+
+  const setlist = await Setlist.findById(parsedParams.id).select('image').orFail()
+
+  if (!setlist.image) {
+    throw new AppError('NOT_FOUND')
+  }
+
+  if (!isSafeUrl(setlist.image)) {
+    throw new AppError('FORBIDDEN')
+  }
+
+  const response = await axios.get(setlist.image, {
+    responseType: 'stream',
+    timeout: 10000,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    },
+    validateStatus: (status) => status >= 200 && status < 300,
+  })
+
+  const contentType = response.headers['content-type']
+  if (typeof contentType !== 'string' || !contentType.startsWith('image/')) {
+    throw new AppError('BAD_REQUEST')
+  }
+
+  res.setHeader('Content-Type', contentType)
+  res.setHeader('Cache-Control', 'public, max-age=3600')
+  response.data.pipe(res)
 }
 
 export const create = async (req: Request, res: Response) => {

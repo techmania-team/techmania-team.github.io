@@ -4,7 +4,7 @@ q-page#pattern
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
@@ -135,6 +135,7 @@ import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
@@ -143,6 +144,7 @@ import { useTempPatternStore } from '@/stores/temp-pattern'
 import { useUserStore } from '@/stores/user'
 import { getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -151,13 +153,21 @@ const route = useRoute()
 const user = useUserStore()
 const pattern = useTempPatternStore()
 
+const isImageError = ref(false)
+
 const backgroundImage = computed(() => {
-  return pattern.image?.length > 0
-    ? pattern.image
-    : pattern.previews.length > 0
-      ? getYouTubeThumbnail(pattern.previews[0]!.ytid)
-      : '/assets/header-pattern.png'
+  if (pattern.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', pattern._id)
+  } else if (pattern.previews?.length > 0) {
+    return getYouTubeThumbnail(pattern.previews[0]!.ytid)
+  } else {
+    return '/assets/header-pattern.png'
+  }
 })
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('patternPage.meta.title', { name: pattern.name }),

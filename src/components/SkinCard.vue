@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card.full-height.card-skin
   //- Header image
-  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
     .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
@@ -65,6 +65,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -75,9 +76,8 @@ const props = defineProps<{
 
 const videoLink = ref('')
 const hasVideo = ref(false)
-const hasImage = ref(false)
-const headerImage = ref('')
 const showVideoDialog = ref(false)
+const isImageError = ref(false)
 
 const router = useRouter()
 
@@ -95,13 +95,27 @@ const formattedUpdateTime = computed(() => {
   }
 })
 
+const headerImage = computed(() => {
+  if (props.skin.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('skins', props.skin._id)
+  } else if (props.skin.previews?.length > 0) {
+    return getYouTubeThumbnail(props.skin.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
+
 const onHeaderClick = async () => {
   if (hasVideo.value && videoLink.value) {
     showVideoDialog.value = true
   } else {
     await router.push(
       getI18nRoute({
-        name: 'pattern',
+        name: 'skin',
         params: { id: props.skin._id },
       }),
     )
@@ -111,12 +125,5 @@ const onHeaderClick = async () => {
 onMounted(() => {
   videoLink.value = props.skin.previews?.[0]?.ytid || ''
   hasVideo.value = props.skin.previews?.[0]?.ytid !== undefined
-  hasImage.value = props.skin.image?.length > 0 || false
-  headerImage.value =
-    props.skin.image?.length > 0
-      ? props.skin.image
-      : props.skin.previews.length > 0
-        ? getYouTubeThumbnail(props.skin.previews[0]!.ytid)
-        : '/assets/unknown.jpg'
 })
 </script>

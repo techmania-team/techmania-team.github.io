@@ -4,7 +4,7 @@ q-page#skin
   q-parallax.header-parallax(:height="200")
     //- Header image background
     template(#media)
-      img(:src="backgroundImage")
+      q-img(:src="backgroundImage" @error="onImageError")
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
@@ -112,6 +112,7 @@ import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
@@ -119,6 +120,7 @@ import { getI18nRoute } from '@/i18n'
 import { useTempSkinStore } from '@/stores/temp-skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -127,13 +129,21 @@ const route = useRoute()
 const user = useUserStore()
 const skin = useTempSkinStore()
 
+const isImageError = ref(false)
+
 const backgroundImage = computed(() => {
-  return skin.image?.length > 0
-    ? skin.image
-    : skin.previews.length > 0
-      ? getYouTubeThumbnail(skin.previews[0]!.ytid)
-      : '/assets/header-skin.png'
+  if (skin.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('skins', skin._id)
+  } else if (skin.previews?.length > 0) {
+    return getYouTubeThumbnail(skin.previews[0]!.ytid)
+  } else {
+    return '/assets/header-skin.png'
+  }
 })
+
+const onImageError = () => {
+  isImageError.value = true
+}
 
 const metaData = () => ({
   title: t('skinPage.meta.title', { name: skin.name }),

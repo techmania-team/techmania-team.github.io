@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card.full-height.card-setlist
   //- Header image
-  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
     .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
@@ -72,6 +72,7 @@ import { useRouter } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import { controls } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const props = defineProps<{
@@ -81,9 +82,8 @@ const props = defineProps<{
 
 const videoLink = ref('')
 const hasVideo = ref(false)
-const hasImage = ref(false)
-const headerImage = ref('')
 const showVideoDialog = ref(false)
+const isImageError = ref(false)
 
 const router = useRouter()
 
@@ -101,13 +101,27 @@ const formattedUpdateTime = computed(() => {
   }
 })
 
+const headerImage = computed(() => {
+  if (props.setlist.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('setlists', props.setlist._id)
+  } else if (props.setlist.previews?.length > 0) {
+    return getYouTubeThumbnail(props.setlist.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
+
 const onHeaderClick = async () => {
   if (hasVideo.value && videoLink.value) {
     showVideoDialog.value = true
   } else {
     await router.push(
       getI18nRoute({
-        name: 'pattern',
+        name: 'setlist',
         params: { id: props.setlist._id },
       }),
     )
@@ -117,12 +131,5 @@ const onHeaderClick = async () => {
 onMounted(() => {
   videoLink.value = props.setlist.previews?.[0]?.ytid || ''
   hasVideo.value = props.setlist.previews?.[0]?.ytid !== undefined
-  hasImage.value = props.setlist.image?.length > 0 || false
-  headerImage.value =
-    props.setlist.image?.length > 0
-      ? props.setlist.image
-      : props.setlist.previews.length > 0
-        ? getYouTubeThumbnail(props.setlist.previews[0]!.ytid)
-        : '/assets/unknown.jpg'
 })
 </script>

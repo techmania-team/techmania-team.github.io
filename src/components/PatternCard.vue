@@ -1,7 +1,7 @@
 <template lang="pug">
 q-card.full-height.card-pattern
   //- Header image
-  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
     .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
@@ -91,6 +91,7 @@ import { getI18nRoute } from '@/i18n'
 import { getControlIcon } from '@/utils/control'
 import { controls } from '@/utils/control'
 import * as date from '@/utils/date'
+import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
@@ -101,9 +102,8 @@ const props = defineProps<{
 
 const videoLink = ref('')
 const hasVideo = ref(false)
-const hasImage = ref(false)
-const headerImage = ref('')
 const showVideoDialog = ref(false)
+const isImageError = ref(false)
 
 const router = useRouter()
 
@@ -129,6 +129,20 @@ const hasLanes = computed(() => {
   return lanes
 })
 
+const headerImage = computed(() => {
+  if (props.pattern.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', props.pattern._id)
+  } else if (props.pattern.previews?.length > 0) {
+    return getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
+  } else {
+    return '/assets/unknown.jpg'
+  }
+})
+
+const onImageError = () => {
+  isImageError.value = true
+}
+
 const onHeaderClick = async () => {
   if (hasVideo.value && videoLink.value) {
     showVideoDialog.value = true
@@ -145,12 +159,5 @@ const onHeaderClick = async () => {
 onMounted(() => {
   videoLink.value = props.pattern.previews?.[0]?.ytid || ''
   hasVideo.value = props.pattern.previews?.[0]?.ytid !== undefined
-  hasImage.value = props.pattern.image?.length > 0 || false
-  headerImage.value =
-    props.pattern.image?.length > 0
-      ? props.pattern.image
-      : props.pattern.previews.length > 0
-        ? getYouTubeThumbnail(props.pattern.previews[0]!.ytid)
-        : '/assets/unknown.jpg'
 })
 </script>

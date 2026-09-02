@@ -19,3 +19,9 @@ export const isSafeUrl = (link: string) => {
 
   return true
 }
+
+export const toImageProxyUrl = (type: 'patterns' | 'skins' | 'setlists', id: string): string => {
+  const base = import.meta.env.QCLI_HOST_URL || ''
+  console.log(new URL(`/api/${type}/${id}/image`, base).toString())
+  return new URL(`/api/${type}/${id}/image`, base).toString()
+}
