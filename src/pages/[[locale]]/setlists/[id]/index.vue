@@ -123,7 +123,7 @@ q-page#setlist
             q-separator.q-mb-md(inset)
           .row.justify-center.q-col-gutter-md
             .col-12.col-md-6.col-lg-4.q-pa-md.q-my-xs(v-for="(video, idx) in setlist.previews" :key="idx")
-              q-video(:ratio="16/9" :src="'https://www.youtube-nocookie.com/embed/'+video.ytid" loading="lazy")
+              YoutubeVideo(:ytid="video.ytid" :name="video.name")
               p.text-center.q-mt-md {{ video.name }}
             p.text-center(v-if='setlist.previews.length === 0') {{ $t('setlistPage.previews.noPreview') }}
       //- Comments
@@ -141,6 +141,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
+import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
 import { useTempSetlistStore } from '@/stores/temp-setlist'
 import { useUserStore } from '@/stores/user'

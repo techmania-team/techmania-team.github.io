@@ -125,7 +125,7 @@ q-page#index
           q-separator
           .row.q-my-md.q-col-gutter-md
             .col-12.col-md-6.col-lg-3(v-for="(video, idx) in videos" :key="idx")
-              q-video(:ratio="16/9" :src="video" loading="lazy")
+              YoutubeVideo(:name="video.name" :ytid="video.ytid")
 </template>
 
 <script setup lang="ts">
@@ -137,6 +137,7 @@ import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SkinCard from '@/components/SkinCard.vue'
+import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { useTempIndexStore } from '@/stores/temp-index'
 import { toLocaleString } from '@/utils/date'
 
@@ -232,14 +233,14 @@ const published = computed(() => {
 
 // Videos
 const videos = [
-  'https://www.youtube-nocookie.com/embed/MtkxhEmCWwU',
-  'https://www.youtube-nocookie.com/embed/1v_LVASKrsQ',
-  'https://www.youtube-nocookie.com/embed/czRzORpQy3U',
-  'https://www.youtube-nocookie.com/embed/3a3XRaqvsWc',
-  'https://www.youtube-nocookie.com/embed/74f7p-t3YeU',
-  'https://www.youtube-nocookie.com/embed/fmJ_BRHP3w0',
-  'https://www.youtube-nocookie.com/embed/peH2TjiPSfI',
-  'https://www.youtube-nocookie.com/embed/3qlUwAas-wY',
+  { name: 'TECHMANIA 1.0 Update Trailer', ytid: 'MtkxhEmCWwU' },
+  { name: 'TECHMANIA | f for fun', ytid: '1v_LVASKrsQ' },
+  { name: 'TECHMANIA | v (Game Mix)', ytid: 'czRzORpQy3U' },
+  { name: 'TECHMANIA | Yin-Yang Specialist (MUG ver)', ytid: '3a3XRaqvsWc' },
+  { name: 'TECHMANIA | Run 4 Cover', ytid: '74f7p-t3YeU' },
+  { name: 'TECHMANIA | Ash Barrens', ytid: 'fmJ_BRHP3w0' },
+  { name: 'TECHMANIA 101 #1: Getting started', ytid: 'peH2TjiPSfI' },
+  { name: 'TECHMANIA tutorial: Touch', ytid: '3qlUwAas-wY' },
 ]
 
 defineOptions({

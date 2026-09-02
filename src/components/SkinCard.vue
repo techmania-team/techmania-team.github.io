@@ -1,15 +1,34 @@
 <template lang="pug">
 q-card.full-height.card-skin
   //- Header image
-  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
-    .absolute.full-width.full-height.flex.justify-center.items-center(v-if='hasVideo')
-      h1.q-ma-none
-        q-icon.text-white(name="play_circle_outline")
+  YoutubeVideo(
+    v-if="hasVideo"
+    :ytid="videoLink"
+    :name="skin.name"
+    :img="headerImage"
+  )
+  q-img.cursor-pointer(
+    v-else
+    :src="headerImage"
+    :ratio="16/9"
+    @click="goToDetail"
+    @error="onImageError"
+  )
   //- Content
   q-card-section
     //- Download or edit button
-    q-btn.btn-dl.absolute(v-if="!mine" fab icon="download" color="tech" text-color="black" type="a" :href="skin.link" target="__blank")
-    q-btn.btn-dl.absolute(v-if="mine" fab icon="edit" color="tech" text-color="black" @click="$router.push(getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id}}))")
+    q-btn.btn-dl.absolute(
+      v-if="!mine"
+      fab icon="download"
+      color="tech" text-color="black"
+      type="a" :href="skin.link" target="__blank"
+    )
+    q-btn.btn-dl.absolute(
+      v-else
+      fab icon="edit"
+      color="tech" text-color="black"
+      :to="getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id}})"
+    )
     //- Informations
     q-list
       //- Link
@@ -45,42 +64,30 @@ q-card.full-height.card-skin
                 | {{ formattedUpdateTime.relative }}
                 q-tooltip.bg-black(anchor="top middle" self="bottom middle")
                   | {{ formattedUpdateTime.text }}
-q-dialog(v-model="showVideoDialog" backdrop-filter="blur(4px)")
-  q-card(style="width: 800px; max-width: 90vw;")
-    q-bar.bg-dark.text-white
-      div {{ skin.name }}
-      q-space
-      q-btn(dense flat icon="close" v-close-popup)
-    q-card-section.q-pa-none
-      q-video(
-        v-if="showVideoDialog"
-        :src="`https://www.youtube-nocookie.com/embed/${videoLink}?autoplay=1`"
-        :ratio="16/9"
-        loading="lazy"
-      )
 </template>
 
 <script setup lang="ts">
 import type { ISkin } from '@/types/skin'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
 import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
+import YoutubeVideo from './YoutubeVideo.vue'
 
 const props = defineProps<{
   skin: ISkin
   mine: boolean
 }>()
 
-const videoLink = ref('')
-const hasVideo = ref(false)
-const showVideoDialog = ref(false)
 const isImageError = ref(false)
 
 const router = useRouter()
+
+const videoLink = computed(() => props.skin.previews?.[0]?.ytid || '')
+const hasVideo = computed(() => Boolean(videoLink.value))
 
 const formattedTime = computed(() => {
   return {
@@ -110,21 +117,12 @@ const onImageError = () => {
   isImageError.value = true
 }
 
-const onHeaderClick = async () => {
-  if (hasVideo.value && videoLink.value) {
-    showVideoDialog.value = true
-  } else {
-    await router.push(
-      getI18nRoute({
-        name: 'skin',
-        params: { id: props.skin._id },
-      }),
-    )
-  }
+const goToDetail = async () => {
+  await router.push(
+    getI18nRoute({
+      name: 'skin',
+      params: { id: props.skin._id },
+    }),
+  )
 }
-
-onMounted(() => {
-  videoLink.value = props.skin.previews?.[0]?.ytid || ''
-  hasVideo.value = props.skin.previews?.[0]?.ytid !== undefined
-})
 </script>
