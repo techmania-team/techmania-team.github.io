@@ -134,7 +134,7 @@
   "patternPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "작곡가: {composer}. 투고자: ${submitter}."
+      "description": "작곡가: {composer}. 투고자: {submitter}."
     },
     "download": "다운로드",
     "edit": "편집",
@@ -362,7 +362,7 @@
   "skinPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "투고자: ${submitter}."
+      "description": "투고자: {submitter}."
     },
     "download": "다운로드",
     "edit": "편집",
@@ -553,7 +553,7 @@
   "setlistPage": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "투고자: ${submitter}."
+      "description": "투고자: {submitter}."
     },
     "download": "다운로드",
     "edit": "편집",
@@ -860,7 +860,7 @@
   "profile": {
     "meta": {
       "title": "TECHMANIA {'|'} {name}",
-      "description": "${name} 님의 TECHMANIA 마이페이지."
+      "description": "{name} 님의 TECHMANIA 마이페이지."
     },
     "tab": {
       "patterns": "패턴",
