@@ -1,6 +1,6 @@
 <template lang="pug">
 .youtube-video-container
-  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick")
+  q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
     .absolute.full-width.full-height.flex.justify-center.items-center.video-play
       h1.q-ma-none
         q-icon.text-white(name="play_circle_outline")
@@ -30,13 +30,21 @@ const props = defineProps<{
 }>()
 
 const showVideoDialog = ref(false)
+const isImageError = ref(false)
 
 const headerImage = computed(() => {
+  if (isImageError.value) {
+    return '/assets/unknown.jpg'
+  }
   return props.img ? props.img : getYouTubeThumbnail(props.ytid)
 })
 
 const onHeaderClick = () => {
   showVideoDialog.value = true
+}
+
+const onImageError = () => {
+  isImageError.value = true
 }
 
 defineExpose({
