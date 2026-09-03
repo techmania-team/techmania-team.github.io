@@ -126,6 +126,7 @@ q-page#index
           .row.q-my-md.q-col-gutter-md
             .col-12.col-md-6.col-lg-3(v-for="(video, idx) in videos" :key="idx")
               YoutubeVideo(:name="video.name" :ytid="video.ytid")
+              p.text-center.q-mt-md {{ video.name }}
 </template>
 
 <script setup lang="ts">
