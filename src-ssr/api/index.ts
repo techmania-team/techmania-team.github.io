@@ -17,6 +17,8 @@ import routerSitemap from './routes/sitemap'
 import routerSkins from './routes/skins'
 import routerUsers from './routes/users'
 
+const LOOPBACK_IPS = new Set(['127.0.0.1', '::ffff:127.0.0.1', '::1'])
+
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 150,
@@ -24,6 +26,12 @@ const limiter = rateLimit({
   legacyHeaders: false,
   message: 'Too Many Requests',
   statusCode: 429,
+  // SSR prefetches now call the API over the loopback interface, so they all
+  // share a single rate-limit key. Counting them would let the server's own
+  // rendering exhaust the quota for everyone. Requests arriving from the
+  // internet always pass through Heroku's router, which sets X-Forwarded-For,
+  // so they can never present a loopback req.ip under `trust proxy`.
+  skip: (req) => LOOPBACK_IPS.has(req.ip ?? ''),
   handler(req, res, next, options) {
     res.status(options.statusCode).json({ success: false, message: options.message })
   },
@@ -38,7 +46,9 @@ export const initializeApi = async (app: Express) => {
     app.disable('x-powered-by')
 
     // Set up rate limiter
-    app.use(limiter)
+    // Scoped to the API: an SSR page render already costs several prefetch
+    // calls, so counting the page view on top of them burnt the quota fast
+    app.use('/api', limiter)
 
     // Set up session
     app.use(
