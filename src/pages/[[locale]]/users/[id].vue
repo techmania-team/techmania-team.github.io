@@ -49,20 +49,25 @@ q-page#profile
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
-import { useTempUserStore } from '@/stores/temp-user'
+import { EMPTY_USER, userQuery } from '@/queries/user'
 
 const { t } = useI18n()
-const profile = useTempUserStore()
 const route = useRoute('profile')
 
+// Shared with preFetch below, and kept across tab changes by the cache, which
+// is what the old store avoided clearing to stop the header from flickering
+const { data } = useQuery(userQuery(() => route.params.id))
+const profile = computed(() => data.value ?? EMPTY_USER)
+
 const metaData = () => ({
-  title: t('profile.meta.title', { name: profile.name }),
+  title: t('profile.meta.title', { name: profile.value.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -70,12 +75,12 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: t('profile.meta.title', { name: profile.name }),
+      content: t('profile.meta.title', { name: profile.value.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
-      content: t('profile.meta.description', { name: profile.name }),
+      content: t('profile.meta.description', { name: profile.value.name }),
       'data-dynamic': true,
     },
     ogType: {
@@ -88,17 +93,17 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: t('profile.meta.title', { name: profile.name }),
+      content: t('profile.meta.title', { name: profile.value.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
-      content: t('profile.meta.description', { name: profile.name }),
+      content: t('profile.meta.description', { name: profile.value.name }),
       'data-dynamic': true,
     },
     ogImage: {
       property: 'og:image',
-      content: profile.avatar,
+      content: profile.value.avatar,
       'data-dynamic': true,
     },
     twCard: {
@@ -111,17 +116,17 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: t('profile.meta.title', { name: profile.name }),
+      content: t('profile.meta.title', { name: profile.value.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
-      content: t('profile.meta.description', { name: profile.name }),
+      content: t('profile.meta.description', { name: profile.value.name }),
       'data-dynamic': true,
     },
     twImage: {
       name: 'twitter:image',
-      content: profile.avatar,
+      content: profile.value.avatar,
       'data-dynamic': true,
     },
   },
@@ -145,25 +150,21 @@ watch(
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'profile'>
-    // Prefetch profile data
-    const profile = useTempUserStore(store)
-
-    // Note:
-    // Do not clear data here, as it will cause the page to flicker when navigating between tabs
-    // profile.clearData()
-    if (route.params.id) {
-      await profile.fetchProfile(route.params.id)
-    } else {
+    if (!route.params.id) {
       redirect({ name: 'index' })
       return
     }
+
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(userQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
     if (route.name === 'profile') {
       redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
     }
 
     // Check if profile exists
-    if (profile._id.length === 0) {
+    if (!state?.data) {
       redirect({ name: 'index' })
       return
     }
