@@ -35,15 +35,15 @@ export interface QuasarInitialState {
 }
 
 export default defineBoot(({ app, store, ssrContext }) => {
-  app.use(PiniaColada, {
-    // On the server the gc timers would both keep the process awake and hold
-    // every entry alive across requests through their setTimeout closures
-    plugins: import.meta.env.QUASAR_SERVER ? [PiniaColadaSSRNoGc()] : [],
-  })
-
   // Compile-time constant, so the client branch below (and its `window`
   // reference) is dropped from the server bundle entirely
   if (import.meta.env.QUASAR_SERVER) {
+    app.use(PiniaColada, {
+      // On the server the gc timers would both keep the process awake and hold
+      // every entry alive across requests through their setTimeout closures
+      plugins: [PiniaColadaSSRNoGc()],
+    })
+
     // Runs after renderToString, so the cache already holds whatever the
     // queries resolved to, and before Quasar turns ssrContext.state into the
     // window.__INITIAL_STATE__ script tag
@@ -64,8 +64,16 @@ export default defineBoot(({ app, store, ssrContext }) => {
 
   const initialState = window.__INITIAL_STATE__
 
+  // Restore the plain stores first. Installing PiniaColada instantiates its
+  // own stores right away, and replacing state.value wholesale afterwards
+  // would drop them again.
   if (initialState !== undefined) {
     store.state.value = initialState.pinia
+  }
+
+  app.use(PiniaColada)
+
+  if (initialState !== undefined) {
     hydrateQueryCache(useQueryCache(store), initialState.colada)
 
     // Same reasoning as Quasar's own hydration step
