@@ -427,6 +427,9 @@ export const search = async (req: Request, res: Response) => {
         localField: 'submitter',
         foreignField: '_id',
         as: 'submitter',
+        // Aggregation bypasses the Mongoose schema, so project the only
+        // submitter field the client needs
+        pipeline: [{ $project: { name: 1 } }],
       },
     },
     {
