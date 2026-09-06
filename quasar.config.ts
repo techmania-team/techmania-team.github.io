@@ -11,7 +11,9 @@ export default defineConfig((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['markdown', 'analytics', 'auth', 'i18n'],
+    // 'colada' must stay first: it hydrates the store, which Quasar would
+    // otherwise have done before any boot file ran
+    boot: ['colada', 'markdown', 'analytics', 'auth', 'i18n'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.sass'],
@@ -156,8 +158,10 @@ export default defineConfig((ctx) => {
       // clientSideRenderingRoutes: [],
       // noPreloadTagRoutes: [],
       // manualStoreSerialization: true,
-      // manualStoreSsrContextInjection: true,
-      // manualStoreHydration: true,
+      // Pinia Colada's cache needs its own serialize/hydrate pass,
+      // handled in src/boot/colada.ts
+      manualStoreSsrContextInjection: true,
+      manualStoreHydration: true,
       // manualPostHydrationTrigger: true,
       // prodScriptNamedExport: false,
 
