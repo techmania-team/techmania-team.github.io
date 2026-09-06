@@ -39,7 +39,8 @@ const limiter = rateLimit({
 
 export const initializeApi = async (app: Express) => {
   try {
-    await mongoose.connect(import.meta.env.DB_URL || '')
+    // A 512MB dyno has no use for the default pool of 100 sockets
+    await mongoose.connect(import.meta.env.DB_URL || '', { maxPoolSize: 10 })
 
     // Set up Express
     app.set('trust proxy', 1)
@@ -51,12 +52,17 @@ export const initializeApi = async (app: Express) => {
     app.use('/api', limiter)
 
     // Set up session
+    // Note: stays global, SSR page rendering reads req.session in src/boot/auth.ts
     app.use(
       session({
         secret: import.meta.env.SESSION_SECRET || '',
         saveUninitialized: false,
-        resave: true,
-        store: MongoStore.create({ mongoUrl: import.meta.env.DB_URL || '' }),
+        // MongoStore implements touch(), so the session TTL is refreshed
+        // without rewriting the document on every single request
+        resave: false,
+        // Reuse mongoose's client instead of opening a second MongoClient
+        // with its own connection pool
+        store: MongoStore.create({ client: mongoose.connection.getClient() }),
         cookie: {
           secure: Boolean(import.meta.env.PROD || false),
           // 14 days, same as connect mongo default ttl
