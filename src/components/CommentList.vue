@@ -181,13 +181,22 @@ const commentParams = (): CommentQueryParams => ({
   id: props.id,
 })
 
-// Other users' comments
-const { data: otherCommentsData, isPending } = useQuery(() => commentsQuery(commentParams()))
+/**
+ * Both comment queries are client only.
+ *
+ * Server-side calls travel over loopback without the session cookie, so the
+ * API answers them as anonymous. That changes what comes back: it stops
+ * leaving out the reader's own comment, which this component then adds back
+ * from the query below and renders twice, and it reports every vote as not
+ * cast. The endpoint for the reader's own comment cannot answer at all
+ * without a session, and used to 401. Fetching after hydration, with the
+ * cookie, is what this component did before.
+ */
+const { data: otherCommentsData, isPending } = useQuery(() => ({
+  ...commentsQuery(commentParams()),
+  enabled: import.meta.env.QUASAR_CLIENT,
+}))
 
-// Current user's comment. The API 404s when they have not written one, which
-// the query turns into null.
-// Client only: server-side calls go out over loopback without the session
-// cookie, so this endpoint can only ever answer them with a 401
 const { data: myCommentData } = useQuery(() => ({
   ...myCommentQuery(commentParams()),
   enabled: user.isLogin && import.meta.env.QUASAR_CLIENT,
