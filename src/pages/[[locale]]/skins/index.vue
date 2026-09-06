@@ -164,7 +164,10 @@ const skins = computed(() => data.value?.pages.flat() ?? [])
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
   if (!isReady.value || !hasNextPage.value) return done(true)
-  await loadNextPage()
+  // cancelRefetch: false makes a concurrent trigger await the request that is
+  // already running. The default aborts it and starts a new one, which turns
+  // repeated q-infinite-scroll triggers into a storm of cancelled requests.
+  await loadNextPage({ cancelRefetch: false })
   done(!hasNextPage.value)
 }
 
