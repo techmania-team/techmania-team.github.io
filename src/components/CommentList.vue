@@ -186,9 +186,11 @@ const { data: otherCommentsData, isPending } = useQuery(() => commentsQuery(comm
 
 // Current user's comment. The API 404s when they have not written one, which
 // the query turns into null.
+// Client only: server-side calls go out over loopback without the session
+// cookie, so this endpoint can only ever answer them with a 401
 const { data: myCommentData } = useQuery(() => ({
   ...myCommentQuery(commentParams()),
-  enabled: user.isLogin,
+  enabled: user.isLogin && import.meta.env.QUASAR_CLIENT,
 }))
 
 const otherComments = computed(() => otherCommentsData.value ?? [])

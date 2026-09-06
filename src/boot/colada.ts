@@ -44,6 +44,11 @@ export interface QuasarInitialState {
 const queryOptions = {
   staleTime: 1000 * 60,
   refetchOnWindowFocus: false,
+  // Without this a failing query rejects its onServerPrefetch hook, and the
+  // unhandled rejection takes the whole Node process down with it. A page
+  // that cannot load one of its queries should render without it, not kill
+  // the server. The error is carried to the client, which refetches on mount.
+  ssrCatchError: true,
 }
 
 export default defineBoot(({ app, store, ssrContext }) => {
