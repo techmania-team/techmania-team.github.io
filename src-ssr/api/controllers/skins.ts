@@ -195,8 +195,10 @@ export const create = async (req: Request, res: Response) => {
 export const search = async (req: Request, res: Response) => {
   // Request query validation schema
   const querySchema = yup.object().shape({
-    start: yup.number().integer().min(0),
-    limit: yup.number().integer().min(1),
+    start: yup.number().integer().min(0).default(0),
+    // Capped and defaulted: an omitted limit used to mean "no $limit stage at all",
+    // i.e. the entire collection loaded and serialised on a single request
+    limit: yup.number().integer().min(1).max(100).default(20),
     keywords: yup.string(),
     types: yup
       .string()
@@ -313,12 +315,9 @@ export const search = async (req: Request, res: Response) => {
   pipeline.push({ $sort: sortStage })
 
   // Skip & Limit stages
-  if (parseedQuery.start !== undefined) {
-    pipeline.push({ $skip: parseedQuery.start })
-  }
-  if (parseedQuery.limit !== undefined) {
-    pipeline.push({ $limit: parseedQuery.limit })
-  }
+  // Both stages are now unconditional: the schema always supplies a value,
+  // so a request can no longer opt out of pagination
+  pipeline.push({ $skip: parseedQuery.start }, { $limit: parseedQuery.limit })
 
   // Submitter lookup & unset stages
   pipeline.push(

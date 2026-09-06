@@ -1043,8 +1043,10 @@ export const getByUser = async (req: Request, res: Response) => {
   const parsedParams = await paramsSchema.validate(req.params, { stripUnknown: true })
 
   const querySchema = yup.object({
-    start: yup.number().integer().min(0),
-    limit: yup.number().integer().min(1),
+    start: yup.number().integer().min(0).default(0),
+    // Capped and defaulted: an omitted limit used to mean "no $limit stage at all",
+    // i.e. the entire collection loaded and serialised on a single request
+    limit: yup.number().integer().min(1).max(100).default(20),
   })
   const parseedQuery = await querySchema.validate(req.query, { stripUnknown: true })
 
@@ -1056,12 +1058,9 @@ export const getByUser = async (req: Request, res: Response) => {
     },
   ]
 
-  if (parseedQuery.start) {
-    pipeline.push({ $skip: parseedQuery.start })
-  }
-  if (parseedQuery.limit) {
-    pipeline.push({ $limit: parseedQuery.limit })
-  }
+  // Both stages are now unconditional: the schema always supplies a value,
+  // so a request can no longer opt out of pagination
+  pipeline.push({ $skip: parseedQuery.start }, { $limit: parseedQuery.limit })
 
   pipeline.push(
     {
