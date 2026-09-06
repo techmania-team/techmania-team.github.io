@@ -1,8 +1,8 @@
 <template lang="pug">
 #profile-comments
   .container
-    .text-center.q-mt-md.text-body1(v-if="comments.length === 0 && scrollDisable") {{ $t('profile.comments.notFound') }}
-    q-infinite-scroll.row.q-my-md(v-else @load="loadScroll" :offset="200" :disable="scrollDisable")
+    .text-center.q-mt-md.text-body1(v-if="!isPending && comments.length === 0") {{ $t('profile.comments.notFound') }}
+    q-infinite-scroll.row.q-my-md(v-else @load="loadScroll" :offset="200" :disable="!hasNextPage")
       .col-12
         q-list(separator)
           //- Loop all comments
@@ -36,36 +36,38 @@
 
 <script setup lang="ts">
 import type { ICommentDetailed } from '@/types/comment'
-import { ref } from 'vue'
+import { useInfiniteQuery } from '@pinia/colada'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
 import * as commentService from '@/services/comment'
 import * as date from '@/utils/date'
-import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-comments')
 
-const comments = ref<ICommentDetailed[]>([])
-const scrollDisable = ref(false)
+const PAGE_SIZE = 12
 
-const fetchComments = async (start = 0) => {
-  try {
-    const { data } = await commentService.getByUser(route.params.id, {
-      start: start,
-      limit: 12,
-    })
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
+  key: () => ['comments', 'by-user', route.params.id],
+  initialPageParam: 0,
+  query: async ({ pageParam }) =>
+    (
+      await commentService.getByUser(route.params.id, {
+        start: pageParam,
+        limit: PAGE_SIZE,
+      })
+    ).data.result,
+  // A short page means we reached the end
+  getNextPageParam: (lastPage: ICommentDetailed[], _allPages, lastPageParam) =>
+    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
+})
 
-    if (data.result.length > 0) comments.value = comments.value.concat(data.result)
-    else scrollDisable.value = true
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  }
-}
+const comments = computed(() => data.value?.pages.flat() ?? [])
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  await fetchComments((index - 1) * 12)
-  done()
+  if (!hasNextPage.value) return done(true)
+  await loadNextPage()
+  done(!hasNextPage.value)
 }
 
 const getCommentLink = (comment: ICommentDetailed) => {

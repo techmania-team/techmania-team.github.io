@@ -18,20 +18,21 @@ q-page#patterns
               v-if="isReady"
               @load="loadScroll"
               :offset="200"
-              :disable="scrollDisable"
+              :disable="!hasNextPage"
               ref="infiniteScrollRef"
             )
               .col-12.col-sm-6.col-md-4.col-lg-3(v-for="pattern in patterns" :key="pattern._id")
                 PatternCard(:pattern="pattern" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="patterns.length === 0 && scrollDisable && isReady") {{ $t('patternsPage.notFound') }}
+            .text-center.text-body1(v-if="isReady && !isPending && patterns.length === 0") {{ $t('patternsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
 import type { IPattern, IPatternSearchForm, IPatternSortBy } from '@/types/pattern'
+import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
@@ -39,7 +40,6 @@ import PatternCard from '@/components/PatternCard.vue'
 import PatternSearchForm from '@/components/PatternSearchForm.vue'
 import * as patternService from '@/services/pattern'
 import { CONTROLTYPE } from '@/utils/control'
-import { handleError } from '@/utils/handleError'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -112,10 +112,9 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const patterns = ref<IPattern[]>([])
-const scrollDisable = ref(true)
+const PAGE_SIZE = 12
+
 const isReady = ref(false)
-const isFetching = ref(false)
 
 const defaultInitialValues: IPatternSearchForm = {
   keysounded: undefined,
@@ -128,49 +127,44 @@ const defaultInitialValues: IPatternSearchForm = {
 
 const searchParams = ref<IPatternSearchForm>({ ...defaultInitialValues })
 
-const fetchPatterns = async (start = 0) => {
-  if (isFetching.value) return
-  isFetching.value = true
+// The search parameters are part of the key, so every distinct search gets
+// its own cache entry and going back to a previous one is instant.
+// `enabled` holds the first fetch until the URL query has been parsed,
+// otherwise we would fetch once with the defaults and again with the real ones.
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
+  key: () => ['patterns', 'search', searchParams.value],
+  enabled: () => isReady.value,
+  initialPageParam: 0,
+  query: async ({ pageParam }) =>
+    (
+      await patternService.search({
+        start: pageParam,
+        keysounded: searchParams.value.keysounded,
+        controls: searchParams.value.controls.join(),
+        keywords: searchParams.value.keywords,
+        lanes: searchParams.value.lanes.join(),
+        sort: searchParams.value.sort,
+        sortBy: searchParams.value.sortBy,
+        limit: PAGE_SIZE,
+      })
+    ).data.result,
+  // A short page means we reached the end
+  getNextPageParam: (lastPage: IPattern[], _allPages, lastPageParam) =>
+    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
+})
 
-  try {
-    const { data } = await patternService.search({
-      start,
-      keysounded: searchParams.value.keysounded,
-      controls: searchParams.value.controls.join(),
-      keywords: searchParams.value.keywords,
-      lanes: searchParams.value.lanes.join(),
-      sort: searchParams.value.sort,
-      sortBy: searchParams.value.sortBy,
-      limit: 12,
-    })
-
-    patterns.value = patterns.value.concat(data.result)
-
-    if (data.result.length === 12) {
-      scrollDisable.value = false
-    } else {
-      scrollDisable.value = true
-    }
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  } finally {
-    isFetching.value = false
-  }
-}
+const patterns = computed(() => data.value?.pages.flat() ?? [])
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value) return done()
-  await fetchPatterns(patterns.value.length)
-  done()
+  if (!isReady.value || !hasNextPage.value) return done(true)
+  await loadNextPage()
+  done(!hasNextPage.value)
 }
 
+// Changing the params changes the key, which starts the new search on its own
 const applySearch = async (values: IPatternSearchForm) => {
-  patterns.value = []
   searchParams.value = { ...values }
-  scrollDisable.value = true
 
-  await fetchPatterns()
   await router.replace({
     query: {
       keywords: values.keywords,
@@ -241,7 +235,6 @@ onMounted(async () => {
   }
 
   isReady.value = true
-  await fetchPatterns()
 })
 </script>
 

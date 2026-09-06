@@ -20,27 +20,27 @@ q-page#skins
               v-if="isReady"
               @load="loadScroll"
               :offset="200"
-              :disable="scrollDisable"
+              :disable="!hasNextPage"
               ref="infiniteScrollRef"
             )
               .col-12.col-sm-6.col-md-4.col-lg-3(v-for="skin in skins" :key="skin._id")
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable && isReady") {{ $t('skinsPage.notFound') }}
+            .text-center.text-body1(v-if="isReady && !isPending && skins.length === 0") {{ $t('skinsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
 import type { ISkin, ISkinSearchForm, ISkinSortBy } from '@/types/skin'
+import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SkinCard from '@/components/SkinCard.vue'
 import SkinSearchForm from '@/components/SkinSearchForm.vue'
 import * as skinService from '@/services/skin'
-import { handleError } from '@/utils/handleError'
 import { SKINTYPE } from '@/utils/skin'
 
 const route = useRoute()
@@ -114,10 +114,9 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const skins = ref<ISkin[]>([])
-const scrollDisable = ref(true)
+const PAGE_SIZE = 12
+
 const isReady = ref(false)
-const isFetching = ref(false)
 
 const defaultInitialValues: ISkinSearchForm = {
   keywords: '',
@@ -132,34 +131,31 @@ const searchParams = ref<ISkinSearchForm>({ ...defaultInitialValues })
  * Fetch skins from API
  * @param start - The start index of the skins
  */
-const fetchSkins = async (start = 0) => {
-  if (isFetching.value) return
-  isFetching.value = true
+// The search parameters are part of the key, so every distinct search gets
+// its own cache entry and going back to a previous one is instant.
+// `enabled` holds the first fetch until the URL query has been parsed,
+// otherwise we would fetch once with the defaults and again with the real ones.
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
+  key: () => ['skins', 'search', searchParams.value],
+  enabled: () => isReady.value,
+  initialPageParam: 0,
+  query: async ({ pageParam }) =>
+    (
+      await skinService.search({
+        start: pageParam,
+        types: searchParams.value.types.join(),
+        keywords: searchParams.value.keywords,
+        sort: searchParams.value.sort,
+        sortBy: searchParams.value.sortBy,
+        limit: PAGE_SIZE,
+      })
+    ).data.result,
+  // A short page means we reached the end
+  getNextPageParam: (lastPage: ISkin[], _allPages, lastPageParam) =>
+    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
+})
 
-  try {
-    const { data } = await skinService.search({
-      start,
-      types: searchParams.value.types.join(),
-      keywords: searchParams.value.keywords,
-      sort: searchParams.value.sort,
-      sortBy: searchParams.value.sortBy,
-      limit: 12,
-    })
-
-    skins.value = skins.value.concat(data.result)
-
-    if (data.result.length === 12) {
-      scrollDisable.value = false
-    } else {
-      scrollDisable.value = true
-    }
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  } finally {
-    isFetching.value = false
-  }
-}
+const skins = computed(() => data.value?.pages.flat() ?? [])
 
 /**
  * Load more skins
@@ -167,20 +163,18 @@ const fetchSkins = async (start = 0) => {
  * @param done - The callback function
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value) return done()
-  await fetchSkins(skins.value.length)
-  done()
+  if (!isReady.value || !hasNextPage.value) return done(true)
+  await loadNextPage()
+  done(!hasNextPage.value)
 }
 
 /**
  * On search form submit, apply search filters
  */
 const applySearch = async (values: ISkinSearchForm) => {
-  skins.value = []
+  // Changing the params changes the key, which starts the new search on its own
   searchParams.value = { ...values }
-  scrollDisable.value = true
 
-  await fetchSkins()
   await router.replace({
     query: {
       keywords: values.keywords,
@@ -231,7 +225,6 @@ onMounted(async () => {
   }
 
   isReady.value = true
-  await fetchSkins()
 })
 </script>
 
