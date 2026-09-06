@@ -338,13 +338,14 @@ q-dialog(v-model="deleteDialog" persistent)
     //- Dialog actions
     q-card-actions(align="around")
       //- Confirm
-      q-btn(color="green" flat :label="$t('setlistFormPage.deleteDialog.yes')" @click="deleteSetlist" :loading="deleting")
+      q-btn(color="green" flat :label="$t('setlistFormPage.deleteDialog.yes')" @click="deleteSetlist()" :loading="isDeleting")
       //- Cancel
       q-btn(color="red" flat :label="$t('setlistFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
 <script setup lang="ts">
-import type { ISetlist } from '@/types/setlist'
+import type { ISetlist, ISetlistForm } from '@/types/setlist'
+import { useMutation, useQueryCache } from '@pinia/colada'
 import { AxiosError } from 'axios'
 import { useQuasar } from 'quasar'
 import validator from 'validator'
@@ -354,7 +355,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
 import { getI18nRoute } from '@/i18n'
-import * as patternService from '@/services/pattern'
+import { patternQuery, patternTypeaheadQuery } from '@/queries/pattern'
 import * as setlistService from '@/services/setlist'
 import { useUserStore } from '@/stores/user'
 import { controls, CONTROLTYPE } from '@/utils/control'
@@ -659,16 +660,13 @@ const filterPatterns = async (val: string, update: (callback: () => void) => voi
       patternOptions.value = []
     })
   }
-  try {
-    const { data } = await patternService.search({ keywords: val, sort: 1, sortBy: 'name' })
-    return update(() => {
-      patternOptions.value = data.result
-    })
-  } catch {
-    return update(() => {
-      patternOptions.value = []
-    })
-  }
+
+  const options = patternTypeaheadQuery(val)
+  const state = await queryCache.refresh(queryCache.ensure(options)).catch(() => null)
+
+  return update(() => {
+    patternOptions.value = state?.data ?? []
+  })
 }
 
 const filterDifficulties = async (
@@ -682,18 +680,15 @@ const filterDifficulties = async (
       difficultyOptions.value = []
     })
   }
-  try {
-    const { data } = await patternService.searchID(form.values[key][idx].pattern)
-    return update(() => {
-      difficultyOptions.value = data.result.difficulties.filter(
-        (difficulty: IDifficultyOption) => difficulty.control === form.values.control,
-      )
-    })
-  } catch {
-    return update(() => {
-      difficultyOptions.value = []
-    })
-  }
+  // Same options the pattern page uses, so this shares its cache entry
+  const options = patternQuery(form.values[key][idx].pattern)
+  const state = await queryCache.refresh(queryCache.ensure(options)).catch(() => null)
+
+  return update(() => {
+    difficultyOptions.value = (state?.data?.difficulties ?? []).filter(
+      (difficulty: IDifficultyOption) => difficulty.control === form.values.control,
+    )
+  })
 }
 
 const clearDifficulty = (type: 'selectablePatterns' | 'hiddenPatterns', idx: number) => {
@@ -716,107 +711,93 @@ const clearDifficulties = () => {
   })
 }
 
-// On form submit
-const onSubmit = form.handleSubmit(async (values) => {
-  $q.loading.show()
+const queryCache = useQueryCache()
 
-  try {
-    if (!turnstileToken.value) {
-      $q.notify({
-        icon: 'warning',
-        message: t('setlistFormPage.turnstile.error.required'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      $q.loading.hide()
-      return
-    }
-
+// Create or update, depending on whether we were given a setlist. Resolves
+// with the id to navigate to afterwards.
+const { mutate: saveSetlist } = useMutation({
+  mutation: async (payload: ISetlistForm) => {
     if (isEdit.value) {
-      // Has setlist ID, update setlist
-      await setlistService.update(props.setlist!._id, {
-        name: values.name,
-        control: values.control,
-        link: values.link,
-        image: values.image,
-        selectablePatterns: values.selectablePatterns,
-        hiddenPatterns: values.hiddenPatterns,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('setlistFormPage.result.updated'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'setlist', params: { id: props.setlist!._id } }))
-    } else {
-      // No setlist ID, create new setlist
-      const { data } = await setlistService.create({
-        name: values.name,
-        control: values.control,
-        link: values.link,
-        image: values.image,
-        selectablePatterns: values.selectablePatterns,
-        hiddenPatterns: values.hiddenPatterns,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('setlistFormPage.result.submitted'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'setlist', params: { id: data.result } }))
+      await setlistService.update(props.setlist!._id, payload)
+      return props.setlist!._id
     }
-  } catch (error) {
+    const { data } = await setlistService.create(payload)
+    return data.result
+  },
+  onMutate: () => {
+    $q.loading.show()
+  },
+  onSuccess: async (id) => {
+    // Every list, profile tab and detail entry for setlists is now out of date
+    await queryCache.invalidateQueries({ key: ['setlists'] })
+
+    $q.notify({
+      icon: 'check',
+      message: t(
+        isEdit.value ? 'setlistFormPage.result.updated' : 'setlistFormPage.result.submitted',
+      ),
+      color: 'positive',
+      position: 'top',
+      timeout: 2000,
+    })
+    await router.push(getI18nRoute({ name: 'setlist', params: { id } }))
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
-      if (isEdit.value) {
-        // Editing setlist
-        await handleFormSubmitError(error, 'setlistFormPage', 'update')
-      } else {
-        // Creating new setlist
-        await handleFormSubmitError(error, 'setlistFormPage', 'create')
-      }
+      await handleFormSubmitError(error, 'setlistFormPage', isEdit.value ? 'update' : 'create')
     } else {
       handleError(error)
     }
     turnstileRef.value?.reset()
-  } finally {
+  },
+  onSettled: () => {
     $q.loading.hide()
+  },
+})
+
+// On form submit
+const onSubmit = form.handleSubmit((values) => {
+  if (!turnstileToken.value) {
+    $q.notify({
+      icon: 'warning',
+      message: t('setlistFormPage.turnstile.error.required'),
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    })
+    return
   }
+
+  saveSetlist({
+    name: values.name,
+    control: values.control,
+    link: values.link,
+    image: values.image,
+    selectablePatterns: values.selectablePatterns,
+    hiddenPatterns: values.hiddenPatterns,
+    previews: values.previews
+      .filter((preview) => preview.name || preview.link)
+      .map((preview) => ({
+        name: preview.name,
+        ytid: getIDFromYouTubeLink(preview.link),
+      })),
+    description: values.description,
+    'cf-turnstile-response': turnstileToken.value,
+  })
 })
 
 // Delete confirmation dialog state
 const deleteDialog = ref(false)
-// Is deleting setlist
-const deleting = ref(false)
 // Open Delete confirmation dialog
 const openDeleteDialog = () => {
   deleteDialog.value = true
 }
-// Delete setlist
-const deleteSetlist = async () => {
-  deleting.value = true
-  try {
-    await setlistService.del(props.setlist!._id)
+
+const { mutate: deleteSetlist, isLoading: isDeleting } = useMutation({
+  mutation: () => setlistService.del(props.setlist!._id),
+  onSuccess: async () => {
+    await queryCache.invalidateQueries({ key: ['setlists'] })
+
     // Notify success
     $q.notify({
       icon: 'check',
@@ -825,23 +806,19 @@ const deleteSetlist = async () => {
       position: 'top',
       timeout: 2000,
     })
-    // Redirect to home
+    // Redirect to the submitter's profile
     await router.push(getI18nRoute({ name: 'profile-setlists', params: { id: user._id } }))
-  } catch (error) {
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
       await handleFormSubmitError(error, 'setlistFormPage', 'delete')
     } else {
       handleError(error)
     }
-  }
-  deleting.value = false
-  deleteDialog.value = false
-}
-
-// Note:
-// Prefetch is not working in component
-defineOptions({
-  async preFetch() {},
+  },
+  onSettled: () => {
+    deleteDialog.value = false
+  },
 })
 
 onMounted(async () => {

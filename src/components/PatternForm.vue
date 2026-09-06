@@ -248,13 +248,14 @@ q-dialog(v-model="deleteDialog" persistent)
     //- Dialog actions
     q-card-actions(align="around")
       //- Confirm
-      q-btn(color="green" flat :label="$t('patternFormPage.deleteDialog.yes')" @click="deletePattern" :loading="deleting")
+      q-btn(color="green" flat :label="$t('patternFormPage.deleteDialog.yes')" @click="deletePattern()" :loading="isDeleting")
       //- Cancel
       q-btn(color="red" flat :label="$t('patternFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
 <script setup lang="ts">
-import type { IPattern, IPatternDifficulty } from '@/types/pattern'
+import type { IPattern, IPatternDifficulty, IPatternForm } from '@/types/pattern'
+import { useMutation, useQueryCache } from '@pinia/colada'
 import { AxiosError } from 'axios'
 import { useQuasar } from 'quasar'
 import { useFieldArray, useForm } from 'vee-validate'
@@ -429,106 +430,95 @@ const getDiffLevel = (i: number) => form.defineField(`difficulties[${i}].level`)
 const getDiffControl = (i: number) => form.defineField(`difficulties[${i}].control`)
 const getDiffLanes = (i: number) => form.defineField(`difficulties[${i}].lanes`)
 
-// On form submit
-const onSubmit = form.handleSubmit(async (values) => {
-  $q.loading.show()
-  try {
-    if (!turnstileToken.value) {
-      $q.notify({
-        icon: 'warning',
-        message: t('patternFormPage.turnstile.error.required'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      $q.loading.hide()
-      return
-    }
+const queryCache = useQueryCache()
 
+// Create or update, depending on whether we were given a pattern. Resolves
+// with the id to navigate to afterwards.
+const { mutate: savePattern } = useMutation({
+  mutation: async (payload: IPatternForm) => {
     if (isEdit.value) {
-      // Has pattern ID, update pattern
-      await patternService.update(props.pattern!._id, {
-        name: values.name,
-        composer: values.composer,
-        link: values.link,
-        keysounded: values.keysounded,
-        image: values.image,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        difficulties: values.difficulties as IPatternDifficulty[],
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('patternFormPage.result.updated'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'pattern', params: { id: props.pattern!._id } }))
-    } else {
-      // No pattern ID, create new pattern
-      const { data } = await patternService.create({
-        name: values.name,
-        composer: values.composer,
-        link: values.link,
-        keysounded: values.keysounded,
-        image: values.image,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        difficulties: values.difficulties as IPatternDifficulty[],
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('patternFormPage.result.submitted'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'pattern', params: { id: data.result } }))
+      await patternService.update(props.pattern!._id, payload)
+      return props.pattern!._id
     }
-  } catch (error) {
+    const { data } = await patternService.create(payload)
+    return data.result
+  },
+  onMutate: () => {
+    $q.loading.show()
+  },
+  onSuccess: async (id) => {
+    // Every list, profile tab and detail entry for patterns is now out of
+    // date. Without this the new pattern would not show up until the cache
+    // went stale on its own.
+    await queryCache.invalidateQueries({ key: ['patterns'] })
+
+    $q.notify({
+      icon: 'check',
+      message: t(
+        isEdit.value ? 'patternFormPage.result.updated' : 'patternFormPage.result.submitted',
+      ),
+      color: 'positive',
+      position: 'top',
+      timeout: 2000,
+    })
+    await router.push(getI18nRoute({ name: 'pattern', params: { id } }))
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
-      if (isEdit.value) {
-        // Editing pattern
-        await handleFormSubmitError(error, 'patternFormPage', 'update')
-      } else {
-        // Creating new pattern
-        await handleFormSubmitError(error, 'patternFormPage', 'create')
-      }
+      await handleFormSubmitError(error, 'patternFormPage', isEdit.value ? 'update' : 'create')
     } else {
       handleError(error)
     }
     turnstileRef.value?.reset()
-  } finally {
+  },
+  onSettled: () => {
     $q.loading.hide()
+  },
+})
+
+// On form submit
+const onSubmit = form.handleSubmit((values) => {
+  if (!turnstileToken.value) {
+    $q.notify({
+      icon: 'warning',
+      message: t('patternFormPage.turnstile.error.required'),
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    })
+    return
   }
+
+  savePattern({
+    name: values.name,
+    composer: values.composer,
+    link: values.link,
+    keysounded: values.keysounded,
+    image: values.image,
+    previews: values.previews
+      .filter((preview) => preview.name || preview.link)
+      .map((preview) => ({
+        name: preview.name,
+        ytid: getIDFromYouTubeLink(preview.link),
+      })),
+    difficulties: values.difficulties as IPatternDifficulty[],
+    description: values.description,
+    'cf-turnstile-response': turnstileToken.value,
+  })
 })
 
 // Delete confirmation dialog state
 const deleteDialog = ref(false)
-// Is deleting pattern
-const deleting = ref(false)
 // Open Delete confirmation dialog
 const openDeleteDialog = () => {
   deleteDialog.value = true
 }
-// Delete pattern
-const deletePattern = async () => {
-  deleting.value = true
-  try {
-    await patternService.del(props.pattern!._id)
+
+const { mutate: deletePattern, isLoading: isDeleting } = useMutation({
+  mutation: () => patternService.del(props.pattern!._id),
+  onSuccess: async () => {
+    await queryCache.invalidateQueries({ key: ['patterns'] })
+
     // Notify success
     $q.notify({
       icon: 'check',
@@ -537,18 +527,20 @@ const deletePattern = async () => {
       position: 'top',
       timeout: 2000,
     })
-    // Redirect to home
+    // Redirect to the submitter's profile
     await router.push(getI18nRoute({ name: 'profile-patterns', params: { id: user._id } }))
-  } catch (error) {
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
       await handleFormSubmitError(error, 'patternFormPage', 'delete')
     } else {
       handleError(error)
     }
-  }
-  deleting.value = false
-  deleteDialog.value = false
-}
+  },
+  onSettled: () => {
+    deleteDialog.value = false
+  },
+})
 
 onMounted(async () => {
   // Get pattern data if editing

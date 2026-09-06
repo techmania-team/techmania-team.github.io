@@ -1,7 +1,7 @@
 import type { IPattern } from '@/types/pattern'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
-import { searchID } from '@/services/pattern'
+import { search, searchID } from '@/services/pattern'
 
 /**
  * Shared query options so a page's preFetch hook and its useQuery() call end
@@ -12,6 +12,18 @@ import { searchID } from '@/services/pattern'
 export const patternQuery = (id: MaybeRefOrGetter<string>) => ({
   key: () => ['patterns', toValue(id)],
   query: async () => (await searchID(toValue(id))).data.result,
+  staleTime: 1000 * 60,
+})
+
+/**
+ * Name lookup used by the setlist form's pattern picker. Cached so that
+ * backspacing through a search term does not refetch what was just typed.
+ */
+export const patternTypeaheadQuery = (keywords: MaybeRefOrGetter<string>) => ({
+  key: () => ['patterns', 'typeahead', toValue(keywords)],
+  query: async () =>
+    (await search({ keywords: toValue(keywords), sort: 1 as const, sortBy: 'name' as const })).data
+      .result,
   staleTime: 1000 * 60,
 })
 
