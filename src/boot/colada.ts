@@ -34,11 +34,24 @@ export interface QuasarInitialState {
   colada: Record<string, _UseQueryEntryNodeValueSerialized>
 }
 
+/**
+ * Pinia Colada defaults to a 5s staleTime and refetches on window focus.
+ * Patterns, skins and setlists barely change, and for an infinite list a
+ * refresh re-runs the query once per page already loaded, one after another.
+ * With the defaults, tabbing back to the browser or navigating back to a list
+ * scrolled a few pages deep costs a burst of sequential requests.
+ */
+const queryOptions = {
+  staleTime: 1000 * 60,
+  refetchOnWindowFocus: false,
+}
+
 export default defineBoot(({ app, store, ssrContext }) => {
   // Compile-time constant, so the client branch below (and its `window`
   // reference) is dropped from the server bundle entirely
   if (import.meta.env.QUASAR_SERVER) {
     app.use(PiniaColada, {
+      queryOptions,
       // On the server the gc timers would both keep the process awake and hold
       // every entry alive across requests through their setTimeout closures
       plugins: [PiniaColadaSSRNoGc()],
@@ -71,7 +84,7 @@ export default defineBoot(({ app, store, ssrContext }) => {
     store.state.value = initialState.pinia
   }
 
-  app.use(PiniaColada)
+  app.use(PiniaColada, { queryOptions })
 
   if (initialState !== undefined) {
     hydrateQueryCache(useQueryCache(store), initialState.colada)

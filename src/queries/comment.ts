@@ -48,11 +48,11 @@ export const myCommentQuery = defineQueryOptions(({ target, id }: CommentQueryPa
 }))
 
 /** Shape used before a comment exists, so templates never see undefined */
-export const EMPTY_COMMENT: IComment = {
+export const EMPTY_COMMENT: Readonly<IComment> = Object.freeze({
   _id: '',
   rating: 0,
   replies: [],
-}
+})
 
 /** One user's comments across everything, for their profile tab */
 export const commentsByUserQuery = defineInfiniteQueryOptions((user: string) => ({

@@ -48,11 +48,10 @@ export const skinsByUserQuery = defineInfiniteQueryOptions((submitter: string) =
 export const skinQuery = defineQueryOptions((id: string) => ({
   key: ['skins', id],
   query: async () => (await searchID(id)).data.result,
-  staleTime: 1000 * 60,
 }))
 
 /** Shape used while a query is pending, so templates never see undefined */
-export const EMPTY_SKIN: ISkin = {
+export const EMPTY_SKIN: Readonly<ISkin> = Object.freeze({
   _id: '',
   submitter: { _id: '', name: '' },
   name: '',
@@ -64,4 +63,4 @@ export const EMPTY_SKIN: ISkin = {
   createdAt: '',
   updatedAt: '',
   rating: { count: 0, avg: 0 },
-}
+})

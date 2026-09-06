@@ -729,7 +729,10 @@ const { mutate: saveSetlist } = useMutation({
   },
   onSuccess: async (id) => {
     // Every list, profile tab and detail entry for setlists is now out of date
-    await queryCache.invalidateQueries({ key: ['setlists'] })
+    // refetchActive: false marks them stale without refetching. We are
+    // navigating away, so awaiting a refresh of lists nobody is looking at
+    // would only delay the redirect; they refetch when next opened.
+    await queryCache.invalidateQueries({ key: ['setlists'] }, false)
 
     $q.notify({
       icon: 'check',
@@ -796,7 +799,7 @@ const openDeleteDialog = () => {
 const { mutate: deleteSetlist, isLoading: isDeleting } = useMutation({
   mutation: () => setlistService.del(props.setlist!._id),
   onSuccess: async () => {
-    await queryCache.invalidateQueries({ key: ['setlists'] })
+    await queryCache.invalidateQueries({ key: ['setlists'] }, false)
 
     // Notify success
     $q.notify({

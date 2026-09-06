@@ -336,7 +336,10 @@ const { mutate: saveSkin } = useMutation({
   },
   onSuccess: async (id) => {
     // Every list, profile tab and detail entry for skins is now out of date
-    await queryCache.invalidateQueries({ key: ['skins'] })
+    // refetchActive: false marks them stale without refetching. We are
+    // navigating away, so awaiting a refresh of lists nobody is looking at
+    // would only delay the redirect; they refetch when next opened.
+    await queryCache.invalidateQueries({ key: ['skins'] }, false)
 
     $q.notify({
       icon: 'check',
@@ -399,7 +402,7 @@ const openDeleteDialog = () => {
 const { mutate: deleteSkin, isLoading: isDeleting } = useMutation({
   mutation: () => skinService.del(props.skin!._id),
   onSuccess: async () => {
-    await queryCache.invalidateQueries({ key: ['skins'] })
+    await queryCache.invalidateQueries({ key: ['skins'] }, false)
 
     // Notify success
     $q.notify({

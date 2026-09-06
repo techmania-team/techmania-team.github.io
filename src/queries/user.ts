@@ -6,11 +6,10 @@ import { searchID } from '@/services/user'
 export const userQuery = defineQueryOptions((id: string) => ({
   key: ['users', id],
   query: async () => (await searchID(id)).data.result,
-  staleTime: 1000 * 60,
 }))
 
 /** Shape used while a query is pending, so templates never see undefined */
-export const EMPTY_USER: IUSer = {
+export const EMPTY_USER: Readonly<IUSer> = Object.freeze({
   _id: '',
   name: '',
   avatar: '',
@@ -18,4 +17,4 @@ export const EMPTY_USER: IUSer = {
   skinCount: 0,
   setlistCount: 0,
   commentCount: 0,
-}
+})

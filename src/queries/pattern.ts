@@ -64,7 +64,6 @@ export const patternsByUserQuery = defineInfiniteQueryOptions((submitter: string
 export const patternQuery = defineQueryOptions((id: string) => ({
   key: ['patterns', id],
   query: async () => (await searchID(id)).data.result,
-  staleTime: 1000 * 60,
 }))
 
 /**
@@ -75,11 +74,10 @@ export const patternTypeaheadQuery = defineQueryOptions((keywords: string) => ({
   key: ['patterns', 'typeahead', keywords],
   query: async () =>
     (await search({ keywords, sort: 1 as const, sortBy: 'name' as const })).data.result,
-  staleTime: 1000 * 60,
 }))
 
 /** Shape used while a query is pending, so templates never see undefined */
-export const EMPTY_PATTERN: IPattern = {
+export const EMPTY_PATTERN: Readonly<IPattern> = Object.freeze({
   _id: '',
   submitter: { _id: '', name: '' },
   name: '',
@@ -93,4 +91,4 @@ export const EMPTY_PATTERN: IPattern = {
   createdAt: '',
   updatedAt: '',
   rating: { count: 0, avg: 0 },
-}
+})

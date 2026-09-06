@@ -49,11 +49,10 @@ export const setlistsByUserQuery = defineInfiniteQueryOptions((submitter: string
 export const setlistQuery = defineQueryOptions((id: string) => ({
   key: ['setlists', id],
   query: async () => (await searchID(id)).data.result,
-  staleTime: 1000 * 60,
 }))
 
 /** Shape used while a query is pending, so templates never see undefined */
-export const EMPTY_SETLIST: ISetlist = {
+export const EMPTY_SETLIST: Readonly<ISetlist> = Object.freeze({
   _id: '',
   submitter: { _id: '', name: '' },
   name: '',
@@ -67,4 +66,4 @@ export const EMPTY_SETLIST: ISetlist = {
   createdAt: '',
   updatedAt: '',
   rating: { count: 0, avg: 0 },
-}
+})

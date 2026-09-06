@@ -450,7 +450,10 @@ const { mutate: savePattern } = useMutation({
     // Every list, profile tab and detail entry for patterns is now out of
     // date. Without this the new pattern would not show up until the cache
     // went stale on its own.
-    await queryCache.invalidateQueries({ key: ['patterns'] })
+    // refetchActive: false marks them stale without refetching. We are
+    // navigating away, so awaiting a refresh of lists nobody is looking at
+    // would only delay the redirect; they refetch when next opened.
+    await queryCache.invalidateQueries({ key: ['patterns'] }, false)
 
     $q.notify({
       icon: 'check',
@@ -517,7 +520,7 @@ const openDeleteDialog = () => {
 const { mutate: deletePattern, isLoading: isDeleting } = useMutation({
   mutation: () => patternService.del(props.pattern!._id),
   onSuccess: async () => {
-    await queryCache.invalidateQueries({ key: ['patterns'] })
+    await queryCache.invalidateQueries({ key: ['patterns'] }, false)
 
     // Notify success
     $q.notify({
