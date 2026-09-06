@@ -502,7 +502,7 @@ export const del = async (req: Request, res: Response) => {
   await Comment.deleteMany({ pattern: parsedParams.id })
   // Delete webhook message
   if (pattern.webhook) {
-    await deleteWebhook(import.meta.env._PATTERNS || '', pattern.webhook)
+    await deleteWebhook(import.meta.env.DISCORD_WEBHOOK_PATTERNS || '', pattern.webhook)
   }
 
   res.status(StatusCodes.OK).send({ success: true, message: '' })
