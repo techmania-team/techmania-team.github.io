@@ -10,7 +10,11 @@ import axios from 'axios'
  * Talk to ourselves over the loopback interface instead.
  */
 const getBaseUrl = () => {
-  if (import.meta.env.QUASAR_SERVER) {
+  // Production only: Quasar's dev server takes its port from
+  // quasar.config.ts > devServer.port and never sets process.env.PORT, so
+  // guessing the loopback port in dev would point at nothing and every
+  // server-side prefetch would fail with ECONNREFUSED
+  if (import.meta.env.QUASAR_SERVER && import.meta.env.QUASAR_PROD) {
     return `http://127.0.0.1:${process.env.PORT || 3000}`
   }
   return import.meta.env.QCLI_HOST_URL
