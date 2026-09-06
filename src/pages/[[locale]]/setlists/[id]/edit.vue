@@ -16,19 +16,22 @@ q-page#setlistForm
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import SetlistForm from '@/components/SetlistForm.vue'
-import { useTempSetlistStore } from '@/stores/temp-setlist'
+import { EMPTY_SETLIST, setlistQuery } from '@/queries/setlist'
 import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
-const route = useRoute()
-const setlist = useTempSetlistStore()
+const route = useRoute('setlist-form-edit')
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(setlistQuery(() => route.params.id))
+const setlist = computed(() => data.value ?? EMPTY_SETLIST)
 
 const title = computed(() =>
   user.isLogin
@@ -120,11 +123,7 @@ defineOptions({
       'setlist-form-edit'
     >
 
-    const setlist = useTempSetlistStore(store)
     const user = useUserStore(store)
-
-    // Clear store
-    setlist.clearData()
 
     // New setlist form, no need to prefetch data
     if (!route.params.id) return
@@ -142,11 +141,14 @@ defineOptions({
     // direct access or refresh page --> server side --> ssrContext is available
     const userId = user._id
 
-    // Prefetch setlist data
-    await setlist.fetchSetlist(route.params.id)
+    // Warms the same cache entry the component reads. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(setlistQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
     // Check if setlist exists and user is the submitter
-    if (setlist._id.length === 0 || setlist.submitter._id !== userId) {
+    if (!state?.data || state.data.submitter._id !== userId) {
       redirect({ name: 'index' })
       return
     }

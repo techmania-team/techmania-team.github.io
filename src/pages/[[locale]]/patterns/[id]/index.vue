@@ -132,17 +132,18 @@ q-page#pattern
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
-import { computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
-import { useTempPatternStore } from '@/stores/temp-pattern'
+import { EMPTY_PATTERN, patternQuery } from '@/queries/pattern'
 import { useUserStore } from '@/stores/user'
 import { getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
@@ -151,23 +152,26 @@ import { getLevelColor, getLevelFilter } from '@/utils/level'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
-const route = useRoute()
+const route = useRoute('pattern')
 const user = useUserStore()
-const pattern = useTempPatternStore()
+
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(patternQuery(() => route.params.id))
+const pattern = computed(() => data.value ?? EMPTY_PATTERN)
 
 const isImageError = ref(false)
 
 const descriptionSanitized = computed(() => {
-  return sanitizeHtml(pattern.description)
+  return sanitizeHtml(pattern.value.description)
 })
 
 const backgroundImage = computed(() => {
-  if (pattern.image?.length > 0 && !isImageError.value) {
-    return toImageProxyUrl('patterns', pattern._id)
-  } else if (pattern.previews?.length > 0) {
-    return getYouTubeThumbnail(pattern.previews[0]!.ytid)
+  if (pattern.value.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('patterns', pattern.value._id)
+  } else if (pattern.value.previews?.length > 0) {
+    return getYouTubeThumbnail(pattern.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-pattern.png'
+    return '/assets/header-pattern.value.png'
   }
 })
 
@@ -176,7 +180,7 @@ const onImageError = () => {
 }
 
 const metaData = () => ({
-  title: t('patternPage.meta.title', { name: pattern.name }),
+  title: t('patternPage.meta.title', { name: pattern.value.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -184,14 +188,14 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: t('patternPage.meta.title', { name: pattern.name }),
+      content: t('patternPage.meta.title', { name: pattern.value.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
       content: t('patternPage.meta.description', {
-        composer: pattern.composer,
-        submitter: pattern.submitter.name,
+        composer: pattern.value.composer,
+        submitter: pattern.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -205,14 +209,14 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: t('patternPage.meta.title', { name: pattern.name }),
+      content: t('patternPage.meta.title', { name: pattern.value.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
       content: t('patternPage.meta.description', {
-        composer: pattern.composer,
-        submitter: pattern.submitter.name,
+        composer: pattern.value.composer,
+        submitter: pattern.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -231,14 +235,14 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: t('patternPage.meta.title', { name: pattern.name }),
+      content: t('patternPage.meta.title', { name: pattern.value.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
       content: t('patternPage.meta.description', {
-        composer: pattern.composer,
-        submitter: pattern.submitter.name,
+        composer: pattern.value.composer,
+        submitter: pattern.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -255,33 +259,23 @@ defineOptions({
   // RouteLocationNormalizedLoadedTyped
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'pattern'>
-    // Prefetch pattern data
-    const pattern = useTempPatternStore(store)
-    if (pattern._id !== route.params.id) {
-      pattern.clearData()
-    }
-
     if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect({ name: 'index' })
       return
     }
 
-    await pattern.fetchPattern(route.params.id)
+    // Warms the same cache entry the component reads below. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(patternQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
-    // Check if pattern exists and user is the submitter
-    if (pattern._id.length === 0) {
+    // Check if pattern exists
+    if (!state?.data) {
       redirect({ name: 'index' })
       return
     }
   },
-})
-
-onUnmounted(() => {
-  // NOTE:
-  // When going to pattern edit page
-  // Clear pattern data when unmounting will cause pattern edit page to lose data
-  // Edit (Prefetch) --> Pattern(onUnmounted) --> Edit (onMounted)
-  // pattern.clearData()
 })
 </script>
 
