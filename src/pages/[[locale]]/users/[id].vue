@@ -63,7 +63,7 @@ const route = useRoute('profile')
 
 // Shared with preFetch below, and kept across tab changes by the cache, which
 // is what the old store avoided clearing to stop the header from flickering
-const { data } = useQuery(userQuery(() => route.params.id))
+const { data } = useQuery(() => userQuery(route.params.id))
 const profile = computed(() => data.value ?? EMPTY_USER)
 
 const metaData = () => ({

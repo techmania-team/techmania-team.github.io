@@ -30,7 +30,7 @@ const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute('skin-form-edit')
 // preFetch has already filled this entry in, so nothing is fetched twice
-const { data } = useQuery(skinQuery(() => route.params.id))
+const { data } = useQuery(() => skinQuery(route.params.id))
 const skin = computed(() => data.value ?? EMPTY_SKIN)
 
 const title = computed(() =>

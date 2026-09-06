@@ -10,36 +10,19 @@
 </template>
 
 <script setup lang="ts">
-import type { ISkin } from '@/types/skin'
 import { useInfiniteQuery } from '@pinia/colada'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SkinCard from '@/components/SkinCard.vue'
-import * as skinService from '@/services/skin'
+import { skinsByUserQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 
 const route = useRoute('profile-skins')
 const user = useUserStore()
 
-const PAGE_SIZE = 12
-
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['skins', 'by-user', route.params.id],
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await skinService.search({
-        submitter: route.params.id,
-        start: pageParam,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: ISkin[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  skinsByUserQuery(route.params.id),
+)
 
 const skins = computed(() => data.value?.pages.flat() ?? [])
 

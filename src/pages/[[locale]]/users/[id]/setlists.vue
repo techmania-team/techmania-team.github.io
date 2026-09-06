@@ -10,36 +10,19 @@
 </template>
 
 <script setup lang="ts">
-import type { ISetlist } from '@/types/setlist'
 import { useInfiniteQuery } from '@pinia/colada'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SetlistCard from '@/components/SetlistCard.vue'
-import * as setlistService from '@/services/setlist'
+import { setlistsByUserQuery } from '@/queries/setlist'
 import { useUserStore } from '@/stores/user'
 
 const route = useRoute('profile-setlists')
 const user = useUserStore()
 
-const PAGE_SIZE = 12
-
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['setlists', 'by-user', route.params.id],
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await setlistService.search({
-        submitter: route.params.id,
-        start: pageParam,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: ISetlist[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  setlistsByUserQuery(route.params.id),
+)
 
 const setlists = computed(() => data.value?.pages.flat() ?? [])
 

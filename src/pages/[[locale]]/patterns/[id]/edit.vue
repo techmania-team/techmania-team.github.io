@@ -29,7 +29,7 @@ const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute('pattern-form-edit')
 // preFetch has already filled this entry in, so nothing is fetched twice
-const { data } = useQuery(patternQuery(() => route.params.id))
+const { data } = useQuery(() => patternQuery(route.params.id))
 const pattern = computed(() => data.value ?? EMPTY_PATTERN)
 
 const title = computed(() =>

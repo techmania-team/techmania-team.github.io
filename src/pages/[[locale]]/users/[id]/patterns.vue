@@ -10,36 +10,19 @@
 </template>
 
 <script setup lang="ts">
-import type { IPattern } from '@/types/pattern'
 import { useInfiniteQuery } from '@pinia/colada'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
-import * as patternService from '@/services/pattern'
+import { patternsByUserQuery } from '@/queries/pattern'
 import { useUserStore } from '@/stores/user'
 
 const route = useRoute('profile-patterns')
 const user = useUserStore()
 
-const PAGE_SIZE = 12
-
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['patterns', 'by-user', route.params.id],
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await patternService.search({
-        submitter: route.params.id,
-        start: pageParam,
-        sort: -1,
-        sortBy: 'createdAt',
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: IPattern[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  patternsByUserQuery(route.params.id),
+)
 
 const patterns = computed(() => data.value?.pages.flat() ?? [])
 

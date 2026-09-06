@@ -31,7 +31,7 @@ q-page#setlists
 </template>
 
 <script setup lang="ts">
-import type { ISetlist, ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
+import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
 import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import { computed, nextTick, onMounted, ref } from 'vue'
@@ -40,7 +40,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SetlistSearchForm from '@/components/SetlistSearchForm.vue'
-import * as setlistService from '@/services/setlist'
+import { setlistSearchQuery } from '@/queries/setlist'
 import { CONTROLTYPE } from '@/utils/control'
 
 const route = useRoute()
@@ -115,8 +115,6 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const PAGE_SIZE = 12
-
 const isReady = ref(false)
 
 const defaultInitialValues: ISetlistSearchForm = {
@@ -131,29 +129,12 @@ const searchParams = ref<ISetlistSearchForm>({ ...defaultInitialValues })
 /**
  * Fetch setlists from API
  */
-// The search parameters are part of the key, so every distinct search gets
-// its own cache entry and going back to a previous one is instant.
 // `enabled` holds the first fetch until the URL query has been parsed,
-// otherwise we would fetch once with the defaults and again with the real ones.
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['setlists', 'search', searchParams.value],
-  enabled: () => isReady.value,
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await setlistService.search({
-        start: pageParam,
-        keywords: searchParams.value.keywords,
-        controls: searchParams.value.controls.join(),
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: ISetlist[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+// otherwise we would fetch once with the defaults and again with the real ones
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
+  ...setlistSearchQuery(searchParams.value),
+  enabled: isReady.value,
+}))
 
 const setlists = computed(() => data.value?.pages.flat() ?? [])
 

@@ -30,7 +30,7 @@ const user = useUserStore()
 const { t } = useI18n()
 const route = useRoute('setlist-form-edit')
 // preFetch has already filled this entry in, so nothing is fetched twice
-const { data } = useQuery(setlistQuery(() => route.params.id))
+const { data } = useQuery(() => setlistQuery(route.params.id))
 const setlist = computed(() => data.value ?? EMPTY_SETLIST)
 
 const title = computed(() =>

@@ -133,7 +133,7 @@ q-no-ssr.row.q-gutter-y-lg
 </template>
 
 <script setup lang="ts">
-import type { CommentTarget } from '@/queries/comment'
+import type { CommentQueryParams, CommentTarget } from '@/queries/comment'
 import type { ICommentReply } from '@/types/comment'
 import { useMutation, useQuery, useQueryCache } from '@pinia/colada'
 import { useQuasar } from 'quasar'
@@ -176,19 +176,20 @@ const props = defineProps({
 
 const queryCache = useQueryCache()
 
-const commentTarget = () => props.type as CommentTarget
+const commentParams = (): CommentQueryParams => ({
+  target: props.type as CommentTarget,
+  id: props.id,
+})
 
 // Other users' comments
-const { data: otherCommentsData, isPending } = useQuery(
-  commentsQuery(commentTarget, () => props.id),
-)
+const { data: otherCommentsData, isPending } = useQuery(() => commentsQuery(commentParams()))
 
 // Current user's comment. The API 404s when they have not written one, which
 // the query turns into null.
-const { data: myCommentData } = useQuery({
-  ...myCommentQuery(commentTarget, () => props.id),
-  enabled: () => user.isLogin,
-})
+const { data: myCommentData } = useQuery(() => ({
+  ...myCommentQuery(commentParams()),
+  enabled: user.isLogin,
+}))
 
 const otherComments = computed(() => otherCommentsData.value ?? [])
 const myComment = computed(() => myCommentData.value ?? EMPTY_COMMENT)

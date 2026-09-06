@@ -40,27 +40,14 @@ import { useInfiniteQuery } from '@pinia/colada'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getI18nRoute } from '@/i18n'
-import * as commentService from '@/services/comment'
+import { commentsByUserQuery } from '@/queries/comment'
 import * as date from '@/utils/date'
 
 const route = useRoute('profile-comments')
 
-const PAGE_SIZE = 12
-
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['comments', 'by-user', route.params.id],
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await commentService.getByUser(route.params.id, {
-        start: pageParam,
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: ICommentDetailed[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  commentsByUserQuery(route.params.id),
+)
 
 const comments = computed(() => data.value?.pages.flat() ?? [])
 

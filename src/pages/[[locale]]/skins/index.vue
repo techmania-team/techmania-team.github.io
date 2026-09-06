@@ -31,7 +31,7 @@ q-page#skins
 </template>
 
 <script setup lang="ts">
-import type { ISkin, ISkinSearchForm, ISkinSortBy } from '@/types/skin'
+import type { ISkinSearchForm, ISkinSortBy } from '@/types/skin'
 import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import { computed, nextTick, onMounted, ref } from 'vue'
@@ -40,7 +40,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SkinCard from '@/components/SkinCard.vue'
 import SkinSearchForm from '@/components/SkinSearchForm.vue'
-import * as skinService from '@/services/skin'
+import { skinSearchQuery } from '@/queries/skin'
 import { SKINTYPE } from '@/utils/skin'
 
 const route = useRoute()
@@ -114,8 +114,6 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const PAGE_SIZE = 12
-
 const isReady = ref(false)
 
 const defaultInitialValues: ISkinSearchForm = {
@@ -131,29 +129,12 @@ const searchParams = ref<ISkinSearchForm>({ ...defaultInitialValues })
  * Fetch skins from API
  * @param start - The start index of the skins
  */
-// The search parameters are part of the key, so every distinct search gets
-// its own cache entry and going back to a previous one is instant.
 // `enabled` holds the first fetch until the URL query has been parsed,
-// otherwise we would fetch once with the defaults and again with the real ones.
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery({
-  key: () => ['skins', 'search', searchParams.value],
-  enabled: () => isReady.value,
-  initialPageParam: 0,
-  query: async ({ pageParam }) =>
-    (
-      await skinService.search({
-        start: pageParam,
-        types: searchParams.value.types.join(),
-        keywords: searchParams.value.keywords,
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-        limit: PAGE_SIZE,
-      })
-    ).data.result,
-  // A short page means we reached the end
-  getNextPageParam: (lastPage: ISkin[], _allPages, lastPageParam) =>
-    lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
-})
+// otherwise we would fetch once with the defaults and again with the real ones
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
+  ...skinSearchQuery(searchParams.value),
+  enabled: isReady.value,
+}))
 
 const skins = computed(() => data.value?.pages.flat() ?? [])
 
