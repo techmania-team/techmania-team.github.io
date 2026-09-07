@@ -71,14 +71,14 @@ q-no-ssr.row.q-gutter-y-lg
                       flat round dense color="tech" size="sm"
                       :icon="reply.votes.voted != 1 ? 'keyboard_arrow_up' : 'arrow_drop_up'"
                       :disable="!user.isLogin"
-                      @click="voteReply(comment._id, reply._id, cidx, ridx, reply.votes.voted, 1)"
+                      @click="voteReply({ cid: comment._id, rid: reply._id, voted: reply.votes.voted, value: 1 })"
                     )
                     span {{ reply.votes.sum }}
                     q-btn(
                       flat round dense color="tech" size="sm"
                       :icon="reply.votes.voted != -1 ? 'keyboard_arrow_down' : 'arrow_drop_down'"
                       :disable="!user.isLogin"
-                      @click="voteReply(comment._id, reply._id, cidx, ridx, reply.votes.voted, -1)"
+                      @click="voteReply({ cid: comment._id, rid: reply._id, voted: reply.votes.voted, value: -1 })"
                     )
                   //- Other actions
                   template(v-if="user.isLogin")
@@ -95,7 +95,7 @@ q-no-ssr.row.q-gutter-y-lg
                       q-btn(
                         flat round dense color="tech" size="sm" icon="delete"
                         v-if="reply.user._id === user._id"
-                        @click="deleteMyReply(comment._id, reply._id, cidx, ridx)"
+                        @click="deleteMyReply({ cid: comment._id, rid: reply._id })"
                       )
       p.text-center(v-if="comments.length === 0 && loaded") {{ $t('commentList.comments.notFound') }}
   //- Edit dialog
@@ -133,15 +133,17 @@ q-no-ssr.row.q-gutter-y-lg
 </template>
 
 <script setup lang="ts">
-import type { IComment, ICommentReply } from '@/types/comment'
-import { AxiosError } from 'axios'
+import type { CommentQueryParams, CommentTarget } from '@/queries/comment'
+import type { ICommentReply } from '@/types/comment'
+import { useMutation, useQuery, useQueryCache } from '@pinia/colada'
 import { useQuasar } from 'quasar'
 import { useForm } from 'vee-validate'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as yup from 'yup'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { getI18nRoute } from '@/i18n'
+import { commentsQuery, EMPTY_COMMENT, myCommentQuery } from '@/queries/comment'
 import * as commentService from '@/services/comment'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
@@ -151,8 +153,6 @@ import CfTurnstile from './CfTurnstile.vue'
 const $q = useQuasar()
 const user = useUserStore()
 const { t } = useI18n()
-
-const loaded = ref(false)
 
 const turnstileTokenMain = ref('')
 const turnstileTokenDialog = ref('')
@@ -174,14 +174,47 @@ const props = defineProps({
   },
 })
 
-// Other users' comments
-const otherComments = ref<IComment[]>([])
-// Current user's comment
-const myComment = ref<IComment>({
-  _id: '',
-  rating: 0,
-  replies: [],
+const queryCache = useQueryCache()
+
+const commentParams = (): CommentQueryParams => ({
+  target: props.type as CommentTarget,
+  id: props.id,
 })
+
+/**
+ * Both comment queries are client only.
+ *
+ * Server-side calls travel over loopback without the session cookie, so the
+ * API answers them as anonymous. That changes what comes back: it stops
+ * leaving out the reader's own comment, which this component then adds back
+ * from the query below and renders twice, and it reports every vote as not
+ * cast. The endpoint for the reader's own comment cannot answer at all
+ * without a session, and used to 401. Fetching after hydration, with the
+ * cookie, is what this component did before.
+ */
+const { data: otherCommentsData, isPending } = useQuery(() => ({
+  ...commentsQuery(commentParams()),
+  enabled: import.meta.env.QUASAR_CLIENT,
+}))
+
+const { data: myCommentData } = useQuery(() => ({
+  ...myCommentQuery(commentParams()),
+  enabled: user.isLogin && import.meta.env.QUASAR_CLIENT,
+}))
+
+const otherComments = computed(() => otherCommentsData.value ?? [])
+const myComment = computed(() => myCommentData.value ?? EMPTY_COMMENT)
+const loaded = computed(() => !isPending.value)
+
+/**
+ * Writing a comment changes more than this list: the profile's comment tab,
+ * and the target's own rating, which the API derives from its comments.
+ */
+const invalidateComments = () =>
+  Promise.all([
+    queryCache.invalidateQueries({ key: ['comments'] }),
+    queryCache.invalidateQueries({ key: [`${props.type}s`] }),
+  ])
 
 // All comments for the pattern
 const comments = computed(() => {
@@ -285,210 +318,118 @@ const openDialog = async (reply: ICommentReply, cidx: number, ridx: number, mode
   }
 }
 
-const onDialogSubmit = form.handleSubmit(async (values) => {
-  try {
-    if (!turnstileTokenDialog.value) {
-      $q.notify({
-        icon: 'warning',
-        message: t('commentList.turnstile.error.required'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      $q.loading.hide()
-      return
-    }
+const { mutate: submitDialog } = useMutation({
+  mutation: async (values: { comment: string; rating: number }) => {
+    const token = turnstileTokenDialog.value
+    const { cid, rid, mode } = editDialog.value
 
-    if (editDialog.value.mode === DIALOG_MODE.REPLY) {
-      // Send reply request
-      const { data } = await commentService.createReply(editDialog.value.cid, {
+    if (mode === DIALOG_MODE.REPLY) {
+      await commentService.createReply(cid, {
         comment: values.comment,
-        'cf-turnstile-response': turnstileTokenDialog.value,
+        'cf-turnstile-response': token,
       })
-      // Update the comment
-      const comment = {
-        _id: data.result._id,
-        comment: values.comment,
-        user: {
-          _id: user._id,
-          name: user.name,
-          avatar: user.avatar,
-        },
-        updatedAt: data.result.updatedAt,
-        createdAt: data.result.createdAt,
-        votes: { voted: 0, sum: 0 },
-      }
-      if (editDialog.value.cid === myComment.value._id) {
-        myComment.value.replies.push(comment)
-      } else {
-        const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
-        otherComments.value[cidx]!.replies.push(comment)
-      }
-    } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_COMMENT) {
-      // Send edit comment request
-      await commentService.updateMyComment(editDialog.value.cid, {
+    } else if (mode === DIALOG_MODE.EDIT_MY_COMMENT) {
+      await commentService.updateMyComment(cid, {
         comment: values.comment,
         rating: values.rating,
-        'cf-turnstile-response': turnstileTokenDialog.value,
+        'cf-turnstile-response': token,
       })
-      // Update the comment
-      myComment.value.replies[0]!.comment = values.comment
-      myComment.value.rating = values.rating
-    } else if (editDialog.value.mode === DIALOG_MODE.EDIT_MY_REPLY) {
-      // Send edit reply request
-      await commentService.updateMyReply(editDialog.value.cid, editDialog.value.rid, {
+    } else if (mode === DIALOG_MODE.EDIT_MY_REPLY) {
+      await commentService.updateMyReply(cid, rid, {
         comment: values.comment,
-        'cf-turnstile-response': turnstileTokenDialog.value,
+        'cf-turnstile-response': token,
       })
-      // Update the reply
-      const cidx = myComment.value._id === '' ? editDialog.value.cidx : editDialog.value.cidx - 1
-      if (editDialog.value.cid === myComment.value._id) {
-        myComment.value.replies[editDialog.value.ridx]!.comment = values.comment
-      } else {
-        otherComments.value[cidx]!.replies[editDialog.value.ridx]!.comment = values.comment
-      }
     }
+  },
+  onSuccess: async () => {
+    // Refetching replaces the index juggling the local copies used to need
+    await invalidateComments()
     editDialog.value.open = false
-  } catch (error) {
+  },
+  onError: (error: unknown) => {
     handleError(error)
     turnstileTokenDialog.value = ''
-  }
+  },
 })
 
-const onCommentSubmit = form.handleSubmit(async (values) => {
-  try {
-    if (!turnstileTokenMain.value) {
-      $q.notify({
-        icon: 'warning',
-        message: t('commentList.turnstile.error.required'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      $q.loading.hide()
-      return
-    }
+const onDialogSubmit = form.handleSubmit((values) => {
+  if (!turnstileTokenDialog.value) {
+    $q.notify({
+      icon: 'warning',
+      message: t('commentList.turnstile.error.required'),
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    })
+    return
+  }
 
-    // Send comment request
-    const { data } = await commentService.create({
+  submitDialog({ comment: values.comment, rating: values.rating })
+})
+
+const { mutate: submitComment } = useMutation({
+  mutation: (values: { comment: string; rating: number }) =>
+    commentService.create({
       comment: values.comment,
       rating: values.rating,
       [props.type]: props.id,
       'cf-turnstile-response': turnstileTokenMain.value,
-    })
-    // Set my comment
-    myComment.value._id = data.result._id
-    myComment.value.rating = data.result.rating
-    myComment.value.replies = data.result.replies
-  } catch (error) {
+    }),
+  onSuccess: () => invalidateComments(),
+  onError: (error: unknown) => {
     handleError(error)
     turnstileTokenMain.value = ''
+  },
+})
+
+const onCommentSubmit = form.handleSubmit((values) => {
+  if (!turnstileTokenMain.value) {
+    $q.notify({
+      icon: 'warning',
+      message: t('commentList.turnstile.error.required'),
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    })
+    return
   }
+
+  submitComment({ comment: values.comment, rating: values.rating })
 })
 
 /**
  * Vote a reply
  * @param cid Comment id
  * @param rid Reply id
- * @param cidx Comment index
- * @param ridx Reply index
  * @param voted Current vote value
  * @param value Vote value to set, 0 = No vote, 1 = Upvote, -1 = Downvote
  */
-const voteReply = async (
-  cid: string,
-  rid: string,
-  cidx: number,
-  ridx: number,
-  voted: number,
-  value: number,
-) => {
-  try {
-    // Send vote request
-    const newValue = voted === value ? 0 : value
-    await commentService.updateReplyVote(cid, rid, {
-      vote: newValue,
-    })
-
-    // Update value
-    if (cid === myComment.value._id) {
-      myComment.value.replies[ridx]!.votes.voted = newValue
-      myComment.value.replies[ridx]!.votes.sum += newValue - voted
-    } else {
-      otherComments.value[cidx]!.replies[ridx]!.votes.voted = newValue
-      otherComments.value[cidx]!.replies[ridx]!.votes.sum += newValue - voted
-    }
-  } catch (error) {
-    handleError(error)
-  }
-}
+const { mutate: voteReply } = useMutation({
+  mutation: ({
+    cid,
+    rid,
+    voted,
+    value,
+  }: {
+    cid: string
+    rid: string
+    voted: number
+    value: number
+  }) =>
+    // Clicking the vote you already cast clears it
+    commentService.updateReplyVote(cid, rid, { vote: voted === value ? 0 : value }),
+  onSuccess: () => invalidateComments(),
+  onError: (error: unknown) => handleError(error),
+})
 
 /**
- * Delete a comment
- * @param commentId Comment id
- * @param replyId Reply id
+ * Delete a reply, or the whole comment when it is the first one
+ * @param cid Comment id
+ * @param rid Reply id
  */
-const deleteMyReply = async (cid: string, rid: string, cidx: number, ridx: number) => {
-  try {
-    // Send delete request
-    await commentService.deleteMyReply(cid, rid)
-    // Update the comment
-    if (cid === myComment.value._id) {
-      if (ridx === 0) {
-        myComment.value.replies = []
-        myComment.value.rating = 0
-        myComment.value._id = ''
-      } else {
-        myComment.value.replies.splice(ridx, 1)
-      }
-    } else {
-      const realCidx = myComment.value._id === '' ? cidx : cidx - 1
-      otherComments.value[realCidx]?.replies?.splice(ridx, 1)
-    }
-  } catch (error) {
-    handleError(error)
-  }
-}
-
-onMounted(async () => {
-  try {
-    // Fetch other comments
-    let commentsData
-    if (props.type === 'pattern') {
-      commentsData = await commentService.getByPattern(props.id)
-    } else if (props.type === 'skin') {
-      commentsData = await commentService.getBySkin(props.id)
-    } else if (props.type === 'setlist') {
-      commentsData = await commentService.getBySetlist(props.id)
-    }
-    if (commentsData) {
-      otherComments.value = commentsData.data.result
-    }
-
-    // Fetch my comment if user is logged in
-    if (user.isLogin) {
-      let myCommentData
-      if (props.type === 'pattern') {
-        myCommentData = await commentService.getMyCommmentByPattern(props.id)
-      } else if (props.type === 'skin') {
-        myCommentData = await commentService.getMyCommmentBySkin(props.id)
-      } else if (props.type === 'setlist') {
-        myCommentData = await commentService.getMyCommmentBySetlist(props.id)
-      }
-      if (myCommentData) {
-        myComment.value._id = myCommentData.data.result._id
-        myComment.value.rating = myCommentData.data.result.rating
-        myComment.value.replies = myCommentData.data.result.replies
-      }
-    }
-  } catch (error) {
-    // Don't need to show error if the comment is not found
-    // Maybe this pattern, skin or setlist doesn't have any comments
-    if (error instanceof AxiosError && error?.response?.status !== 404) {
-      handleError(error)
-    }
-  }
-
-  loaded.value = true
+const { mutate: deleteMyReply } = useMutation({
+  mutation: ({ cid, rid }: { cid: string; rid: string }) => commentService.deleteMyReply(cid, rid),
+  onSuccess: () => invalidateComments(),
+  onError: (error: unknown) => handleError(error),
 })
 </script>

@@ -171,13 +171,14 @@ q-dialog(v-model="deleteDialog" persistent)
     //- Dialog actions
     q-card-actions(align="around")
       //- Confirm
-      q-btn(color="green" flat :label="$t('skinFormPage.deleteDialog.yes')" @click="deleteSkin" :loading="deleting")
+      q-btn(color="green" flat :label="$t('skinFormPage.deleteDialog.yes')" @click="deleteSkin()" :loading="isDeleting")
       //- Cancel
       q-btn(color="red" flat :label="$t('skinFormPage.deleteDialog.no')" v-close-popup)
 </template>
 
 <script setup lang="ts">
-import type { ISkin } from '@/types/skin'
+import type { ISkin, ISkinForm } from '@/types/skin'
+import { useMutation, useQueryCache } from '@pinia/colada'
 import { AxiosError } from 'axios'
 import { useQuasar } from 'quasar'
 import { useFieldArray, useForm } from 'vee-validate'
@@ -317,102 +318,92 @@ const previewsField = useFieldArray('previews')
 const getPreviewName = (i: number) => form.defineField(`previews[${i}].name`)
 const getPreviewLink = (i: number) => form.defineField(`previews[${i}].link`)
 
-// On form submit
-const onSubmit = form.handleSubmit(async (values) => {
-  $q.loading.show()
-  try {
-    if (!turnstileToken.value) {
-      $q.notify({
-        icon: 'warning',
-        message: t('skinFormPage.turnstile.error.required'),
-        color: 'warning',
-        position: 'top',
-        timeout: 2000,
-      })
-      $q.loading.hide()
-      return
-    }
+const queryCache = useQueryCache()
 
+// Create or update, depending on whether we were given a skin. Resolves with
+// the id to navigate to afterwards.
+const { mutate: saveSkin } = useMutation({
+  mutation: async (payload: ISkinForm) => {
     if (isEdit.value) {
-      // Has skin ID, update skin
-      await skinService.update(props.skin!._id, {
-        name: values.name,
-        link: values.link,
-        image: values.image,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        type: [...values.type].sort((a, b) => a - b),
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('skinFormPage.result.updated'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'skin', params: { id: props.skin!._id } }))
-    } else {
-      // No skin ID, create new skin
-      const { data } = await skinService.create({
-        name: values.name,
-        link: values.link,
-        image: values.image,
-        previews: values.previews
-          .filter((preview) => preview.name || preview.link)
-          .map((preview) => ({
-            name: preview.name,
-            ytid: getIDFromYouTubeLink(preview.link),
-          })),
-        type: [...values.type].sort((a, b) => a - b),
-        description: values.description,
-        'cf-turnstile-response': turnstileToken.value,
-      })
-      $q.notify({
-        icon: 'check',
-        message: t('skinFormPage.result.submitted'),
-        color: 'positive',
-        position: 'top',
-        timeout: 2000,
-      })
-      await router.push(getI18nRoute({ name: 'skin', params: { id: data.result } }))
+      await skinService.update(props.skin!._id, payload)
+      return props.skin!._id
     }
-  } catch (error) {
+    const { data } = await skinService.create(payload)
+    return data.result
+  },
+  onMutate: () => {
+    $q.loading.show()
+  },
+  onSuccess: async (id) => {
+    // Every list, profile tab and detail entry for skins is now out of date
+    // refetchActive: false marks them stale without refetching. We are
+    // navigating away, so awaiting a refresh of lists nobody is looking at
+    // would only delay the redirect; they refetch when next opened.
+    await queryCache.invalidateQueries({ key: ['skins'] }, false)
+
+    $q.notify({
+      icon: 'check',
+      message: t(isEdit.value ? 'skinFormPage.result.updated' : 'skinFormPage.result.submitted'),
+      color: 'positive',
+      position: 'top',
+      timeout: 2000,
+    })
+    await router.push(getI18nRoute({ name: 'skin', params: { id } }))
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
-      if (isEdit.value) {
-        // Editing skin
-        await handleFormSubmitError(error, 'skinFormPage', 'update')
-      } else {
-        // Creating new skin
-        await handleFormSubmitError(error, 'skinFormPage', 'create')
-      }
+      await handleFormSubmitError(error, 'skinFormPage', isEdit.value ? 'update' : 'create')
     } else {
       handleError(error)
     }
     turnstileRef.value?.reset()
-  } finally {
+  },
+  onSettled: () => {
     $q.loading.hide()
+  },
+})
+
+// On form submit
+const onSubmit = form.handleSubmit((values) => {
+  if (!turnstileToken.value) {
+    $q.notify({
+      icon: 'warning',
+      message: t('skinFormPage.turnstile.error.required'),
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    })
+    return
   }
+
+  saveSkin({
+    name: values.name,
+    link: values.link,
+    image: values.image,
+    previews: values.previews
+      .filter((preview) => preview.name || preview.link)
+      .map((preview) => ({
+        name: preview.name,
+        ytid: getIDFromYouTubeLink(preview.link),
+      })),
+    type: [...values.type].sort((a, b) => a - b),
+    description: values.description,
+    'cf-turnstile-response': turnstileToken.value,
+  })
 })
 
 // Delete confirmation dialog state
 const deleteDialog = ref(false)
-// Is deleting skin
-const deleting = ref(false)
 // Open Delete confirmation dialog
 const openDeleteDialog = () => {
   deleteDialog.value = true
 }
-// Delete skin
-const deleteSkin = async () => {
-  deleting.value = true
-  try {
-    await skinService.del(props.skin!._id)
+
+const { mutate: deleteSkin, isLoading: isDeleting } = useMutation({
+  mutation: () => skinService.del(props.skin!._id),
+  onSuccess: async () => {
+    await queryCache.invalidateQueries({ key: ['skins'] }, false)
+
     // Notify success
     $q.notify({
       icon: 'check',
@@ -421,18 +412,20 @@ const deleteSkin = async () => {
       position: 'top',
       timeout: 2000,
     })
-    // Redirect to home
+    // Redirect to the submitter's profile
     await router.push(getI18nRoute({ name: 'profile-skins', params: { id: user._id } }))
-  } catch (error) {
+  },
+  onError: async (error) => {
     if (error instanceof AxiosError) {
       await handleFormSubmitError(error, 'skinFormPage', 'delete')
     } else {
       handleError(error)
     }
-  }
-  deleting.value = false
-  deleteDialog.value = false
-}
+  },
+  onSettled: () => {
+    deleteDialog.value = false
+  },
+})
 
 onMounted(async () => {
   // Get skin data if editing

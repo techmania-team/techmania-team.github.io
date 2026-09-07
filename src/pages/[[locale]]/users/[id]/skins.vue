@@ -1,8 +1,8 @@
 <template lang="pug">
 #profile-skins
   .container
-    .text-center.q-mt-md.text-body1(v-if="skins.length === 0 && scrollDisable") {{ $t('profile.skins.notFound') }}
-    q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+    .text-center.q-mt-md.text-body1(v-if="!isPending && skins.length === 0") {{ $t('profile.skins.notFound') }}
+    q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="!hasNextPage")
       .col-12.col-sm-6.col-md-4.col-lg-3(v-for="(skin) in skins" :key="skin._id")
         SkinCard(:skin="skin" :mine="route.params.id === user._id")
       template(#loading)
@@ -10,41 +10,29 @@
 </template>
 
 <script setup lang="ts">
-import type { ISkin } from '@/types/skin'
-import { ref } from 'vue'
+import { useInfiniteQuery } from '@pinia/colada'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SkinCard from '@/components/SkinCard.vue'
-import * as skinService from '@/services/skin'
+import { skinsByUserQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
-import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-skins')
 const user = useUserStore()
 
-const skins = ref<ISkin[]>([])
-const scrollDisable = ref(false)
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  skinsByUserQuery(route.params.id),
+)
 
-const fetchSkins = async (start = 0) => {
-  try {
-    const { data } = await skinService.search({
-      submitter: route.params.id,
-      start: start,
-      sort: -1,
-      sortBy: 'createdAt',
-      limit: 12,
-    })
-
-    if (data.result.length > 0) skins.value = skins.value.concat(data.result)
-    else scrollDisable.value = true
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  }
-}
+const skins = computed(() => data.value?.pages.flat() ?? [])
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  await fetchSkins((index - 1) * 12)
-  done()
+  if (!hasNextPage.value) return done(true)
+  // cancelRefetch: false makes a concurrent trigger await the request that is
+  // already running. The default aborts it and starts a new one, which turns
+  // repeated q-infinite-scroll triggers into a storm of cancelled requests.
+  await loadNextPage({ cancelRefetch: false })
+  done(!hasNextPage.value)
 }
 </script>
 

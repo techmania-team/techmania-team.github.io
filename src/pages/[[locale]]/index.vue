@@ -130,23 +130,70 @@ q-page#index
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import type { IRelease } from '@/types/info'
+import { useQuery } from '@pinia/colada'
 import { useMeta, useQuasar } from 'quasar'
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SkinCard from '@/components/SkinCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
-import { useTempIndexStore } from '@/stores/temp-index'
+import { getReleases } from '@/services/info'
+import { search as searchPatterns } from '@/services/pattern'
+import { search as searchSetlists } from '@/services/setlist'
+import { search as searchSkins } from '@/services/skin'
 import { toLocaleString } from '@/utils/date'
 
 const $q = useQuasar()
 const { t } = useI18n()
 const route = useRoute()
-const tempIndex = useTempIndexStore()
-const { releases, patterns, skins, setlists } = storeToRefs(tempIndex)
+
+/** How many of each kind to show in the "latest" sections */
+const LATEST_COUNT = 8
+/** These lists change rarely; don't refetch them on every visit */
+const STALE_TIME = 1000 * 60 * 5
+
+const EMPTY_RELEASES: IRelease = {
+  win: { tag: '', date: '' },
+  ios: { tag: '', date: '' },
+  android: { tag: '', date: '' },
+  mac: { tag: '', date: '' },
+}
+
+// useQuery runs during SSR through onServerPrefetch and the result is
+// hydrated on the client, so there is no preFetch hook to keep in sync
+const { data: patternsData } = useQuery({
+  key: ['patterns', 'latest'],
+  query: async () => (await searchPatterns({ start: 0, limit: LATEST_COUNT })).data.result,
+  staleTime: STALE_TIME,
+})
+
+const { data: skinsData } = useQuery({
+  key: ['skins', 'latest'],
+  query: async () => (await searchSkins({ start: 0, limit: LATEST_COUNT })).data.result,
+  staleTime: STALE_TIME,
+})
+
+const { data: setlistsData } = useQuery({
+  key: ['setlists', 'latest'],
+  query: async () => (await searchSetlists({ start: 0, limit: LATEST_COUNT })).data.result,
+  staleTime: STALE_TIME,
+})
+
+const { data: releasesData } = useQuery({
+  key: ['info', 'releases'],
+  query: async () => (await getReleases()).data.result,
+  staleTime: STALE_TIME,
+})
+
+// Fall back while a query is still pending or has errored, so the template
+// never has to deal with undefined
+const patterns = computed(() => patternsData.value ?? [])
+const skins = computed(() => skinsData.value ?? [])
+const setlists = computed(() => setlistsData.value ?? [])
+const releases = computed(() => releasesData.value ?? EMPTY_RELEASES)
 
 const metaData = () => ({
   title: t('indexPage.meta.title'),
@@ -243,22 +290,6 @@ const videos = [
   { name: 'TECHMANIA 101 #1: Getting started', ytid: 'peH2TjiPSfI' },
   { name: 'TECHMANIA tutorial: Touch', ytid: '3qlUwAas-wY' },
 ]
-
-defineOptions({
-  async preFetch({ store }) {
-    // Prefetch patterns, skins
-    const tempIndex = useTempIndexStore(store)
-    await tempIndex.fetchData()
-  },
-})
-
-onUnmounted(() => {
-  // Clear temp index data
-  // Note:
-  // Do not clear data here
-  // It will cause GitHub API rate limit exceeded if user navigates to this page frequently
-  // tempIndex.clearData()
-})
 </script>
 
 <route lang="yaml">

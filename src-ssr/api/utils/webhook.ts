@@ -4,6 +4,28 @@ import { WebhookClient } from 'discord.js'
 export const WEBHOOK_COLOR = 15158332
 
 /**
+ * Reuse one client per webhook URL.
+ *
+ * Every WebhookClient carries its own @discordjs/rest instance: an undici
+ * Agent, a rate-limit bucket Map and a sweep timer. Constructing one per call
+ * and never destroying it leaks all of that on every submission, edit and
+ * delete. The URLs come from env vars, so this map holds at most a handful of
+ * entries and lives for the lifetime of the process.
+ */
+const webhookClients = new Map<string, WebhookClient>()
+
+const getWebhookClient = (url: string) => {
+  let client = webhookClients.get(url)
+
+  if (!client) {
+    client = new WebhookClient({ url })
+    webhookClients.set(url, client)
+  }
+
+  return client
+}
+
+/**
  * Post a webhook message to Discord
  * @param {string} url Webhook URL
  * @param {string} content Content to send
@@ -12,7 +34,7 @@ export const WEBHOOK_COLOR = 15158332
  */
 export const postWebhook = async (url: string, content: string, embeds: [EmbedBuilder]) => {
   try {
-    const webhookClient = new WebhookClient({ url })
+    const webhookClient = getWebhookClient(url)
 
     const result = await webhookClient.send({
       content,
@@ -42,7 +64,7 @@ export const editWebhook = async (
   embeds: [EmbedBuilder],
 ) => {
   try {
-    const webhookClient = new WebhookClient({ url })
+    const webhookClient = getWebhookClient(url)
 
     const result = await webhookClient.editMessage(id, {
       content,
@@ -63,7 +85,7 @@ export const editWebhook = async (
  */
 export const deleteWebhook = async (url: string, id: string) => {
   try {
-    const webhookClient = new WebhookClient({ url })
+    const webhookClient = getWebhookClient(url)
 
     await webhookClient.deleteMessage(id)
 

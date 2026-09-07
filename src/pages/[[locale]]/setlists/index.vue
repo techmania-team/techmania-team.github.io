@@ -20,28 +20,28 @@ q-page#setlists
               v-if="isReady"
               @load="loadScroll"
               :offset="200"
-              :disable="scrollDisable"
+              :disable="!hasNextPage"
               ref="infiniteScrollRef"
             )
               .col-12.col-sm-6.col-md-4.col-lg-3(v-for="setlist in setlists" :key="setlist._id")
                 SetlistCard(:setlist="setlist" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="setlists.length === 0 && scrollDisable && isReady") {{ $t('setlistsPage.notFound') }}
+            .text-center.text-body1(v-if="isReady && !isPending && setlists.length === 0") {{ $t('setlistsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
-import type { ISetlist, ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
+import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
+import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SetlistSearchForm from '@/components/SetlistSearchForm.vue'
-import * as setlistService from '@/services/setlist'
+import { setlistSearchQuery } from '@/queries/setlist'
 import { CONTROLTYPE } from '@/utils/control'
-import { handleError } from '@/utils/handleError'
 
 const route = useRoute()
 const router = useRouter()
@@ -115,10 +115,7 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const setlists = ref<ISetlist[]>([])
-const scrollDisable = ref(true)
 const isReady = ref(false)
-const isFetching = ref(false)
 
 const defaultInitialValues: ISetlistSearchForm = {
   keywords: '',
@@ -132,53 +129,34 @@ const searchParams = ref<ISetlistSearchForm>({ ...defaultInitialValues })
 /**
  * Fetch setlists from API
  */
-const fetchSetlists = async (start = 0) => {
-  if (isFetching.value) return
-  isFetching.value = true
+// `enabled` holds the first fetch until the URL query has been parsed,
+// otherwise we would fetch once with the defaults and again with the real ones
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
+  ...setlistSearchQuery(searchParams.value),
+  enabled: isReady.value,
+}))
 
-  try {
-    const { data } = await setlistService.search({
-      start,
-      keywords: searchParams.value.keywords,
-      controls: searchParams.value.controls.join(),
-      sort: searchParams.value.sort,
-      sortBy: searchParams.value.sortBy,
-      limit: 12,
-    })
-
-    setlists.value = setlists.value.concat(data.result)
-
-    if (data.result.length === 12) {
-      scrollDisable.value = false
-    } else {
-      scrollDisable.value = true
-    }
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  } finally {
-    isFetching.value = false
-  }
-}
+const setlists = computed(() => data.value?.pages.flat() ?? [])
 
 /**
  * Load more setlists
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value) return done()
-  await fetchSetlists(setlists.value.length)
-  done()
+  if (!isReady.value || !hasNextPage.value) return done(true)
+  // cancelRefetch: false makes a concurrent trigger await the request that is
+  // already running. The default aborts it and starts a new one, which turns
+  // repeated q-infinite-scroll triggers into a storm of cancelled requests.
+  await loadNextPage({ cancelRefetch: false })
+  done(!hasNextPage.value)
 }
 
 /**
  * On search form submit, apply search filters
  */
 const applySearch = async (values: ISetlistSearchForm) => {
-  setlists.value = []
+  // Changing the params changes the key, which starts the new search on its own
   searchParams.value = { ...values }
-  scrollDisable.value = true
 
-  await fetchSetlists()
   await router.replace({
     query: {
       keywords: values.keywords,
@@ -225,7 +203,6 @@ onMounted(async () => {
   }
 
   isReady.value = true
-  await fetchSetlists()
 })
 </script>
 

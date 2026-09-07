@@ -106,7 +106,12 @@ export class TurnstileValidator {
       if (error instanceof AxiosError && error.code === 'ECONNABORTED') {
         return { success: false, error: 'Validation timeout' }
       }
-      return { success: false, error: 'Internal error' }
+      // Keep the cause: the middleware only ever tells the caller that
+      // validation failed, so this text exists purely for the server log
+      return {
+        success: false,
+        error: `Internal error: ${error instanceof Error ? error.message : String(error)}`,
+      }
     }
   }
 }
@@ -133,6 +138,18 @@ export default (options: TurnstileOptions = {}): RequestHandler => {
     })
 
     if (!result.success) {
+      // The reason never reaches the caller, so without this a rejection in
+      // production is indistinguishable from any other 403. Action and
+      // hostname mismatches in particular look like nothing at all.
+      const detail = [
+        result.error,
+        result.expected !== undefined ? `expected=${result.expected}` : undefined,
+        result.received !== undefined ? `received=${result.received}` : undefined,
+      ]
+        .filter(Boolean)
+        .join(' ')
+      console.error(`[turnstile] rejected ${req.method} ${req.originalUrl}: ${detail}`)
+
       res.status(StatusCodes.FORBIDDEN).json({
         success: false,
         message: 'Turnstile validation failed',

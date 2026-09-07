@@ -16,19 +16,22 @@ q-page#skinForm
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import SkinForm from '@/components/SkinForm.vue'
-import { useTempSkinStore } from '@/stores/temp-skin'
+import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
-const route = useRoute()
-const skin = useTempSkinStore()
+const route = useRoute('skin-form-edit')
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(() => skinQuery(route.params.id))
+const skin = computed(() => data.value ?? EMPTY_SKIN)
 
 const title = computed(() =>
   user.isLogin
@@ -120,11 +123,7 @@ defineOptions({
       'skin-form-edit'
     >
 
-    const skin = useTempSkinStore(store)
     const user = useUserStore(store)
-
-    // Clear store
-    skin.clearData()
 
     // New skin form, no need to prefetch data
     if (!route.params.id) return
@@ -142,11 +141,14 @@ defineOptions({
     // direct access or refresh page --> server side --> ssrContext is available
     const userId = user._id
 
-    // Prefetch skin data
-    await skin.fetchSkin(route.params.id)
+    // Warms the same cache entry the component reads. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(skinQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
     // Check if skin exists and user is the submitter
-    if (skin._id.length === 0 || skin.submitter._id !== userId) {
+    if (!state?.data || state.data.submitter._id !== userId) {
       redirect({ name: 'index' })
       return
     }

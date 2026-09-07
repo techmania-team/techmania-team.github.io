@@ -17,6 +17,7 @@
     "postinstall": "quasar prepare --silent"
   },
   "dependencies": {
+    "@pinia/colada": "^1.4.4",
     "@quasar/extras": "^2.0.4",
     "@quasar/quasar-ui-qmarkdown": "^2.0.5",
     "axios": "^1.19.0",

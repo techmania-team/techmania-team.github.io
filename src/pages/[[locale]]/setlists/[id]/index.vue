@@ -133,10 +133,11 @@ q-page#setlist
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
-import { computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -144,7 +145,7 @@ import CommentList from '@/components/CommentList.vue'
 import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
-import { useTempSetlistStore } from '@/stores/temp-setlist'
+import { EMPTY_SETLIST, setlistQuery } from '@/queries/setlist'
 import { useUserStore } from '@/stores/user'
 import { controls, getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
@@ -152,23 +153,25 @@ import { toImageProxyUrl } from '@/utils/image'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
-const route = useRoute()
+const route = useRoute('setlist')
 const user = useUserStore()
-const setlist = useTempSetlistStore()
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(() => setlistQuery(route.params.id))
+const setlist = computed(() => data.value ?? EMPTY_SETLIST)
 
 const isImageError = ref(false)
 
 const descriptionSanitized = computed(() => {
-  return sanitizeHtml(setlist.description)
+  return sanitizeHtml(setlist.value.description)
 })
 
 const backgroundImage = computed(() => {
-  if (setlist.image?.length > 0 && !isImageError.value) {
-    return toImageProxyUrl('setlists', setlist._id)
-  } else if (setlist.previews?.length > 0) {
-    return getYouTubeThumbnail(setlist.previews[0]!.ytid)
+  if (setlist.value.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('setlists', setlist.value._id)
+  } else if (setlist.value.previews?.length > 0) {
+    return getYouTubeThumbnail(setlist.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-setlist.png'
+    return '/assets/header-setlist.value.png'
   }
 })
 
@@ -177,7 +180,7 @@ const onImageError = () => {
 }
 
 const metaData = () => ({
-  title: t('setlistPage.meta.title', { name: setlist.name }),
+  title: t('setlistPage.meta.title', { name: setlist.value.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -185,13 +188,13 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: t('setlistPage.meta.title', { name: setlist.name }),
+      content: t('setlistPage.meta.title', { name: setlist.value.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
       content: t('setlistPage.meta.description', {
-        submitter: setlist.submitter.name,
+        submitter: setlist.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -205,13 +208,13 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: t('setlistPage.meta.title', { name: setlist.name }),
+      content: t('setlistPage.meta.title', { name: setlist.value.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
       content: t('setlistPage.meta.description', {
-        submitter: setlist.submitter.name,
+        submitter: setlist.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -230,13 +233,13 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: t('setlistPage.meta.title', { name: setlist.name }),
+      content: t('setlistPage.meta.title', { name: setlist.value.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
       content: t('setlistPage.meta.description', {
-        submitter: setlist.submitter.name,
+        submitter: setlist.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -252,33 +255,23 @@ useMeta(metaData)
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'setlist'>
-    // Prefetch setlist data
-    const setlist = useTempSetlistStore(store)
-    if (setlist._id !== route.params.id) {
-      setlist.clearData()
-    }
-
     if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect({ name: 'index' })
       return
     }
 
-    await setlist.fetchSetlist(route.params.id)
+    // Warms the same cache entry the component reads below. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(setlistQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
-    // Check if setlist exists and user is the submitter
-    if (setlist._id.length === 0) {
+    // Check if setlist exists
+    if (!state?.data) {
       redirect({ name: 'index' })
       return
     }
   },
-})
-
-onUnmounted(() => {
-  // NOTE:
-  // When going to setlist edit page
-  // Clear setlist data when unmounting will cause setlist edit page to lose data
-  // Edit (Prefetch) --> Setlist(onUnmounted) --> Edit (onMounted)
-  // setlist.clearData()
 })
 </script>
 

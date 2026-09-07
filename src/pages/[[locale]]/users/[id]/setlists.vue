@@ -1,8 +1,8 @@
 <template lang="pug">
 #profile-setlists
   .container
-    .text-center.q-mt-md.text-body1(v-if="setlists.length === 0 && scrollDisable") {{ $t('profile.setlists.notFound') }}
-    q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="scrollDisable")
+    .text-center.q-mt-md.text-body1(v-if="!isPending && setlists.length === 0") {{ $t('profile.setlists.notFound') }}
+    q-infinite-scroll.row.q-my-md.q-col-gutter-md(@load="loadScroll" :offset="200" :disable="!hasNextPage")
       .col-12.col-sm-6.col-md-4.col-lg-3(v-for="(setlist) in setlists" :key="setlist._id")
         SetlistCard(:setlist="setlist" :mine="route.params.id === user._id")
       template(#loading)
@@ -10,41 +10,29 @@
 </template>
 
 <script setup lang="ts">
-import type { ISetlist } from '@/types/setlist'
-import { ref } from 'vue'
+import { useInfiniteQuery } from '@pinia/colada'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SetlistCard from '@/components/SetlistCard.vue'
-import * as setlistService from '@/services/setlist'
+import { setlistsByUserQuery } from '@/queries/setlist'
 import { useUserStore } from '@/stores/user'
-import { handleError } from '@/utils/handleError'
 
 const route = useRoute('profile-setlists')
 const user = useUserStore()
 
-const setlists = ref<ISetlist[]>([])
-const scrollDisable = ref(false)
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  setlistsByUserQuery(route.params.id),
+)
 
-const fetchSetlists = async (start = 0) => {
-  try {
-    const { data } = await setlistService.search({
-      submitter: route.params.id,
-      start: start,
-      sort: -1,
-      sortBy: 'createdAt',
-      limit: 12,
-    })
-
-    if (data.result.length > 0) setlists.value = setlists.value.concat(data.result)
-    else scrollDisable.value = true
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  }
-}
+const setlists = computed(() => data.value?.pages.flat() ?? [])
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  await fetchSetlists((index - 1) * 12)
-  done()
+  if (!hasNextPage.value) return done(true)
+  // cancelRefetch: false makes a concurrent trigger await the request that is
+  // already running. The default aborts it and starts a new one, which turns
+  // repeated q-infinite-scroll triggers into a storm of cancelled requests.
+  await loadNextPage({ cancelRefetch: false })
+  done(!hasNextPage.value)
 }
 </script>
 

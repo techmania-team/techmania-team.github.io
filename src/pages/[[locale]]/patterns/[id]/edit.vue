@@ -15,19 +15,22 @@ q-page#patternForm
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import PatternForm from '@/components/PatternForm.vue'
-import { useTempPatternStore } from '@/stores/temp-pattern'
+import { EMPTY_PATTERN, patternQuery } from '@/queries/pattern'
 import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
-const route = useRoute()
-const pattern = useTempPatternStore()
+const route = useRoute('pattern-form-edit')
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(() => patternQuery(route.params.id))
+const pattern = computed(() => data.value ?? EMPTY_PATTERN)
 
 const title = computed(() =>
   user.isLogin
@@ -118,11 +121,7 @@ defineOptions({
       RouteNamedMap,
       'pattern-form-edit'
     >
-    const pattern = useTempPatternStore(store)
     const user = useUserStore(store)
-
-    // Clear store
-    pattern.clearData()
 
     // New pattern form, no need to prefetch data
     if (!route.params.id) return
@@ -140,11 +139,14 @@ defineOptions({
     // direct access or refresh page --> server side --> ssrContext is available
     const userId = user._id
 
-    // Prefetch pattern data
-    await pattern.fetchPattern(route.params.id)
+    // Warms the same cache entry the component reads. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(patternQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
     // Check if pattern exists and user is the submitter
-    if (pattern._id.length === 0 || pattern.submitter._id !== userId) {
+    if (!state?.data || state.data.submitter._id !== userId) {
       redirect({ name: 'index' })
       return
     }

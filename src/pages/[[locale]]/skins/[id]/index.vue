@@ -109,17 +109,18 @@ q-page#skin
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
+import { useQuery, useQueryCache } from '@pinia/colada'
 import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
-import { computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
 import { getI18nRoute } from '@/i18n'
-import { useTempSkinStore } from '@/stores/temp-skin'
+import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
@@ -127,23 +128,25 @@ import { SKINTYPES } from '@/utils/skin'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
-const route = useRoute()
+const route = useRoute('skin')
 const user = useUserStore()
-const skin = useTempSkinStore()
+// preFetch has already filled this entry in, so nothing is fetched twice
+const { data } = useQuery(() => skinQuery(route.params.id))
+const skin = computed(() => data.value ?? EMPTY_SKIN)
 
 const isImageError = ref(false)
 
 const descriptionSanitized = computed(() => {
-  return sanitizeHtml(skin.description)
+  return sanitizeHtml(skin.value.description)
 })
 
 const backgroundImage = computed(() => {
-  if (skin.image?.length > 0 && !isImageError.value) {
-    return toImageProxyUrl('skins', skin._id)
-  } else if (skin.previews?.length > 0) {
-    return getYouTubeThumbnail(skin.previews[0]!.ytid)
+  if (skin.value.image?.length > 0 && !isImageError.value) {
+    return toImageProxyUrl('skins', skin.value._id)
+  } else if (skin.value.previews?.length > 0) {
+    return getYouTubeThumbnail(skin.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-skin.png'
+    return '/assets/header-skin.value.png'
   }
 })
 
@@ -152,7 +155,7 @@ const onImageError = () => {
 }
 
 const metaData = () => ({
-  title: t('skinPage.meta.title', { name: skin.name }),
+  title: t('skinPage.meta.title', { name: skin.value.name }),
   meta: {
     color: {
       name: 'theme-color',
@@ -160,13 +163,13 @@ const metaData = () => ({
     },
     title: {
       name: 'title',
-      content: t('skinPage.meta.title', { name: skin.name }),
+      content: t('skinPage.meta.title', { name: skin.value.name }),
       'data-dynamic': true,
     },
     description: {
       name: 'description',
       content: t('skinPage.meta.description', {
-        submitter: skin.submitter.name,
+        submitter: skin.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -180,13 +183,13 @@ const metaData = () => ({
     },
     ogTitle: {
       property: 'og:title',
-      content: t('skinPage.meta.title', { name: skin.name }),
+      content: t('skinPage.meta.title', { name: skin.value.name }),
       'data-dynamic': true,
     },
     ogDescription: {
       property: 'og:description',
       content: t('skinPage.meta.description', {
-        submitter: skin.submitter.name,
+        submitter: skin.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -205,13 +208,13 @@ const metaData = () => ({
     },
     twTitle: {
       name: 'twitter:title',
-      content: t('skinPage.meta.title', { name: skin.name }),
+      content: t('skinPage.meta.title', { name: skin.value.name }),
       'data-dynamic': true,
     },
     twDescription: {
       name: 'twitter:description',
       content: t('skinPage.meta.description', {
-        submitter: skin.submitter.name,
+        submitter: skin.value.submitter.name,
       }),
       'data-dynamic': true,
     },
@@ -228,33 +231,23 @@ defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'skin'>
 
-    // Prefetch skin data
-    const skin = useTempSkinStore(store)
-    if (skin._id !== route.params.id) {
-      skin.clearData()
-    }
-
     if (!route.params.id || !validator.isMongoId(route.params.id)) {
       redirect({ name: 'index' })
       return
     }
 
-    await skin.fetchSkin(route.params.id)
+    // Warms the same cache entry the component reads below. refresh() reuses
+    // still-fresh data, so navigating back here does not refetch.
+    const queryCache = useQueryCache(store)
+    const entry = queryCache.ensure(skinQuery(route.params.id))
+    const state = await queryCache.refresh(entry).catch(() => null)
 
-    // Check if skin exists and user is the submitter
-    if (skin._id.length === 0) {
+    // Check if skin exists
+    if (!state?.data) {
       redirect({ name: 'index' })
       return
     }
   },
-})
-
-onUnmounted(() => {
-  // NOTE:
-  // When going to skin edit page
-  // Clear skin data when unmounting will cause skin edit page to lose data
-  // Edit (Prefetch) --> Skin(onUnmounted) --> Edit (onMounted)
-  // skin.clearData()
 })
 </script>
 

@@ -20,27 +20,27 @@ q-page#skins
               v-if="isReady"
               @load="loadScroll"
               :offset="200"
-              :disable="scrollDisable"
+              :disable="!hasNextPage"
               ref="infiniteScrollRef"
             )
               .col-12.col-sm-6.col-md-4.col-lg-3(v-for="skin in skins" :key="skin._id")
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="skins.length === 0 && scrollDisable && isReady") {{ $t('skinsPage.notFound') }}
+            .text-center.text-body1(v-if="isReady && !isPending && skins.length === 0") {{ $t('skinsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
-import type { ISkin, ISkinSearchForm, ISkinSortBy } from '@/types/skin'
+import type { ISkinSearchForm, ISkinSortBy } from '@/types/skin'
+import { useInfiniteQuery } from '@pinia/colada'
 import { useMeta } from 'quasar'
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SkinCard from '@/components/SkinCard.vue'
 import SkinSearchForm from '@/components/SkinSearchForm.vue'
-import * as skinService from '@/services/skin'
-import { handleError } from '@/utils/handleError'
+import { skinSearchQuery } from '@/queries/skin'
 import { SKINTYPE } from '@/utils/skin'
 
 const route = useRoute()
@@ -114,10 +114,7 @@ const metaData = () => ({
 })
 useMeta(metaData)
 
-const skins = ref<ISkin[]>([])
-const scrollDisable = ref(true)
 const isReady = ref(false)
-const isFetching = ref(false)
 
 const defaultInitialValues: ISkinSearchForm = {
   keywords: '',
@@ -132,34 +129,14 @@ const searchParams = ref<ISkinSearchForm>({ ...defaultInitialValues })
  * Fetch skins from API
  * @param start - The start index of the skins
  */
-const fetchSkins = async (start = 0) => {
-  if (isFetching.value) return
-  isFetching.value = true
+// `enabled` holds the first fetch until the URL query has been parsed,
+// otherwise we would fetch once with the defaults and again with the real ones
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
+  ...skinSearchQuery(searchParams.value),
+  enabled: isReady.value,
+}))
 
-  try {
-    const { data } = await skinService.search({
-      start,
-      types: searchParams.value.types.join(),
-      keywords: searchParams.value.keywords,
-      sort: searchParams.value.sort,
-      sortBy: searchParams.value.sortBy,
-      limit: 12,
-    })
-
-    skins.value = skins.value.concat(data.result)
-
-    if (data.result.length === 12) {
-      scrollDisable.value = false
-    } else {
-      scrollDisable.value = true
-    }
-  } catch (error) {
-    handleError(error)
-    scrollDisable.value = true
-  } finally {
-    isFetching.value = false
-  }
-}
+const skins = computed(() => data.value?.pages.flat() ?? [])
 
 /**
  * Load more skins
@@ -167,20 +144,21 @@ const fetchSkins = async (start = 0) => {
  * @param done - The callback function
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value) return done()
-  await fetchSkins(skins.value.length)
-  done()
+  if (!isReady.value || !hasNextPage.value) return done(true)
+  // cancelRefetch: false makes a concurrent trigger await the request that is
+  // already running. The default aborts it and starts a new one, which turns
+  // repeated q-infinite-scroll triggers into a storm of cancelled requests.
+  await loadNextPage({ cancelRefetch: false })
+  done(!hasNextPage.value)
 }
 
 /**
  * On search form submit, apply search filters
  */
 const applySearch = async (values: ISkinSearchForm) => {
-  skins.value = []
+  // Changing the params changes the key, which starts the new search on its own
   searchParams.value = { ...values }
-  scrollDisable.value = true
 
-  await fetchSkins()
   await router.replace({
     query: {
       keywords: values.keywords,
@@ -231,7 +209,6 @@ onMounted(async () => {
   }
 
   isReady.value = true
-  await fetchSkins()
 })
 </script>
 

@@ -17,6 +17,8 @@ import routerSitemap from './routes/sitemap'
 import routerSkins from './routes/skins'
 import routerUsers from './routes/users'
 
+const LOOPBACK_IPS = new Set(['127.0.0.1', '::ffff:127.0.0.1', '::1'])
+
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 150,
@@ -24,6 +26,12 @@ const limiter = rateLimit({
   legacyHeaders: false,
   message: 'Too Many Requests',
   statusCode: 429,
+  // SSR prefetches now call the API over the loopback interface, so they all
+  // share a single rate-limit key. Counting them would let the server's own
+  // rendering exhaust the quota for everyone. Requests arriving from the
+  // internet always pass through Heroku's router, which sets X-Forwarded-For,
+  // so they can never present a loopback req.ip under `trust proxy`.
+  skip: (req) => LOOPBACK_IPS.has(req.ip ?? ''),
   handler(req, res, next, options) {
     res.status(options.statusCode).json({ success: false, message: options.message })
   },
@@ -31,22 +39,30 @@ const limiter = rateLimit({
 
 export const initializeApi = async (app: Express) => {
   try {
-    await mongoose.connect(import.meta.env.DB_URL || '')
+    // A 512MB dyno has no use for the default pool of 100 sockets
+    await mongoose.connect(import.meta.env.DB_URL || '', { maxPoolSize: 10 })
 
     // Set up Express
     app.set('trust proxy', 1)
     app.disable('x-powered-by')
 
     // Set up rate limiter
-    app.use(limiter)
+    // Scoped to the API: an SSR page render already costs several prefetch
+    // calls, so counting the page view on top of them burnt the quota fast
+    app.use('/api', limiter)
 
     // Set up session
+    // Note: stays global, SSR page rendering reads req.session in src/boot/auth.ts
     app.use(
       session({
         secret: import.meta.env.SESSION_SECRET || '',
         saveUninitialized: false,
-        resave: true,
-        store: MongoStore.create({ mongoUrl: import.meta.env.DB_URL || '' }),
+        // MongoStore implements touch(), so the session TTL is refreshed
+        // without rewriting the document on every single request
+        resave: false,
+        // Reuse mongoose's client instead of opening a second MongoClient
+        // with its own connection pool
+        store: MongoStore.create({ client: mongoose.connection.getClient() }),
         cookie: {
           secure: Boolean(import.meta.env.PROD || false),
           // 14 days, same as connect mongo default ttl
