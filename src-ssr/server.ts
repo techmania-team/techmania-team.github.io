@@ -36,6 +36,18 @@ export const create = defineSsrCreate(async (/* { ... } */) => {
 
   if (import.meta.env.QUASAR_PROD) {
     /**
+     * Dependencies stay external to the server bundle, so a library that
+     * branches on process.env.NODE_ENV decides at runtime, not at build time.
+     * vee-validate is one: without this it keeps every form it renders in a
+     * devtools registry, freed from onUnmounted, which server rendering never
+     * reaches. Each rendered page then holds on to its whole component tree.
+     *
+     * Assigned only when the environment left it unset, so an explicit value
+     * still wins.
+     */
+    process.env.NODE_ENV ??= 'production'
+
+    /**
      * Optional: secure your app with Helmet
      * (https://helmetjs.github.io/)
      */
