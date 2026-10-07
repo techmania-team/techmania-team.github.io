@@ -26,6 +26,17 @@ export default defineSsrMiddleware(({ app, resolve, render, serve }) => {
    * over to Vue and Vue Router to render our page
    */
   app.get(resolve.urlPath('{*path}'), async (req, res) => {
+    // Vue Router matches /en-US/ and /en-US alike, which would leave every
+    // page with a duplicate one slash away. Collapsing leading slashes keeps
+    // //example.com/ from becoming a protocol-relative redirect off the site.
+    if (req.path.length > 1 && req.path.endsWith('/')) {
+      const path = '/' + req.path.replace(/^\/+|\/+$/g, '')
+      const queryStart = req.originalUrl.indexOf('?')
+      const query = queryStart === -1 ? '' : req.originalUrl.slice(queryStart)
+      res.redirect(StatusCodes.MOVED_PERMANENTLY, path + query)
+      return
+    }
+
     res.setHeader('Content-Type', 'text/html')
 
     try {

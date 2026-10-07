@@ -70,12 +70,15 @@ q-layout(view='hHh lpR fff')
                   q-item-label {{ locale.toUpperCase() }}
   //- Page Content
   q-page-container
-    router-view.q-mb-xl(:key="viewKey")
+    NotFound(v-if="isNotFound")
+    router-view.q-mb-xl(v-else :key="viewKey")
     //- Back to top button
     q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
   //- Footer
-  q-footer.bg-techgrey.text-white.relative-position(bordered)
+  //- height-hint 0: the server assumes the footer is 50px tall but the client
+  //- only measures it after hydrating, so q-page's min-height came out different
+  q-footer.bg-techgrey.text-white.relative-position(bordered height-hint="0")
     .container
       q-toolbar
         p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA
@@ -91,10 +94,13 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import NotFound from '@/components/NotFound.vue'
 import { getI18nRoute, localeOptions, setLocale } from '@/i18n'
+import { useNotFoundStore } from '@/stores/notFound'
 import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
+const notFound = useNotFoundStore()
 const i18n = useI18n()
 const t = i18n.t
 const router = useRouter()
@@ -171,6 +177,8 @@ const setLocaleOption = async (locale: string) => {
   await router.replace(getI18nRoute(route))
   dropdown.value = false
 }
+
+const isNotFound = computed(() => notFound.path === route.fullPath)
 
 const viewKey = computed(() => {
   if (route.name && String(route.name).startsWith('profile')) {

@@ -48,6 +48,22 @@ export const create = defineSsrCreate(async (/* { ... } */) => {
     process.env.NODE_ENV ??= 'production'
 
     /**
+     * Heroku terminates TLS at its router and forwards plain HTTP, telling us
+     * the original scheme in this header. Without the redirect, every page is
+     * also served, and indexed, at http://. The host comes from our own
+     * config rather than the request, so a forged Host header cannot turn
+     * this into an open redirect.
+     */
+    const siteHost = new URL(import.meta.env.QCLI_HOST_URL || 'http://localhost').host
+    app.use((req, res, next) => {
+      if (req.headers['x-forwarded-proto'] === 'http') {
+        res.redirect(301, `https://${siteHost}${req.originalUrl}`)
+        return
+      }
+      next()
+    })
+
+    /**
      * Optional: secure your app with Helmet
      * (https://helmetjs.github.io/)
      */

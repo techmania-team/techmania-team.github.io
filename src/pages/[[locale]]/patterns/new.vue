@@ -14,16 +14,14 @@ q-page#patternForm
 </template>
 
 <script setup lang="ts">
-import { useMeta } from 'quasar'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
 import PatternForm from '@/components/PatternForm.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 const { t } = useI18n()
-const route = useRoute()
 
 const title = computed(() =>
   user.isLogin
@@ -37,76 +35,11 @@ const description = computed(() =>
     : t('patternFormPage.meta.description', { text: t('patternFormPage.meta.login') }),
 )
 
-const metaData = () => {
-  return {
-    title: title.value,
-    meta: {
-      color: {
-        name: 'theme-color',
-        content: '#E74C3C',
-      },
-      title: {
-        name: 'title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      description: {
-        name: 'description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      ogType: {
-        property: 'og:type',
-        content: 'website',
-      },
-      ogUrl: {
-        property: 'og:url',
-        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      ogTitle: {
-        property: 'og:title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      ogDescription: {
-        property: 'og:description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      ogImage: {
-        property: 'og:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-      },
-      twCard: {
-        name: 'twitter:card',
-        content: 'summary_large_image',
-      },
-      twUrl: {
-        name: 'twitter:url',
-        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      twTitle: {
-        name: 'twitter:title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      twDescription: {
-        name: 'twitter:description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      twImage: {
-        name: 'twitter:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-      },
-    },
-  }
-}
-useMeta(metaData)
+useSeoMeta({
+  title,
+  description,
+  noindex: true,
+})
 </script>
 
 <route lang="yaml">

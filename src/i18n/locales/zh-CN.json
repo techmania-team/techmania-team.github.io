@@ -139,7 +139,7 @@
     "download": "下载",
     "edit": "编辑",
     "basic": {
-      "title": "谱面详情",
+      "title": "基本信息",
       "composer": {
         "label": "作曲家"
       },
@@ -162,7 +162,7 @@
       }
     },
     "difficulties": {
-      "title": "难度"
+      "title": "谱面"
     },
     "description": {
       "title": "谱面描述",
@@ -183,12 +183,12 @@
     "titleEdit": "编辑谱面",
     "rules": {
       "title": "上传谱面前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的谱面。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的谱面。",
       "rule2": "请勿上传包含成人内容的谱面。",
       "rule3": "请勿上传其他人的作品。"
     },
     "basic": {
-      "title": "谱面详情",
+      "title": "曲目信息",
       "name": {
         "label": "曲名",
         "error": {
@@ -239,7 +239,7 @@
       }
     },
     "difficulties": {
-      "title": "难度",
+      "title": "谱面",
       "control": {
         "label": "操作方式",
         "touch": "触屏",
@@ -265,10 +265,10 @@
         }
       },
       "level": {
-        "label": "等级",
+        "label": "难度",
         "error": {
           "required": "必填项",
-          "min": "无效等级"
+          "min": "无效难度"
         }
       }
     },
@@ -408,7 +408,7 @@
     "titleEdit": "编辑皮肤",
     "rules": {
       "title": "上传皮肤前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的皮肤。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的皮肤。",
       "rule2": "请勿上传包含成人内容的皮肤。",
       "rule3": "请勿上传其他人的作品。"
     },
@@ -544,7 +544,7 @@
         "label": "排序",
         "submit": "上传时间",
         "update": "最后更新时间",
-        "name": "Skin Name",
+        "name": "标题",
         "rating": "评分"
       }
     },
@@ -640,7 +640,7 @@
     "titleEdit": "编辑组曲",
     "rules": {
       "title": "上传组曲前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的组曲。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的组曲。",
       "rule2": "请勿上传包含成人内容的组曲。",
       "rule3": "请勿上传其他人的作品。"
     },
@@ -688,11 +688,11 @@
         }
       },
       "difficulty": {
-        "label": "难度",
-        "searchNotFound": "找不到难度",
+        "label": "谱面",
+        "searchNotFound": "找不到谱面",
         "error": {
           "required": "必填项",
-          "invalid": "无效难度"
+          "invalid": "无效谱面"
         }
       }
     },
@@ -708,11 +708,11 @@
         }
       },
       "difficulty": {
-        "label": "难度",
-        "searchNotFound": "找不到难度",
+        "label": "谱面",
+        "searchNotFound": "找不到谱面",
         "error": {
           "required": "必填项",
-          "invalid": "无效难度"
+          "invalid": "无效谱面"
         }
       },
       "criteriaType": {
@@ -883,5 +883,9 @@
   },
   "error": {
     "unknown": "服务器错误，请稍后再试，或在 Discord 服务器联系开发者。"
+  },
+  "notFoundPage": {
+    "message": "这里什么都没有……",
+    "home": "返回首页"
   }
 }

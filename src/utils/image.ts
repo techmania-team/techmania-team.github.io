@@ -1,3 +1,5 @@
+import { toAbsoluteUrl } from '@/utils/url'
+
 export const isSafeUrl = (link: string) => {
   const parsed = new URL(link)
   if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
@@ -20,7 +22,5 @@ export const isSafeUrl = (link: string) => {
   return true
 }
 
-export const toImageProxyUrl = (type: 'patterns' | 'skins' | 'setlists', id: string): string => {
-  const base = import.meta.env.QCLI_HOST_URL || ''
-  return new URL(`/api/${type}/${id}/image`, base).toString()
-}
+export const toImageProxyUrl = (type: 'patterns' | 'skins' | 'setlists', id: string): string =>
+  toAbsoluteUrl(`/api/${type}/${id}/image`)

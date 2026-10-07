@@ -430,6 +430,11 @@ export const searchID = async (req: Request, res: Response) => {
 
   // Note:
   // Aggregation returns an array, but we only need the first element
+  // Sanitized on read as well as on write: the page renders it with v-html, and
+  // doing it here keeps sanitize-html, and the postcss it pulls in, out of the
+  // client bundle. It also covers documents saved before writes were sanitized.
+  result[0].description = sanitizeHtml(result[0].description ?? '')
+
   res.status(StatusCodes.OK).send({ success: true, message: '', result: result[0] })
 }
 

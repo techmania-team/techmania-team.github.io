@@ -8,7 +8,7 @@ q-page#profile
     //- Header content
     template(#content)
       DiscordAvatar(:avatar="profile.avatar" :avatar-options="{ rounded: true, size: '100px' }")
-      .text-h4.text-center.q-mt-md {{ profile.name }}
+      h1.text-h4.text-center.q-mt-md.q-mb-none {{ profile.name }}
   section.q-mx-auto.padding.q-mt-lg
     .container
       .row
@@ -49,14 +49,15 @@ q-page#profile
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
-import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
+import { useQuery } from '@pinia/colada'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_USER, userQuery } from '@/queries/user'
+import { prefetchById } from '@/utils/prefetch'
 
 const { t } = useI18n()
 const route = useRoute('profile')
@@ -66,72 +67,12 @@ const route = useRoute('profile')
 const { data } = useQuery(() => userQuery(route.params.id))
 const profile = computed(() => data.value ?? EMPTY_USER)
 
-const metaData = () => ({
-  title: t('profile.meta.title', { name: profile.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: profile.value.avatar,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: profile.value.avatar,
-      'data-dynamic': true,
-    },
-  },
+useSeoMeta({
+  title: () => t('profile.meta.title', { name: profile.value.name }),
+  description: () => t('profile.meta.description', { name: profile.value.name }),
+  image: () => profile.value.avatar,
+  type: 'profile',
 })
-useMeta(metaData)
 
 const tab = ref('patterns')
 watch(
@@ -150,24 +91,14 @@ watch(
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'profile'>
-    if (!route.params.id) {
-      redirect({ name: 'index' })
-      return
-    }
 
-    const queryCache = useQueryCache(store)
-    const entry = queryCache.ensure(userQuery(route.params.id))
-    const state = await queryCache.refresh(entry).catch(() => null)
-
+    // The profile has nothing of its own to show, its first tab does
     if (route.name === 'profile') {
-      redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
-    }
-
-    // Check if profile exists
-    if (!state?.data) {
-      redirect({ name: 'index' })
+      redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }), 301)
       return
     }
+
+    await prefetchById({ currentRoute, store }, route.params.id, userQuery)
   },
 })
 </script>

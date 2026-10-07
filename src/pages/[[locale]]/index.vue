@@ -9,7 +9,8 @@ q-page#index
     template(#content)
       .absolute.column.items-center.text-center
         //- Logo
-        img#logo(src="/assets/Logo.png")
+        h1#logo-title.q-my-none
+          img#logo(src="/assets/Logo.png" :alt="$t('indexPage.meta.title')")
         //- Windows
         div(v-if="platform === 'windows'")
           //- Download
@@ -132,23 +133,26 @@ q-page#index
 <script setup lang="ts">
 import type { IRelease } from '@/types/info'
 import { useQuery } from '@pinia/colada'
-import { useMeta, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
 import PatternCard from '@/components/PatternCard.vue'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SkinCard from '@/components/SkinCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useLocalePath } from '@/composables/useLocalePath'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getReleases } from '@/services/info'
 import { search as searchPatterns } from '@/services/pattern'
 import { search as searchSetlists } from '@/services/setlist'
 import { search as searchSkins } from '@/services/skin'
 import { toLocaleString } from '@/utils/date'
+import { GAME, SOCIAL_LINKS } from '@/utils/jsonLd'
+import { DEFAULT_OG_IMAGE, toAbsoluteUrl } from '@/utils/url'
 
 const $q = useQuasar()
 const { t } = useI18n()
-const route = useRoute()
+const pathOf = useLocalePath()
 
 /** How many of each kind to show in the "latest" sections */
 const LATEST_COUNT = 8
@@ -195,72 +199,28 @@ const skins = computed(() => skinsData.value ?? [])
 const setlists = computed(() => setlistsData.value ?? [])
 const releases = computed(() => releasesData.value ?? EMPTY_RELEASES)
 
-const metaData = () => ({
-  title: t('indexPage.meta.title'),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
+useSeoMeta({
+  title: () => t('indexPage.meta.title'),
+  description: () => t('indexPage.meta.description'),
+  jsonLd: () => [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'TECHMANIA',
+      url: toAbsoluteUrl(pathOf({ name: 'index' })),
     },
-    title: {
-      name: 'title',
-      content: t('indexPage.meta.title'),
-      'data-dynamic': true,
+    {
+      '@context': 'https://schema.org',
+      ...GAME,
+      description: t('indexPage.meta.description'),
+      image: DEFAULT_OG_IMAGE,
+      genre: 'Rhythm game',
+      gamePlatform: ['Windows', 'macOS', 'Android', 'iOS'],
+      offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+      sameAs: SOCIAL_LINKS,
     },
-    description: {
-      name: 'description',
-      content: t('indexPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('indexPage.meta.title'),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('indexPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('indexPage.meta.title'),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('indexPage.meta.description'),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-  },
+  ],
 })
-useMeta(metaData)
 
 // Selected platform
 const platform = ref('windows')

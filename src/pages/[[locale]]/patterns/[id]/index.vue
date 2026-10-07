@@ -8,7 +8,7 @@ q-page#pattern
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
-        .text-h4.text-center {{ pattern.name }}
+        h1.text-h4.text-center.q-my-none {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-md
         q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank" rel="noopener noreferrer") {{ $t('patternPage.download') }}
@@ -105,16 +105,15 @@ q-page#pattern
                     div(:class="getLevelColor(difficulty.level)") {{ difficulty.name }}
         //- Description
         //- NOTE:
-        //- Use q-no-ssr to prevent hydration error
+        //- The API sanitizes it. A div, not a p: descriptions hold block elements such as div, which a p cannot contain
         .col-12.pre-line
-          q-no-ssr
-            q-list
-              q-item-label.text-h6.text-tech(header) {{ $t('patternPage.description.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  p(v-html="descriptionSanitized" v-if="pattern.description")
-                  p(v-else) {{ $t('patternPage.description.noDescription') }}
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('patternPage.description.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                div.q-mb-md(v-html="pattern.description" v-if="pattern.description")
+                p(v-else) {{ $t('patternPage.description.noDescription') }}
         //- Previews
         .col-12
           q-list
@@ -132,28 +131,31 @@ q-page#pattern
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
-import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
-import sanitizeHtml from 'sanitize-html'
-import validator from 'validator'
+import { useQuery } from '@pinia/colada'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useLocalePath } from '@/composables/useLocalePath'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_PATTERN, patternQuery } from '@/queries/pattern'
 import { useUserStore } from '@/stores/user'
 import { getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
+import { toBreadcrumbList, toCreativeWork } from '@/utils/jsonLd'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
+import { prefetchById } from '@/utils/prefetch'
+import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
 const route = useRoute('pattern')
 const user = useUserStore()
+const pathOf = useLocalePath()
 
 // preFetch has already filled this entry in, so nothing is fetched twice
 const { data } = useQuery(() => patternQuery(route.params.id))
@@ -161,17 +163,13 @@ const pattern = computed(() => data.value ?? EMPTY_PATTERN)
 
 const isImageError = ref(false)
 
-const descriptionSanitized = computed(() => {
-  return sanitizeHtml(pattern.value.description)
-})
-
 const backgroundImage = computed(() => {
   if (pattern.value.image?.length > 0 && !isImageError.value) {
     return toImageProxyUrl('patterns', pattern.value._id)
   } else if (pattern.value.previews?.length > 0) {
     return getYouTubeThumbnail(pattern.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-pattern.value.png'
+    return toAbsoluteUrl('/assets/header-pattern.png')
   }
 })
 
@@ -179,102 +177,43 @@ const onImageError = () => {
   isImageError.value = true
 }
 
-const metaData = () => ({
-  title: t('patternPage.meta.title', { name: pattern.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
+const description = computed(() =>
+  t('patternPage.meta.description', {
+    composer: pattern.value.composer,
+    submitter: pattern.value.submitter.name,
+  }),
+)
+
+useSeoMeta({
+  title: () => t('patternPage.meta.title', { name: pattern.value.name }),
+  description,
+  image: backgroundImage,
+  type: 'article',
+  // Only once the document has loaded: the placeholder has no ids to link to
+  jsonLd: () =>
+    data.value && [
+      toCreativeWork({
+        ...pattern.value,
+        description: description.value,
+        image: backgroundImage.value,
+        path: route.path,
+        submitter: {
+          name: pattern.value.submitter.name,
+          path: pathOf({ name: 'profile-patterns', params: { id: pattern.value.submitter._id } }),
+        },
       }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-  },
+      toBreadcrumbList([
+        { name: 'TECHMANIA', path: pathOf({ name: 'index' }) },
+        { name: t('nav.patterns'), path: pathOf({ name: 'patterns' }) },
+        { name: pattern.value.name, path: route.path },
+      ]),
+    ],
 })
-useMeta(metaData)
 
 defineOptions({
-  // RouteLocationNormalizedLoadedTyped
-  async preFetch({ currentRoute, redirect, store }) {
+  async preFetch({ currentRoute, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'pattern'>
-    if (!route.params.id || !validator.isMongoId(route.params.id)) {
-      redirect({ name: 'index' })
-      return
-    }
-
-    // Warms the same cache entry the component reads below. refresh() reuses
-    // still-fresh data, so navigating back here does not refetch.
-    const queryCache = useQueryCache(store)
-    const entry = queryCache.ensure(patternQuery(route.params.id))
-    const state = await queryCache.refresh(entry).catch(() => null)
-
-    // Check if pattern exists
-    if (!state?.data) {
-      redirect({ name: 'index' })
-      return
-    }
+    await prefetchById({ currentRoute, store }, route.params.id, patternQuery)
   },
 })
 </script>

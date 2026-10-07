@@ -1,21 +1,20 @@
 <template lang="pug">
 q-page#patterns
-  q-no-ssr.q-mx-auto.padding
+  .q-mx-auto.padding
     //- Header
     q-parallax.q-mb-xl.header-parallax(:height="200")
       template(#media)
         img(src="/assets/header-pattern.png")
       template(#content)
-        h4.text-center {{ $t('patternsPage.title') }}
+        h1.page-title.text-h4.text-center {{ $t('patternsPage.title') }}
     //- SearchForm
-    PatternSearchForm(v-if="isReady" :initial-values="searchParams" @search="applySearch")
+    PatternSearchForm(:initial-values="searchParams" @search="applySearch")
     //- Patterns
     section.q-mx-auto.padding.q-my-md
       .container
         .row
           .col-12
             q-infinite-scroll.row.q-my-md.q-col-gutter-md(
-              v-if="isReady"
               @load="loadScroll"
               :offset="200"
               :disable="!hasNextPage"
@@ -25,19 +24,19 @@ q-page#patterns
                 PatternCard(:pattern="pattern" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="isReady && !isPending && patterns.length === 0") {{ $t('patternsPage.notFound') }}
+            .text-center.text-body1(v-if="!isPending && patterns.length === 0") {{ $t('patternsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
 import type { IPatternSearchForm, IPatternSortBy } from '@/types/pattern'
 import { useInfiniteQuery } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import PatternCard from '@/components/PatternCard.vue'
 import PatternSearchForm from '@/components/PatternSearchForm.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { patternSearchQuery } from '@/queries/pattern'
 import { CONTROLTYPE } from '@/utils/control'
 
@@ -45,74 +44,10 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const metaData = () => ({
-  title: t('patternsPage.meta.title'),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-  },
+useSeoMeta({
+  title: () => t('patternsPage.meta.title'),
+  description: () => t('patternsPage.meta.description'),
 })
-useMeta(metaData)
-
-const isReady = ref(false)
 
 const defaultInitialValues: IPatternSearchForm = {
   keysounded: undefined,
@@ -123,19 +58,69 @@ const defaultInitialValues: IPatternSearchForm = {
   sortBy: 'createdAt',
 }
 
-const searchParams = ref<IPatternSearchForm>({ ...defaultInitialValues })
+const querySchema = yup.object({
+  keywords: yup.string().default(defaultInitialValues.keywords),
+  keysounded: yup
+    .boolean()
+    .optional()
+    .transform((value, originalValue) => {
+      if (originalValue === 'true') return true
+      if (originalValue === 'false') return false
+      return undefined
+    })
+    .default(defaultInitialValues.keysounded),
+  controls: yup
+    .array()
+    .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+    .transform((value, originalValue) => {
+      if (typeof originalValue === 'string' && originalValue.length > 0) {
+        return originalValue.split(',').map(Number)
+      }
+      return defaultInitialValues.controls
+    })
+    .default(defaultInitialValues.controls),
+  lanes: yup
+    .array<(2 | 3 | 4)[]>()
+    .transform((value, originalValue) => {
+      if (typeof originalValue === 'string' && originalValue.length > 0) {
+        return originalValue.split(',').map((v) => Number(v) as 2 | 3 | 4)
+      }
+      return defaultInitialValues.lanes
+    })
+    .default(defaultInitialValues.lanes),
+  sort: yup
+    .number<1 | -1>()
+    .transform((value) => (Number(value) === 1 ? 1 : -1))
+    .default(defaultInitialValues.sort),
+  sortBy: yup.string<IPatternSortBy>().default(defaultInitialValues.sortBy),
+})
 
-// `enabled` holds the first fetch until the URL query has been parsed,
-// otherwise we would fetch once with the defaults and again with the real ones
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
-  ...patternSearchQuery(searchParams.value),
-  enabled: isReady.value,
-}))
+const hasQuery = Object.keys(route.query).length > 0
+
+const toQuery = (values: IPatternSearchForm) => ({
+  keywords: values.keywords,
+  keysounded: values.keysounded !== undefined ? String(values.keysounded) : undefined,
+  controls: values.controls.join(),
+  lanes: values.lanes.join(),
+  sort: values.sort,
+  sortBy: values.sortBy,
+})
+
+// Parsed during setup so the server renders the first page of results too
+const searchParams = ref<IPatternSearchForm>(
+  hasQuery
+    ? (querySchema.cast(route.query, { stripUnknown: true }) as IPatternSearchForm)
+    : { ...defaultInitialValues },
+)
+
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  patternSearchQuery(searchParams.value),
+)
 
 const patterns = computed(() => data.value?.pages.flat() ?? [])
 
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value || !hasNextPage.value) return done(true)
+  if (!hasNextPage.value) return done(true)
   // cancelRefetch: false makes a concurrent trigger await the request that is
   // already running. The default aborts it and starts a new one, which turns
   // repeated q-infinite-scroll triggers into a storm of cancelled requests.
@@ -146,77 +131,14 @@ const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
 // Changing the params changes the key, which starts the new search on its own
 const applySearch = async (values: IPatternSearchForm) => {
   searchParams.value = { ...values }
-
-  await router.replace({
-    query: {
-      keywords: values.keywords,
-      keysounded: values.keysounded !== undefined ? String(values.keysounded) : undefined,
-      controls: values.controls.join(),
-      lanes: values.lanes.join(),
-      sort: values.sort,
-      sortBy: values.sortBy,
-    },
-  })
+  await router.replace({ query: toQuery(values) })
 }
 
 onMounted(async () => {
-  if (Object.keys(route.query).length > 0) {
-    const querySchema = yup.object({
-      keywords: yup.string().default(defaultInitialValues.keywords),
-      keysounded: yup
-        .boolean()
-        .optional()
-        .transform((value, originalValue) => {
-          if (originalValue === 'true') return true
-          if (originalValue === 'false') return false
-          return undefined
-        })
-        .default(defaultInitialValues.keysounded),
-      controls: yup
-        .array()
-        .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
-        .transform((value, originalValue) => {
-          if (typeof originalValue === 'string' && originalValue.length > 0) {
-            return originalValue.split(',').map(Number)
-          }
-          return defaultInitialValues.controls
-        })
-        .default(defaultInitialValues.controls),
-      lanes: yup
-        .array<(2 | 3 | 4)[]>()
-        .transform((value, originalValue) => {
-          if (typeof originalValue === 'string' && originalValue.length > 0) {
-            return originalValue.split(',').map((v) => Number(v) as 2 | 3 | 4)
-          }
-          return defaultInitialValues.lanes
-        })
-        .default(defaultInitialValues.lanes),
-      sort: yup
-        .number<1 | -1>()
-        .transform((value) => (Number(value) === 1 ? 1 : -1))
-        .default(defaultInitialValues.sort),
-      sortBy: yup.string<IPatternSortBy>().default(defaultInitialValues.sortBy),
-    })
-
-    searchParams.value = querySchema.cast(route.query, { stripUnknown: true }) as IPatternSearchForm
-
-    // 將初始值同步回 URL 確保格式整齊
-    await router.replace({
-      query: {
-        keywords: searchParams.value.keywords,
-        keysounded:
-          searchParams.value.keysounded !== undefined
-            ? String(searchParams.value.keysounded)
-            : undefined,
-        controls: searchParams.value.controls.join(),
-        lanes: searchParams.value.lanes.join(),
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-      },
-    })
+  // 將初始值同步回 URL 確保格式整齊
+  if (hasQuery) {
+    await router.replace({ query: toQuery(searchParams.value) })
   }
-
-  isReady.value = true
 })
 </script>
 

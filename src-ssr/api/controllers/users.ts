@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import * as yup from 'yup'
 import User from '../models/user'
+import { AppError } from '../utils/error'
 
 export const getById = async (req: Request, res: Response) => {
   // Request params validation schema
@@ -106,6 +107,10 @@ export const getById = async (req: Request, res: Response) => {
       },
     },
   ])
+
+  if (result.length === 0) {
+    throw new AppError('NOT_FOUND')
+  }
 
   // Only return the first result
   // Because we only find 1 user by ID

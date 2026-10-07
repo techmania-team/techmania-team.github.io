@@ -7,7 +7,7 @@ q-page#changelog
       img(src="/assets/header-changelog.png")
     //- Header content
     template(#content)
-      h4.text-center {{ $t('changelogPage.title') }}
+      h1.page-title.text-h4.text-center {{ $t('changelogPage.title') }}
   section.container
     .row
       //- Title
@@ -51,10 +51,9 @@ q-page#changelog
 
 <script setup lang="ts">
 import type { IChangelog } from '@/types/info'
-import { useMeta } from 'quasar'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getChangelogs } from '@/services/info'
 import { toLocaleString } from '@/utils/date'
 import { handleError } from '@/utils/handleError'
@@ -63,75 +62,12 @@ interface IChangelogExpand extends IChangelog {
   expand: boolean
 }
 
-const route = useRoute()
 const { t } = useI18n()
 
-const metaData = () => ({
-  title: t('changelogPage.meta.title'),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('changelogPage.meta.title'),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('changelogPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('changelogPage.meta.title'),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('changelogPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('changelogPage.meta.title'),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('changelogPage.meta.description'),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-  },
+useSeoMeta({
+  title: () => t('changelogPage.meta.title'),
+  description: () => t('changelogPage.meta.description'),
 })
-useMeta(metaData)
 
 const releases = ref<IChangelogExpand[]>([])
 const hasError = ref(false)

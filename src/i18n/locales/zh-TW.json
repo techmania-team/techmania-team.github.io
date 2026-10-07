@@ -112,7 +112,7 @@
         "no": "無"
       },
       "control": {
-        "label": "控制方式",
+        "label": "操作方式",
         "touch": "觸控",
         "keys": "鍵盤",
         "km": "鍵鼠"
@@ -139,7 +139,7 @@
     "download": "下載",
     "edit": "編輯",
     "basic": {
-      "title": "譜面資訊",
+      "title": "基本資料",
       "composer": {
         "label": "作曲家"
       },
@@ -162,7 +162,7 @@
       }
     },
     "difficulties": {
-      "title": "難度"
+      "title": "譜面"
     },
     "description": {
       "title": "說明",
@@ -188,7 +188,7 @@
       "rule3": "請勿上傳其他人製作的譜面。"
     },
     "basic": {
-      "title": "譜面資訊",
+      "title": "歌曲資訊",
       "name": {
         "label": "曲名",
         "error": {
@@ -239,9 +239,9 @@
       }
     },
     "difficulties": {
-      "title": "難度",
+      "title": "譜面",
       "control": {
-        "label": "控制方式",
+        "label": "操作方式",
         "touch": "觸控",
         "keys": "鍵盤",
         "km": "鍵鼠",
@@ -265,10 +265,10 @@
         }
       },
       "level": {
-        "label": "等級",
+        "label": "難度",
         "error": {
           "required": "必填欄位",
-          "min": "無效等級"
+          "min": "無效難度"
         }
       }
     },
@@ -535,7 +535,7 @@
         "placeholder": "請輸入關鍵字..."
       },
       "control": {
-        "label": "控制方式",
+        "label": "操作方式",
         "touch": "觸控",
         "keys": "鍵盤",
         "km": "鍵鼠"
@@ -544,7 +544,7 @@
         "label": "排序",
         "submit": "上傳日期",
         "update": "更新日期",
-        "name": "曲名",
+        "name": "標題",
         "rating": "評分"
       }
     },
@@ -572,7 +572,7 @@
         "label": "更新日期"
       },
       "control": {
-        "label": "控制方式",
+        "label": "操作方式",
         "touch": "觸控",
         "keys": "鍵盤",
         "km": "鍵鼠"
@@ -620,7 +620,7 @@
     "selectablePatterns": "可選譜面",
     "hiddenPatterns": "隱藏譜面",
     "control": {
-      "label": "控制方式",
+      "label": "操作方式",
       "touch": "觸控",
       "keys": "鍵盤",
       "km": "鍵鼠"
@@ -642,7 +642,7 @@
       "title": "在送出您的組曲前請先閱讀下列規則：",
       "rule1": "嚴禁上傳使用 DJMAX 和 DJMAX RESPECT 原創歌曲製作的組曲。",
       "rule2": "請勿上傳包含成人內容的組曲。",
-      "rule3": "請勿上傳包含成人內容的組曲。"
+      "rule3": "請勿上傳其他人製作的組曲。"
     },
     "basic": {
       "title": "組曲資訊",
@@ -666,7 +666,7 @@
         }
       },
       "control": {
-        "label": "控制方式",
+        "label": "操作方式",
         "touch": "觸控",
         "keys": "鍵盤",
         "km": "鍵鼠",
@@ -688,8 +688,8 @@
         }
       },
       "difficulty": {
-        "label": "難度",
-        "searchNotFound": "找不到難度",
+        "label": "譜面",
+        "searchNotFound": "找不到譜面",
         "error": {
           "required": "必填欄位",
           "invalid": "無效選項"
@@ -708,8 +708,8 @@
         }
       },
       "difficulty": {
-        "label": "難度",
-        "searchNotFound": "找不到難度",
+        "label": "譜面",
+        "searchNotFound": "找不到譜面",
         "error": {
           "required": "必填欄位",
           "invalid": "無效選項"
@@ -883,5 +883,9 @@
   },
   "error": {
     "unknown": "伺服器錯誤，請稍後再試，或在 Discord 伺服器聯絡開發者。"
+  },
+  "notFoundPage": {
+    "message": "這裡什麼都沒有⋯⋯",
+    "home": "回首頁"
   }
 }

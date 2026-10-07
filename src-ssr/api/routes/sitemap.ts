@@ -3,11 +3,11 @@ import { StatusCodes } from 'http-status-codes'
 import Pattern from '../models/pattern.js'
 import Setlist from '../models/setlist.js'
 import Skin from '../models/skin.js'
-import User from '../models/user.js'
 
 const router = Router()
 
-const BASE_URL = 'https://techmania-team.herokuapp.com'
+// Must match the canonical links the pages print, see src/utils/url.ts
+const BASE_URL = new URL(import.meta.env.QCLI_HOST_URL || 'http://localhost').origin
 
 // Must match localeOptions in src/i18n/index.ts
 const LOCALES = ['en-US', 'zh-TW', 'zh-CN', 'ja-JP', 'ko-KR']
@@ -64,24 +64,30 @@ async function buildSitemap(): Promise<string> {
   const chunks: string[] = ['<?xml version="1.0" encoding="UTF-8"?>']
   chunks.push('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
-  const today = new Date().toISOString().split('T')[0]
-
-  for (const path of ['/', '/changelog', '/howtoplay', '/patterns', '/skins', '/setlists']) {
-    chunks.push(buildUrls(path, today))
+  // No lastmod: these change with every upload, and a date that is always
+  // today teaches crawlers to ignore lastmod for the whole file. The home page
+  // is '' so it matches the canonical /en-US rather than /en-US/.
+  for (const path of ['', '/changelog', '/howtoplay', '/patterns', '/skins', '/setlists']) {
+    chunks.push(buildUrls(path))
   }
 
   await appendDocUrls(chunks, '/patterns', Pattern.find({}, TIMESTAMPED).lean().cursor())
   await appendDocUrls(chunks, '/skins', Skin.find({}, TIMESTAMPED).lean().cursor())
   await appendDocUrls(chunks, '/setlists', Setlist.find({}, TIMESTAMPED).lean().cursor())
 
-  // User model has no timestamps, so no lastmod
-  // users/:id redirects to users/:id/patterns, so use the sub-pages directly
-  const userCursor = User.find({}, { _id: 1 }).lean().cursor()
-  for await (const user of userCursor) {
-    const id = user._id.toString()
-    chunks.push(buildUrls(`/users/${id}/patterns`))
-    chunks.push(buildUrls(`/users/${id}/skins`))
-    chunks.push(buildUrls(`/users/${id}/setlists`))
+  // Only the profile tabs that have something on them. Most accounts only
+  // ever log in to comment, and an empty tab is a thin page in every locale.
+  // users/:id redirects to users/:id/patterns, so use the sub-pages directly.
+  // User model has no timestamps, so no lastmod.
+  const tabs: [string, Promise<unknown[]>][] = [
+    ['patterns', Pattern.distinct('submitter').exec()],
+    ['skins', Skin.distinct('submitter').exec()],
+    ['setlists', Setlist.distinct('submitter').exec()],
+  ]
+  for (const [tab, submitters] of tabs) {
+    for (const id of await submitters) {
+      chunks.push(buildUrls(`/users/${String(id)}/${tab}`))
+    }
   }
 
   chunks.push('</urlset>')

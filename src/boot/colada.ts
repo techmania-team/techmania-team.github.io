@@ -51,6 +51,23 @@ const queryOptions = {
   ssrCatchError: true,
 }
 
+/**
+ * A failed query keeps its AxiosError, which holds the whole request and
+ * response. Quasar's state serializer writes functions out as source code, so
+ * one failed query put Node internals into the page, and the script restoring
+ * the state then threw before any of it reached the client. The client only
+ * ever needs to know that the query failed.
+ */
+const toPlainErrors = (cache: Record<string, _UseQueryEntryNodeValueSerialized>) => {
+  for (const entry of Object.values(cache)) {
+    const error = entry[1]
+    if (error instanceof Error) {
+      entry[1] = { name: error.name, message: error.message }
+    }
+  }
+  return cache
+}
+
 export default defineBoot(({ app, store, ssrContext }) => {
   // Compile-time constant, so the client branch below (and its `window`
   // reference) is dropped from the server bundle entirely
@@ -73,7 +90,7 @@ export default defineBoot(({ app, store, ssrContext }) => {
 
       ssrContext.state = {
         pinia,
-        colada: serializeQueryCache(useQueryCache(store)),
+        colada: toPlainErrors(serializeQueryCache(useQueryCache(store))),
       } satisfies QuasarInitialState
     })
 
