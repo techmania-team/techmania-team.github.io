@@ -117,12 +117,14 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useLocalePath } from '@/composables/useLocalePath'
 import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
+import { toBreadcrumbList, toCreativeWork } from '@/utils/jsonLd'
 import { prefetchById } from '@/utils/prefetch'
 import { SKINTYPES } from '@/utils/skin'
 import { toAbsoluteUrl } from '@/utils/url'
@@ -131,6 +133,7 @@ import { getYouTubeThumbnail } from '@/utils/youtube'
 const { t } = useI18n()
 const route = useRoute('skin')
 const user = useUserStore()
+const pathOf = useLocalePath()
 // preFetch has already filled this entry in, so nothing is fetched twice
 const { data } = useQuery(() => skinQuery(route.params.id))
 const skin = computed(() => data.value ?? EMPTY_SKIN)
@@ -164,6 +167,25 @@ useSeoMeta({
   description,
   image: backgroundImage,
   type: 'article',
+  // Only once the document has loaded: the placeholder has no ids to link to
+  jsonLd: () =>
+    data.value && [
+      toCreativeWork({
+        ...skin.value,
+        description: description.value,
+        image: backgroundImage.value,
+        path: route.path,
+        submitter: {
+          name: skin.value.submitter.name,
+          path: pathOf({ name: 'profile-skins', params: { id: skin.value.submitter._id } }),
+        },
+      }),
+      toBreadcrumbList([
+        { name: 'TECHMANIA', path: pathOf({ name: 'index' }) },
+        { name: t('nav.skins'), path: pathOf({ name: 'skins' }) },
+        { name: skin.value.name, path: route.path },
+      ]),
+    ],
 })
 
 defineOptions({

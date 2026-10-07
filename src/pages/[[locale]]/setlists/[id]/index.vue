@@ -142,6 +142,7 @@ import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useLocalePath } from '@/composables/useLocalePath'
 import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_SETLIST, setlistQuery } from '@/queries/setlist'
@@ -149,6 +150,7 @@ import { useUserStore } from '@/stores/user'
 import { controls, getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
+import { toBreadcrumbList, toCreativeWork } from '@/utils/jsonLd'
 import { prefetchById } from '@/utils/prefetch'
 import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
@@ -156,6 +158,7 @@ import { getYouTubeThumbnail } from '@/utils/youtube'
 const { t } = useI18n()
 const route = useRoute('setlist')
 const user = useUserStore()
+const pathOf = useLocalePath()
 // preFetch has already filled this entry in, so nothing is fetched twice
 const { data } = useQuery(() => setlistQuery(route.params.id))
 const setlist = computed(() => data.value ?? EMPTY_SETLIST)
@@ -189,6 +192,25 @@ useSeoMeta({
   description,
   image: backgroundImage,
   type: 'article',
+  // Only once the document has loaded: the placeholder has no ids to link to
+  jsonLd: () =>
+    data.value && [
+      toCreativeWork({
+        ...setlist.value,
+        description: description.value,
+        image: backgroundImage.value,
+        path: route.path,
+        submitter: {
+          name: setlist.value.submitter.name,
+          path: pathOf({ name: 'profile-setlists', params: { id: setlist.value.submitter._id } }),
+        },
+      }),
+      toBreadcrumbList([
+        { name: 'TECHMANIA', path: pathOf({ name: 'index' }) },
+        { name: t('nav.setlists'), path: pathOf({ name: 'setlists' }) },
+        { name: setlist.value.name, path: route.path },
+      ]),
+    ],
 })
 
 defineOptions({

@@ -139,15 +139,19 @@ import PatternCard from '@/components/PatternCard.vue'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SkinCard from '@/components/SkinCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useLocalePath } from '@/composables/useLocalePath'
 import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getReleases } from '@/services/info'
 import { search as searchPatterns } from '@/services/pattern'
 import { search as searchSetlists } from '@/services/setlist'
 import { search as searchSkins } from '@/services/skin'
 import { toLocaleString } from '@/utils/date'
+import { GAME, SOCIAL_LINKS } from '@/utils/jsonLd'
+import { DEFAULT_OG_IMAGE, toAbsoluteUrl } from '@/utils/url'
 
 const $q = useQuasar()
 const { t } = useI18n()
+const pathOf = useLocalePath()
 
 /** How many of each kind to show in the "latest" sections */
 const LATEST_COUNT = 8
@@ -197,6 +201,24 @@ const releases = computed(() => releasesData.value ?? EMPTY_RELEASES)
 useSeoMeta({
   title: () => t('indexPage.meta.title'),
   description: () => t('indexPage.meta.description'),
+  jsonLd: () => [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'TECHMANIA',
+      url: toAbsoluteUrl(pathOf({ name: 'index' })),
+    },
+    {
+      '@context': 'https://schema.org',
+      ...GAME,
+      description: t('indexPage.meta.description'),
+      image: DEFAULT_OG_IMAGE,
+      genre: 'Rhythm game',
+      gamePlatform: ['Windows', 'macOS', 'Android', 'iOS'],
+      offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+      sameAs: SOCIAL_LINKS,
+    },
+  ],
 })
 
 // Selected platform
