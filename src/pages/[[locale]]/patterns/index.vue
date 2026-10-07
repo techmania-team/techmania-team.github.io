@@ -31,13 +31,13 @@ q-page#patterns
 <script setup lang="ts">
 import type { IPatternSearchForm, IPatternSortBy } from '@/types/pattern'
 import { useInfiniteQuery } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import PatternCard from '@/components/PatternCard.vue'
 import PatternSearchForm from '@/components/PatternSearchForm.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { patternSearchQuery } from '@/queries/pattern'
 import { CONTROLTYPE } from '@/utils/control'
 
@@ -45,72 +45,10 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const metaData = () => ({
-  title: t('patternsPage.meta.title'),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('patternsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('patternsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-  },
+useSeoMeta({
+  title: () => t('patternsPage.meta.title'),
+  description: () => t('patternsPage.meta.description'),
 })
-useMeta(metaData)
 
 const isReady = ref(false)
 

@@ -110,7 +110,6 @@ q-page#skin
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed } from 'vue'
@@ -119,12 +118,14 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
 import { SKINTYPES } from '@/utils/skin'
+import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
@@ -146,7 +147,7 @@ const backgroundImage = computed(() => {
   } else if (skin.value.previews?.length > 0) {
     return getYouTubeThumbnail(skin.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-skin.value.png'
+    return toAbsoluteUrl('/assets/header-skin.png')
   }
 })
 
@@ -154,78 +155,16 @@ const onImageError = () => {
   isImageError.value = true
 }
 
-const metaData = () => ({
-  title: t('skinPage.meta.title', { name: skin.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('skinPage.meta.title', { name: skin.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('skinPage.meta.description', {
-        submitter: skin.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('skinPage.meta.title', { name: skin.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('skinPage.meta.description', {
-        submitter: skin.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('skinPage.meta.title', { name: skin.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('skinPage.meta.description', {
-        submitter: skin.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-  },
+const description = computed(() =>
+  t('skinPage.meta.description', { submitter: skin.value.submitter.name }),
+)
+
+useSeoMeta({
+  title: () => t('skinPage.meta.title', { name: skin.value.name }),
+  description,
+  image: backgroundImage,
+  type: 'article',
 })
-useMeta(metaData)
 
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {

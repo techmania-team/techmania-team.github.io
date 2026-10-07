@@ -50,11 +50,11 @@ q-page#profile
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import DiscordAvatar from '@/components/DiscordAvatar.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_USER, userQuery } from '@/queries/user'
 
@@ -66,72 +66,12 @@ const route = useRoute('profile')
 const { data } = useQuery(() => userQuery(route.params.id))
 const profile = computed(() => data.value ?? EMPTY_USER)
 
-const metaData = () => ({
-  title: t('profile.meta.title', { name: profile.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: profile.value.avatar,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('profile.meta.title', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('profile.meta.description', { name: profile.value.name }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: profile.value.avatar,
-      'data-dynamic': true,
-    },
-  },
+useSeoMeta({
+  title: () => t('profile.meta.title', { name: profile.value.name }),
+  description: () => t('profile.meta.description', { name: profile.value.name }),
+  image: () => profile.value.avatar,
+  type: 'profile',
 })
-useMeta(metaData)
 
 const tab = ref('patterns')
 watch(

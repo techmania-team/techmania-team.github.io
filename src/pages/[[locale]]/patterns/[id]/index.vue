@@ -133,7 +133,6 @@ q-page#pattern
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed } from 'vue'
@@ -142,6 +141,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_PATTERN, patternQuery } from '@/queries/pattern'
 import { useUserStore } from '@/stores/user'
@@ -149,6 +149,7 @@ import { getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
 import { getLevelColor, getLevelFilter } from '@/utils/level'
+import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
@@ -171,7 +172,7 @@ const backgroundImage = computed(() => {
   } else if (pattern.value.previews?.length > 0) {
     return getYouTubeThumbnail(pattern.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-pattern.value.png'
+    return toAbsoluteUrl('/assets/header-pattern.png')
   }
 })
 
@@ -179,81 +180,19 @@ const onImageError = () => {
   isImageError.value = true
 }
 
-const metaData = () => ({
-  title: t('patternPage.meta.title', { name: pattern.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('patternPage.meta.title', { name: pattern.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('patternPage.meta.description', {
-        composer: pattern.value.composer,
-        submitter: pattern.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-  },
+const description = computed(() =>
+  t('patternPage.meta.description', {
+    composer: pattern.value.composer,
+    submitter: pattern.value.submitter.name,
+  }),
+)
+
+useSeoMeta({
+  title: () => t('patternPage.meta.title', { name: pattern.value.name }),
+  description,
+  image: backgroundImage,
+  type: 'article',
 })
-useMeta(metaData)
 
 defineOptions({
   // RouteLocationNormalizedLoadedTyped

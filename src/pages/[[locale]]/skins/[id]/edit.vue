@@ -17,12 +17,12 @@ q-page#skinForm
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import validator from 'validator'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import SkinForm from '@/components/SkinForm.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 
@@ -45,76 +45,11 @@ const description = computed(() =>
     : t('skinFormPage.meta.description', { text: t('skinFormPage.meta.login') }),
 )
 
-const metaData = () => {
-  return {
-    title: title.value,
-    meta: {
-      color: {
-        name: 'theme-color',
-        content: '#E74C3C',
-      },
-      title: {
-        name: 'title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      description: {
-        name: 'description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      ogType: {
-        property: 'og:type',
-        content: 'website',
-      },
-      ogUrl: {
-        property: 'og:url',
-        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      ogTitle: {
-        property: 'og:title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      ogDescription: {
-        property: 'og:description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      ogImage: {
-        property: 'og:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-      },
-      twCard: {
-        name: 'twitter:card',
-        content: 'summary_large_image',
-      },
-      twUrl: {
-        name: 'twitter:url',
-        content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-        'data-dynamic': true,
-      },
-      twTitle: {
-        name: 'twitter:title',
-        content: title.value,
-        'data-dynamic': true,
-      },
-      twDescription: {
-        name: 'twitter:description',
-        content: description.value,
-        'data-dynamic': true,
-      },
-      twImage: {
-        name: 'twitter:image',
-        content:
-          'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-      },
-    },
-  }
-}
-useMeta(metaData)
+useSeoMeta({
+  title,
+  description,
+  noindex: true,
+})
 
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {

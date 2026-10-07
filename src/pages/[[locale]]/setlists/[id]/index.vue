@@ -134,7 +134,6 @@ q-page#setlist
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery, useQueryCache } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import sanitizeHtml from 'sanitize-html'
 import validator from 'validator'
 import { computed } from 'vue'
@@ -144,12 +143,14 @@ import { useRoute } from 'vue-router'
 import CommentList from '@/components/CommentList.vue'
 import SetlistPatternCard from '@/components/SetlistPatternCard.vue'
 import YoutubeVideo from '@/components/YoutubeVideo.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_SETLIST, setlistQuery } from '@/queries/setlist'
 import { useUserStore } from '@/stores/user'
 import { controls, getControlIcon } from '@/utils/control'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
+import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
 
 const { t } = useI18n()
@@ -171,7 +172,7 @@ const backgroundImage = computed(() => {
   } else if (setlist.value.previews?.length > 0) {
     return getYouTubeThumbnail(setlist.value.previews[0]!.ytid)
   } else {
-    return '/assets/header-setlist.value.png'
+    return toAbsoluteUrl('/assets/header-setlist.png')
   }
 })
 
@@ -179,78 +180,16 @@ const onImageError = () => {
   isImageError.value = true
 }
 
-const metaData = () => ({
-  title: t('setlistPage.meta.title', { name: setlist.value.name }),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('setlistPage.meta.title', { name: setlist.value.name }),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('setlistPage.meta.description', {
-        submitter: setlist.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('setlistPage.meta.title', { name: setlist.value.name }),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('setlistPage.meta.description', {
-        submitter: setlist.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('setlistPage.meta.title', { name: setlist.value.name }),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('setlistPage.meta.description', {
-        submitter: setlist.value.submitter.name,
-      }),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content: backgroundImage.value,
-      'data-dynamic': true,
-    },
-  },
+const description = computed(() =>
+  t('setlistPage.meta.description', { submitter: setlist.value.submitter.name }),
+)
+
+useSeoMeta({
+  title: () => t('setlistPage.meta.title', { name: setlist.value.name }),
+  description,
+  image: backgroundImage,
+  type: 'article',
 })
-useMeta(metaData)
 
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {

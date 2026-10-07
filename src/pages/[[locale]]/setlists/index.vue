@@ -33,13 +33,13 @@ q-page#setlists
 <script setup lang="ts">
 import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
 import { useInfiniteQuery } from '@pinia/colada'
-import { useMeta } from 'quasar'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 import SetlistCard from '@/components/SetlistCard.vue'
 import SetlistSearchForm from '@/components/SetlistSearchForm.vue'
+import { useSeoMeta } from '@/composables/useSeoMeta'
 import { setlistSearchQuery } from '@/queries/setlist'
 import { CONTROLTYPE } from '@/utils/control'
 
@@ -48,72 +48,10 @@ const router = useRouter()
 const { t } = useI18n()
 
 // SEO MetaData
-const metaData = () => ({
-  title: t('setlistsPage.meta.title'),
-  meta: {
-    color: {
-      name: 'theme-color',
-      content: '#E74C3C',
-    },
-    title: {
-      name: 'title',
-      content: t('setlistsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    description: {
-      name: 'description',
-      content: t('setlistsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogType: {
-      property: 'og:type',
-      content: 'website',
-    },
-    ogUrl: {
-      property: 'og:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    ogTitle: {
-      property: 'og:title',
-      content: t('setlistsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    ogDescription: {
-      property: 'og:description',
-      content: t('setlistsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    ogImage: {
-      property: 'og:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-    twCard: {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    twUrl: {
-      name: 'twitter:url',
-      content: new URL(route.fullPath, import.meta.env.QCLI_HOST_URL).toString(),
-    },
-    twTitle: {
-      name: 'twitter:title',
-      content: t('setlistsPage.meta.title'),
-      'data-dynamic': true,
-    },
-    twDescription: {
-      name: 'twitter:description',
-      content: t('setlistsPage.meta.description'),
-      'data-dynamic': true,
-    },
-    twImage: {
-      name: 'twitter:image',
-      content:
-        'https://raw.githubusercontent.com/techmania-team/techmania-team.github.io/master/public/assets/Logo_black.png',
-    },
-  },
+useSeoMeta({
+  title: () => t('setlistsPage.meta.title'),
+  description: () => t('setlistsPage.meta.description'),
 })
-useMeta(metaData)
 
 const isReady = ref(false)
 
