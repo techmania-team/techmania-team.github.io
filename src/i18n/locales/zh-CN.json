@@ -139,7 +139,7 @@
     "download": "下载",
     "edit": "编辑",
     "basic": {
-      "title": "谱面详情",
+      "title": "基本信息",
       "composer": {
         "label": "作曲家"
       },
@@ -162,7 +162,7 @@
       }
     },
     "difficulties": {
-      "title": "难度"
+      "title": "谱面"
     },
     "description": {
       "title": "谱面描述",
@@ -188,7 +188,7 @@
       "rule3": "请勿上传其他人的作品。"
     },
     "basic": {
-      "title": "谱面详情",
+      "title": "曲目信息",
       "name": {
         "label": "曲名",
         "error": {
@@ -239,7 +239,7 @@
       }
     },
     "difficulties": {
-      "title": "难度",
+      "title": "谱面",
       "control": {
         "label": "操作方式",
         "touch": "触屏",
@@ -265,10 +265,10 @@
         }
       },
       "level": {
-        "label": "等级",
+        "label": "难度",
         "error": {
           "required": "必填项",
-          "min": "无效等级"
+          "min": "无效难度"
         }
       }
     },
@@ -688,11 +688,11 @@
         }
       },
       "difficulty": {
-        "label": "难度",
-        "searchNotFound": "找不到难度",
+        "label": "谱面",
+        "searchNotFound": "找不到谱面",
         "error": {
           "required": "必填项",
-          "invalid": "无效难度"
+          "invalid": "无效谱面"
         }
       }
     },
@@ -708,11 +708,11 @@
         }
       },
       "difficulty": {
-        "label": "难度",
-        "searchNotFound": "找不到难度",
+        "label": "谱面",
+        "searchNotFound": "找不到谱面",
         "error": {
           "required": "必填项",
-          "invalid": "无效难度"
+          "invalid": "无效谱面"
         }
       },
       "criteriaType": {

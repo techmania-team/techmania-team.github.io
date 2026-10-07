@@ -106,7 +106,7 @@
         "placeholder": "키워드를 입력해 주세요..."
       },
       "keysounded": {
-        "label": "키사운드",
+        "label": "연주음",
         "all": "전체",
         "yes": "있음",
         "no": "없음"
@@ -147,7 +147,7 @@
         "label": "투고자"
       },
       "keysounded": {
-        "label": "키사운드",
+        "label": "연주음",
         "yes": "있음",
         "no": "없음"
       },
@@ -209,9 +209,9 @@
         }
       },
       "keysounded": {
-        "label": "키사운드",
+        "label": "연주음",
         "error": {
-          "required": "키사운드 여부를 선택해야 합니다"
+          "required": "연주음 여부를 선택해야 합니다"
         }
       },
       "image": {
@@ -324,7 +324,7 @@
     "submittedBy": "투고자: {name}",
     "submittedAt": "투고일: {date}",
     "updatedAt": "갱신일: {date}",
-    "keysounded": "키사운드",
+    "keysounded": "연주음",
     "control": {
       "touch": "터치",
       "keys": "키보드",
@@ -345,7 +345,7 @@
         "label": "스킨 종류",
         "note": "노트",
         "vfx": "쿨밤",
-        "combo": "콤보",
+        "combo": "판정/콤보",
         "gameUI": "게임 UI",
         "theme": "테마"
       },
@@ -375,7 +375,7 @@
         "label": "스킨 종류",
         "note": "노트",
         "vfx": "쿨밤",
-        "combo": "콤보",
+        "combo": "판정/콤보",
         "gameUI": "게임 UI",
         "theme": "테마"
       },
@@ -424,7 +424,7 @@
         "label": "스킨 종류",
         "note": "노트",
         "vfx": "쿨밤",
-        "combo": "콤보",
+        "combo": "판정/콤보",
         "gameUI": "게임 UI",
         "theme": "테마",
         "error": {
@@ -519,7 +519,7 @@
       "label": "스킨 종류",
       "note": "노트",
       "vfx": "쿨밤",
-      "combo": "콤보",
+      "combo": "판정/콤보",
       "gameUI": "게임 UI",
       "theme": "테마"
     }
@@ -590,13 +590,13 @@
       "noPreview": "미리보기 없음"
     },
     "selectablePatterns": {
-      "title": "선택 가능 패턴"
+      "title": "선택 가능한 패턴"
     },
     "hiddenPatterns": {
       "title": "히든 패턴",
       "criteriaType": {
         "index": "순번",
-        "level": "난이도",
+        "level": "레벨",
         "hp": "HP%",
         "score": "점수",
         "combo": "콤보",
@@ -617,7 +617,7 @@
     "submittedBy": "투고자: {name}",
     "submittedAt": "투고일: {date}",
     "updatedAt": "갱신일: {date}",
-    "selectablePatterns": "선택 가능 패턴",
+    "selectablePatterns": "선택 가능한 패턴",
     "hiddenPatterns": "히든 패턴",
     "control": {
       "label": "플레이 방식",
@@ -677,7 +677,7 @@
       }
     },
     "selectablePatterns": {
-      "title": "선택 가능 패턴",
+      "title": "선택 가능한 패턴",
       "name": {
         "label": "이름",
         "searchNotFound": "패턴이 없습니다",
@@ -718,7 +718,7 @@
       "criteriaType": {
         "label": "조건 종류",
         "index": "순번",
-        "level": "난이도",
+        "level": "레벨",
         "hp": "HP%",
         "score": "점수",
         "combo": "콤보",
