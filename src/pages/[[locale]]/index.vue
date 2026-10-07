@@ -9,7 +9,8 @@ q-page#index
     template(#content)
       .absolute.column.items-center.text-center
         //- Logo
-        img#logo(src="/assets/Logo.png")
+        h1#logo-title.q-my-none
+          img#logo(src="/assets/Logo.png" :alt="$t('indexPage.meta.title')")
         //- Windows
         div(v-if="platform === 'windows'")
           //- Download

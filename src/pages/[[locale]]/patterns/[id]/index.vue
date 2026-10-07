@@ -8,7 +8,7 @@ q-page#pattern
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
-        .text-h4.text-center {{ pattern.name }}
+        h1.text-h4.text-center.q-my-none {{ pattern.name }}
         .text-h6.text-center {{ pattern.composer }}
       .row.q-gutter-md
         q-btn(color="secondary" icon="download" :href="pattern.link" target="__blank" rel="noopener noreferrer") {{ $t('patternPage.download') }}

@@ -7,7 +7,7 @@ q-page#changelog
       img(src="/assets/header-changelog.png")
     //- Header content
     template(#content)
-      h4.text-center {{ $t('changelogPage.title') }}
+      h1.page-title.text-h4.text-center {{ $t('changelogPage.title') }}
   section.container
     .row
       //- Title

@@ -6,7 +6,7 @@ q-page#setlists
       template(#media)
         img(src="/assets/header-setlist.png")
       template(#content)
-        h4.text-center {{ $t('setlistsPage.title') }}
+        h1.page-title.text-h4.text-center {{ $t('setlistsPage.title') }}
 
     //- 搜尋表單
     SetlistSearchForm(v-if="isReady" :initial-values="searchParams" @search="applySearch")

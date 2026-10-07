@@ -7,7 +7,7 @@ q-page#how-to-play
       img(src="/assets/header-howtoplay.png")
     //- Header content
     template(#content)
-      h4.text-center {{ $t('howtoplayPage.title') }}
+      h1.page-title.text-h4.text-center {{ $t('howtoplayPage.title') }}
   //- Content
   section.q-mx-auto.padding
     .container

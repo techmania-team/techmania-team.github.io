@@ -8,7 +8,7 @@ q-page#setlist
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
-        .text-h4.text-center {{ setlist.name }}
+        h1.text-h4.text-center.q-my-none {{ setlist.name }}
       .row.q-gutter-x-md
         q-btn(color="secondary" icon="download" :href="setlist.link" target="__blank" rel="noopener noreferrer") {{ $t('setlistPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="setlist.submitter._id === user._id" :to="getI18nRoute({ name: 'setlist-form-edit', params: { id: setlist._id }})") {{ $t('setlistPage.edit') }}

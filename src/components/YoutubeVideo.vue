@@ -2,7 +2,7 @@
 .youtube-video-container
   q-img.cursor-pointer(:src="headerImage" :ratio="16/9" @click="onHeaderClick" @error="onImageError")
     .absolute.full-width.full-height.flex.justify-center.items-center.video-play
-      h1.q-ma-none
+      .text-h1
         q-icon.text-white(name="play_circle_outline")
   q-dialog(v-model="showVideoDialog" backdrop-filter="blur(4px)")
     q-card(style="width: 1000px; max-width: 90vw;")

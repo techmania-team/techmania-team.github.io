@@ -8,7 +8,7 @@ q-page#skin
     //- Header content
     template(#content)
       .column.items-center.q-mb-md
-        .text-h4.text-center {{ skin.name }}
+        h1.text-h4.text-center.q-my-none {{ skin.name }}
       .row.q-gutter-x-md
         q-btn(color="secondary" icon="download" :href="skin.link" target="__blank" rel="noopener noreferrer") {{ $t('skinPage.download') }}
         q-btn(color="secondary" icon="edit" v-if="skin.submitter._id === user._id" :to="getI18nRoute({ name: 'skin-form-edit', params: { id: skin._id }})") {{ $t('skinPage.edit') }}

@@ -8,7 +8,7 @@ q-page#profile
     //- Header content
     template(#content)
       DiscordAvatar(:avatar="profile.avatar" :avatar-options="{ rounded: true, size: '100px' }")
-      .text-h4.text-center.q-mt-md {{ profile.name }}
+      h1.text-h4.text-center.q-mt-md.q-mb-none {{ profile.name }}
   section.q-mx-auto.padding.q-mt-lg
     .container
       .row

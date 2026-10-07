@@ -6,7 +6,7 @@ q-page#patterns
       template(#media)
         img(src="/assets/header-pattern.png")
       template(#content)
-        h4.text-center {{ $t('patternsPage.title') }}
+        h1.page-title.text-h4.text-center {{ $t('patternsPage.title') }}
     //- SearchForm
     PatternSearchForm(v-if="isReady" :initial-values="searchParams" @search="applySearch")
     //- Patterns
