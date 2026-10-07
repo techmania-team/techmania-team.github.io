@@ -41,7 +41,13 @@ export default defineBoot(async ({ app, router, ssrContext, urlPath, redirect })
   }
 
   router.beforeEach(async (to) => {
+    // The catch-all route has no locale param, so read it off the path, e.g. /zh-TW/nope
     if (to.name === 'error-404') {
+      const segment = to.path.split('/')[1] ?? ''
+      await setLocale(
+        localeOptions.includes(segment) ? segment : getDefaultLocale(ssrContext),
+        ssrContext,
+      )
       return
     }
 

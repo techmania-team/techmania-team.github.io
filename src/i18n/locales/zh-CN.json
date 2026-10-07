@@ -883,5 +883,9 @@
   },
   "error": {
     "unknown": "服务器错误，请稍后再试，或在 Discord 服务器联系开发者。"
+  },
+  "notFoundPage": {
+    "message": "这里什么都没有……",
+    "home": "返回首页"
   }
 }

@@ -883,5 +883,9 @@
   },
   "error": {
     "unknown": "Server Error, please try again or contact developer in Discord server."
+  },
+  "notFoundPage": {
+    "message": "Oops. Nothing here...",
+    "home": "Go Home"
   }
 }
