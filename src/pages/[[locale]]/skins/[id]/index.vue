@@ -82,16 +82,15 @@ q-page#skin
                     | {{ (Array.isArray(skin.type) ? skin.type : [skin.type]).map((t) => $t('skinPage.basic.type.' + SKINTYPES[t])).join(', ') }}
         //- Description
         //- NOTE:
-        //- Use q-no-ssr to prevent hydration error
+        //- The API sanitizes it. A div, not a p: descriptions hold block elements such as div, which a p cannot contain
         .col-12.pre-line
-          q-no-ssr
-            q-list
-              q-item-label.text-h6.text-tech(header) {{ $t('skinPage.description.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  p(v-html="descriptionSanitized" v-if="skin.description")
-                  p(v-else) {{ $t('skinPage.description.noDescription') }}
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('skinPage.description.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                div.q-mb-md(v-html="skin.description" v-if="skin.description")
+                p(v-else) {{ $t('skinPage.description.noDescription') }}
         //- Previews
         .col-12
           q-list
@@ -110,7 +109,6 @@ q-page#skin
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery } from '@pinia/colada'
-import sanitizeHtml from 'sanitize-html'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -139,10 +137,6 @@ const { data } = useQuery(() => skinQuery(route.params.id))
 const skin = computed(() => data.value ?? EMPTY_SKIN)
 
 const isImageError = ref(false)
-
-const descriptionSanitized = computed(() => {
-  return sanitizeHtml(skin.value.description)
-})
 
 const backgroundImage = computed(() => {
   if (skin.value.image?.length > 0 && !isImageError.value) {

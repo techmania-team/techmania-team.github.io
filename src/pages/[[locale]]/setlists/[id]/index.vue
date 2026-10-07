@@ -91,16 +91,15 @@ q-page#setlist
                     | {{ setlist.selectablePatterns.length }} + {{ setlist.hiddenPatterns.length }}
         //- Description
         //- NOTE:
-        //- Use q-no-ssr to prevent hydration error
+        //- The API sanitizes it. A div, not a p: descriptions hold block elements such as div, which a p cannot contain
         .col-12.pre-line
-          q-no-ssr
-            q-list
-              q-item-label.text-h6.text-tech(header) {{ $t('setlistPage.description.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  p(v-html="descriptionSanitized" v-if="setlist.description")
-                  p(v-else) {{ $t('setlistPage.description.noDescription') }}
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('setlistPage.description.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                div.q-mb-md(v-html="setlist.description" v-if="setlist.description")
+                p(v-else) {{ $t('setlistPage.description.noDescription') }}
         //- Selectable Patterns
         .col-12.pre-line
           q-list
@@ -134,7 +133,6 @@ q-page#setlist
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery } from '@pinia/colada'
-import sanitizeHtml from 'sanitize-html'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -164,10 +162,6 @@ const { data } = useQuery(() => setlistQuery(route.params.id))
 const setlist = computed(() => data.value ?? EMPTY_SETLIST)
 
 const isImageError = ref(false)
-
-const descriptionSanitized = computed(() => {
-  return sanitizeHtml(setlist.value.description)
-})
 
 const backgroundImage = computed(() => {
   if (setlist.value.image?.length > 0 && !isImageError.value) {

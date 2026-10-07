@@ -105,16 +105,15 @@ q-page#pattern
                     div(:class="getLevelColor(difficulty.level)") {{ difficulty.name }}
         //- Description
         //- NOTE:
-        //- Use q-no-ssr to prevent hydration error
+        //- The API sanitizes it. A div, not a p: descriptions hold block elements such as div, which a p cannot contain
         .col-12.pre-line
-          q-no-ssr
-            q-list
-              q-item-label.text-h6.text-tech(header) {{ $t('patternPage.description.title') }}
-              q-separator.q-mb-md(inset)
-              q-item
-                q-item-section
-                  p(v-html="descriptionSanitized" v-if="pattern.description")
-                  p(v-else) {{ $t('patternPage.description.noDescription') }}
+          q-list
+            q-item-label.text-h6.text-tech(header) {{ $t('patternPage.description.title') }}
+            q-separator.q-mb-md(inset)
+            q-item
+              q-item-section
+                div.q-mb-md(v-html="pattern.description" v-if="pattern.description")
+                p(v-else) {{ $t('patternPage.description.noDescription') }}
         //- Previews
         .col-12
           q-list
@@ -133,7 +132,6 @@ q-page#pattern
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
 import { useQuery } from '@pinia/colada'
-import sanitizeHtml from 'sanitize-html'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -164,10 +162,6 @@ const { data } = useQuery(() => patternQuery(route.params.id))
 const pattern = computed(() => data.value ?? EMPTY_PATTERN)
 
 const isImageError = ref(false)
-
-const descriptionSanitized = computed(() => {
-  return sanitizeHtml(pattern.value.description)
-})
 
 const backgroundImage = computed(() => {
   if (pattern.value.image?.length > 0 && !isImageError.value) {
