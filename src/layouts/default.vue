@@ -76,7 +76,9 @@ q-layout(view='hHh lpR fff')
     q-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       q-btn(fab icon="keyboard_arrow_up" color="tech" text-color="black")
   //- Footer
-  q-footer.bg-techgrey.text-white.relative-position(bordered)
+  //- height-hint 0: the server assumes the footer is 50px tall but the client
+  //- only measures it after hydrating, so q-page's min-height came out different
+  q-footer.bg-techgrey.text-white.relative-position(bordered height-hint="0")
     .container
       q-toolbar
         p.q-mb-none &copy; {{ new Date().getFullYear() }} TECHMANIA
