@@ -45,7 +45,7 @@
       "description": "터치스크린 유무에 상관없이 플레이할 수 있는 오픈 소스 리듬 게임입니다."
     },
     "title": "HOW TO PLAY",
-    "scanlineNotice": "타임라인이 노트의 중심을 지날 때 노트패드를 연주하세요!",
+    "scanlineNotice": "타임라인이 노트의 중심을 지날 때 노트를 연주하세요!",
     "tabs": {
       "touch": "터치",
       "keys": "키보드",

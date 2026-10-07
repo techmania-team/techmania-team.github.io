@@ -183,7 +183,7 @@
     "titleEdit": "编辑谱面",
     "rules": {
       "title": "上传谱面前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的谱面。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的谱面。",
       "rule2": "请勿上传包含成人内容的谱面。",
       "rule3": "请勿上传其他人的作品。"
     },
@@ -408,7 +408,7 @@
     "titleEdit": "编辑皮肤",
     "rules": {
       "title": "上传皮肤前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的皮肤。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的皮肤。",
       "rule2": "请勿上传包含成人内容的皮肤。",
       "rule3": "请勿上传其他人的作品。"
     },
@@ -544,7 +544,7 @@
         "label": "排序",
         "submit": "上传时间",
         "update": "最后更新时间",
-        "name": "Skin Name",
+        "name": "标题",
         "rating": "评分"
       }
     },
@@ -640,7 +640,7 @@
     "titleEdit": "编辑组曲",
     "rules": {
       "title": "上传组曲前请阅读以下规则：",
-      "rule1": "P请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的组曲。",
+      "rule1": "请勿上传使用 DJMAX 和 DJMAX RESPECT 原创曲制作的组曲。",
       "rule2": "请勿上传包含成人内容的组曲。",
       "rule3": "请勿上传其他人的作品。"
     },
