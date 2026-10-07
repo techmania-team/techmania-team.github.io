@@ -1,6 +1,6 @@
 <template lang="pug">
 q-page#skins
-  q-no-ssr.q-mx-auto.padding
+  .q-mx-auto.padding
     //- Header
     q-parallax.q-mb-xl.header-parallax(:height="200")
       template(#media)
@@ -9,7 +9,7 @@ q-page#skins
         h1.page-title.text-h4.text-center {{ $t('skinsPage.title') }}
 
     //- 搜尋表單
-    SkinSearchForm(v-if="isReady" :initial-values="searchParams" @search="applySearch")
+    SkinSearchForm(:initial-values="searchParams" @search="applySearch")
 
     //- Skins 列表
     section.q-mx-auto.padding.q-my-md
@@ -17,7 +17,6 @@ q-page#skins
         .row
           .col-12
             q-infinite-scroll.row.q-my-md.q-col-gutter-md(
-              v-if="isReady"
               @load="loadScroll"
               :offset="200"
               :disable="!hasNextPage"
@@ -27,13 +26,13 @@ q-page#skins
                 SkinCard(:skin="skin" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="isReady && !isPending && skins.length === 0") {{ $t('skinsPage.notFound') }}
+            .text-center.text-body1(v-if="!isPending && skins.length === 0") {{ $t('skinsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
 import type { ISkinSearchForm, ISkinSortBy } from '@/types/skin'
 import { useInfiniteQuery } from '@pinia/colada'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
@@ -52,8 +51,6 @@ useSeoMeta({
   description: () => t('skinsPage.meta.description'),
 })
 
-const isReady = ref(false)
-
 const defaultInitialValues: ISkinSearchForm = {
   keywords: '',
   types: [SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME],
@@ -61,18 +58,55 @@ const defaultInitialValues: ISkinSearchForm = {
   sortBy: 'createdAt',
 }
 
-const searchParams = ref<ISkinSearchForm>({ ...defaultInitialValues })
+const querySchema = yup.object({
+  keywords: yup.string().default(defaultInitialValues.keywords),
+  types: yup
+    .array()
+    .of(
+      yup
+        .number<SKINTYPE>()
+        .oneOf([SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME]),
+    )
+    .transform((value, originalValue) => {
+      if (typeof originalValue === 'string' && originalValue.length > 0) {
+        return originalValue.split(',').map(Number)
+      }
+      return defaultInitialValues.types
+    })
+    .default(defaultInitialValues.types),
+  sort: yup
+    .number<1 | -1>()
+    .transform((value) => (Number(value) === 1 ? 1 : -1))
+    .default(defaultInitialValues.sort),
+  sortBy: yup.string<ISkinSortBy>().default(defaultInitialValues.sortBy),
+})
+
+const hasQuery = Object.keys(route.query).length > 0
+
+/**
+ * Search filters as URL query
+ * @param values - The search filters
+ */
+const toQuery = (values: ISkinSearchForm) => ({
+  keywords: values.keywords,
+  types: values.types.join(),
+  sort: values.sort,
+  sortBy: values.sortBy,
+})
+
+// Parsed during setup so the server renders the first page of results too
+const searchParams = ref<ISkinSearchForm>(
+  hasQuery
+    ? (querySchema.cast(route.query, { stripUnknown: true }) as ISkinSearchForm)
+    : { ...defaultInitialValues },
+)
 
 /**
  * Fetch skins from API
- * @param start - The start index of the skins
  */
-// `enabled` holds the first fetch until the URL query has been parsed,
-// otherwise we would fetch once with the defaults and again with the real ones
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
-  ...skinSearchQuery(searchParams.value),
-  enabled: isReady.value,
-}))
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  skinSearchQuery(searchParams.value),
+)
 
 const skins = computed(() => data.value?.pages.flat() ?? [])
 
@@ -82,7 +116,7 @@ const skins = computed(() => data.value?.pages.flat() ?? [])
  * @param done - The callback function
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value || !hasNextPage.value) return done(true)
+  if (!hasNextPage.value) return done(true)
   // cancelRefetch: false makes a concurrent trigger await the request that is
   // already running. The default aborts it and starts a new one, which turns
   // repeated q-infinite-scroll triggers into a storm of cancelled requests.
@@ -96,57 +130,13 @@ const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
 const applySearch = async (values: ISkinSearchForm) => {
   // Changing the params changes the key, which starts the new search on its own
   searchParams.value = { ...values }
-
-  await router.replace({
-    query: {
-      keywords: values.keywords,
-      types: values.types.join(),
-      sort: values.sort,
-      sortBy: values.sortBy,
-    },
-  })
+  await router.replace({ query: toQuery(values) })
 }
 
 onMounted(async () => {
-  await nextTick()
-
-  if (Object.keys(route.query).length > 0) {
-    const querySchema = yup.object({
-      keywords: yup.string().default(defaultInitialValues.keywords),
-      types: yup
-        .array()
-        .of(
-          yup
-            .number<SKINTYPE>()
-            .oneOf([SKINTYPE.NOTE, SKINTYPE.VFX, SKINTYPE.COMBO, SKINTYPE.GAMEUI, SKINTYPE.THEME]),
-        )
-        .transform((value, originalValue) => {
-          if (typeof originalValue === 'string' && originalValue.length > 0) {
-            return originalValue.split(',').map(Number)
-          }
-          return defaultInitialValues.types
-        })
-        .default(defaultInitialValues.types),
-      sort: yup
-        .number<1 | -1>()
-        .transform((value) => (Number(value) === 1 ? 1 : -1))
-        .default(defaultInitialValues.sort),
-      sortBy: yup.string<ISkinSortBy>().default(defaultInitialValues.sortBy),
-    })
-
-    searchParams.value = querySchema.cast(route.query, { stripUnknown: true }) as ISkinSearchForm
-
-    await router.replace({
-      query: {
-        keywords: searchParams.value.keywords,
-        types: searchParams.value.types.join(),
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-      },
-    })
+  if (hasQuery) {
+    await router.replace({ query: toQuery(searchParams.value) })
   }
-
-  isReady.value = true
 })
 </script>
 

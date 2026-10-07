@@ -1,6 +1,6 @@
 <template lang="pug">
 q-page#setlists
-  q-no-ssr.q-mx-auto.padding
+  .q-mx-auto.padding
     //- Header
     q-parallax.q-mb-xl.header-parallax(:height="200")
       template(#media)
@@ -9,7 +9,7 @@ q-page#setlists
         h1.page-title.text-h4.text-center {{ $t('setlistsPage.title') }}
 
     //- 搜尋表單
-    SetlistSearchForm(v-if="isReady" :initial-values="searchParams" @search="applySearch")
+    SetlistSearchForm(:initial-values="searchParams" @search="applySearch")
 
     //- Setlists 列表
     section.q-mx-auto.padding.q-my-md
@@ -17,7 +17,6 @@ q-page#setlists
         .row
           .col-12
             q-infinite-scroll.row.q-my-md.q-col-gutter-md(
-              v-if="isReady"
               @load="loadScroll"
               :offset="200"
               :disable="!hasNextPage"
@@ -27,13 +26,13 @@ q-page#setlists
                 SetlistCard(:setlist="setlist" :mine="false")
               template(#loading)
                 q-spinner-dots(color="tech" size="40px")
-            .text-center.text-body1(v-if="isReady && !isPending && setlists.length === 0") {{ $t('setlistsPage.notFound') }}
+            .text-center.text-body1(v-if="!isPending && setlists.length === 0") {{ $t('setlistsPage.notFound') }}
 </template>
 
 <script setup lang="ts">
 import type { ISetlistSearchForm, ISetlistSortBy } from '@/types/setlist'
 import { useInfiniteQuery } from '@pinia/colada'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
@@ -53,8 +52,6 @@ useSeoMeta({
   description: () => t('setlistsPage.meta.description'),
 })
 
-const isReady = ref(false)
-
 const defaultInitialValues: ISetlistSearchForm = {
   keywords: '',
   controls: [CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM],
@@ -62,17 +59,50 @@ const defaultInitialValues: ISetlistSearchForm = {
   sortBy: 'createdAt',
 }
 
-const searchParams = ref<ISetlistSearchForm>({ ...defaultInitialValues })
+const querySchema = yup.object({
+  keywords: yup.string().default(defaultInitialValues.keywords),
+  controls: yup
+    .array()
+    .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
+    .transform((value, originalValue) => {
+      if (typeof originalValue === 'string' && originalValue.length > 0) {
+        return originalValue.split(',').map(Number)
+      }
+      return defaultInitialValues.controls
+    })
+    .default(defaultInitialValues.controls),
+  sort: yup
+    .number<1 | -1>()
+    .transform((value) => (Number(value) === 1 ? 1 : -1))
+    .default(defaultInitialValues.sort),
+  sortBy: yup.string<ISetlistSortBy>().default(defaultInitialValues.sortBy),
+})
+
+const hasQuery = Object.keys(route.query).length > 0
+
+/**
+ * Search filters as URL query
+ */
+const toQuery = (values: ISetlistSearchForm) => ({
+  keywords: values.keywords,
+  controls: values.controls.join(),
+  sort: values.sort,
+  sortBy: values.sortBy,
+})
+
+// Parsed during setup so the server renders the first page of results too
+const searchParams = ref<ISetlistSearchForm>(
+  hasQuery
+    ? (querySchema.cast(route.query, { stripUnknown: true }) as ISetlistSearchForm)
+    : { ...defaultInitialValues },
+)
 
 /**
  * Fetch setlists from API
  */
-// `enabled` holds the first fetch until the URL query has been parsed,
-// otherwise we would fetch once with the defaults and again with the real ones
-const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() => ({
-  ...setlistSearchQuery(searchParams.value),
-  enabled: isReady.value,
-}))
+const { data, hasNextPage, isPending, loadNextPage } = useInfiniteQuery(() =>
+  setlistSearchQuery(searchParams.value),
+)
 
 const setlists = computed(() => data.value?.pages.flat() ?? [])
 
@@ -80,7 +110,7 @@ const setlists = computed(() => data.value?.pages.flat() ?? [])
  * Load more setlists
  */
 const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
-  if (!isReady.value || !hasNextPage.value) return done(true)
+  if (!hasNextPage.value) return done(true)
   // cancelRefetch: false makes a concurrent trigger await the request that is
   // already running. The default aborts it and starts a new one, which turns
   // repeated q-infinite-scroll triggers into a storm of cancelled requests.
@@ -94,53 +124,13 @@ const loadScroll = async (index: number, done: (stop?: boolean) => void) => {
 const applySearch = async (values: ISetlistSearchForm) => {
   // Changing the params changes the key, which starts the new search on its own
   searchParams.value = { ...values }
-
-  await router.replace({
-    query: {
-      keywords: values.keywords,
-      controls: values.controls.join(),
-      sort: values.sort,
-      sortBy: values.sortBy,
-    },
-  })
+  await router.replace({ query: toQuery(values) })
 }
 
 onMounted(async () => {
-  await nextTick()
-
-  if (Object.keys(route.query).length > 0) {
-    const querySchema = yup.object({
-      keywords: yup.string().default(defaultInitialValues.keywords),
-      controls: yup
-        .array()
-        .of(yup.number<CONTROLTYPE>().oneOf([CONTROLTYPE.TOUCH, CONTROLTYPE.KEYS, CONTROLTYPE.KM]))
-        .transform((value, originalValue) => {
-          if (typeof originalValue === 'string' && originalValue.length > 0) {
-            return originalValue.split(',').map(Number)
-          }
-          return defaultInitialValues.controls
-        })
-        .default(defaultInitialValues.controls),
-      sort: yup
-        .number<1 | -1>()
-        .transform((value) => (Number(value) === 1 ? 1 : -1))
-        .default(defaultInitialValues.sort),
-      sortBy: yup.string<ISetlistSortBy>().default(defaultInitialValues.sortBy),
-    })
-
-    searchParams.value = querySchema.cast(route.query, { stripUnknown: true }) as ISetlistSearchForm
-
-    await router.replace({
-      query: {
-        keywords: searchParams.value.keywords,
-        controls: searchParams.value.controls.join(),
-        sort: searchParams.value.sort,
-        sortBy: searchParams.value.sortBy,
-      },
-    })
+  if (hasQuery) {
+    await router.replace({ query: toQuery(searchParams.value) })
   }
-
-  isReady.value = true
 })
 </script>
 
