@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TECHMANIA</title>
-  <link rel="canonical" href="https://techmania-team.herokuapp.com/">
-  <!-- An instant meta refresh is read by search engines as a permanent redirect -->
-  <meta http-equiv="refresh" content="0; url=https://techmania-team.herokuapp.com/">
+  <!-- GitHub Pages serves this for every path it does not have, so old links
+       to /patterns/... keep working. The new site adds the locale itself. -->
   <script>
     location.replace('https://techmania-team.herokuapp.com' + location.pathname + location.search + location.hash)
   </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=https://techmania-team.herokuapp.com/">
+  </noscript>
 </head>
 <body>
   <p>TECHMANIA has moved to <a href="https://techmania-team.herokuapp.com/">techmania-team.herokuapp.com</a>.</p>
