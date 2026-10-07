@@ -49,7 +49,7 @@ q-page#profile
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
-import { useQuery, useQueryCache } from '@pinia/colada'
+import { useQuery } from '@pinia/colada'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -57,6 +57,7 @@ import DiscordAvatar from '@/components/DiscordAvatar.vue'
 import { useSeoMeta } from '@/composables/useSeoMeta'
 import { getI18nRoute } from '@/i18n'
 import { EMPTY_USER, userQuery } from '@/queries/user'
+import { prefetchById } from '@/utils/prefetch'
 
 const { t } = useI18n()
 const route = useRoute('profile')
@@ -90,24 +91,14 @@ watch(
 defineOptions({
   async preFetch({ currentRoute, redirect, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'profile'>
-    if (!route.params.id) {
-      redirect({ name: 'index' })
-      return
-    }
 
-    const queryCache = useQueryCache(store)
-    const entry = queryCache.ensure(userQuery(route.params.id))
-    const state = await queryCache.refresh(entry).catch(() => null)
-
+    // The profile has nothing of its own to show, its first tab does
     if (route.name === 'profile') {
-      redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }))
-    }
-
-    // Check if profile exists
-    if (!state?.data) {
-      redirect({ name: 'index' })
+      redirect(getI18nRoute({ name: 'profile-patterns', params: { id: route.params.id } }), 301)
       return
     }
+
+    await prefetchById({ currentRoute, store }, route.params.id, userQuery)
   },
 })
 </script>

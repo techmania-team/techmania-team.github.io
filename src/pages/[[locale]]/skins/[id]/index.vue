@@ -109,9 +109,8 @@ q-page#skin
 <script setup lang="ts">
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 import type { RouteNamedMap } from 'vue-router/auto-routes'
-import { useQuery, useQueryCache } from '@pinia/colada'
+import { useQuery } from '@pinia/colada'
 import sanitizeHtml from 'sanitize-html'
-import validator from 'validator'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -124,6 +123,7 @@ import { EMPTY_SKIN, skinQuery } from '@/queries/skin'
 import { useUserStore } from '@/stores/user'
 import * as date from '@/utils/date'
 import { toImageProxyUrl } from '@/utils/image'
+import { prefetchById } from '@/utils/prefetch'
 import { SKINTYPES } from '@/utils/skin'
 import { toAbsoluteUrl } from '@/utils/url'
 import { getYouTubeThumbnail } from '@/utils/youtube'
@@ -167,25 +167,9 @@ useSeoMeta({
 })
 
 defineOptions({
-  async preFetch({ currentRoute, redirect, store }) {
+  async preFetch({ currentRoute, store }) {
     const route = currentRoute as RouteLocationNormalizedLoadedTyped<RouteNamedMap, 'skin'>
-
-    if (!route.params.id || !validator.isMongoId(route.params.id)) {
-      redirect({ name: 'index' })
-      return
-    }
-
-    // Warms the same cache entry the component reads below. refresh() reuses
-    // still-fresh data, so navigating back here does not refetch.
-    const queryCache = useQueryCache(store)
-    const entry = queryCache.ensure(skinQuery(route.params.id))
-    const state = await queryCache.refresh(entry).catch(() => null)
-
-    // Check if skin exists
-    if (!state?.data) {
-      redirect({ name: 'index' })
-      return
-    }
+    await prefetchById({ currentRoute, store }, route.params.id, skinQuery)
   },
 })
 </script>
